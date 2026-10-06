@@ -5,7 +5,6 @@ import {
   ArrowRight,
   BadgeCheck,
   Building2,
-  ChartNoAxesCombined,
   Check,
   Clock,
   CreditCard,
@@ -30,6 +29,8 @@ import {
   Users,
   Wallet,
   type LucideIcon,
+  Percent,
+  Handshake,
 } from "lucide-react";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
@@ -258,8 +259,9 @@ const OFFER_ICON: Record<ServiceSlug, LucideIcon> = {
   "banka-hesabi": Wallet,
   muhasebe: Receipt,
   "oturum-vize": IdCard,
-  "hukuki-danismanlik": Scale,
-  "pazar-arastirmasi": ChartNoAxesCombined,
+  vergi: Percent,
+  "kurumsal-danismanlik": Handshake,
+  "aml-uyum": ShieldCheck,
 };
 
 /* ------------------------------------------------------------- kıyas hücresi

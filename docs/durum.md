@@ -4955,6 +4955,27 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (3) · altı hizmet, VIP sade, logolar, hover, hero ikinci tur
+
+- ALTI HİZMET eklendi (services.ts · YENI): Vergi danışmanlığı, Kurumsal danışmanlık, AML
+  ve mevzuat uyumu; üç ülkede. Menüde ve alt bilgide görünüyor. Dubai'de üç sayfa açık
+  (/dubai/vergi, /dubai/kurumsal-danismanlik, /dubai/aml-uyum), genel hizmet şablonunda ve
+  fiyatsız ("teklife bağlı"). Kapsam maddeleri Murat Bey'in sohbetindeki ülke ülke alt
+  hizmet listesinden; DOĞRULANACAK (SWAP:ALTI_HIZMET_KAPSAM). İngiltere ve KKTC'nin hizmet
+  alt sayfaları öteki hizmetler gibi kapalı.
+- ANA SAYFA hizmetleri: üstte iki büyük kart (Şirket kuruluşu, Muhasebe ve finansal
+  raporlama), altta dört küçük (Vergi, Kurumsal danışmanlık, Banka ve iş desteği, AML ve
+  uyum). Oturum kartı ana sayfadan çıktı (vize yalnız Dubai'de).
+- VIP avantajları: çizimler kalktı ("araba çok kötü … bu kadar büyük göstermeye gerek
+  yok"), küçük amber ikonlu sade kutular.
+- Üç serbest bölge kartı: çizim yerine logo (IFZA, Meydan müşteri dosyası). DWTC logosu
+  YOK, adı yazıyla duruyor; logo istenmeli.
+- Fiyat formu: artı/eksi, "i" ve VIP kartında hover; VIP seçilince amber.
+- /lab/dubai-hero-kart ikinci tur: K1-K3 elendi; F1 Rozetler, F2 Lisans, F3 Sade (aşama
+  anlatmıyorlar). Canlıdaki aynı.
+- Kurulum akışının sunum modu: /lab/satis-akisi (bilgi girmeden geçiliyor, üst adımlara
+  tıklanıyor). /basla gerçek davranışta.
+
 ## 07.10.2026 (2) · Dubai fiyat formu kutu diline geçti, VIP kapsamı çizimli
 
 - Fiyat formu (ve aynı bileşeni kullanan /basla ikinci adımı): her seçenek aynı dikdörtgen

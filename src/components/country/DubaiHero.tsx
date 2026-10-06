@@ -26,7 +26,8 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
-import { ArrowRight, ChevronRight, Info, MapPin } from "lucide-react";
+import { ArrowRight, BadgeCheck, ChevronRight, Info, MapPin, Percent, Timer } from "lucide-react";
+import { Flag } from "@/components/shared/CountryPicker";
 import SmartLink from "@/components/shared/SmartLink";
 import { STAGES } from "@/components/shared/HeroDubaiCards";
 import { FACTS } from "@/lib/brand";
@@ -53,24 +54,25 @@ const ASAMA = STAGES.map((s, i) => ({
   anahtar: s.key,
 }));
 
-/* KART ADAYLARI · /lab/dubai-hero-kart (06.10.2026). Burak: "görselin
-   üstündeki aşamalarda daha farklı neler yapabiliriz? Aşamaları ve
-   başlıkları bu kadar büyük göstermek yerine … soldaki küçük kutunun içinde
-   oynayan şeyler var ya, belki onlara odaklanan bir şey. Birkaç bir şey
-   deneyebilirsin."
-     s6  canlıdaki: çizim + büyük ad + rozet + numaralı çubuk
-     k1  Sahne: çizim büyüdü, kartın tamamı o; ad küçük bir satır, noktalar
-     k2  Şerit: beş çizim yan yana küçük karelerde; sıradaki parlak, adı altında
-     k3  Köşe: sol altta küçük bir hap; çizim, ad ve ince ilerleme çizgisi
-   Seçilen aday varsayılan olur, ötekiler silinir. */
-export type DubaiKart = "s6" | "k1" | "k2" | "k3";
+/* FOTOĞRAFIN ÜSTÜ · ADAYLAR · /lab/dubai-hero-kart
+   İlk tur (K1 Sahne, K2 Şerit, K3 Köşe; aşama kartının üç biçimi) elendi.
+   Burak (07.10.2026): "şu anki hâlâ daha iyi duruyor. İlla aşamaları
+   anlatacak bir şeyler koymak zorunda değiliz; tamamen farklı
+   düşünebilirsin, estetik olsun yeter." İkinci tur aşama anlatmıyor:
+     s6  canlıdaki: aşama kartı
+     f1  Rozetler: fotoğrafın üstünde üç küçük cam rozet, üç doğrulanmış olgu
+     f2  Lisans: sol altta hafif eğik bir "ticaret lisansı" kartı (süs)
+     f3  Sade: yalnız fotoğraf, sol altta bayraklı küçük bir yer etiketi
+   Rozetlerdeki üç olgu sitede zaten yazılı ve teyitli: %100 yabancı
+   sahiplik (teklif PDF'i), 5-6 günde kuruluş (teyit · Dubai kuruluş 1),
+   375.000 AED'ye kadar %0 (teyit · Dubai kuruluş 3). */
+export type DubaiKart = "s6" | "f1" | "f2" | "f3";
 
-function Cizim({ a, acik = true }: { a: (typeof ASAMA)[number]; acik?: boolean }) {
+function Cizim({ a }: { a: (typeof ASAMA)[number] }) {
   /* çizimin animasyonu hero.css'te `.dhs .hkc-scene[data-on]` kapısına
-     bağlı; sarmalayıcı o iki sınıfı taşıyor. Şeritte sıradaki dışındakiler
-     de görünsün diye sahne hep "açık", hareket yalnız sıradakinde. */
+     bağlı; sarmalayıcı o iki sınıfı taşıyor */
   return (
-    <div className="dhr-cizim dhs" data-dur={!acik || undefined} aria-hidden="true">
+    <div className="dhr-cizim dhs" aria-hidden="true">
       <div className="hkc-scene" data-scene={a.anahtar} data-on="true">
         {a.cizim}
       </div>
@@ -87,75 +89,63 @@ function Kart({ tip, i, git, reduce }: { tip: DubaiKart; i: number; git: (k: num
     transition: { duration: 0.28, ease: EASE },
   };
 
-  if (tip === "k2")
+  if (tip === "f1")
     return (
-      <div className="dhr-serit" role="group" aria-label="Aşamalar">
-        {ASAMA.map((x, k) => (
-          <button
-            key={x.no}
-            type="button"
-            className="dhr-serit-b"
-            data-on={k === i || undefined}
-            aria-current={k === i ? "step" : undefined}
-            aria-label={`${x.ad}: ${x.satir}`}
-            onClick={() => git(k)}
-          >
-            <Cizim a={x} acik={k === i} />
-            <span className="dhr-serit-ad" aria-hidden="true">
-              {x.ad}
-            </span>
-          </button>
-        ))}
-      </div>
+      <ul className="dhr-rozetler" aria-label="Dubai'de şirket: üç olgu">
+        <li data-yer="1">
+          <span className="dhr-rozet-ic" aria-hidden="true">
+            <BadgeCheck size={18} strokeWidth={2} />
+          </span>
+          <span>
+            <b>%100</b> yabancı sahiplik
+          </span>
+        </li>
+        <li data-yer="2">
+          <span className="dhr-rozet-ic" aria-hidden="true">
+            <Timer size={18} strokeWidth={2} />
+          </span>
+          <span>
+            <b>5-6 günde</b> kuruluş
+          </span>
+        </li>
+        <li data-yer="3">
+          <span className="dhr-rozet-ic" data-ton="amber" aria-hidden="true">
+            <Percent size={18} strokeWidth={2} />
+          </span>
+          <span>
+            375.000 AED&apos;ye kadar <b>%0</b>
+          </span>
+        </li>
+      </ul>
     );
 
-  if (tip === "k3")
+  if (tip === "f2")
     return (
-      <div className="dhr-kose">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div key={a.no} className="dhr-kose-ust" {...gecis}>
-            <Cizim a={a} />
-            <p className="dhr-kose-m">
-              <span>
-                {a.no} / {String(ASAMA.length).padStart(2, "0")}
-              </span>
-              <b>{a.ad}</b>
-            </p>
-          </motion.div>
-        </AnimatePresence>
-        <span className="dhr-kose-ray" aria-hidden="true">
-          <i style={{ width: `${((i + 1) / ASAMA.length) * 100}%` }} />
-        </span>
-      </div>
-    );
-
-  if (tip === "k1")
-    return (
-      <div className="dhr-sahne">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div key={a.no} {...gecis}>
-            <Cizim a={a} />
-            <p className="dhr-sahne-m">
-              <b>{a.ad}</b>
-              <span className="dhr-kim" data-ton={a.kim.ton}>
-                {a.kim.ad}
-              </span>
-            </p>
-          </motion.div>
-        </AnimatePresence>
-        <div className="dhr-nokta" role="group" aria-label="Aşamalar">
-          {ASAMA.map((x, k) => (
-            <button
-              key={x.no}
-              type="button"
-              data-on={k === i || undefined}
-              aria-current={k === i ? "step" : undefined}
-              aria-label={`${x.ad}: ${x.satir}`}
-              onClick={() => git(k)}
-            />
-          ))}
+      <div className="dhr-lisans" aria-hidden="true">
+        <div className="dhr-lisans-ust">
+          <span className="dhr-lisans-t">Ticaret lisansı</span>
+          <span className="dhr-lisans-muhur">
+            <BadgeCheck size={20} strokeWidth={2} />
+          </span>
+        </div>
+        <span className="dhr-lisans-ad" />
+        <span className="dhr-lisans-s" />
+        <span className="dhr-lisans-s" data-kisa="" />
+        <div className="dhr-lisans-alt">
+          <span>Serbest bölge</span>
+          <span>Dubai</span>
         </div>
       </div>
+    );
+
+  if (tip === "f3")
+    return (
+      <p className="dhr-yer">
+        <span className="dhr-yer-b" aria-hidden="true">
+          <Flag country="dubai" />
+        </span>
+        Dubai · Birleşik Arap Emirlikleri
+      </p>
     );
 
   return (

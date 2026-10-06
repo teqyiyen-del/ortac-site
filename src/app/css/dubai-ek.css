@@ -30,17 +30,31 @@
   border-radius: var(--r-panel);
   background: var(--white);
 }
-/* çizim penceresi: koyu, kartın üstünde, dört yanında eşit pay */
+/* logo penceresi: açık, kartın üstünde, dört yanında eşit pay */
 .dbe-bolge-fig {
   position: relative;
+  display: grid;
+  place-items: center;
+  height: 132px;
   margin: 10px 10px 0;
   border-radius: calc(var(--r-panel) - 10px);
-  background: var(--night);
+  background: var(--paper);
+  color: var(--text-900);
 }
-.dbe-svg {
-  display: block;
-  width: 100%;
-  height: auto;
+.dbe-logo-yazi {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+.dbe-logo-yazi small {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text-600);
 }
 .dbe-rozet {
   position: absolute;
@@ -191,23 +205,22 @@
 }
 .dbe-kapsam {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-@media (min-width: 720px) {
+@media (min-width: 620px) {
   .dbe-kapsam {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-/* kart: üstte çizim penceresi (dört yanında eşit pay), altında tek satır */
 .dbe-kapsam li {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 8px 8px 16px;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
   border: 1px solid #ecdcb8;
   border-radius: var(--r-lg);
   background: var(--white);
@@ -215,20 +228,24 @@
   font-weight: 600;
   line-height: 1.35;
   color: var(--text-900);
+  transition: border-color 160ms linear, background-color 160ms linear;
 }
-.dbe-vfig {
-  display: block;
-  padding: 10px 8px;
-  border-radius: calc(var(--r-lg) - 8px);
-  background: #fff6e0;
+@media (hover: hover) {
+  .dbe-kapsam li:hover {
+    border-color: #e0a43c;
+    background: #fffaf0;
+  }
 }
-.dbe-vsvg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.dbe-kapsam li > :not(.dbe-vfig) {
-  padding-inline: 8px;
+.dbe-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--amber-100);
+  color: #8a5200;
 }
 
 /* ============================================================ FİYAT FORMU
@@ -531,7 +548,79 @@ button.dfy-kutu {
   outline-color: #ffffff;
 }
 
+/* ---- HOVER VE VIP SEÇİLİ (07.10.2026). Burak: "artı eksi'nin üstünde
+   hover olmuyor, tıklanabiliyormuş gibi hissettirmiyor; hover
+   animasyonlarını pas geçme. VIP'e de lazım; basınca sarı olabilir." ---- */
+button.dfy-kutu,
+.dfy-adim button,
+.dfy-i-b {
+  transition: border-color 160ms linear, background-color 160ms linear, color 160ms linear,
+    transform 180ms var(--ease-out-quint);
+}
+@media (hover: hover) {
+  button.dfy-kutu:hover {
+    transform: translateY(-2px);
+  }
+  .dfy-adim button:hover:not(:disabled) {
+    border-color: var(--blue-700);
+    background: var(--blue-700);
+    color: #ffffff;
+    transform: scale(1.06);
+  }
+  .sec-night .dfy-adim button:hover:not(:disabled),
+  .sec-night .dfy-vize[data-on="true"] .dfy-adim button:hover:not(:disabled) {
+    border-color: var(--blue-700);
+    background: var(--blue-700);
+    color: #ffffff;
+  }
+  .dfy-i-b:hover {
+    border-color: var(--blue-700);
+    color: var(--blue-700);
+  }
+  .sec-night .dfy-i-b:hover {
+    border-color: #ffffff;
+    color: #ffffff;
+  }
+  .dfy-ek[data-vip]:not([data-on="true"]):hover {
+    border-color: #e0a43c;
+    background: #fffaf0;
+  }
+  .sec-night .dfy-ek[data-vip]:not([data-on="true"]):hover {
+    border-color: #e0a43c;
+    background: rgba(224, 164, 60, 0.1);
+  }
+}
+.dfy-adim button:active:not(:disabled) {
+  transform: scale(0.94);
+}
+/* VIP seçili: amber (iki zeminde de). #1d1608 / #e9b558 hesapla 9,6:1 */
+.dfy-ek[data-vip][data-on="true"],
+.sec-night .dfy-ek[data-vip][data-on="true"] {
+  border-color: #e9b558;
+  background: #e9b558;
+  color: #1d1608;
+}
+.dfy-ek[data-vip][data-on="true"] .dfy-alt,
+.sec-night .dfy-ek[data-vip][data-on="true"] .dfy-alt {
+  color: #3d2f10;
+}
+.dfy-ek[data-vip][data-on="true"] :is(.dfy-ic, .dfy-tik) {
+  border-color: #1d1608;
+  background: #1d1608;
+  color: #e9b558;
+}
+.dfy-ek[data-vip][data-on="true"] .dbe-ek-vip {
+  background: #1d1608;
+  color: #e9b558;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  button.dfy-kutu:hover,
+  .dfy-adim button:hover:not(:disabled) {
+    transform: none;
+  }
+  .dfy-i-b,
+  .dbe-kapsam li,
   .dfy-kutu,
   .dfy-adim button {
     transition: none;

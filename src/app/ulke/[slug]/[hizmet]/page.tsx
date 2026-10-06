@@ -41,6 +41,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 const money = (n: number) => `$${n.toLocaleString("tr-TR")}`;
+/* Başlık cümle içine giriyor ("Dubai'de …"): kelimeler küçülüyor, ama
+   kısaltmalar (AML) büyük kalıyor. */
+const kucult = (t: string) =>
+  t
+    .split(" ")
+    .map((k) => (k.length <= 4 && k === k.toLocaleUpperCase("tr-TR") && /[A-ZÇĞİÖŞÜ]{2}/.test(k) ? k : k.toLocaleLowerCase("tr-TR")))
+    .join(" ");
 
 export default async function ServicePage({ params }: { params: Params }) {
   const { slug, hizmet } = await params;
@@ -62,7 +69,7 @@ export default async function ServicePage({ params }: { params: Params }) {
       <main>
         <PageHero
           crumb={`${name} · ${svc.title}`}
-          title={`${name}'de ${svc.title.toLocaleLowerCase("tr-TR")}.`}
+          title={`${name}'de ${kucult(svc.title)}.`}
           lead={svc.line}
         />
 
@@ -113,33 +120,44 @@ export default async function ServicePage({ params }: { params: Params }) {
                   <span className="sp-quote-n">
                     {svc.from !== null ? money(svc.from) : "Teklife bağlı"}
                   </span>
-                  <span className="sp-quote-u">
-                    {svc.unit} · {svc.duration}
+                  <span className="sp-quote-u" style={svc.from === null ? { marginBottom: 20 } : undefined}>
+                    {svc.from !== null ? `${svc.unit} · ${svc.duration}` : "Kapsam ve tutar işinize göre netleşir."}
                   </span>
 
+                  {/* 07.10.2026 · fiyatı yazılmamış hizmette (vergi, kurumsal
+                      danışmanlık, AML) kalem tablosu ve "Toplam $0" basılmıyor */}
+                  {svc.lines.length > 0 && (
                   <div className="sp-lines">
-                    {svc.lines.map((l) => (
-                      <div key={l.label} className="sp-line">
-                        <span>
-                          {l.label}
-                          {l.note && <b>{l.note}</b>}
-                        </span>
-                        <span className="sp-line-a">
-                          {l.amount !== null ? money(l.amount) : "teklif"}
-                        </span>
+                      {svc.lines.map((l) => (
+                        <div key={l.label} className="sp-line">
+                          <span>
+                            {l.label}
+                            {l.note && <b>{l.note}</b>}
+                          </span>
+                          <span className="sp-line-a">
+                            {l.amount !== null ? money(l.amount) : "teklif"}
+                          </span>
+                        </div>
+                      ))}
+                      <div className="sp-line sp-line-total">
+                        <span>Toplam</span>
+                        <span className="sp-line-a">{money(total)}</span>
                       </div>
-                    ))}
-                    <div className="sp-line sp-line-total">
-                      <span>Toplam</span>
-                      <span className="sp-line-a">{money(total)}</span>
                     </div>
-                  </div>
-
-                  <SmartLink href={`/basla?ulke=${slug}&hizmet=${svc.slug}`} className="btn btn-primary btn-full">
-                    Bu hizmetle başlayın
-                    <ArrowRight size={15} strokeWidth={2.1} />
-                  </SmartLink>
-                  <p className="sp-note">Tutarlar temsilidir; nihai teklif evraklara göre netleşir.</p>
+  
+                  )}
+                  {svc.from !== null ? (
+                    <SmartLink href={`/basla?ulke=${slug}&hizmet=${svc.slug}`} className="btn btn-primary btn-full">
+                      Bu hizmetle başlayın
+                      <ArrowRight size={15} strokeWidth={2.1} />
+                    </SmartLink>
+                  ) : (
+                    <SmartLink href="/iletisim" className="btn btn-primary btn-full">
+                      Bizimle iletişime geçin
+                      <ArrowRight size={15} strokeWidth={2.1} />
+                    </SmartLink>
+                  )}
+                  {svc.from !== null && <p className="sp-note">Tutarlar temsilidir; nihai teklif evraklara göre netleşir.</p>}
                 </aside>
               </FadeUp>
             </div>

@@ -11,8 +11,9 @@ export type ServiceSlug =
   | "muhasebe"
   | "banka-hesabi"
   | "oturum-vize"
-  | "hukuki-danismanlik"
-  | "pazar-arastirmasi";
+  | "vergi"
+  | "kurumsal-danismanlik"
+  | "aml-uyum";
 
 export type Service = {
   slug: ServiceSlug;
@@ -139,11 +140,68 @@ function visa(c: Country): Service | null {
    Slug, sayfa şablonu, menü hücresi, ana sayfa kartı ve zincir halkası
    birlikte gitti (brand.ts · CHAIN). */
 
-/* 06.10.2026 · HUKUKİ DANIŞMANLIK VE PAZAR ARAŞTIRMASI İPTAL. Burak (Murat
-   Bey'in hizmet tablosu üzerine): "hukuki danışmanlık ve pazar araştırması
-   iptal." 22.09'da yalnız adlarıyla, sönük düğme olarak eklenmişlerdi
-   (sayfaları hiç açılmadı). İki üretici fonksiyon silindi; slug'lar tipte
-   duruyor ki onlara anahtarlı ikon ve adres tabloları bozulmasın. */
+/* 07.10.2026 · ALTI ANA BAŞLIK. Murat Bey'in hizmet tablosu (Burak iletti):
+   üç ülkede de aynı altı uzmanlık var; Dubai'de ek olarak vize.
+     Muhasebe ve finansal raporlama        → muhasebe (vardı)
+     Vergi danışmanlığı ve uyum            → vergi (YENİ)
+     Kurumsal danışmanlık                  → kurumsal-danismanlik (YENİ)
+     Şirket kuruluşu ve kurumsal hizmetler → sirket-kurulusu (vardı)
+     Banka ve iş desteği                   → banka-hesabi (vardı)
+     AML ve mevzuat uyumu                  → aml-uyum (YENİ)
+   "Hukuki danışmanlık" ve "Pazar araştırması" aynı gün iptal edildi
+   (22.09'da yalnız adlarıyla, sönük düğme olarak eklenmişlerdi).
+
+   ÜÇ YENİ HİZMETİN İÇERİĞİ. Kapsam maddeleri Murat Bey'in aynı sohbetteki
+   ülke ülke alt hizmet listesinden; fiyat, süre ve hariç kalem YAZILMADI
+   (bilinmiyor, uydurulmuyor): `from: null`, kalem listesi boş, sayfa
+   "teklife bağlı" diyor. Sohbetin 23 satırlık uzun tablosu hatalı çıktığı
+   için (KKTC'de vize, Dubai'de bordro) oradan bir şey alınmadı.
+   SWAP:ALTI_HIZMET_KAPSAM · Murat Bey doğrulayacak. */
+type Yeni = { slug: ServiceSlug; title: string; line: string; kapsam: Record<Country, string[]> };
+const YENI: Yeni[] = [
+  {
+    slug: "vergi",
+    title: "Vergi danışmanlığı",
+    line: "Vergi kaydı, beyan ve planlama; mevzuata uygun, tek ekipten.",
+    kapsam: {
+      dubai: ["Kurumlar vergisi kaydı ve beyanı", "KDV kaydı ve beyanı", "Vergi planlaması ve danışmanlık"],
+      ingiltere: ["Corporation Tax beyanı", "VAT kaydı ve beyanı", "Vergi planlaması ve danışmanlık"],
+      kktc: ["Vergi beyannameleri", "KDV", "Vergi yapılandırması"],
+    },
+  },
+  {
+    slug: "kurumsal-danismanlik",
+    title: "Kurumsal danışmanlık",
+    line: "Şirket yapılandırması, pazara giriş ve iş danışmanlığı.",
+    kapsam: {
+      dubai: ["Şirket yapılandırması", "Pazara giriş", "İş danışmanlığı"],
+      ingiltere: ["İngiltere pazarına giriş", "Şirket yapılandırması", "Uluslararası iş danışmanlığı"],
+      kktc: ["Vergi ve şirket yapılandırması", "Uluslararası iş yapılandırması", "Yatırım ve iş danışmanlığı"],
+    },
+  },
+  {
+    slug: "aml-uyum",
+    title: "AML ve mevzuat uyumu",
+    line: "Kara para önleme, gerçek faydalanıcı bildirimi ve mevzuat uyumu.",
+    kapsam: {
+      dubai: ["AML uyumu", "Gerçek faydalanıcı (UBO) bildirimi", "goAML kaydı ve desteği"],
+      ingiltere: ["Gerçek faydalanıcı (PSC) kaydı", "Companies House uyumu", "Mevzuat desteği"],
+      kktc: ["Kurumsal uyum", "Gerçek faydalanıcı (UBO) bildirimi", "Mevzuat gereklilikleri"],
+    },
+  },
+];
+const yeni = (c: Country): Service[] =>
+  YENI.map((y) => ({
+    slug: y.slug,
+    title: y.title,
+    line: y.line,
+    from: null,
+    unit: "teklife bağlı",
+    duration: "kapsama göre",
+    includes: y.kapsam[c],
+    excludes: [],
+    lines: [],
+  }));
 
 export function servicesFor(c: Country): Service[] {
   return [
@@ -151,6 +209,7 @@ export function servicesFor(c: Country): Service[] {
     accounting(c),
     banking(c),
     visa(c),
+    ...yeni(c),
   ].filter(Boolean) as Service[];
 }
 

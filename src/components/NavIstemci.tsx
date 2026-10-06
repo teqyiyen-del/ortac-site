@@ -9,7 +9,6 @@ import {
   Briefcase,
   Building2,
   CalendarCheck,
-  ChartNoAxesCombined,
   ChevronDown,
   ChevronRight,
   Compass,
@@ -23,6 +22,8 @@ import {
   Scale3d,
   Wrench,
   type LucideIcon,
+  Percent,
+  ShieldCheck,
 } from "lucide-react";
 
 import Logo from "@/components/shared/Logo";
@@ -148,8 +149,9 @@ export const SVC_ICON: Record<ServiceSlug, LucideIcon> = {
   muhasebe: CalendarCheck,
   "banka-hesabi": Landmark,
   "oturum-vize": IdCard,
-  "hukuki-danismanlik": Scale,
-  "pazar-arastirmasi": ChartNoAxesCombined,
+  vergi: Percent,
+  "kurumsal-danismanlik": Handshake,
+  "aml-uyum": ShieldCheck,
 };
 
 /* Kartın alt satırı. service.line tam bir cümle ("Lisans sınıfının seçilmesi,

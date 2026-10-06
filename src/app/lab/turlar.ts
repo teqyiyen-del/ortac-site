@@ -126,9 +126,9 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/dubai-hero-kart",
-    t: "Dubai girişi · aşama kartı",
-    n: "K1 · K2 · K3",
-    l: "Fotoğrafın üstündeki aşama kartı için üç aday: çizim öne çıkıyor, başlık küçülüyor",
+    t: "Dubai girişi · fotoğrafın üstü",
+    n: "F1 · F2 · F3",
+    l: "İkinci tur: aşama anlatmayan üç aday (rozetler, lisans kartı, sade); ilk tur K1-K3 elendi",
     durum: "suruyor",
   },
   {

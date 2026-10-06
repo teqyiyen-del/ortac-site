@@ -265,6 +265,12 @@ const STATIC_LIVE = [
      docs/teyit-listesi.md'de; KKTC fiyat paneli hâlâ eski temsilî rakamlarla
      (üç paket turu gelecek). KKTC'nin hizmet alt sayfaları kapalı kalıyor. */
   "/dubai/oturum-vize",
+  /* 07.10.2026 · altı ana başlığın üç yenisi (services.ts · YENI). Dubai'de
+     açık; genel hizmet şablonunda, fiyatsız ("teklife bağlı"). İngiltere ve
+     KKTC'nin hizmet alt sayfaları öteki hizmetler gibi kapalı. */
+  "/dubai/vergi",
+  "/dubai/kurumsal-danismanlik",
+  "/dubai/aml-uyum",
   "/kktc",
   /* İngiltere kuruluş — 23.09.2026. Burak: "açabilirsin sayfayı." Not:
      "ortaç İngiltere şirket kuruluş tarafına çok odaklanmıyor … prestij

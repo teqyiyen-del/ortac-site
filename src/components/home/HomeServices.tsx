@@ -2,16 +2,14 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
-import { ArrowRight, ChevronDown, Globe } from "lucide-react";
+import { ArrowRight, ChevronDown, Globe, Handshake, Landmark, Percent, ShieldCheck, type LucideIcon } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
 import {
   SceneAccounting,
-  SceneBanking,
   SceneFormation,
-  SceneVisa,
 } from "@/components/home/ServiceScenes";
 import { CHAIN } from "@/lib/brand";
 import { COUNTRY_SLUGS, serviceHref, servicesFor, type ServiceSlug } from "@/lib/services";
@@ -44,26 +42,30 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
    7+5 üstte, 5+7 altta (ayna) — bento hiçbir zaman delikle kapanmıyor.
    23.09.2026'ya kadar alt satır 4+4+4'tü; uyum kartı hizmetle birlikte
    kalktı (services.ts), iki kart kaldı. */
+/* 07.10.2026 · ALTI UZMANLIK. Burak (Murat Bey'in tablosu üzerine): "ana
+   sayfadaki hizmetleri de altı yapabiliriz. Şirket kuruluşuyla muhasebe
+   yine ana karakterler olsun; altta dört tane, üst ikili alt dörtlü."
+   Üst sıra iki büyük kart (sahneli, 7+5); alt sıra dört küçük kart
+   (ikonlu, sahnesiz). Oturum kartı ana sayfadan çıktı: vize altı başlığın
+   dışında, yalnız Dubai'de (ülke sayfasında ve menüde duruyor). Başlıklar
+   ve ülke listesi services.ts'ten; küçük kartların tek satırı burada. */
 const CARDS: {
   key: string;
   slug: ServiceSlug;
-  span: 7 | 5 | 4;
+  span: 7 | 5;
   Scene: () => React.ReactElement;
   /** kartın başlığı CHAIN'deki addan farklıysa */
   ad?: string;
 }[] = [
-  /* 03.10.2026 · Burak: "hizmet kartlarında muhasebeyi öne almaya gerek yok,
-     sadece kuruluşun yanına alabilirsin. Ve kuruluşa niye 'kuruluş'
-     diyorsun? 'Şirket kuruluşu' diyebiliriz; hizmetlerin içinde diyorum."
-     Muhasebe ile banka yer değiştirdi (genişlikler aynı: 7+5 / 5+7). Ad
-     yalnız BU kartta değişiyor; CHAIN'deki "Kuruluş" döngü bölümünde,
-     iş ortaklığı ve hakkımızda sayfalarında da kullanılıyor. */
   { key: "kurulus", slug: "sirket-kurulusu", span: 7, Scene: SceneFormation, ad: "Şirket kuruluşu" },
-  { key: "muhasebe", slug: "muhasebe", span: 5, Scene: SceneAccounting },
-  { key: "banka", slug: "banka-hesabi", span: 5, Scene: SceneBanking },
-  { key: "oturum", slug: "oturum-vize", span: 7, Scene: SceneVisa },
+  { key: "muhasebe", slug: "muhasebe", span: 5, Scene: SceneAccounting, ad: "Muhasebe ve finansal raporlama" },
 ];
-
+const KUCUK: { slug: ServiceSlug; Icon: LucideIcon; ad: string; satir: string }[] = [
+  { slug: "vergi", Icon: Percent, ad: "Vergi danışmanlığı", satir: "Vergi kaydı, beyan ve planlama" },
+  { slug: "kurumsal-danismanlik", Icon: Handshake, ad: "Kurumsal danışmanlık", satir: "Yapılandırma ve pazara giriş" },
+  { slug: "banka-hesabi", Icon: Landmark, ad: "Banka ve iş desteği", satir: "Hesap başvurusu ve tahsilat kanalları" },
+  { slug: "aml-uyum", Icon: ShieldCheck, ad: "AML ve uyum", satir: "Kara para önleme ve mevzuat uyumu" },
+];
 const byKey = Object.fromEntries(CHAIN.map((c) => [c.key, c]));
 
 /** hizmetin gerçekten verildiği ülkeler — tek kaynak servicesFor() */
@@ -314,7 +316,7 @@ export default function HomeServices() {
           />
           <FadeUp delay={0.2}>
             <p className="sec-lead">
-              Muhasebe ve vergiden şirket kuruluşuna, bankadan oturuma; hepsi tek ekipte.
+              Muhasebe ve vergiden şirket kuruluşuna, bankadan uyuma; hepsi tek ekipte.
               Kapsam ülkeye göre değiştiği için her alanda ülkeyi siz seçiyorsunuz.
             </p>
           </FadeUp>
@@ -345,6 +347,20 @@ export default function HomeServices() {
               </FadeUp>
             );
           })}
+          {KUCUK.map((k, i) => (
+            <FadeUp key={k.slug} delay={0.24 + i * 0.05} y={18} className="hx-cell hx-c3">
+              <article className="hx-card hx-kucuk">
+                <span className="hx-kucuk-ic" aria-hidden="true">
+                  <k.Icon size={20} strokeWidth={1.9} />
+                </span>
+                <div className="hx-body">
+                  <h3 className="hx-t">{k.ad}</h3>
+                  <p className="hx-l">{k.satir}</p>
+                </div>
+                <CountryOut label={k.ad} slug={k.slug} list={countriesFor(k.slug)} />
+              </article>
+            </FadeUp>
+          ))}
         </div>
       </div>
     </section>

@@ -7,7 +7,6 @@ import {
   AtSign,
   Building2,
   CalendarCheck,
-  ChartNoAxesCombined,
   Check,
   Compass,
   ExternalLink,
@@ -18,9 +17,11 @@ import {
   MessageCircle,
   Minus,
   Phone,
-  Scale,
   Send,
   type LucideIcon,
+  Percent,
+  Handshake,
+  ShieldCheck,
 } from "lucide-react";
 
 import AskCta from "@/components/shared/AskCta";
@@ -668,8 +669,9 @@ const TOPIC_ICON: Record<ServiceSlug, LucideIcon> = {
   muhasebe: CalendarCheck,
   "banka-hesabi": Landmark,
   "oturum-vize": IdCard,
-  "hukuki-danismanlik": Scale,
-  "pazar-arastirmasi": ChartNoAxesCombined,
+  vergi: Percent,
+  "kurumsal-danismanlik": Handshake,
+  "aml-uyum": ShieldCheck,
 };
 
 /* "Emin değilim" için pusula: sitede bu cevabın ikonu ZATEN Compass —
