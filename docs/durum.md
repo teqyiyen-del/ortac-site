@@ -4955,6 +4955,16 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (5) · lab: VIP düzeni üç aday, hero G3 karma
+
+- /lab/dubai-vip: V1 İki kart (önceki hava; sağ taraf beyaz kartta altı düz satır),
+  V2 Büyük rakam, V3 Gün gün; canlıdaki tek kart. Karar bekliyor.
+- /lab/dubai-hero-kart: G3 Karma eklendi (solda ticaret lisansı kartı, sağında üç
+  rozet). G1 ve G2 duruyor. Burak G2'ye yakın, karmayı görmek istedi.
+- AÇIK · bölüm zeminleri: Burak "genel olarak beyaz mı yapsak" diye sordu, emin değil.
+  Önerim: iki ton kalsın (beyaz + siyah), kırık beyaz yalnız kartların içinde; sayfa
+  genelinde bölüm zemini olarak kırık beyazı kaldırmak ayrı bir tur (site geneli).
+
 ## 07.10.2026 (4) · ana sayfa 3+3, VIP tek kart, özet kısa, hero üçüncü tur
 
 - Ana sayfa hizmetleri: altı kart AYNI kart, 3 + 3, hepsi sahneli (üç yeni sahne: vergi,

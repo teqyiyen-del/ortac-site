@@ -164,7 +164,75 @@ const VIP_KAPSAM: { Icon: LucideIcon; t: string }[] = [
   { Icon: CalendarCheck, t: "Randevular siz gelmeden hazır" },
 ];
 
-export function DubaiVip() {
+/* VIP DÜZEN ADAYLARI · /lab/dubai-vip (07.10.2026). Burak: "böyle daha okey
+   olmuş ama öncekindeki soldaki havayı da seviyordum … bunun için labda bir
+   şeyler denesene, üç tane farklı yön de, içimizde kalmasın."
+     tek    canlıdaki: tek gece kart, solda süre, sağda maddeler
+     iki    önceki hava: solda gece kart (süre + fiyat), sağda beyaz kartta
+            altı madde düz satır; kutular boş kalmıyor, iki kart aynı boy
+     rakam  büyük rakam: "5" ile "10-12" tipografik kıyas, altında maddeler
+     gun    gün gün: 12 noktalık iki sıra (standart, VIP), altında maddeler
+   Seçilen varsayılan olur, ötekiler silinir. */
+export type VipDuzen = "tek" | "iki" | "rakam" | "gun";
+
+function VipMaddeler() {
+  return (
+    <ul className="dbe-kapsam">
+      {VIP_KAPSAM.map(({ Icon, t }) => (
+        <li key={t}>
+          <span className="dbe-ic">
+            <Icon size={18} strokeWidth={1.9} aria-hidden="true" />
+          </span>
+          {t}
+        </li>
+      ))}
+    </ul>
+  );
+}
+function VipAlt() {
+  return (
+    <div className="dbe-vip-alt">
+      <span className="dbe-vip-fiyat">
+        <b>{money(VIP)}</b> tek seferlik
+      </span>
+      <SmartLink href="#fiyat" className="btn btn-primary">
+        Fiyata ekleyin
+        <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+      </SmartLink>
+    </div>
+  );
+}
+function VipRozet() {
+  return (
+    <span className="dbe-vip-rozet">
+      <Crown size={15} strokeWidth={2} aria-hidden="true" />
+      VIP
+    </span>
+  );
+}
+function VipCubuklar() {
+  return (
+    <>
+      <span className="dbe-sure-k">Dubai&apos;de geçireceğiniz süre</span>
+      <div className="dbe-cubuk" data-tip="standart">
+        <span className="dbe-cubuk-ad">Standart</span>
+        <span className="dbe-cubuk-ray">
+          <i />
+        </span>
+        <b>yaklaşık 10-12 iş günü</b>
+      </div>
+      <div className="dbe-cubuk" data-tip="vip">
+        <span className="dbe-cubuk-ad">VIP</span>
+        <span className="dbe-cubuk-ray">
+          <i />
+        </span>
+        <b>yaklaşık 5 iş günü</b>
+      </div>
+    </>
+  );
+}
+
+export function DubaiVip({ duzen = "tek" }: { duzen?: VipDuzen }) {
   return (
     <section id="vip" className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
@@ -185,6 +253,71 @@ export function DubaiVip() {
           </FadeUp>
         </div>
 
+        {duzen === "iki" && (
+          <FadeUp>
+            <div className="dbe-v2">
+              <div className="dbe-v2-sol">
+                <VipRozet />
+                <VipCubuklar />
+                <VipAlt />
+              </div>
+              <div className="dbe-v2-sag">
+                <span className="dbe-v2-k">VIP&apos;te neler var</span>
+                <VipMaddeler />
+              </div>
+            </div>
+          </FadeUp>
+        )}
+        {duzen === "rakam" && (
+          <FadeUp>
+            <div className="dbe-vip dbe-v3">
+              <div className="dbe-v3-ust">
+                <VipRozet />
+                <div className="dbe-v3-kiyas">
+                  <p data-tip="vip">
+                    <b>5</b>
+                    <span>iş günü · VIP</span>
+                  </p>
+                  <p data-tip="standart">
+                    <b>10-12</b>
+                    <span>iş günü · standart</span>
+                  </p>
+                </div>
+              </div>
+              <div className="dbe-vip-sag">
+                <VipMaddeler />
+              </div>
+              <VipAlt />
+            </div>
+          </FadeUp>
+        )}
+        {duzen === "gun" && (
+          <FadeUp>
+            <div className="dbe-vip">
+              <div className="dbe-v4-ust">
+                <VipRozet />
+                <span className="dbe-sure-k">Dubai&apos;de geçireceğiniz iş günleri</span>
+                {(["standart", "vip"] as const).map((tip) => (
+                  <div key={tip} className="dbe-v4-sira" data-tip={tip}>
+                    <span className="dbe-cubuk-ad">{tip === "vip" ? "VIP" : "Standart"}</span>
+                    <span className="dbe-v4-gunler" aria-hidden="true">
+                      {Array.from({ length: 12 }, (_, g) => (
+                        <i key={g} data-dolu={g < (tip === "vip" ? 5 : 12) || undefined} />
+                      ))}
+                    </span>
+                    <b>{tip === "vip" ? "yaklaşık 5" : "yaklaşık 10-12"}</b>
+                  </div>
+                ))}
+              </div>
+              <div className="dbe-vip-sag">
+                <VipMaddeler />
+              </div>
+              <VipAlt />
+            </div>
+          </FadeUp>
+        )}
+        {duzen === "tek" && (
+          <>
         {/* 07.10.2026 · TEK KART. İki sütunlu hâlde sağdaki altı kutu sol
             kartın boyuna gerilip boş kalıyordu (Burak: "box'un içi çok boş
             duruyor, dikey olarak çok boşluk var … VIP kısmına biraz kafa
@@ -240,6 +373,8 @@ export function DubaiVip() {
             </div>
           </div>
         </FadeUp>
+          </>
+        )}
       </div>
     </section>
   );

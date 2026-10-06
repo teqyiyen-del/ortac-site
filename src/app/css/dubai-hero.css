@@ -440,6 +440,46 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
   background: #5a9eef;
 }
 
+/* ---- g3 · Karma: solda lisans kartı, sağında üç rozet; aynı boy ---- */
+.dhr-karma {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: 8px;
+  align-items: stretch;
+}
+.dhr-karma .dhr-belge,
+.dhr-karma .dhr-rozetler {
+  position: static;
+  width: auto;
+}
+.dhr-karma .dhr-belge {
+  padding: 16px;
+}
+.dhr-karma .dhr-belge-ic {
+  height: 100%;
+  min-height: 0;
+}
+.dhr-karma .dhr-rozetler {
+  grid-auto-rows: 1fr;
+}
+.dhr-karma .dhr-rozetler > li {
+  font-size: 14px;
+}
+/* dar ekranda alt alta */
+@media (max-width: 479.5px) {
+  .dhr-karma {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dhr-karma .dhr-belge {
+    display: none;
+  }
+}
+
 @media (min-width: 1024px) {
   .dhr {
     padding: 136px 0 88px;

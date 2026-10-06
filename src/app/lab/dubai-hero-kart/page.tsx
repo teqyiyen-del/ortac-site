@@ -8,6 +8,7 @@ import { COUNTRY_CONTENT } from "@/lib/countryContent";
 export const metadata: Metadata = { title: "Dubai girişi · aşama kartı adayları | Ortac Global" };
 
 const ADAY: { k: DubaiKart; ad: string; kunye: string }[] = [
+  { k: "g3", ad: "G3 · Karma", kunye: "solda ticaret lisansı kartı, sağında üç rozet" },
   { k: "g1", ad: "G1 · Belgeler", kunye: "düz duran belge kartı; sırayla ticaret lisansı, Emirates ID, kurumsal hesap" },
   { k: "g2", ad: "G2 · Rozetler, derli", kunye: "üç olgu sol altta hizalı tek sütunda" },
   { k: "s6", ad: "Canlıdaki", kunye: "aşama kartı: çizim, ad, rozet ve numaralı çubuk" },

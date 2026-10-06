@@ -68,7 +68,11 @@ const ASAMA = STAGES.map((s, i) => ({
    5-6 günde kuruluş (teyit · Dubai kuruluş 1), 375.000 AED'ye kadar %0
    (teyit · Dubai kuruluş 3). Banka kartı sonuç ima etmiyor: "başvuru
    dosyası" diyor, "hesap açıldı" demiyor. */
-export type DubaiKart = "s6" | "g1" | "g2";
+/* 4. tur (07.10.2026) · g3 Karma. Burak: "G2 bir tık daha iyi hissettirdi …
+   G2 ile G1'i kombine edip bir şey yapsak? G1'den ticaret lisansını çekeriz,
+   yani işin sonunda buna sahip oluyorsun gibi; G2'den de rozetler." Solda
+   sabit ticaret lisansı kartı, sağında üç rozet; ikisi aynı boyda. */
+export type DubaiKart = "s6" | "g1" | "g2" | "g3";
 
 const BELGE = [
   { k: "lisans", ad: "Ticaret lisansı", Icon: BadgeCheck, cipler: ["Serbest bölge", "Dubai"] },
@@ -96,6 +100,54 @@ function Kart({ tip, i, git, reduce }: { tip: DubaiKart; i: number; git: (k: num
     exit: reduce ? undefined : { opacity: 0, y: -6 },
     transition: { duration: 0.28, ease: EASE },
   };
+
+  if (tip === "g3")
+    return (
+      <div className="dhr-karma">
+        <div className="dhr-belge" aria-hidden="true">
+          <div className="dhr-belge-ic">
+            <div className="dhr-belge-ust">
+              <span className="dhr-belge-t">Ticaret lisansı</span>
+              <span className="dhr-belge-muhur">
+                <BadgeCheck size={20} strokeWidth={2} />
+              </span>
+            </div>
+            <span className="dhr-belge-ad" />
+            <span className="dhr-belge-s" />
+            <span className="dhr-belge-s" data-kisa="" />
+            <div className="dhr-belge-alt">
+              <span>Serbest bölge</span>
+            </div>
+          </div>
+        </div>
+      <ul className="dhr-rozetler" aria-label="Dubai'de şirket: üç olgu">
+          <li>
+            <span className="dhr-rozet-ic" aria-hidden="true">
+              <BadgeCheck size={18} strokeWidth={2} />
+            </span>
+            <span>
+              <b>%100</b> yabancı sahiplik
+            </span>
+          </li>
+          <li>
+            <span className="dhr-rozet-ic" aria-hidden="true">
+              <Timer size={18} strokeWidth={2} />
+            </span>
+            <span>
+              <b>5-6 günde</b> kuruluş
+            </span>
+          </li>
+          <li>
+            <span className="dhr-rozet-ic" data-ton="amber" aria-hidden="true">
+              <Percent size={18} strokeWidth={2} />
+            </span>
+            <span>
+              375.000 AED&apos;ye kadar <b>%0</b>
+            </span>
+          </li>
+        </ul>
+      </div>
+    );
 
   if (tip === "g2")
     return (
