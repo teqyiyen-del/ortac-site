@@ -75,6 +75,21 @@
    geçiyor, sözleşme, belgeler ve ödeme orada. Panelin adresi SWAP (elimizde
    yok); panelin marka adı sitede geçmez (tuzaklar 7). Ödemeli ve "kabul"
    akışlarının kodu duruyor, lab'dan bağlanmıyor.
+   ------------------------------------------------------------ 06.10.2026 (2)
+   Burak akışı gezdi: "Niye paket seçiyoruz? Paket yok … Dubai şirket
+   kısmında bir fiyatlar yaptık ya, oraya benzer bir şey koyman lazım, ya da
+   orayı koyman lazım direkt." `ozet` akışında:
+     · 2. adım paket değil, fiyat panelinin KENDİ formu (DubaiSecimFormu):
+       serbest bölge, lisans yılı, vize, VIP, yıllık muhasebe; tutar altta.
+     · Fiyat panelinden gelen seçimle açılırsa (`onceden`) ülke ve seçim
+       dolu, akış ikinci adımdan başlıyor. Menüden gelince baştan.
+     · Bilgiler: dört alan; e-postanın altındaki açıklama ve SWAP notu
+       kalktı; altına KVKK aydınlatma satırı (metnin adresi SWAP).
+     · Özet: A4 görünümü kaldı ("böyle daha iyi"), "PDF olarak kaydet"
+       kalktı ("hâlâ teklif gibi oluyor").
+     · WhatsApp düğmesi ortada değil, ana düğmenin hemen yanında.
+   Akış /basla sayfasına bağlandı (app/basla/page.tsx); hiçbir bilgi bir
+   yere gönderilmiyor, panel adresi ve WhatsApp numarası hâlâ SWAP.
    ========================================================================= */
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -112,6 +127,11 @@ import {
 } from "@/lib/store";
 
 /* ------------------------------------------------------------------ TİPLER */
+
+import { DubaiSecimFormu } from "@/components/country/DubaiFiyat";
+import { DUBAI_VARSAYILAN, dubaiSatirlar, dubaiToplam, type DubaiSecim } from "@/lib/dubaiFiyat";
+import "@/app/css/lab-satis.css";
+import "@/app/css/dubai-ek.css";
 
 type Kisi = { ad: string; soyad: string; eposta: string; telefon: string };
 
@@ -174,9 +194,12 @@ export function SatisPenceresi({
   akis,
   sunum,
   onKapat,
+  onceden,
 }: {
   acik: boolean;
   akis: Akis;
+  /** fiyat panelinden gelen seçim: ülke ve seçim dolu, akış 2. adımdan açılır */
+  onceden?: DubaiSecim | null;
   /** Sunum modu: adımlar arasında bilgi girmeden geçilir (bkz. ornekDoldur). */
   sunum: boolean;
   onKapat: () => void;
@@ -186,8 +209,9 @@ export function SatisPenceresi({
   /* Pencere her açılışta YENİ bir `key` ile kuruluyor (SatisAkisiDemo ·
      oturum), yani bu başlatıcılar her açılışta yeniden çalışıyor; kapatıp
      yeniden açan kişi yarım bir akışa değil başa düşüyor. */
-  const [adim, setAdim] = useState(0);
-  const [ulke, setUlke] = useState<Country | null>(null);
+  const [adim, setAdim] = useState(onceden ? 1 : 0);
+  const [ulke, setUlke] = useState<Country | null>(onceden ? "dubai" : null);
+  const [secim, setSecim] = useState<DubaiSecim>(onceden ?? DUBAI_VARSAYILAN);
   const [tier, setTier] = useState<Tier | null>(null);
   const [kisi, setKisi] = useState<Kisi>({ ad: "", soyad: "", eposta: "", telefon: "" });
   const [dokundu, setDokundu] = useState(false);
@@ -213,7 +237,7 @@ export function SatisPenceresi({
   /* ödemesiz akışta son adım teklif: dört adım */
   const ozetM = akis === "ozet";
   const adimlar = ozetM
-    ? [...ADIMLAR.slice(0, 3), { ...ADIMLAR[3], ad: "Özet" }]
+    ? [ADIMLAR[0], { ...ADIMLAR[1], ad: "Kurulum" }, ADIMLAR[2], { ...ADIMLAR[3], ad: "Özet" }]
     : akis === "kabul"
       ? ADIMLAR.slice(0, 4)
       : ADIMLAR;
@@ -224,7 +248,7 @@ export function SatisPenceresi({
 
   const devamOlur =
     (adim === 0 && ulke !== null) ||
-    (adim === 1 && sonuc !== null) ||
+    (adim === 1 && (ozetM || sonuc !== null)) ||
     (adim === 2 && kisiTamam) ||
     adim === 3;
 
@@ -237,9 +261,9 @@ export function SatisPenceresi({
     const tarih = new Date();
     const yy = String(tarih.getFullYear()).slice(-2);
     const mm = String(tarih.getMonth() + 1).padStart(2, "0");
-    const kod = ozet([kisi.eposta, kisi.ad, kisi.soyad, ulke, tier].join("|"));
+    const kod = ozet([kisi.eposta, kisi.ad, kisi.soyad, ulke, tier, JSON.stringify(secim)].join("|"));
     return `ORT-DXB-${yy}${mm}-${kod}`;
-  }, [adim, ulke, tier, kisi]);
+  }, [adim, ulke, tier, kisi, secim]);
 
   /* ------------------------------------------------------- SUNUM MODU
      Müşteri: "içinde rahatça dolaşabilmek için bilgi girmesem de devam
@@ -386,7 +410,19 @@ export function SatisPenceresi({
               {/* ================================================= 2 · PAKET
                   Üç sabit paket; özelleştirme yok (05.10.2026). Kapsam kartın
                   içinde, tutar paketin kendi fiyatı. */}
-              {adim === 1 && ulke && (
+              {adim === 1 && ulke && ozetM && (
+                <section aria-labelledby="sat-a1o">
+                  <h2 id="sat-a1o" className="sat-soru">Kurulumunuzu seçin</h2>
+                  <div className="sat-secim">
+                    <DubaiSecimFormu secim={secim} onSecim={setSecim} />
+                  </div>
+                  <p className="sat-secim-t">
+                    <span>Tahmini tutar · KDV hariç</span>
+                    <b>{money(dubaiToplam(secim))}</b>
+                  </p>
+                </section>
+              )}
+              {adim === 1 && ulke && !ozetM && (
                 <section aria-labelledby="sat-a1">
                   <h2 id="sat-a1" className="sat-soru">Paketinizi seçin</h2>
                   <div className="sat-tierler sat-uc" role="radiogroup" aria-labelledby="sat-a1">
@@ -448,7 +484,7 @@ export function SatisPenceresi({
                       onDeger={(v) => setKisi((k) => ({ ...k, eposta: v }))}
                       hata={dokundu && !epostaGecerli ? "Geçerli bir e-posta adresi yazın" : ""}
                       autoComplete="email"
-                      yardim={ozetM ? "Özetiniz ve panel bilgileri bu adrese gidecek." : "Teklif ve ödeme bilgisi bu adrese gidecek."}
+                      yardim={ozetM ? undefined : "Teklif ve ödeme bilgisi bu adrese gidecek."}
                     />
                     <Alan
                       etiket="Telefon"
@@ -459,15 +495,24 @@ export function SatisPenceresi({
                       autoComplete="tel"
                     />
                   </div>
-                  <p className="sat-swap">
-                    <b>SWAP</b> Alanların kesin listesi müşteriden bekleniyor (&quot;neler alacağımızı
-                    teyit ederiz&quot;). Demo için ad · soyad · e-posta · telefon.
-                  </p>
+                  {ozetM ? (
+                    /* KVKK aydınlatma satırı. Metnin sayfası henüz yok
+                       (SWAP:KVKK); bağlantı o gelince eklenecek. */
+                    <p className="sat-kvkk">
+                      Bilgileriniz yalnızca kuruluş sürecinizi yürütmek için kullanılır; devam ederek KVKK aydınlatma
+                      metnini kabul etmiş olursunuz.
+                    </p>
+                  ) : (
+                    <p className="sat-swap">
+                      <b>SWAP</b> Alanların kesin listesi müşteriden bekleniyor (&quot;neler alacağımızı
+                      teyit ederiz&quot;). Demo için ad · soyad · e-posta · telefon.
+                    </p>
+                  )}
                 </section>
               )}
 
               {/* ================================================ 4 · TEKLİF */}
-              {adim === 3 && ulke && tier && sonuc && (
+              {adim === 3 && ulke && (ozetM || (tier && sonuc)) && (
                 <section aria-labelledby="sat-a3">
                   <h2 id="sat-a3" className="sat-soru sat-yazdirma-yok">{ozetM ? "Kurulum özetiniz" : "Teklifiniz hazır"}</h2>
 
@@ -512,51 +557,81 @@ export function SatisPenceresi({
                       </div>
                     </div>
 
-                    <div className="sat-belge-paket">
-                      <p className="sat-belge-k">{TIER_META[tier].name} paketinin kapsamı</p>
-                      <ul>
-                        {kapsam(tier).map((k, n) => (
-                          <li key={k}>
-                            <Check size={14} strokeWidth={2.4} aria-hidden="true" />
-                            {n === 0 ? `${k} · ${FACTS[ulke].days}` : k}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <table className="sat-belge-tablo">
-                      <thead>
-                        <tr>
-                          <th scope="col">Kalem</th>
-                          <th scope="col">Tutar</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {sonuc.lines.map((l) => (
-                          <tr key={l.label}>
-                            <td>{l.label}</td>
-                            <td>{money(l.amount)}</td>
+                    {ozetM ? (
+                      <table className="sat-belge-tablo">
+                        <thead>
+                          <tr>
+                            <th scope="col">Kalem</th>
+                            <th scope="col">Tutar</th>
                           </tr>
-                        ))}
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <th scope="row">Toplam</th>
-                          <td>{money(sonuc.total)}</td>
-                        </tr>
-                      </tfoot>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {dubaiSatirlar(secim).map((l) => (
+                            <tr key={l.ad}>
+                              <td>{l.ad}</td>
+                              <td>{money(l.tutar)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <th scope="row">Toplam · KDV hariç</th>
+                            <td>{money(dubaiToplam(secim))}</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    ) : tier && sonuc ? (
+                      <>
+                    <div className="sat-belge-paket">
+                          <p className="sat-belge-k">{TIER_META[tier].name} paketinin kapsamı</p>
+                          <ul>
+                            {kapsam(tier).map((k, n) => (
+                              <li key={k}>
+                                <Check size={14} strokeWidth={2.4} aria-hidden="true" />
+                                {n === 0 ? `${k} · ${FACTS[ulke].days}` : k}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+    
+                        <table className="sat-belge-tablo">
+                          <thead>
+                            <tr>
+                              <th scope="col">Kalem</th>
+                              <th scope="col">Tutar</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {sonuc.lines.map((l) => (
+                              <tr key={l.label}>
+                                <td>{l.label}</td>
+                                <td>{money(l.amount)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <th scope="row">Toplam</th>
+                              <td>{money(sonuc.total)}</td>
+                            </tr>
+                          </tfoot>
+                        </table>
+    
+                      </>
+                    ) : null}
 
                     <p className="sat-belge-dip">{TEMSILI}</p>
                   </article>
                   </A4Sayfa>
 
+                  {!ozetM && (
                   <div className="sat-teklif-eylem sat-yazdirma-yok">
                     <button type="button" className="btn btn-line btn-sm" onClick={() => window.print()}>
                       <Printer size={15} strokeWidth={2} aria-hidden="true" />
                       PDF olarak kaydet
                     </button>
                   </div>
+                  )}
                   </div>
                 </section>
               )}
@@ -661,6 +736,7 @@ export function SatisPenceresi({
               <span />
             )}
 
+            <div className="sat-alt-sag">
             <Yardim />
 
             {adim < 3 && (
@@ -699,6 +775,7 @@ export function SatisPenceresi({
                 <span className="sat-demo">demo</span>
               </button>
             )}
+            </div>
           </footer>
         )}
       </div>

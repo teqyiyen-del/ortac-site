@@ -53,7 +53,144 @@ const ASAMA = STAGES.map((s, i) => ({
   anahtar: s.key,
 }));
 
-export default function DubaiHero({ lead }: { lead: string }) {
+/* KART ADAYLARI · /lab/dubai-hero-kart (06.10.2026). Burak: "görselin
+   üstündeki aşamalarda daha farklı neler yapabiliriz? Aşamaları ve
+   başlıkları bu kadar büyük göstermek yerine … soldaki küçük kutunun içinde
+   oynayan şeyler var ya, belki onlara odaklanan bir şey. Birkaç bir şey
+   deneyebilirsin."
+     s6  canlıdaki: çizim + büyük ad + rozet + numaralı çubuk
+     k1  Sahne: çizim büyüdü, kartın tamamı o; ad küçük bir satır, noktalar
+     k2  Şerit: beş çizim yan yana küçük karelerde; sıradaki parlak, adı altında
+     k3  Köşe: sol altta küçük bir hap; çizim, ad ve ince ilerleme çizgisi
+   Seçilen aday varsayılan olur, ötekiler silinir. */
+export type DubaiKart = "s6" | "k1" | "k2" | "k3";
+
+function Cizim({ a, acik = true }: { a: (typeof ASAMA)[number]; acik?: boolean }) {
+  /* çizimin animasyonu hero.css'te `.dhs .hkc-scene[data-on]` kapısına
+     bağlı; sarmalayıcı o iki sınıfı taşıyor. Şeritte sıradaki dışındakiler
+     de görünsün diye sahne hep "açık", hareket yalnız sıradakinde. */
+  return (
+    <div className="dhr-cizim dhs" data-dur={!acik || undefined} aria-hidden="true">
+      <div className="hkc-scene" data-scene={a.anahtar} data-on="true">
+        {a.cizim}
+      </div>
+    </div>
+  );
+}
+
+function Kart({ tip, i, git, reduce }: { tip: DubaiKart; i: number; git: (k: number) => void; reduce: boolean }) {
+  const a = ASAMA[i];
+  const gecis = {
+    initial: reduce ? false : ({ opacity: 0, y: 8 } as const),
+    animate: { opacity: 1, y: 0 },
+    exit: reduce ? undefined : { opacity: 0, y: -6 },
+    transition: { duration: 0.28, ease: EASE },
+  };
+
+  if (tip === "k2")
+    return (
+      <div className="dhr-serit" role="group" aria-label="Aşamalar">
+        {ASAMA.map((x, k) => (
+          <button
+            key={x.no}
+            type="button"
+            className="dhr-serit-b"
+            data-on={k === i || undefined}
+            aria-current={k === i ? "step" : undefined}
+            aria-label={`${x.ad}: ${x.satir}`}
+            onClick={() => git(k)}
+          >
+            <Cizim a={x} acik={k === i} />
+            <span className="dhr-serit-ad" aria-hidden="true">
+              {x.ad}
+            </span>
+          </button>
+        ))}
+      </div>
+    );
+
+  if (tip === "k3")
+    return (
+      <div className="dhr-kose">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={a.no} className="dhr-kose-ust" {...gecis}>
+            <Cizim a={a} />
+            <p className="dhr-kose-m">
+              <span>
+                {a.no} / {String(ASAMA.length).padStart(2, "0")}
+              </span>
+              <b>{a.ad}</b>
+            </p>
+          </motion.div>
+        </AnimatePresence>
+        <span className="dhr-kose-ray" aria-hidden="true">
+          <i style={{ width: `${((i + 1) / ASAMA.length) * 100}%` }} />
+        </span>
+      </div>
+    );
+
+  if (tip === "k1")
+    return (
+      <div className="dhr-sahne">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={a.no} {...gecis}>
+            <Cizim a={a} />
+            <p className="dhr-sahne-m">
+              <b>{a.ad}</b>
+              <span className="dhr-kim" data-ton={a.kim.ton}>
+                {a.kim.ad}
+              </span>
+            </p>
+          </motion.div>
+        </AnimatePresence>
+        <div className="dhr-nokta" role="group" aria-label="Aşamalar">
+          {ASAMA.map((x, k) => (
+            <button
+              key={x.no}
+              type="button"
+              data-on={k === i || undefined}
+              aria-current={k === i ? "step" : undefined}
+              aria-label={`${x.ad}: ${x.satir}`}
+              onClick={() => git(k)}
+            />
+          ))}
+        </div>
+      </div>
+    );
+
+  return (
+    <div className="dhr-kart">
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div key={a.no} className="dhr-kart-ust" {...gecis}>
+          <Cizim a={a} />
+          <p className="dhr-kart-m">
+            <b>{a.ad}</b>
+            <span className="dhr-kim" data-ton={a.kim.ton}>
+              {a.kim.ad}
+            </span>
+          </p>
+        </motion.div>
+      </AnimatePresence>
+      <div className="dhr-cubuk" role="group" aria-label="Aşamalar">
+        {ASAMA.map((x, k) => (
+          <button
+            key={x.no}
+            type="button"
+            aria-current={k === i ? "step" : undefined}
+            aria-label={`${x.ad}: ${x.satir}`}
+            data-durum={k === i ? "on" : k < i ? "gecti" : undefined}
+            onClick={() => git(k)}
+          >
+            <i aria-hidden="true" />
+            <span aria-hidden="true">{x.no}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function DubaiHero({ lead, kart = "s6" }: { lead: string; kart?: DubaiKart }) {
   const reduce = useReducedMotion();
   const kok = useRef<HTMLElement>(null);
   const gorunur = useInView(kok, { amount: 0.25 });
@@ -71,7 +208,10 @@ export default function DubaiHero({ lead }: { lead: string }) {
     return () => window.clearTimeout(t);
   }, [dur]);
 
-  const a = ASAMA[i];
+  const git = (k: number) => {
+    setI(k);
+    setDur((d) => d + 1);
+  };
   return (
     <section ref={kok} className="dhr">
       <div className="container-o dhr-grid">
@@ -126,50 +266,7 @@ export default function DubaiHero({ lead }: { lead: string }) {
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="dhr-img"
           />
-          <div className="dhr-kart">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={a.no}
-                className="dhr-kart-ust"
-                initial={reduce ? false : { opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? undefined : { opacity: 0, y: -6 }}
-                transition={{ duration: 0.28, ease: EASE }}
-              >
-                {/* çizimin animasyonu hero.css'te `.dhs .hkc-scene[data-on]`
-                    kapısına bağlı; sarmalayıcı o iki sınıfı taşıyor */}
-                <div className="dhr-cizim dhs" aria-hidden="true">
-                  <div className="hkc-scene" data-scene={a.anahtar} data-on="true">
-                    {a.cizim}
-                  </div>
-                </div>
-                <p className="dhr-kart-m">
-                  <b>{a.ad}</b>
-                  <span className="dhr-kim" data-ton={a.kim.ton}>
-                    {a.kim.ad}
-                  </span>
-                </p>
-              </motion.div>
-            </AnimatePresence>
-            <div className="dhr-cubuk" role="group" aria-label="Aşamalar">
-              {ASAMA.map((x, k) => (
-                <button
-                  key={x.no}
-                  type="button"
-                  aria-current={k === i ? "step" : undefined}
-                  aria-label={`${x.ad}: ${x.satir}`}
-                  data-durum={k === i ? "on" : k < i ? "gecti" : undefined}
-                  onClick={() => {
-                    setI(k);
-                    setDur((d) => d + 1);
-                  }}
-                >
-                  <i aria-hidden="true" />
-                  <span aria-hidden="true">{x.no}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+          <Kart tip={kart} i={i} git={git} reduce={!!reduce} />
         </div>
       </div>
     </section>

@@ -4955,6 +4955,34 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 · Dubai sayfası ikinci tur, kurulum akışı /basla'da, hizmet kararı
+
+Burak'ın sesli turu üzerine. DOĞRU KAYNAK KARARI: Dubai'de teklif PDF'i ve Murat Bey'in
+teyit cevapları esas; çelişen yer sormadan düzeltilir.
+
+- HİZMETLER: Murat Bey'in 6 ana başlığı esas (Muhasebe ve finansal raporlama · Vergi ·
+  Kurumsal danışmanlık · Şirket kuruluşu ve kurumsal hizmetler · Banka ve iş desteği ·
+  AML ve uyum), üçü de üç ülkede; Dubai'de ek olarak vize. 23 satırlık uzun tablo hatalı,
+  kullanılmıyor. "Hukuki danışmanlık" ve "Pazar araştırması" İPTAL (services.ts'ten
+  çıktı). AÇIK: ana sayfadaki dört hizmet kartı altı başlığa çıkacak mı, yeni başlıkların
+  (vergi, danışmanlık, AML) sayfası ve içeriği nereden gelecek.
+- Dubai sayfasında sıra: giriş → yapı → üç serbest bölge → avantajlar → kendi ofisimiz →
+  VIP → fiyat → süreç → evraklar → vergi → kazancı getirme → kuruluş sonrası → … Öteki
+  iki ülkede sıra eskisi gibi.
+- Üç serbest bölge kartı yenilendi: üstte çizim, üç madde ikonlu, fiyat yok.
+- Girişte düğmelerle güven satırları arasındaki çizgi kalktı.
+- Kuruluş sonrası vize kalemi PDF'e çekildi: 1.953 (2.400 idi), süre 10-12 iş günü,
+  VIP ile 5.
+- KURULUM AKIŞI /basla'da (menüdeki "Kurulumu Başlat" oraya iniyor). Dubai'de paket yok:
+  ikinci adım fiyat panelinin formu. Fiyat panelinden "Bu kurulumla başlayın" seçimi
+  adresle taşıyor, akış ikinci adımdan seçili açılıyor. Bilgiler dört alan + KVKK satırı.
+  Özet A4, PDF düğmesi yok. WhatsApp düğmesi ana düğmenin yanında.
+  HENÜZ GERÇEK DEĞİL: hiçbir bilgi bir yere gitmiyor. SWAP: müşteri paneli adresi,
+  WhatsApp numarası, KVKK metni, özetin geçerlilik süresi.
+- LAB · /lab/dubai-hero-kart: giriş fotoğrafındaki aşama kartı için K1 Sahne, K2 Şerit,
+  K3 Köşe. Karar bekliyor. "…'den başlayan"ı "Fiyatları Gör" düğmesine yedirme fikri
+  Burak'ta açık ("böyle de iyi").
+
 ## 06.10.2026 (gece) · Dubai girişi S6 canlıda
 
 Lab'da seçilen S6 (beyaz zemin, solda yazı, sağda fotoğraf ve cam aşama kartı) Dubai

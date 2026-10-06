@@ -59,6 +59,8 @@ export default async function CountryPage({ params }: { params: Params }) {
      değiştiği için diyagram state'e bağlı, yani istemci tarafında yaşamak
      zorunda. Sunucu bileşeni olan bu sayfa onu artık hazır kuramıyor. */
 
+  const dubaiSira = slug === "dubai";
+
   return (
     <>
       <Nav />
@@ -187,13 +189,21 @@ export default async function CountryPage({ params }: { params: Params }) {
         {/* ---------- what WE add on top of it (base, dubai only for now) ---------- */}
         <CountryOrtac country={slug} />
 
+        {/* 06.10.2026 · DUBAİ'DE SIRA DEĞİŞTİ. Burak: "vergi çerçevesi ve
+            Türkiye'ye nasıl getirirsin kısımları biraz daha işin meraklısına
+            kısmı. VIP'i 'kendi ofisimizden yürütüyoruz'un altına al, ondan
+            sonra direkt fiyatlar gelsin, sonra vergi ve kazanç … süreç de bir
+            tık yukarıda olmalı." Dubai: ofis → VIP → fiyat → süreç → evraklar
+            → vergi → kazancı getirme. Öteki iki ülkede sıra eskisi gibi. */}
+        {dubaiSira && <DubaiVip />}
+
         {/* ---------- tax frame ----------
              Akışta yukarı alındı: avantajlardan hemen sonra, fiyattan önce.
              It used to sit near the end, after the process and the document
              list, which is long past the point where the question gets asked.
              What a visitor wants to know right after "why here" is what they
              actually keep, and only then what our own work costs. */}
-        <CountryTax data={c.tax} name={name} />
+        {!dubaiSira && (<CountryTax data={c.tax} name={name} />)}
 
         {/* ---------- money home ----------
              Akışta yukarı alındı: vergi çerçevesinin hemen altına. Eskiden
@@ -202,7 +212,7 @@ export default async function CountryPage({ params }: { params: Params }) {
              eve getiririm". İki bölüm yan yana durunca ziyaretçi parayı uçtan
              uca takip edebiliyor, fiyat konuşması ondan sonra başlıyor. */}
         {/* KKTC'de yok (routes boş · Burak: "bunda gerek yok"). */}
-        {c.routes.length > 0 && <MoneyHome country={slug} name={name} />}
+        {!dubaiSira && c.routes.length > 0 && <MoneyHome country={slug} name={name} />}
 
         {/* ---------- bilgi bölümleri · 23.09.2026, şimdilik yalnız KKTC ----------
              Talep araştırmasının en çok sorulanları (docs/kktc-talep-
@@ -210,8 +220,8 @@ export default async function CountryPage({ params }: { params: Params }) {
              bölümünün hemen ardından (aynı konu, Türkiye tarafı); ödeme
              kanalları onun ardından; sermaye süreçten önce (bloke süreçteki
              bir adım). */}
-        {c.paraYolu && <CountryParaYolu data={c.paraYolu} />}
-        {c.odeme && <CountryOdeme data={c.odeme} country={slug} />}
+        {!dubaiSira && c.paraYolu && <CountryParaYolu data={c.paraYolu} />}
+        {!dubaiSira && c.odeme && <CountryOdeme data={c.odeme} country={slug} />}
 
         {/* ---------- interactive price ----------
              ZEMİN MAVİDEN SİYAHA GERİ DÖNDÜ. Müşteri: "dubai fiyat kısmını eski
@@ -256,9 +266,6 @@ export default async function CountryPage({ params }: { params: Params }) {
           </div>
         </section>
 
-        {/* 06.10.2026 · VIP vize hizmeti (yalnız Dubai): fiyat panelindeki
-            "VIP" kartının açıklaması, panelin hemen altında. */}
-        {slug === "dubai" && <DubaiVip />}
 
         {/* ---------- KALDIRILDI · "… hizmetleri" fiyat kartları ----------
              Beş hizmet kartı, her birinin üstünde bir fiyat. Fiyat konusu bu
@@ -283,6 +290,10 @@ export default async function CountryPage({ params }: { params: Params }) {
 
         {/* ---------- documents: the inputs that process needs ---------- */}
         <CountryDocs data={c.docs} name={name} />
+
+        {/* Dubai'de vergi ve kazancı getirme burada (gerekçe yukarıda) */}
+        {dubaiSira && <CountryTax data={c.tax} name={name} />}
+        {dubaiSira && c.routes.length > 0 && <MoneyHome country={slug} name={name} />}
 
         {/* ---------- what happens after the company exists ----------
              Yeri kasıtlı: kuruluş anlatıldıktan (süreç) ve neyin istendiği

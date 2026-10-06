@@ -25,17 +25,39 @@
 .dbe-bolge {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 28px;
+  overflow: clip;
   border: 1px solid var(--border);
   border-radius: var(--r-panel);
   background: var(--white);
 }
-.dbe-bolge-ust {
+/* çizim penceresi: koyu, kartın üstünde, dört yanında eşit pay */
+.dbe-bolge-fig {
+  position: relative;
+  margin: 10px 10px 0;
+  border-radius: calc(var(--r-panel) - 10px);
+  background: var(--night);
+}
+.dbe-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.dbe-rozet {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--blue-700);
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.dbe-bolge-ic {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px 24px 24px;
 }
 .dbe-bolge-ad {
   margin: 0;
@@ -43,14 +65,6 @@
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--text-900);
-}
-.dbe-rozet {
-  padding: 4px 10px;
-  border-radius: var(--r-pill);
-  background: var(--blue-100);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--blue-900);
 }
 .dbe-bolge-kime {
   margin: 0;
@@ -61,35 +75,31 @@
 .dbe-liste {
   display: grid;
   gap: 8px;
-  margin: 0;
+  margin: 6px 0 0;
   padding: 0;
   list-style: none;
 }
 .dbe-liste li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
+  gap: 12px;
+  padding: 10px 12px;
   border-radius: var(--r-sm);
   background: var(--paper);
   font-size: 14px;
   font-weight: 500;
   color: var(--text-900);
 }
-.dbe-liste svg {
+.dbe-liste-ic {
+  display: inline-flex;
   flex: none;
-  color: var(--blue-700);
-}
-.dbe-bolge-fiyat {
-  margin: auto 0 0;
-  padding-top: 4px;
-  font-size: 14px;
-  color: var(--text-600);
-}
-.dbe-bolge-fiyat b {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--green-600);
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--blue-100);
+  color: var(--blue-900);
 }
 
 /* ---- VIP vize hizmeti ---- */
@@ -227,22 +237,24 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 8px;
 }
+/* AÇIK ZEMİN varsayılan (kurulum akışının penceresi beyaz); gece sürümü
+   aşağıda, fiyat bölümünün .sec-night'ı altında. */
 .dbe-ek {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 14px;
   padding: 18px;
-  border: 1px solid var(--night-line);
+  border: 1px solid var(--border);
   border-radius: var(--r-lg);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--white);
   text-align: left;
   cursor: pointer;
   transition: border-color 160ms linear, background-color 160ms linear;
 }
 @media (hover: hover) {
   .dbe-ek:hover {
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: var(--blue-600);
   }
 }
 .dbe-ek-kutu {
@@ -251,7 +263,7 @@
   justify-content: center;
   width: 26px;
   height: 26px;
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border: 1.5px solid #9aa0a8;
   border-radius: 8px;
   color: transparent;
 }
@@ -259,47 +271,76 @@
   display: block;
   font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-900);
 }
 .dbe-ek-alt {
   display: block;
   margin-top: 2px;
   font-size: 14px;
   line-height: 1.4;
-  color: var(--on-dark-2);
+  color: var(--text-600);
 }
 .dbe-ek-tutar {
   font-size: 18px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  color: #ffffff;
+  color: var(--text-900);
 }
 .dbe-ek[data-on="true"] {
-  border-color: #ffffff;
-  background: #ffffff;
+  border-color: var(--blue-600);
+  background: var(--blue-100);
 }
 .dbe-ek[data-on="true"] .dbe-ek-kutu {
   border-color: var(--blue-700);
   background: var(--blue-700);
   color: #ffffff;
 }
-.dbe-ek[data-on="true"] .dbe-ek-ad,
-.dbe-ek[data-on="true"] .dbe-ek-tutar {
-  color: var(--night);
-}
-.dbe-ek[data-on="true"] .dbe-ek-alt {
-  color: var(--text-600);
-}
 .dbe-ek:focus-visible {
-  outline: 2px solid #ffffff;
+  outline: 2px solid var(--blue-700);
   outline-offset: 2px;
 }
 .dbe-ipucu {
   margin: 0;
   font-size: 14px;
   line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* gece: seçilince kart beyaza döner (paket kartının seçili hâli) */
+.sec-night .dbe-ek {
+  border-color: var(--night-line);
+  background: rgba(255, 255, 255, 0.03);
+}
+@media (hover: hover) {
+  .sec-night .dbe-ek:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+.sec-night .dbe-ek-kutu {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.sec-night .dbe-ek-ad,
+.sec-night .dbe-ek-tutar {
+  color: #ffffff;
+}
+.sec-night .dbe-ek-alt,
+.sec-night .dbe-ipucu {
   color: var(--on-dark-2);
+}
+.sec-night .dbe-ek[data-on="true"] {
+  border-color: #ffffff;
+  background: #ffffff;
+}
+.sec-night .dbe-ek[data-on="true"] .dbe-ek-ad,
+.sec-night .dbe-ek[data-on="true"] .dbe-ek-tutar {
+  color: var(--night);
+}
+.sec-night .dbe-ek[data-on="true"] .dbe-ek-alt {
+  color: var(--text-600);
+}
+.sec-night .dbe-ek:focus-visible {
+  outline-color: #ffffff;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -342,6 +383,7 @@
 }
 .dbe-kapsam li {
   border-color: #ecdcb8;
+  background: #fffaf0;
 }
 .dbe-kapsam .dbe-ic {
   background: var(--amber-100);
@@ -349,6 +391,9 @@
 }
 /* fiyat panelindeki VIP kartı: seçili değilken de amber çerçeve ve rozet */
 .dbe-ek[data-vip]:not([data-on="true"]) {
+  border-color: #d9b56a;
+}
+.sec-night .dbe-ek[data-vip]:not([data-on="true"]) {
   border-color: #6b5220;
 }
 .dbe-ek-vip {

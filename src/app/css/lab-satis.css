@@ -1437,3 +1437,87 @@ button.sat-adim-b:focus-visible {
     justify-content: center;
   }
 }
+
+/* ------------------------------------------------ 06.10.2026 · `ozet` akışı
+   2. adım fiyat panelinin formu (DubaiSecimFormu): panelin kendi çerçevesi
+   ve dolgusu burada kalkıyor, pencere zaten bir kutu. */
+.sat-secim .ip-form {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.sat-secim-t {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 20px 0 0;
+  padding: 16px 18px;
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  font-size: 14px;
+  color: var(--text-600);
+}
+/* yeşil = para */
+.sat-secim-t b {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--green-600);
+}
+.sat-kvkk {
+  margin: 20px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+/* WhatsApp düğmesi ortada değil, ana düğmenin hemen yanında (Burak) */
+.sat-alt-sag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+@media (max-width: 639.5px) {
+  .sat-alt-sag {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    width: 100%;
+  }
+}
+
+/* /basla · pencerenin arkasındaki sayfa (pencere kapanınca görünen) */
+.sat-basla {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: 120px 24px 80px;
+  background: var(--night);
+  text-align: center;
+}
+.sat-basla-ic h1 {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+.sat-basla-ic p {
+  margin: 14px auto 24px;
+  max-width: 44ch;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--on-dark-2);
+}
+
+/* Fiyat formunun yazı renkleri design system'de GECE için ayarlı (form
+   bugüne kadar yalnız siyah bölümde basılıyordu: ds-renk.css). Pencere
+   beyaz; burada açık zemin renklerine dönüyor. */
+[data-ds-renk] .sat-secim :is(.ip-label, .ip-tier-i, .ip-inc) {
+  color: var(--text-600);
+}
+[data-ds-renk] .sat-secim .ip-chip {
+  color: var(--text-900);
+}
+[data-ds-renk] .sat-secim .ip-chip[data-on="true"] {
+  color: #ffffff;
+}

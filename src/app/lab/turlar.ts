@@ -125,11 +125,19 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/dubai-hero-kart",
+    t: "Dubai girişi · aşama kartı",
+    n: "K1 · K2 · K3",
+    l: "Fotoğrafın üstündeki aşama kartı için üç aday: çizim öne çıkıyor, başlık küçülüyor",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/hizmet-hero",
     t: "Hizmet sayfası girişi",
-    n: "S1 · S2 · S3",
+    /* 06.10.2026 · S6 Dubai sayfasında canlı (country/DubaiHero.tsx) */
+    n: "S6 canlıda · S1 S2 S3 S7 yedek",
     l: "Beyaz zemin, solda yazı, sağda fotoğraf ve üstünde aşama kartları; Dubai şirket kuruluşu üstünde",
-    durum: "suruyor",
+    durum: "canli",
   },
   {
     href: "/lab/hero-kurumsal",

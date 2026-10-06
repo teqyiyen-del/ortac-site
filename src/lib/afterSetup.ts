@@ -240,24 +240,28 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
       {
         id: "vize-emirates-id",
         title: "Yatırımcı / İşçi Vizesi ve Emirates ID",
-        en: "VIP hizmet · 2 yıllık oturum izni",
+        en: "2 yıllık oturum izni",
         rhythm: "iki-yillik",
         inclusion: "istege-bagli",
-        price: { usd: 2400, unit: "kişi başı", plusVat: true },
+        /* 06.10.2026 · 2.400 → 1.953. Burak: "en doğrusu PDF'teki" (teklif
+           PDF'i, 06.10.2026: vize 1.953, VIP ayrıca 800; standart süre
+           yaklaşık 10-12 iş günü, VIP'te yaklaşık 5). Eski satır VIP'i
+           fiyatın içinde sayıyordu. */
+        price: { usd: 1953, unit: "kişi başı", plusVat: true },
         line: "Yatırımcı, partner veya çalışan vizesi ile Emirates ID sürecinin tamamı. Belirtilen ücret bir kişi için 2 yıllık yatırımcı oturum iznini kapsıyor.",
         scope: [
           "Yatırımcı / partner / çalışan vizesi başvurusunun hazırlanması",
           "Giriş izni (Entry Permit) alınması",
           "Statü değişikliği işlemleri",
-          "VIP sağlık muayenesi organizasyonu",
+          "Sağlık muayenesi organizasyonu",
           "Kan testi ve akciğer filmi koordinasyonu",
-          "VIP biyometrik veri (parmak izi) randevusu",
+          "Biyometrik veri (parmak izi) randevusu",
           "Emirates ID başvurusu, kartın takibi ve teslimi",
           "Oturum izni onay sürecinin yönetimi",
           "Resmî kurum randevularının organizasyonu",
           "Süreç boyunca birebir danışmanlık",
         ],
-        note: "Oturum izni yasal işlemleri süresince 5 iş günü Dubai'de bulunmanız gerekiyor. Resmî kurum harçlarındaki yasal değişikliklerde ücret güncellenir.",
+        note: "İşlemler için Dubai'de yaklaşık 10-12 iş günü bulunmanız gerekiyor; VIP vize hizmetiyle (ayrıca 800 USD) yaklaşık 5 iş günü. Resmî kurum harçlarındaki yasal değişikliklerde ücret güncellenir.",
         months: [1],
       },
       {

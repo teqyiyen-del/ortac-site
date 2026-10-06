@@ -139,42 +139,11 @@ function visa(c: Country): Service | null {
    Slug, sayfa şablonu, menü hücresi, ana sayfa kartı ve zincir halkası
    birlikte gitti (brand.ts · CHAIN). */
 
-/* 22.09.2026 · YALNIZ ADI OLAN İKİ HİZMET (Dubai). Burak: "eski sitemizde
-   hukuki danışmanlık ve pazar araştırması gibi 2 hizmet daha var, onların
-   butonlarını ekle ama içlerini yapmıcaz, önce bi konuşmam lazım".
-   Düğme menüde, alt bilgide ve iletişim konu listesinde görünüyor; sayfa
-   KAPALI (routes.ts · STATIC_LIVE'da yok), yani bağlantı sönük. Kapsam,
-   süre ve fiyat YAZILMADI: hiçbiri bilinmiyor, uydurulmuyor. Menü kartının
-   alt satırı `duration`'dan geliyor (Nav · hintOf, includes boşken).
-   SWAP:DANISMANLIK_KAPSAM */
-function legal(c: Country): Service | null {
-  if (c !== "dubai") return null;
-  return {
-    slug: "hukuki-danismanlik",
-    title: "Hukuki danışmanlık",
-    line: "Kapsamı müşteriyle konuşulduktan sonra yazılacak.",
-    from: null,
-    unit: "teklife bağlı",
-    duration: "Yakında",
-    includes: [],
-    excludes: [],
-    lines: [],
-  };
-}
-function research(c: Country): Service | null {
-  if (c !== "dubai") return null;
-  return {
-    slug: "pazar-arastirmasi",
-    title: "Pazar araştırması",
-    line: "Kapsamı müşteriyle konuşulduktan sonra yazılacak.",
-    from: null,
-    unit: "teklife bağlı",
-    duration: "Yakında",
-    includes: [],
-    excludes: [],
-    lines: [],
-  };
-}
+/* 06.10.2026 · HUKUKİ DANIŞMANLIK VE PAZAR ARAŞTIRMASI İPTAL. Burak (Murat
+   Bey'in hizmet tablosu üzerine): "hukuki danışmanlık ve pazar araştırması
+   iptal." 22.09'da yalnız adlarıyla, sönük düğme olarak eklenmişlerdi
+   (sayfaları hiç açılmadı). İki üretici fonksiyon silindi; slug'lar tipte
+   duruyor ki onlara anahtarlı ikon ve adres tabloları bozulmasın. */
 
 export function servicesFor(c: Country): Service[] {
   return [
@@ -182,8 +151,6 @@ export function servicesFor(c: Country): Service[] {
     accounting(c),
     banking(c),
     visa(c),
-    legal(c),
-    research(c),
   ].filter(Boolean) as Service[];
 }
 

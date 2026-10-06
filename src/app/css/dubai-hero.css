@@ -118,9 +118,9 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
 .dhr-guven {
   display: grid;
   gap: 10px;
-  margin: 36px 0 0;
-  padding: 24px 0 0;
-  border-top: 1px solid var(--border);
+  /* düğmelerle aradaki ince çizgi kalktı (Burak: "o çizgiye ihtiyacım yok") */
+  margin: 28px 0 0;
+  padding: 0;
   list-style: none;
   font-size: 14px;
   color: var(--text-600);
@@ -264,6 +264,176 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
   outline-offset: 2px;
 }
 
+/* ============================================ KART ADAYLARI (lab) · k1 k2 k3
+   /lab/dubai-hero-kart. Ortak cam yüzey; seçilen aday kalır, ötekiler silinir. */
+.dhr-sahne,
+.dhr-kose,
+.dhr-serit-b {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(12, 12, 12, 0.78);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .dhr-sahne,
+  .dhr-kose,
+  .dhr-serit-b {
+    background: rgba(12, 12, 12, 0.36);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+  }
+}
+/* şeritte sıradaki dışındaki çizimler duruyor */
+.dhr-cizim[data-dur] * {
+  animation-play-state: paused !important;
+}
+
+/* ---- k1 · Sahne: kartın tamamı çizim ---- */
+.dhr-sahne {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  z-index: 1;
+  width: min(300px, calc(100% - 40px));
+  padding: 12px;
+  border-radius: var(--r-lg);
+}
+.dhr-sahne .dhr-cizim {
+  width: 100%;
+}
+.dhr-sahne-m {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 12px 2px 0;
+}
+.dhr-sahne-m b {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.dhr-nokta {
+  display: flex;
+  gap: 6px;
+  margin: 12px 2px 2px;
+}
+.dhr-nokta button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: width 220ms var(--ease-out-quint), background-color 160ms linear;
+}
+.dhr-nokta button[data-on] {
+  width: 28px;
+  background: #5a9eef;
+}
+
+/* ---- k2 · Şerit: beş çizim yan yana ---- */
+.dhr-serit {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  align-items: end;
+}
+.dhr-serit-b {
+  display: grid;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 16px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  opacity: 0.72;
+  transition: opacity 200ms linear, border-color 200ms linear, transform 260ms var(--ease-out-quint);
+}
+.dhr-serit-b .dhr-cizim {
+  width: 100%;
+  border-radius: 10px;
+}
+.dhr-serit-b .dhr-cizim .hkc-scene {
+  padding: 2px 3px;
+}
+.dhr-serit-ad {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: left;
+  color: #d6d6d6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dhr-serit-b[data-on] {
+  border-color: #5a9eef;
+  opacity: 1;
+  transform: translateY(-8px);
+}
+.dhr-serit-b[data-on] .dhr-serit-ad {
+  color: #ffffff;
+}
+
+/* ---- k3 · Köşe: küçük hap ---- */
+.dhr-kose {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  z-index: 1;
+  width: min(280px, calc(100% - 40px));
+  padding: 10px 12px 12px 10px;
+  border-radius: 20px;
+}
+.dhr-kose-ust {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dhr-kose .dhr-cizim {
+  width: 84px;
+  border-radius: 12px;
+}
+.dhr-kose-m {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+}
+.dhr-kose-m span {
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: #c9c9c9;
+}
+.dhr-kose-m b {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.dhr-kose-ray {
+  display: block;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.dhr-kose-ray i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #5a9eef;
+  transition: width 420ms var(--ease-out-quint);
+}
+.dhr-nokta button:focus-visible,
+.dhr-serit-b:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
 @media (min-width: 1024px) {
   .dhr {
     padding: 136px 0 88px;
@@ -278,7 +448,10 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dhr-btn {
+  .dhr-btn,
+  .dhr-nokta button,
+  .dhr-serit-b,
+  .dhr-kose-ray i {
     transition: none;
   }
 }

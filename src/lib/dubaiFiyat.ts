@@ -32,3 +32,42 @@ export const MUH_AYLIK = 350;
 export const MUH_YILLIK = MUH_AYLIK * 10;
 /** sitede yazılacak "…'den başlayan" rakam: en düşük baz */
 export const DUBAI_BASLANGIC = Math.min(...BOLGELER.map((b) => BOLGE[b].baz));
+
+/* ------------------------------------------------------------- SEÇİM
+   Fiyat paneli (ülke sayfası) ile kurulum akışı (/basla) AYNI seçimi
+   kullanıyor: panelde yapılan seçim adresle akışa taşınıyor, akış ikinci
+   adımdan seçili açılıyor (Burak, 06.10.2026: "fiyatlar kısmından seçip
+   başlatıyorsa direkt seçili gelmesini istiyorum"). */
+export type DubaiSecim = { bolge: Bolge; yil: number; vize: number; vip: boolean; yillik: boolean };
+export const DUBAI_VARSAYILAN: DubaiSecim = { bolge: "ifza", yil: 1, vize: 0, vip: false, yillik: false };
+
+export type DubaiSatir = { ad: string; tutar: number; baz?: boolean };
+export function dubaiSatirlar(x: DubaiSecim): DubaiSatir[] {
+  const b = BOLGE[x.bolge];
+  return [
+    { ad: `${b.ad} kuruluş · 1 yıllık lisans`, tutar: b.baz, baz: true },
+    ...(x.yil > 1 ? [{ ad: `Lisans · ${x.yil - 1} ek yıl`, tutar: (x.yil - 1) * b.yilEk }] : []),
+    ...(x.vize > 0 ? [{ ad: `Vize · ${x.vize} kişi`, tutar: x.vize * VIZE }] : []),
+    ...(x.vip ? [{ ad: "VIP vize hizmeti", tutar: VIP }] : []),
+    ...(x.yillik ? [{ ad: "Muhasebe · yıllık (10 ay fiyatına)", tutar: MUH_YILLIK }] : []),
+  ];
+}
+export const dubaiToplam = (x: DubaiSecim) => dubaiSatirlar(x).reduce((a, s) => a + s.tutar, 0);
+
+/** panelden akışa: /basla?ulke=dubai&bolge=ifza&yil=1&vize=2&vip=1&yillik=1 */
+export function dubaiBaslaHref(x: DubaiSecim): string {
+  const q = new URLSearchParams({ ulke: "dubai", bolge: x.bolge, yil: String(x.yil), vize: String(x.vize) });
+  if (x.vip) q.set("vip", "1");
+  if (x.yillik) q.set("yillik", "1");
+  return `/basla?${q.toString()}`;
+}
+/** adresten seçim; ülke Dubai değilse ya da değerler bozuksa null/varsayılan */
+export function dubaiSecimOku(q: Record<string, string | string[] | undefined>): DubaiSecim | null {
+  if (q.ulke !== "dubai") return null;
+  const sayi = (v: unknown, en: number, cok: number, yoksa: number) => {
+    const n = typeof v === "string" ? Number.parseInt(v, 10) : Number.NaN;
+    return Number.isFinite(n) ? Math.min(cok, Math.max(en, n)) : yoksa;
+  };
+  const bolge = BOLGELER.find((b) => b === q.bolge) ?? DUBAI_VARSAYILAN.bolge;
+  return { bolge, yil: sayi(q.yil, 1, 3, 1), vize: sayi(q.vize, 0, 10, 0), vip: q.vip === "1", yillik: q.yillik === "1" };
+}
