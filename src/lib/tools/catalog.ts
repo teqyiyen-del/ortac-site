@@ -127,7 +127,8 @@ export type ToolId =
   | "uygunluk-testi"
   | "isim-ureteci"
   | "ingiltere-isim-sorgulama"
-  | "ingiltere-sic-kodu";
+  | "ingiltere-sic-kodu"
+  | "ifza-faaliyet-kodu";
 
 /** Belgenin huni haritası (s.4). Menüdeki ve dizindeki gruplama bundan. */
 export type ToolFamily = "hesaplayici" | "karar" | "sonrasi";
@@ -396,6 +397,23 @@ const SEEDS = [
     is: "Şirketinizin ne iş yapacağını yazıyorsunuz; Companies House'un kullandığı SIC 2007 listesinden eşleşen faaliyet kodları çıkıyor.",
     isNot: "Kodu sizin yerinize seçmiyor: hangi kodun faaliyetinizi en iyi tarif ettiğine siz karar veriyorsunuz. Resmî tanımlar İngilizce; Türkçe arama bir çeviri yardımı, resmî çeviri değil.",
     source: "Companies House · SIC 2007 kısaltılmış liste (CSV, 731 kod) + ONS açıklama notları + TÜİK NACE Rev.2 bölüm adları — lib/tools/sic.ts",
+  },
+  /* 06.10.2026 · TABAN. Burak: "IFZA'daki tüm aktiviteleri kendi arşivine
+     alan ve kişilere yapmak istedikleri işe göre aktivite kodu veren bir
+     araç … onun bir base'ini inşa et." Kapsam ve eksikler lib/tools/ifza.ts
+     ile components/tools/IfzaFaaliyet.tsx'in başında. */
+  {
+    id: "ifza-faaliyet-kodu",
+    status: "live",
+    family: "karar",
+    country: "dubai",
+    nav: true,
+    title: "IFZA faaliyet kodu bulucu",
+    accent: "faaliyet kodu bulucu",
+    meta: "Dubai · IFZA faaliyet listesi",
+    is: "Şirketinizin ne iş yapacağını yazıyorsunuz; IFZA'nın faaliyet listesinden eşleşen faaliyetler kodlarıyla çıkıyor, ek kurum onayı isteyenler işaretli.",
+    isNot: "Faaliyeti sizin yerinize seçmiyor ve lisans onayı vermiyor: hangi faaliyetlerin birlikte yazılabildiğine IFZA karar veriyor. Adlar ve açıklamalar İngilizce; Türkçe arama bir çeviri yardımı, resmî çeviri değil.",
+    source: "IFZA · activities.ifza.com (827 faaliyet, 06.10.2026 arşivi) — lib/tools/ifza-veri.json · scripts/ifza-cek.mjs",
   },
 ] as const satisfies readonly ToolSeed[];
 

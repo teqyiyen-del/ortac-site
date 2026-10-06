@@ -1,0 +1,44 @@
+/* ============================================================================
+   araclar-ifza.css · IFZA FAALİYET KODU BULUCU · ad alanı .ta-ifz-
+   Bileşen components/tools/IfzaFaaliyet.tsx (bu dosyayı o içe aktarıyor).
+   Kabuk ve satır SIC aracının sınıfları (.ta-sic-, araclar-sic.css); burada
+   yalnız bu araca özgü üç parça var. Amber = şart (ek kurum onayı).
+   Okunan her yazı ≥ 14 px.
+   ========================================================================== */
+.ta-ifz-ac {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.ta-ifz-cipler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ta-ifz-tur {
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-900);
+}
+.ta-ifz-onay {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 14px;
+  background: var(--amber-100);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #7a4800;
+}
+.ta-ifz-onay svg {
+  flex: none;
+  margin-top: 3px;
+}

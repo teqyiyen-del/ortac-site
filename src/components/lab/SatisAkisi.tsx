@@ -64,6 +64,17 @@
        panele sokacağız … Murat abi böyle de olabilir diyordu, o hâlini de
        yapıp sunmak istiyorum." Dört adım, ödeme adımı yok; teklif kabul
        edilince teşekkür ekranı ve sonraki adımlar.
+   ------------------------------------------------------------ 06.10.2026
+   Burak (toplantı sonrası): "kuruluma başlama işinde ödemeyi koymayacağız.
+   En sondaki aşamayı da teklif diye değil özet ismiyle konumlandıracağız.
+   Sonrasında 'süreci başlatalım' gibi bir buton koyacağız ve yasal tarafa
+   [müşteri paneline] yönlendirip oradan devamını getirecekler; o mantığa
+   geri dönüyoruz."
+   Üçüncü akış (`akis="ozet"`) ve lab'daki TEK giriş artık bu: ülke, paket,
+   bilgiler, ÖZET. Son düğme "Süreci başlatalım"; kişi müşteri paneline
+   geçiyor, sözleşme, belgeler ve ödeme orada. Panelin adresi SWAP (elimizde
+   yok); panelin marka adı sitede geçmez (tuzaklar 7). Ödemeli ve "kabul"
+   akışlarının kodu duruyor, lab'dan bağlanmıyor.
    ========================================================================= */
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -124,7 +135,7 @@ const TIERS: Tier[] = ["basic", "gold", "platinium"];
 const SABIT_FAALIYET: Activity = "danismanlik";
 
 /** Ödemeli akış (beş adım) ya da teklif ve kabul (dört adım, ödeme yok). */
-export type Akis = "odeme" | "kabul";
+export type Akis = "odeme" | "kabul" | "ozet";
 
 /* Paketin kartında basılan kapsam: lib/pricing.ts · TIER_INCLUDES'tan. */
 function kapsam(t: Tier): string[] {
@@ -200,7 +211,12 @@ export function SatisPenceresi({
     [ulke, tier],
   );
   /* ödemesiz akışta son adım teklif: dört adım */
-  const adimlar = akis === "kabul" ? ADIMLAR.slice(0, 4) : ADIMLAR;
+  const ozetM = akis === "ozet";
+  const adimlar = ozetM
+    ? [...ADIMLAR.slice(0, 3), { ...ADIMLAR[3], ad: "Özet" }]
+    : akis === "kabul"
+      ? ADIMLAR.slice(0, 4)
+      : ADIMLAR;
   const sonAdim = adimlar.length - 1;
 
   const epostaGecerli = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(kisi.eposta.trim());
@@ -252,7 +268,7 @@ export function SatisPenceresi({
 
   function ileri() {
     /* ödemesiz akış: teklif adımındaki düğme teklifi KABUL ediyor */
-    if (akis === "kabul" && adim === 3) {
+    if (akis !== "odeme" && adim === 3) {
       setBitti(true);
       return;
     }
@@ -409,7 +425,7 @@ export function SatisPenceresi({
               {/* ============================================== 3 · BİLGİLER */}
               {adim === 2 && (
                 <section aria-labelledby="sat-a2">
-                  <h2 id="sat-a2" className="sat-soru">Teklif kimin adına hazırlansın?</h2>
+                  <h2 id="sat-a2" className="sat-soru">{ozetM ? "Süreç kimin adına başlasın?" : "Teklif kimin adına hazırlansın?"}</h2>
                   <div className="sat-form">
                     <Alan
                       etiket="Ad"
@@ -432,7 +448,7 @@ export function SatisPenceresi({
                       onDeger={(v) => setKisi((k) => ({ ...k, eposta: v }))}
                       hata={dokundu && !epostaGecerli ? "Geçerli bir e-posta adresi yazın" : ""}
                       autoComplete="email"
-                      yardim="Teklif ve ödeme bilgisi bu adrese gidecek."
+                      yardim={ozetM ? "Özetiniz ve panel bilgileri bu adrese gidecek." : "Teklif ve ödeme bilgisi bu adrese gidecek."}
                     />
                     <Alan
                       etiket="Telefon"
@@ -453,18 +469,18 @@ export function SatisPenceresi({
               {/* ================================================ 4 · TEKLİF */}
               {adim === 3 && ulke && tier && sonuc && (
                 <section aria-labelledby="sat-a3">
-                  <h2 id="sat-a3" className="sat-soru sat-yazdirma-yok">Teklifiniz hazır</h2>
+                  <h2 id="sat-a3" className="sat-soru sat-yazdirma-yok">{ozetM ? "Kurulum özetiniz" : "Teklifiniz hazır"}</h2>
 
                   <div className="sat-a4-alan">
                   <A4Sayfa>
-                  <article className="sat-belge" aria-label={`Teklif ${teklifNo}`}>
+                  <article className="sat-belge" aria-label={`${ozetM ? "Özet" : "Teklif"} ${teklifNo}`}>
                     <header className="sat-belge-bas">
                       {/* eslint-disable-next-line @next/next/no-img-element -- yazdırmada da basılması için düz img */}
                       <img src="/ortac-logo.png" alt="Ortac Global" className="sat-belge-logo" />
                       <div className="sat-belge-kunye">
-                        <p className="sat-belge-tur">Hizmet teklifi</p>
+                        <p className="sat-belge-tur">{ozetM ? "Kurulum özeti" : "Hizmet teklifi"}</p>
                         <p>
-                          <span>Teklif no</span> <b>{teklifNo}</b>
+                          <span>{ozetM ? "Özet no" : "Teklif no"}</span> <b>{teklifNo}</b>
                         </p>
                         <p>
                           <span>Tarih</span> <b>{bugun}</b>
@@ -477,7 +493,7 @@ export function SatisPenceresi({
 
                     <div className="sat-belge-taraf">
                       <div>
-                        <p className="sat-belge-k">Teklif sahibi</p>
+                        <p className="sat-belge-k">{ozetM ? "Kimin adına" : "Teklif sahibi"}</p>
                         <p className="sat-belge-ad">
                           {kisi.ad} {kisi.soyad}
                         </p>
@@ -661,7 +677,7 @@ export function SatisPenceresi({
             )}
             {adim === 3 && (
               <button type="button" className="btn btn-sm sat-ana" onClick={ileri}>
-                {akis === "kabul" ? "Teklifi kabul ediyorum" : "Teklifi onayla, ödemeye geç"}
+                {ozetM ? "Süreci başlatalım" : akis === "kabul" ? "Teklifi kabul ediyorum" : "Teklifi onayla, ödemeye geç"}
                 <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
               </button>
             )}
@@ -818,6 +834,43 @@ function Tamam({
   eposta: string;
 }) {
   const kabul = akis === "kabul";
+  if (akis === "ozet")
+    return (
+      <section className="sat-tamam" aria-labelledby="sat-tamam-t">
+        <span className="sat-tamam-ic" aria-hidden="true">
+          <Check size={26} strokeWidth={2.4} />
+        </span>
+        <h2 id="sat-tamam-t" className="sat-soru">
+          Süreç başladı, müşteri paneline geçiyorsunuz
+        </h2>
+        <p>
+          Özet <b>{teklifNo}</b>. Bir kopyası <b>{eposta}</b> adresine gönderildi. Devamı müşteri panelinde.
+        </p>
+        <ol className="sat-sonra">
+          <li>
+            <span>01</span>Panelde hesabınızı açarsınız.
+          </li>
+          <li>
+            <span>02</span>Hizmet sözleşmesini panelde onaylarsınız.
+          </li>
+          <li>
+            <span>03</span>Kimlik ve şirket belgelerini panelden yüklersiniz.
+          </li>
+          <li>
+            <span>04</span>Ödeme ve kuruluş adımları aynı panelden ilerler.
+          </li>
+        </ol>
+        {/* SWAP · panelin adresi gelince bu düğme oraya giden bir bağlantı
+            olacak (gerçek akışta "Süreci başlatalım" doğrudan oraya götürür). */}
+        <button type="button" className="btn btn-sm sat-ana">
+          Müşteri paneline geç
+          <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+          <span className="sat-demo">demo</span>
+        </button>
+        <Yardim />
+        <p className="sat-demo-not">Demo: hiçbir bilgi bir yere gönderilmedi, panel bağlantısı henüz bağlı değil.</p>
+      </section>
+    );
   return (
     <section className="sat-tamam" aria-labelledby="sat-tamam-t">
       <span className="sat-tamam-ic" aria-hidden="true">
@@ -881,7 +934,7 @@ function Tamam({
    adım) ya da teklif ve kabul (dört adım, ödeme yok). */
 export default function SatisAkisiDemo() {
   const [acik, setAcik] = useState(false);
-  const [akis, setAkis] = useState<Akis>("odeme");
+  const [akis, setAkis] = useState<Akis>("ozet");
   const [oturum, setOturum] = useState(0);
   /* Varsayılan AÇIK: müşteri bu sayfayı kendi müşterisine sunacak. */
   const [sunum, setSunum] = useState(true);
@@ -904,24 +957,16 @@ export default function SatisAkisiDemo() {
         </label>
       </div>
 
+      {/* 06.10.2026 · tek giriş: ödemesiz, son adım "Özet", sonra panel.
+          Akış A (ödeme) ve B (kabul) lab'dan kalktı; kodları duruyor. */}
       <div className="sat-girisler">
         <div className="sat-giris">
-          <p className="sat-giris-k">Akış A · teklif ve ödeme</p>
-          <p className="sat-giris-t">Ülke, paket, bilgiler, teklif, ödeme</p>
-          <p className="sat-giris-s">Teklif onaylanınca ödeme aynı pencerede: kart ya da havale.</p>
-          <button type="button" className="btn btn-sm sat-ana" onClick={() => ac("odeme")}>
-            Kurulumu Başlat
-            <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="sat-giris">
-          <p className="sat-giris-k">Akış B · teklif ve kabul</p>
-          <p className="sat-giris-t">Ülke, paket, bilgiler, teklif</p>
+          <p className="sat-giris-k">Kurulum akışı</p>
+          <p className="sat-giris-t">Ülke, paket, bilgiler, özet</p>
           <p className="sat-giris-s">
-            Burada ödeme yok. Teklif kabul edilir; ödeme bilgisi ve panel daveti e-postayla gelir.
+            Burada ödeme yok. Özetten sonra &quot;Süreci başlatalım&quot; ile müşteri paneline geçilir; devamı orada.
           </p>
-          <button type="button" className="btn btn-sm sat-ana" onClick={() => ac("kabul")}>
+          <button type="button" className="btn btn-sm sat-ana" onClick={() => ac("ozet")}>
             Kurulumu Başlat
             <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
           </button>

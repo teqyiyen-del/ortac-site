@@ -19,6 +19,7 @@ import {
   ArrowRight,
   CalendarClock,
   Car,
+  Crown,
   Check,
   Fingerprint,
   Languages,
@@ -135,6 +136,7 @@ export function DubaiVip() {
             as="h2"
             text="VIP vize hizmeti: Dubai'de yaklaşık 5 iş günü."
             accent="Dubai'de yaklaşık 5 iş günü."
+            accentColor="var(--amber-600)"
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
@@ -149,6 +151,10 @@ export function DubaiVip() {
         <div className="dbe-vip">
           <FadeUp>
             <div className="dbe-sure">
+              <span className="dbe-vip-rozet">
+                <Crown size={15} strokeWidth={2} aria-hidden="true" />
+                VIP
+              </span>
               <span className="dbe-sure-k">Dubai&apos;de geçireceğiniz süre</span>
               <div className="dbe-cubuk" data-tip="standart">
                 <span className="dbe-cubuk-ad">Standart</span>

@@ -3,6 +3,7 @@ import UaeVat from "@/components/tools/UaeVat";
 import NameForge from "@/components/tools/NameForge";
 import UkIsimSorgu from "@/components/tools/UkIsimSorgu";
 import SicBulucu from "@/components/tools/SicBulucu";
+import IfzaFaaliyet from "@/components/tools/IfzaFaaliyet";
 import type { PagedToolId } from "@/lib/tools/catalog";
 
 /* ============================================================================
@@ -39,4 +40,5 @@ export const TOOL_VIEW: Record<PagedToolId, ComponentType> = {
   "isim-ureteci": NameForge,
   "ingiltere-isim-sorgulama": UkIsimSorgu,
   "ingiltere-sic-kodu": SicBulucu,
+  "ifza-faaliyet-kodu": IfzaFaaliyet,
 };

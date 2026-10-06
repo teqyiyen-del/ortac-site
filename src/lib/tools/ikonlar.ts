@@ -1,5 +1,6 @@
 import {
   Hash,
+  ListChecks,
   Percent,
   Receipt,
   SearchCheck,
@@ -29,4 +30,5 @@ export const TOOL_ICON: Record<ToolId, LucideIcon> = {
   "isim-ureteci": Sparkles,
   "ingiltere-isim-sorgulama": SearchCheck,
   "ingiltere-sic-kodu": Hash,
+  "ifza-faaliyet-kodu": ListChecks,
 };

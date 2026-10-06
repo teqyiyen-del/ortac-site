@@ -8,6 +8,7 @@ import SatisAkisiDemo from "@/components/lab/SatisAkisi";
    ödeme; B aynı dört adım, ödeme yok, teklif kabul edilir. Ödeme hiçbir
    yere bağlı değil; gerekçe, veri kaynağı ve uydurulmayanların listesi
    components/lab/SatisAkisi.tsx'in başında. Müşterinin brifi docs/durum.md'de.
+   06.10.2026: tek akış kaldı (ödemesiz, son adım "Özet", sonra panel).
    Canlı sayfalara bağlı değil. */
 
 export const metadata: Metadata = {
@@ -20,10 +21,9 @@ export default function SatisAkisiLab() {
     <main className="sat-lab">
       <div className="sat-kunye">
         <span>Demo · Dubai</span>
-        <h1>Kurulumu başlat · iki akış</h1>
+        <h1>Kurulumu başlat</h1>
         <p>
-          A: teklif onaylanınca ödeme aynı pencerede. B: ödeme yok, teklif kabul edilir, gerisi e-posta ve
-          panelden. Tutarlar temsilî.
+          Ödeme yok: ülke, paket, bilgiler, özet; sonra müşteri paneline geçiş. Tutarlar temsilî.
         </p>
       </div>
       <SatisAkisiDemo />

@@ -307,3 +307,58 @@
     transition: none;
   }
 }
+
+/* ---- VIP · amber katmanı (06.10.2026, ikinci tur) ----
+   Burak: "VIP kısmını daha VIP hissettirecek şekilde yapabiliriz, bizim
+   amber rengi falan içine girsin." Amber sitede şart ve risk rengi; BU
+   BÖLÜMDE bilerek "ayrıcalık" anlamında kullanılıyor (Burak'ın isteği),
+   başka bölüme taşınmaz. Işık ve parıltı yok: düz renk, ince çizgi.
+   Ölçülen/hesaplanan: #e9b558 / #080808 10,6:1 · #8a5200 / #fcf1de 5,9:1. */
+.dbe-vip-rozet {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 6px 12px;
+  border: 1px solid #6b5220;
+  border-radius: var(--r-pill);
+  background: #1d1608;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #e9b558;
+}
+.dbe-sure {
+  border: 1px solid #4a3a17;
+}
+.dbe-cubuk[data-tip="vip"] .dbe-cubuk-ray i {
+  background: #e0a43c;
+}
+.dbe-cubuk[data-tip="vip"] .dbe-cubuk-ad {
+  color: #e9b558;
+}
+.dbe-vip-alt {
+  border-top-color: #4a3a17;
+}
+.dbe-kapsam li {
+  border-color: #ecdcb8;
+}
+.dbe-kapsam .dbe-ic {
+  background: var(--amber-100);
+  color: #8a5200;
+}
+/* fiyat panelindeki VIP kartı: seçili değilken de amber çerçeve ve rozet */
+.dbe-ek[data-vip]:not([data-on="true"]) {
+  border-color: #6b5220;
+}
+.dbe-ek-vip {
+  margin-right: 8px;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: #e0a43c;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #1d1608;
+  vertical-align: 1px;
+}

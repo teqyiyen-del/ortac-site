@@ -113,7 +113,8 @@ export default function DubaiFiyat() {
               {
                 on: vip,
                 set: setVip,
-                ad: "VIP vize hizmeti",
+                ad: "Vize hizmeti",
+                vip: true,
                 alt: "Karşılama, özel araç, Türkçe danışman. Dubai'de yaklaşık 5 iş günü.",
                 tutar: `+${money(VIP)}`,
               },
@@ -121,6 +122,7 @@ export default function DubaiFiyat() {
                 on: yillik,
                 set: setYillik,
                 ad: "Muhasebeyi yıllık alın",
+                vip: false,
                 alt: `12 ay hizmet, 10 ay fiyatına. Aylık ödemede ${money(MUH_AYLIK)}.`,
                 tutar: `+${money(MUH_YILLIK)}`,
               },
@@ -132,13 +134,17 @@ export default function DubaiFiyat() {
                 aria-checked={ek.on}
                 className="dbe-ek"
                 data-on={ek.on}
+                data-vip={ek.vip || undefined}
                 onClick={() => ek.set(!ek.on)}
               >
                 <span className="dbe-ek-kutu" aria-hidden="true">
                   <Check size={16} strokeWidth={3} />
                 </span>
                 <span>
-                  <span className="dbe-ek-ad">{ek.ad}</span>
+                  <span className="dbe-ek-ad">
+                    {ek.vip && <span className="dbe-ek-vip">VIP</span>}
+                    {ek.ad}
+                  </span>
                   <span className="dbe-ek-alt">{ek.alt}</span>
                 </span>
                 <span className="dbe-ek-tutar">{ek.tutar}</span>

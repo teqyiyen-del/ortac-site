@@ -141,6 +141,9 @@ export const TOOL_PHOTO: Record<string, string> = {
   "ingiltere-isim-sorgulama": U("1586769852836-bc069f19e1b6", 900),
   // ahşap kütüphane kart kataloğu çekmeceleri, metal etiketli
   "ingiltere-sic-kodu": U("1769092992803-ee97d235ba87", 900),
+  /* SWAP · araca özgü fotoğraf seçilmedi; SIC aracının kart kataloğu karesi
+     (aynı fikir: kodlu bir arşivde arama). */
+  "ifza-faaliyet-kodu": U("1769092992803-ee97d235ba87", 900),
 };
 
 /* ----------------------------------------------------------- sektör sayfaları

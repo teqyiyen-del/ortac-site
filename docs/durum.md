@@ -4955,6 +4955,27 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 06.10.2026 (akşam) · VIP amber, hero fiyatı, kurulum akışı, IFZA faaliyet aracı
+
+- VIP bölümü amber katmanı aldı (rozet, VIP çubuğu, ikon kutuları, fiyat panelindeki VIP
+  kartı). Amber burada bilerek "ayrıcalık"; Burak'ın isteği.
+- Dubai hero'sunda "$5.120'den başlayan fiyatlarla" satırı (yalnız Dubai).
+- Kurulum akışı (/lab/satis-akisi): ödeme yok, son adım "Özet", düğme "Süreci
+  başlatalım", sonra müşteri paneline geçiş. Panel adresi SWAP. Ödemeli ve "kabul"
+  akışları lab'dan kalktı, kodu duruyor. AÇIK: akış hâlâ üç paketle; Dubai fiyatı
+  baz + ekler oldu, ikisi eşitlenecek mi Burak'a soruldu.
+- Yeni araç TABANI: /araclar/ifza-faaliyet-kodu. IFZA'nın 827 faaliyeti depoda arşivli
+  (lib/tools/ifza-veri.json; yenileme `node scripts/ifza-cek.mjs`). Türkçe kelime
+  sözlüğüyle arama, kod kopyalama, ek kurum onayı uyarısı. Yapılmadı: kod biriktirme,
+  rapor, yapay zekâ ile eşleştirme (sunucu rotası ve anahtar ister), araca özgü fotoğraf.
+- PDF ile Dubai sayfaları karşılaştırıldı: vergi (375.000 AED / %9), muhasebe 350 / ay,
+  KDV beyanı 350 / dönem, banka garantisi yok, vize için BAE'de bulunma tutuyor.
+  TUTMAYAN, dokunulmadı: "kuruluştan sonra" bölümündeki vize kalemi "VIP hizmet · 2.400
+  USD kişi başı, 5 iş günü" diyor (lib/afterSetup.ts); yeni belgede vize 1.953 + VIP 800,
+  standart süre 10-12 iş günü. Hangisi geçerli, Burak'a soruldu.
+- PDF'te olup sitede olmayanlar: pasif şirket muhasebesi 950 / yıl, yüksek hacim 600 / ay,
+  hizmeti devretme (NOC) 4.000 AED, ofis seçenekleri (Flexi Desk vb.).
+
 ## 06.10.2026 · Dubai: baz fiyat paneli, üç serbest bölge, VIP bölümü; ana sayfada fiyat yok
 
 Kaynak: müşterinin kendi teklif PDF'i (ORTAC Accounting Services LLC, Dubai Free Zone

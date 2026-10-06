@@ -176,6 +176,7 @@ const STATIC_LIVE = [
      bağlanmıyor. */
   "/araclar/bae-kdv",
   "/araclar/ingiltere-sic-kodu",
+  "/araclar/ifza-faaliyet-kodu",
   "/araclar/ingiltere-isim-sorgulama",
   /* Kurumsal panelinin iki yeni girdisi. Müşteri paneli "çok boş" bulduğu için
      eklendiler; kapalı bırakılsalardı panel dört sönük kartla daha da boş
