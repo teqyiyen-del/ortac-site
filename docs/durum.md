@@ -4955,6 +4955,14 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 06.10.2026 (gece) · Dubai girişi S6 canlıda
+
+Lab'da seçilen S6 (beyaz zemin, solda yazı, sağda fotoğraf ve cam aşama kartı) Dubai
+sayfasının girişi oldu: `components/country/DubaiHero.tsx`, `css/dubai-hero.css`.
+"$5.120'den başlayan" satırı girişte. İngiltere ve KKTC eski girişte (PageHero); onay
+gelince aynı kalıba geçecek, hizmet alt sayfaları da. /lab/hizmet-hero/sunum artık
+/dubai'ye yönleniyor.
+
 ## 06.10.2026 (akşam) · VIP amber, hero fiyatı, kurulum akışı, IFZA faaliyet aracı
 
 - VIP bölümü amber katmanı aldı (rozet, VIP çubuğu, ikon kutuları, fiyat panelindeki VIP

@@ -72,20 +72,6 @@
   max-width: 42ch;
   margin-top: 16px;
 }
-/* Dubai · "…'den başlayan" satırı (06.10.2026). Gece zeminde yeşil = para:
-   #63d69d / #080808 hesapla 11:1. */
-.phx-fiyat {
-  margin: 20px 0 0;
-  font-size: 15px;
-  color: var(--on-dark-2);
-}
-.phx-fiyat b {
-  margin-right: 2px;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--green-300);
-}
 .phx-cta {
   display: flex;
   flex-wrap: wrap;

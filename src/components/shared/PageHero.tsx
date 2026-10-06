@@ -1,6 +1,5 @@
 "use client";
 
-import { DUBAI_BASLANGIC, money } from "@/lib/dubaiFiyat";
 import SmartLink from "@/components/shared/SmartLink";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -777,17 +776,6 @@ export default function PageHero({
               <p className="phx-lead">{lead}</p>
             </FadeUp>
 
-            {/* 06.10.2026 · Burak: "Dubai şirket kuruluş hero'suna da '…'den
-                başlayan' koysak." Rakam fiyat panelinin en düşük bazı
-                (lib/dubaiFiyat.ts); yalnız Dubai, öteki iki ülkede yeni
-                fiyat dili henüz yok. Yeşil = para. */}
-            {dubai && (
-              <FadeUp delay={0.3} ilk>
-                <p className="phx-fiyat">
-                  <b>{money(DUBAI_BASLANGIC)}</b>&apos;den başlayan fiyatlarla
-                </p>
-              </FadeUp>
-            )}
             <FadeUp delay={0.34} ilk>
               <div className="phx-cta">
                 <SmartLink

@@ -296,9 +296,6 @@ body:has(.lhz-sayfa) .onv:not([data-solid="true"]) {
 }
 .lhz-lab-ad a span { margin-left: 10px; font-weight: 400; color: var(--on-dark-2); }
 
-/* ---- /lab/hizmet-hero/sunum: gerçek Dubai sayfası, eski girişi gizli ---- */
-.lhz-sunum .ph { display: none; }
-
 /* S6 · S7 · KART YARI SAYDAM (05.10.2026). Burak: "opaklığı kısık yapsak,
    arkasından görseli de hafif göstersin; bu kadar koyu olmasına gerek yok
    görselin üstünde. Ana sayfa herosundaki bildirim kartları gibi." Sitenin

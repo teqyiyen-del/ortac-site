@@ -329,5 +329,3 @@ function KucukKart({ dar, fiyat }: { dar?: boolean; fiyat?: string }) {
 }
 export const HizmetS6 = () => <KucukKart />;
 export const HizmetS7 = () => <KucukKart dar />;
-/** müşteri sunumu: S6, gerçek Dubai sayfasının üstünde (lab/hizmet-hero/sunum) */
-export const HizmetS6Sunum = () => <KucukKart fiyat="#fiyat" />;

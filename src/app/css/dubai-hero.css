@@ -1,0 +1,284 @@
+/* ============================================================================
+   DUBAİ SAYFASI GİRİŞİ · CANLI (06.10.2026) · .dhr-
+   Bileşen: components/country/DubaiHero.tsx (CSS'i o içe aktarıyor). Lab'daki
+   S6'nın (.lhz-, css/lab-hizmet-hero.css) canlı kopyası; ad alanı ayrı ki
+   lab'da denenen ölçü canlıyı sessizce değiştirmesin.
+   Beyaz zemin, solda yazı, sağda fotoğraf, üstünde tek cam kart. Okunan her
+   yazı ≥ 14 px. Renk: iş kimde rozeti (sizde amber, Ortac'ta mavi, otorite
+   ve banka yeşil), fiyat yeşil, gerisi mavi.
+   ========================================================================== */
+
+/* Menü bu girişin üstünde açık zeminde: koyu yazı (lab'da :has ile
+   deneniyordu; aynı kural, yalnız bu girişin olduğu sayfada). */
+body:has(.dhr) .onv:not([data-solid="true"]) {
+  --onv-ink: var(--text-900);
+  --onv-dim: var(--text-600);
+  --onv-hair: var(--border);
+  --onv-hover: var(--paper);
+  --onv-on: #ffffff;
+}
+
+.dhr {
+  position: relative;
+  padding: 112px 0 72px;
+  overflow: clip;
+  background: var(--white);
+}
+.dhr-grid {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+.dhr-sol {
+  min-width: 0;
+}
+.dhr-iz {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 28px;
+  font-size: 14px;
+  color: var(--text-600);
+}
+.dhr-iz a {
+  color: inherit;
+  text-decoration: none;
+}
+.dhr-iz span {
+  color: var(--text-900);
+}
+.dhr-h1 {
+  margin: 0;
+  font-size: clamp(40px, 5vw, 68px);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--text-900);
+}
+.dhr-h1 span {
+  display: block;
+  color: var(--blue-700);
+}
+.dhr-lead {
+  margin: 22px 0 0;
+  max-width: 44ch;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text-600);
+}
+/* "…'den başlayan": açık zeminde yeşil = para (#1e8a54 / #fff hesapla 4,4;
+   22 px kalın, büyük metin eşiği 3) */
+.dhr-fiyat {
+  margin: 20px 0 0;
+  font-size: 15px;
+  color: var(--text-600);
+}
+.dhr-fiyat b {
+  margin-right: 2px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--green-600);
+}
+.dhr-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+.dhr-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding-inline: 24px;
+  border-radius: var(--r-pill);
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 160ms linear, border-color 160ms linear;
+}
+.dhr-btn-mavi {
+  background: var(--blue-700);
+  color: #ffffff;
+}
+.dhr-btn-cizgi {
+  border: 1px solid var(--border);
+  color: var(--text-900);
+}
+@media (hover: hover) {
+  .dhr-btn-mavi:hover {
+    background: var(--blue-800);
+  }
+  .dhr-btn-cizgi:hover {
+    border-color: var(--text-900);
+  }
+}
+.dhr-guven {
+  display: grid;
+  gap: 10px;
+  margin: 36px 0 0;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+  font-size: 14px;
+  color: var(--text-600);
+}
+.dhr-guven li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dhr-guven svg {
+  flex: none;
+  color: var(--blue-700);
+}
+
+/* ---- fotoğraf paneli ---- */
+.dhr-foto {
+  position: relative;
+  min-height: 460px;
+  overflow: clip;
+  border-radius: var(--r-panel);
+  background: var(--night);
+}
+.dhr-img {
+  object-fit: cover;
+}
+/* kart alçak: perde yalnız dipte, fotoğrafın çoğu açık */
+.dhr-foto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8, 8, 8, 0.34) 0%, rgba(8, 8, 8, 0.08) 36%, rgba(8, 8, 8, 0) 56%);
+  pointer-events: none;
+}
+
+/* ---- cam kart. Sitenin "gece yüzeyde alfa yok" kuralının BİLEREK
+   istisnası (Burak: "arkasından görseli de hafif göstersin … ana sayfa
+   herosundaki bildirim kartları gibi"). Blur desteklemeyen tarayıcıda alfa
+   bir kademe koyu. ---- */
+.dhr-kart {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1;
+  padding: 14px 14px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--r-lg);
+  background: rgba(12, 12, 12, 0.78);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .dhr-kart {
+    background: rgba(12, 12, 12, 0.36);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+  }
+}
+.dhr-kart-ust {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+/* çizim penceresi: canlı kartın sahnesiyle aynı oran (440 × 340);
+   .hkc-scene hero.css'te mutlak konumlu, pencere ona zemin */
+.dhr-cizim {
+  position: relative;
+  flex: none;
+  width: 124px;
+  aspect-ratio: 440 / 340;
+  overflow: clip;
+  border-radius: var(--r-md);
+  background: rgba(8, 8, 8, 0.55);
+}
+.dhr-cizim .hkc-scene {
+  padding: 4px 6px;
+}
+.dhr-kart-m {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  margin: 0;
+}
+.dhr-kart-m b {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ffffff;
+}
+.dhr-kim {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: #0f2544;
+  color: #7fb0ff;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.dhr-kim[data-ton="amber"] {
+  background: #2a1f0c;
+  color: #f1c56f;
+}
+.dhr-kim[data-ton="yesil"] {
+  background: #0e2a1c;
+  color: #8ee0b4;
+}
+.dhr-cubuk {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 10px;
+}
+.dhr-cubuk button {
+  display: grid;
+  gap: 6px;
+  padding: 8px 0 2px;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  color: #c9c9c9;
+  cursor: pointer;
+}
+.dhr-cubuk i {
+  display: block;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.dhr-cubuk button[data-durum] i {
+  background: #5a9eef;
+}
+.dhr-cubuk button[data-durum="gecti"] i {
+  background: #2f5fa8;
+}
+.dhr-cubuk button[data-durum="on"] {
+  color: #ffffff;
+}
+.dhr-cubuk button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+@media (min-width: 1024px) {
+  .dhr {
+    padding: 136px 0 88px;
+  }
+  .dhr-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 64px;
+  }
+  .dhr-foto {
+    min-height: 600px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dhr-btn {
+    transition: none;
+  }
+}

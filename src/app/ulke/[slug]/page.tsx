@@ -5,6 +5,7 @@ import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import CountryPricing from "@/components/CountryPricing";
+import DubaiHero from "@/components/country/DubaiHero";
 import DubaiFiyat from "@/components/country/DubaiFiyat";
 import { DubaiBolgeler, DubaiVip } from "@/components/country/DubaiEkler";
 import CountryProcess from "@/components/CountryProcess";
@@ -74,13 +75,20 @@ export default async function CountryPage({ params }: { params: Params }) {
             prop kalksaydı bile davranış değişmezdi; silinmesinin sebebi
             "Dubai özel" okumasının artık yanlış olması.
             Kalibrasyon: src/app/css/pagehero-grid.css, TİP B (.ph-split). */}
-        <PageHero
-          country={slug}
-          crumb={`Ülkeler · ${name}`}
-          title={`${name}'de şirket kurmak.`}
-          accent="şirket kurmak."
-          lead={c.intro}
-        />
+        {/* 06.10.2026 · DUBAİ'DE GİRİŞ DEĞİŞTİ: lab'da seçilen S6 canlıda
+            (country/DubaiHero.tsx; gerekçe orada). İngiltere ve KKTC eski
+            girişte. Sunum sayfası (/lab/hizmet-hero/sunum) artık gereksiz. */}
+        {slug === "dubai" ? (
+          <DubaiHero lead={c.intro} />
+        ) : (
+          <PageHero
+            country={slug}
+            crumb={`Ülkeler · ${name}`}
+            title={`${name}'de şirket kurmak.`}
+            accent="şirket kurmak."
+            lead={c.intro}
+          />
+        )}
 
         {/* ---------- KALDIRILDI · rakam şeridi (.cp-facts) ----------
              Hero'nun hemen altında dört rakam duruyordu: süre, yapı, kuruluş
