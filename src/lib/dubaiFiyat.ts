@@ -20,10 +20,12 @@
 export const money = (n: number) => `$${n.toLocaleString("tr-TR")}`;
 
 export type Bolge = "ifza" | "meydan" | "dwtc";
-export const BOLGE: Record<Bolge, { ad: string; baz: number; yilEk: number }> = {
-  ifza: { ad: "IFZA", baz: 5120, yilEk: 4200 },
-  meydan: { ad: "Meydan", baz: 5300, yilEk: 4400 },
-  dwtc: { ad: "DWTC", baz: 5820, yilEk: 4800 },
+/* `kisa`: fiyat formundaki "i" düğmesinin açtığı tek cümle (teklif PDF'inin
+   "Packages" ve "Hangi Dubai Free Zone?" bölümlerinden). */
+export const BOLGE: Record<Bolge, { ad: string; baz: number; yilEk: number; kisa: string }> = {
+  ifza: { ad: "IFZA", baz: 5120, yilEk: 4200, kisa: "En çok tercih edilen. Esnek faaliyet ve lisans yapısı, Dubai Silicon Oasis'te." },
+  meydan: { ad: "Meydan", baz: 5300, yilEk: 4400, kisa: "Dijital ve hızlı kuruluş. Fiziksel ofis ihtiyacı sınırlı şirketler için." },
+  dwtc: { ad: "DWTC", baz: 5820, yilEk: 4800, kisa: "Dubai'nin merkezinde. Kurumsal yapı ve premium çalışma alanı." },
 };
 export const BOLGELER: Bolge[] = ["ifza", "meydan", "dwtc"];
 export const VIZE = 1953;

@@ -4955,6 +4955,18 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (2) · Dubai fiyat formu kutu diline geçti, VIP kapsamı çizimli
+
+- Fiyat formu (ve aynı bileşeni kullanan /basla ikinci adımı): her seçenek aynı dikdörtgen
+  kutu ve ikonlu. Lisans süresi "1 yıl · 2 yıl · 3 yıl" ("baz fiyata dahil" kalktı), vize
+  tam genişlik kutu (kişi başı fiyat yazısı kalktı). Üç bölgede, VIP'te ve muhasebede "i"
+  düğmesi: tek cümle + "Detaylı gör" (bölgeler → #serbest-bolgeler, VIP → #vip, muhasebe →
+  /dubai/muhasebe).
+- VIP bölümünde altı avantaj ikon yerine küçük çizimlerle.
+- MURAT BEY'E SORULACAK (Burak: "onu sor, bekliyoruz"): lisansı 2 ya da 3 yıllık almanın
+  ek fiyatı (bölge başına). Formda şimdilik tahmin duruyor: IFZA 4.200, Meydan 4.400,
+  DWTC 4.800 / ek yıl. Meydan 5.300 ve DWTC 5.820 baz fiyatları da doğrulanacak.
+
 ## 07.10.2026 · Dubai sayfası ikinci tur, kurulum akışı /basla'da, hizmet kararı
 
 Burak'ın sesli turu üzerine. DOĞRU KAYNAK KARARI: Dubai'de teklif PDF'i ve Murat Bey'in

@@ -22,7 +22,21 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Check } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  Calculator,
+  CalendarDays,
+  Check,
+  Cpu,
+  Crown,
+  IdCard,
+  Info,
+  Minus,
+  Plus,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import { gtm } from "@/lib/gtm";
 import {
@@ -33,11 +47,11 @@ import {
   MUH_AYLIK,
   MUH_YILLIK,
   VIP,
-  VIZE,
   dubaiBaslaHref,
   dubaiSatirlar,
   dubaiToplam,
   money,
+  type Bolge,
   type DubaiSecim,
 } from "@/lib/dubaiFiyat";
 import "@/app/css/dubai-ek.css";
@@ -46,7 +60,47 @@ import "@/app/css/dubai-ek.css";
    ikinci adımı da BUNU basıyor (components/lab/SatisAkisi.tsx · Burak:
    "paket yok … Dubai şirket kısmında bir fiyatlar yaptık ya, oraya benzer
    bir şey koyman lazım, ya da orayı koyman lazım direkt"). Durum dışarıda;
-   koyu ve açık zeminde aynı işaretleme (renkler CSS'te). */
+   koyu ve açık zeminde aynı işaretleme (renkler CSS'te).
+
+   07.10.2026 · FORM TEK KUTU DİLİNE GEÇTİ (.dfy-, css/dubai-ek.css). Burak:
+   "lisans süresi ve vize kısmı çok küçük ve bağımsız duruyor, onları da
+   kalan box mantığına çevir; yuvarlak değil dikdörtgenimsi. Bölgelerin
+   yanına ikon. '1 yıl'ın yanına 'baz fiyata dahil' yazmaya gerek yok.
+   Vizenin altındaki kişi başı fiyata gerek yok. Bölgelerin, VIP'in ve
+   muhasebenin sağ üstüne bir 'i' düğmesi: basınca ufak bir detay açılsın,
+   'detaylı gör' diye gidebilsin."
+   Her seçenek aynı kutu: ikon, ad, (varsa) tutar. "i" düğmesi kutunun
+   İÇİNDE DEĞİL yanında duruyor (düğme içinde düğme olmaz); üstüne gelince
+   ya da basınca balon açılıyor, balondaki bağlantı ilgili bölüme götürüyor. */
+function Bilgi({ ad, metin, href }: { ad: string; metin: string; href: string }) {
+  const [acik, setAcik] = useState(false);
+  return (
+    <span className="dfy-i" data-acik={acik || undefined} onMouseLeave={() => setAcik(false)}>
+      <button
+        type="button"
+        className="dfy-i-b"
+        aria-label={`${ad} hakkında bilgi`}
+        aria-expanded={acik}
+        onClick={() => setAcik((v) => !v)}
+        onBlur={(e) => {
+          if (!e.currentTarget.parentElement?.contains(e.relatedTarget)) setAcik(false);
+        }}
+      >
+        <Info size={15} strokeWidth={2.2} aria-hidden="true" />
+      </button>
+      <span className="dfy-balon" role="note">
+        {metin}
+        <SmartLink href={href} className="dfy-balon-a">
+          Detaylı gör
+          <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
+        </SmartLink>
+      </span>
+    </span>
+  );
+}
+
+const BOLGE_IKON: Record<Bolge, LucideIcon> = { ifza: Cpu, meydan: Zap, dwtc: Building2 };
+
 export function DubaiSecimFormu({
   secim,
   onSecim,
@@ -56,112 +110,138 @@ export function DubaiSecimFormu({
 }) {
   const { bolge, yil, vize, vip, yillik } = secim;
   const set = (p: Partial<DubaiSecim>) => onSecim({ ...secim, ...p });
+  const ekler = [
+    {
+      on: vip,
+      degis: () => set({ vip: !vip }),
+      Icon: Crown,
+      ad: "Vize hizmeti",
+      vip: true,
+      alt: "Dubai'de yaklaşık 5 iş günü",
+      tutar: `+${money(VIP)}`,
+      bilgi: "Havalimanında karşılama, özel araç ve Türkçe danışman. Randevular siz gelmeden kurulur.",
+      href: "/dubai#vip",
+    },
+    {
+      on: yillik,
+      degis: () => set({ yillik: !yillik }),
+      Icon: Calculator,
+      ad: "Muhasebeyi yıllık alın",
+      vip: false,
+      alt: `12 ay hizmet, 10 ay fiyatına`,
+      tutar: `+${money(MUH_YILLIK)}`,
+      bilgi: `Muhasebe her şirket için zorunlu. Yıllık almazsanız aylık ${money(MUH_AYLIK)} ödenir.`,
+      href: "/dubai/muhasebe",
+    },
+  ];
   return (
     <div className="ip-form">
       <div className="ip-field">
         <span className="ip-label">Serbest bölge</span>
-        <div className="ip-tiers">
-          {BOLGELER.map((k) => (
-            <button
-              key={k}
-              type="button"
-              className="ip-tier"
-              data-on={bolge === k}
-              aria-pressed={bolge === k}
-              onClick={() => {
-                set({ bolge: k });
-                gtm("dubai_bolge", { bolge: k });
-              }}
-            >
-              <span className="ip-tier-n">{BOLGE[k].ad}</span>
-              <span className="ip-tier-i">Kuruluş + 1 yıl lisans</span>
-              <span className="ip-tier-p">{money(BOLGE[k].baz)}</span>
-            </button>
-          ))}
+        <div className="dfy-uc">
+          {BOLGELER.map((k) => {
+            const Icon = BOLGE_IKON[k];
+            return (
+              <div key={k} className="dfy-sar">
+                <button
+                  type="button"
+                  className="dfy-kutu dfy-bolge"
+                  data-on={bolge === k}
+                  aria-pressed={bolge === k}
+                  onClick={() => {
+                    set({ bolge: k });
+                    gtm("dubai_bolge", { bolge: k });
+                  }}
+                >
+                  <span className="dfy-ic" aria-hidden="true">
+                    <Icon size={18} strokeWidth={1.9} />
+                  </span>
+                  <span className="dfy-ad">{BOLGE[k].ad}</span>
+                  <span className="dfy-alt">Kuruluş + 1 yıl lisans</span>
+                  <span className="dfy-tutar">{money(BOLGE[k].baz)}</span>
+                </button>
+                <Bilgi ad={BOLGE[k].ad} metin={BOLGE[k].kisa} href="/dubai#serbest-bolgeler" />
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      <div className="ip-field">
-        <span className="ip-label">Lisans süresi</span>
-        <div className="ip-chips">
-          {[1, 2, 3].map((y) => (
-            <button
-              key={y}
-              type="button"
-              className="ip-chip"
-              data-on={yil === y}
-              aria-pressed={yil === y}
-              onClick={() => set({ yil: y })}
-            >
-              {y} yıl{y === 1 ? " · baz fiyata dahil" : ""}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="ip-field">
-        <div className="ip-mini">
-          <span className="ip-label">Vize (kişi)</span>
-          <div className="ip-step">
-            <button type="button" aria-label="Azalt" disabled={vize <= 0} onClick={() => set({ vize: vize - 1 })}>
-              −
-            </button>
-            <span>{vize}</span>
-            <button type="button" aria-label="Artır" disabled={vize >= 10} onClick={() => set({ vize: vize + 1 })}>
-              +
-            </button>
+      <div className="dfy-iki">
+        <div className="ip-field">
+          <span className="ip-label">Lisans süresi</span>
+          <div className="dfy-uc dfy-uc-dar">
+            {[1, 2, 3].map((y) => (
+              <button
+                key={y}
+                type="button"
+                className="dfy-kutu dfy-yil"
+                data-on={yil === y}
+                aria-pressed={yil === y}
+                onClick={() => set({ yil: y })}
+              >
+                <span className="dfy-ic" aria-hidden="true">
+                  <CalendarDays size={18} strokeWidth={1.9} />
+                </span>
+                <span className="dfy-ad">{y} yıl</span>
+              </button>
+            ))}
           </div>
-          <span className="ip-inc">kişi başı {money(VIZE)}</span>
+        </div>
+
+        <div className="ip-field">
+          <span className="ip-label">Vize</span>
+          <div className="dfy-kutu dfy-vize" data-on={vize > 0}>
+            <span className="dfy-ic" aria-hidden="true">
+              <IdCard size={18} strokeWidth={1.9} />
+            </span>
+            <span className="dfy-ad">{vize === 0 ? "Vize yok" : `${vize} kişi`}</span>
+            <span className="dfy-adim">
+              <button type="button" aria-label="Vize sayısını azalt" disabled={vize <= 0} onClick={() => set({ vize: vize - 1 })}>
+                <Minus size={16} strokeWidth={2.2} aria-hidden="true" />
+              </button>
+              <button type="button" aria-label="Vize sayısını artır" disabled={vize >= 10} onClick={() => set({ vize: vize + 1 })}>
+                <Plus size={16} strokeWidth={2.2} aria-hidden="true" />
+              </button>
+            </span>
+          </div>
         </div>
       </div>
 
       <div className="ip-field">
         <span className="ip-label">Ek hizmetler</span>
-        <div className="dbe-ekler">
-          {[
-            {
-              on: vip,
-              degis: () => set({ vip: !vip }),
-              ad: "Vize hizmeti",
-              vip: true,
-              alt: "Karşılama, özel araç, Türkçe danışman. Dubai'de yaklaşık 5 iş günü.",
-              tutar: `+${money(VIP)}`,
-            },
-            {
-              on: yillik,
-              degis: () => set({ yillik: !yillik }),
-              ad: "Muhasebeyi yıllık alın",
-              vip: false,
-              alt: `12 ay hizmet, 10 ay fiyatına. Aylık ödemede ${money(MUH_AYLIK)}.`,
-              tutar: `+${money(MUH_YILLIK)}`,
-            },
-          ].map((ek) => (
-            <button
-              key={ek.ad}
-              type="button"
-              role="checkbox"
-              aria-checked={ek.on}
-              className="dbe-ek"
-              data-on={ek.on}
-              data-vip={ek.vip || undefined}
-              onClick={ek.degis}
-            >
-              <span className="dbe-ek-kutu" aria-hidden="true">
-                <Check size={16} strokeWidth={3} />
-              </span>
-              <span>
-                <span className="dbe-ek-ad">
-                  {ek.vip && <span className="dbe-ek-vip">VIP</span>}
-                  {ek.ad}
+        <div className="dfy-ekler">
+          {ekler.map((ek) => (
+            <div key={ek.ad} className="dfy-sar">
+              <button
+                type="button"
+                role="checkbox"
+                aria-checked={ek.on}
+                className="dfy-kutu dfy-ek"
+                data-on={ek.on}
+                data-vip={ek.vip || undefined}
+                onClick={ek.degis}
+              >
+                <span className="dfy-ic" aria-hidden="true">
+                  <ek.Icon size={18} strokeWidth={1.9} />
                 </span>
-                <span className="dbe-ek-alt">{ek.alt}</span>
-              </span>
-              <span className="dbe-ek-tutar">{ek.tutar}</span>
-            </button>
+                <span className="dfy-ek-m">
+                  <span className="dfy-ad">
+                    {ek.vip && <span className="dbe-ek-vip">VIP</span>}
+                    {ek.ad}
+                  </span>
+                  <span className="dfy-alt">{ek.alt}</span>
+                </span>
+                <span className="dfy-tutar">{ek.tutar}</span>
+                <span className="dfy-tik" aria-hidden="true">
+                  <Check size={14} strokeWidth={3} />
+                </span>
+              </button>
+              <Bilgi ad={ek.ad} metin={ek.bilgi} href={ek.href} />
+            </div>
           ))}
         </div>
       </div>
-      <p className="dbe-ipucu">Muhasebe her şirket için zorunlu; yıllık almazsanız aylık ödenir.</p>
     </div>
   );
 }
