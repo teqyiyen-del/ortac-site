@@ -2,16 +2,19 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
-import { ArrowRight, ChevronDown, Globe, Handshake, Landmark, Percent, ShieldCheck, type LucideIcon } from "lucide-react";
+import { ArrowRight, ChevronDown, Globe } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag } from "@/components/shared/CountryPicker";
 import {
   SceneAccounting,
+  SceneAdvisory,
+  SceneBanking,
+  SceneCompliance,
   SceneFormation,
+  SceneTax,
 } from "@/components/home/ServiceScenes";
-import { CHAIN } from "@/lib/brand";
 import { COUNTRY_SLUGS, serviceHref, servicesFor, type ServiceSlug } from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
@@ -42,31 +45,27 @@ import { COUNTRY_LABELS, type Country } from "@/lib/store";
    7+5 üstte, 5+7 altta (ayna) — bento hiçbir zaman delikle kapanmıyor.
    23.09.2026'ya kadar alt satır 4+4+4'tü; uyum kartı hizmetle birlikte
    kalktı (services.ts), iki kart kaldı. */
-/* 07.10.2026 · ALTI UZMANLIK. Burak (Murat Bey'in tablosu üzerine): "ana
-   sayfadaki hizmetleri de altı yapabiliriz. Şirket kuruluşuyla muhasebe
-   yine ana karakterler olsun; altta dört tane, üst ikili alt dörtlü."
-   Üst sıra iki büyük kart (sahneli, 7+5); alt sıra dört küçük kart
-   (ikonlu, sahnesiz). Oturum kartı ana sayfadan çıktı: vize altı başlığın
-   dışında, yalnız Dubai'de (ülke sayfasında ve menüde duruyor). Başlıklar
-   ve ülke listesi services.ts'ten; küçük kartların tek satırı burada. */
+/* 07.10.2026 · ALTI UZMANLIK, 3 + 3. Aynı gün iki hâl yaşadı: önce üstte
+   iki büyük sahneli kart, altta dört küçük ikonlu kart; Burak: "alt tarafı
+   dörtlü yaptın, yukarıyla tutarsız oldu … alttaki de yukarıdaki gibi
+   gözükmeli; başlıklar, cümleler ve 'Ülkeye özel hizmeti görün' iki satıra
+   geçmemeli. Sığmayacaksa 3-3 yapabilirsin." Altı kart artık AYNI kart:
+   sahneli, eşit genişlikte (4+4+4, iki sıra). Başlıklar tek satıra sığacak
+   kadar kısa. Oturum kartı ana sayfada yok: vize altı başlığın dışında,
+   yalnız Dubai'de (ülke sayfasında ve menüde duruyor). */
 const CARDS: {
-  key: string;
   slug: ServiceSlug;
-  span: 7 | 5;
   Scene: () => React.ReactElement;
-  /** kartın başlığı CHAIN'deki addan farklıysa */
-  ad?: string;
+  ad: string;
+  satir: string;
 }[] = [
-  { key: "kurulus", slug: "sirket-kurulusu", span: 7, Scene: SceneFormation, ad: "Şirket kuruluşu" },
-  { key: "muhasebe", slug: "muhasebe", span: 5, Scene: SceneAccounting, ad: "Muhasebe ve finansal raporlama" },
+  { slug: "sirket-kurulusu", Scene: SceneFormation, ad: "Şirket kuruluşu", satir: "Lisans, tescil ve kuruluş evrakı" },
+  { slug: "muhasebe", Scene: SceneAccounting, ad: "Muhasebe ve raporlama", satir: "Defter, beyan ve finansal raporlama" },
+  { slug: "vergi", Scene: SceneTax, ad: "Vergi danışmanlığı", satir: "Vergi kaydı, beyan ve planlama" },
+  { slug: "kurumsal-danismanlik", Scene: SceneAdvisory, ad: "Kurumsal danışmanlık", satir: "Yapılandırma ve pazara giriş" },
+  { slug: "banka-hesabi", Scene: SceneBanking, ad: "Banka ve iş desteği", satir: "Hesap başvurusu ve tahsilat kanalları" },
+  { slug: "aml-uyum", Scene: SceneCompliance, ad: "AML ve uyum", satir: "Kara para önleme ve mevzuat uyumu" },
 ];
-const KUCUK: { slug: ServiceSlug; Icon: LucideIcon; ad: string; satir: string }[] = [
-  { slug: "vergi", Icon: Percent, ad: "Vergi danışmanlığı", satir: "Vergi kaydı, beyan ve planlama" },
-  { slug: "kurumsal-danismanlik", Icon: Handshake, ad: "Kurumsal danışmanlık", satir: "Yapılandırma ve pazara giriş" },
-  { slug: "banka-hesabi", Icon: Landmark, ad: "Banka ve iş desteği", satir: "Hesap başvurusu ve tahsilat kanalları" },
-  { slug: "aml-uyum", Icon: ShieldCheck, ad: "AML ve uyum", satir: "Kara para önleme ve mevzuat uyumu" },
-];
-const byKey = Object.fromEntries(CHAIN.map((c) => [c.key, c]));
 
 /** hizmetin gerçekten verildiği ülkeler — tek kaynak servicesFor() */
 const countriesFor = (slug: ServiceSlug): Country[] =>
@@ -323,41 +322,19 @@ export default function HomeServices() {
         </div>
 
         <div className="hx-grid">
-          {CARDS.map((c, i) => {
-            const meta = byKey[c.key];
-            return (
-              <FadeUp
-                key={c.key}
-                delay={0.12 + i * 0.06}
-                y={18}
-                className={`hx-cell hx-c${c.span}`}
-              >
-                <article className="hx-card">
-                  <div className="hx-stage" aria-hidden="true">
-                    <c.Scene />
-                  </div>
-
-                  <div className="hx-body">
-                    <h3 className="hx-t">{c.ad ?? meta.label}</h3>
-                    <p className="hx-l">{meta.line}</p>
-                  </div>
-
-                  <CountryOut label={c.ad ?? meta.label} slug={c.slug} list={countriesFor(c.slug)} />
-                </article>
-              </FadeUp>
-            );
-          })}
-          {KUCUK.map((k, i) => (
-            <FadeUp key={k.slug} delay={0.24 + i * 0.05} y={18} className="hx-cell hx-c3">
-              <article className="hx-card hx-kucuk">
-                <span className="hx-kucuk-ic" aria-hidden="true">
-                  <k.Icon size={20} strokeWidth={1.9} />
-                </span>
-                <div className="hx-body">
-                  <h3 className="hx-t">{k.ad}</h3>
-                  <p className="hx-l">{k.satir}</p>
+          {CARDS.map((c, i) => (
+            <FadeUp key={c.slug} delay={0.12 + i * 0.05} y={18} className="hx-cell hx-c4">
+              <article className="hx-card">
+                <div className="hx-stage" aria-hidden="true">
+                  <c.Scene />
                 </div>
-                <CountryOut label={k.ad} slug={k.slug} list={countriesFor(k.slug)} />
+
+                <div className="hx-body">
+                  <h3 className="hx-t">{c.ad}</h3>
+                  <p className="hx-l">{c.satir}</p>
+                </div>
+
+                <CountryOut label={c.ad} slug={c.slug} list={countriesFor(c.slug)} />
               </article>
             </FadeUp>
           ))}

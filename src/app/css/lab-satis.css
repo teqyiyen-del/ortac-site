@@ -1521,3 +1521,9 @@ button.sat-adim-b:focus-visible {
 [data-ds-renk] .sat-secim .ip-chip[data-on="true"] {
   color: #ffffff;
 }
+
+/* özet akışı: sayfa içeriği kadar (A4 boyuna uzamıyor) */
+.sat-a4[data-kisa] {
+  min-height: 0;
+  padding: 12mm 14mm;
+}

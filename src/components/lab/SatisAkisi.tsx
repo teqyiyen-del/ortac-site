@@ -517,7 +517,7 @@ export function SatisPenceresi({
                   <h2 id="sat-a3" className="sat-soru sat-yazdirma-yok">{ozetM ? "Kurulum özetiniz" : "Teklifiniz hazır"}</h2>
 
                   <div className="sat-a4-alan">
-                  <A4Sayfa>
+                  <A4Sayfa kisa={ozetM}>
                   <article className="sat-belge" aria-label={`${ozetM ? "Özet" : "Teklif"} ${teklifNo}`}>
                     <header className="sat-belge-bas">
                       {/* eslint-disable-next-line @next/next/no-img-element -- yazdırmada da basılması için düz img */}
@@ -797,7 +797,10 @@ export function SatisPenceresi({
    Ölçek ResizeObserver ile: CSS'te "kap genişliği / 210mm" bölmesi (tipli
    calc) tarayıcılarda henüz güvenilir değil. Dış kabın yüksekliği de elle
    veriliyor, çünkü transform: scale kutunun akıştaki yerini küçültmüyor. */
-function A4Sayfa({ children }: { children: React.ReactNode }) {
+/* `kisa` (07.10.2026): özet akışında sayfa A4 boyuna uzamıyor, içeriği
+   kadar. Burak: "A4 yapınca alt kısım çok boş kalıyor … A4'ün yarısı gibi
+   düşün, kocaman A4 göstermemize gerek yok." Genişlik ve tipografi aynı. */
+function A4Sayfa({ children, kisa }: { children: React.ReactNode; kisa?: boolean }) {
   const kap = useRef<HTMLDivElement>(null);
   const sayfa = useRef<HTMLDivElement>(null);
   const [olcek, setOlcek] = useState(1);
@@ -823,6 +826,7 @@ function A4Sayfa({ children }: { children: React.ReactNode }) {
       <div
         ref={sayfa}
         className="sat-a4"
+        data-kisa={kisa || undefined}
         style={{ "--sat-olcek": olcek } as React.CSSProperties}
       >
         {children}

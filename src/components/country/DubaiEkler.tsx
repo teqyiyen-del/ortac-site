@@ -96,9 +96,10 @@ function BolgeLogo({ k }: { k: Bolge }) {
 }
 
 export function DubaiBolgeler() {
-  /* zemin kâğıt: sayfanın üstünde art arda dört beyaz bölüm vardı */
+  /* zemin beyaz (07.10.2026): bir tur kâğıttı; Burak: "bazılarını kırık
+     beyaz yapıyorsun, gerek yok; çok parça parça gidiyormuş gibi." */
   return (
-    <section id="serbest-bolgeler" className="sec-pad" style={{ background: "var(--paper)" }}>
+    <section id="serbest-bolgeler" className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
         <div className="sec-head">
           <SplitWords
@@ -184,8 +185,14 @@ export function DubaiVip() {
           </FadeUp>
         </div>
 
-        <div className="dbe-vip">
-          <FadeUp>
+        {/* 07.10.2026 · TEK KART. İki sütunlu hâlde sağdaki altı kutu sol
+            kartın boyuna gerilip boş kalıyordu (Burak: "box'un içi çok boş
+            duruyor, dikey olarak çok boşluk var … VIP kısmına biraz kafa
+            yor"). Süre kıyası, altı madde ve fiyat artık aynı gece kartın
+            içinde: solda süre ve fiyat, sağda maddeler kutusuz, amber
+            ikonlu satırlar hâlinde. */}
+        <FadeUp>
+          <div className="dbe-vip">
             <div className="dbe-sure">
               <span className="dbe-vip-rozet">
                 <Crown size={15} strokeWidth={2} aria-hidden="true" />
@@ -206,31 +213,33 @@ export function DubaiVip() {
                 </span>
                 <b>yaklaşık 5 iş günü</b>
               </div>
-              <div className="dbe-vip-alt">
-                <span className="dbe-vip-fiyat">
-                  <b>{money(VIP)}</b> tek seferlik
-                </span>
-                <SmartLink href="#fiyat" className="btn btn-primary">
-                  Fiyata ekleyin
-                  <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                </SmartLink>
-              </div>
             </div>
-          </FadeUp>
 
-          <FadeUp delay={0.1}>
-            <ul className="dbe-kapsam">
-              {VIP_KAPSAM.map(({ Icon, t }) => (
-                <li key={t}>
-                  <span className="dbe-ic">
-                    <Icon size={20} strokeWidth={1.9} aria-hidden="true" />
-                  </span>
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </FadeUp>
-        </div>
+            <div className="dbe-vip-sag">
+              <span className="dbe-sure-k">VIP&apos;te neler var</span>
+              <ul className="dbe-kapsam">
+                {VIP_KAPSAM.map(({ Icon, t }) => (
+                  <li key={t}>
+                    <span className="dbe-ic">
+                      <Icon size={18} strokeWidth={1.9} aria-hidden="true" />
+                    </span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="dbe-vip-alt">
+              <span className="dbe-vip-fiyat">
+                <b>{money(VIP)}</b> tek seferlik
+              </span>
+              <SmartLink href="#fiyat" className="btn btn-primary">
+                Fiyata ekleyin
+                <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+              </SmartLink>
+            </div>
+          </div>
+        </FadeUp>
       </div>
     </section>
   );

@@ -127,8 +127,8 @@ export const LAB_TURLARI: LabTur[] = [
   {
     href: "/lab/dubai-hero-kart",
     t: "Dubai girişi · fotoğrafın üstü",
-    n: "F1 · F2 · F3",
-    l: "İkinci tur: aşama anlatmayan üç aday (rozetler, lisans kartı, sade); ilk tur K1-K3 elendi",
+    n: "G1 · G2",
+    l: "Üçüncü tur: düz belge kartı (üç belge sırayla) ve derli rozetler; K1-K3 ve F1-F3 elendi",
     durum: "suruyor",
   },
   {

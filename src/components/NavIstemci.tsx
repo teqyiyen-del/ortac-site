@@ -691,24 +691,12 @@ function ServicesPanel({
                 const s = own.get(u.slug);
                 const Icon = SVC_ICON[u.slug];
 
-                /* Yokluk sessiz kalmıyor. Kart yerinde duruyor, kesik çizgili
-                   ve tıklanamaz; hangi ülkede yürütmediğimizi söylüyor.
-                   Kaybolan bilgi okunmuyor: İngiltere'ye geçen ziyaretçi
-                   "vize yok" cümlesini görmeli, boşluğu fark etmesi
-                   beklenmemeli. */
-                if (!s) {
-                  return (
-                    <span key={u.slug} className="onv-card" data-dead="">
-                      <span className="onv-ic" aria-hidden="true">
-                        <Icon size={18} strokeWidth={1.9} />
-                      </span>
-                      <span className="onv-card-tx">
-                        <b>{u.title}</b>
-                        <em>{COUNTRY_NAME[c]} için yürütmüyoruz</em>
-                      </span>
-                    </span>
-                  );
-                }
+                /* 07.10.2026 · O ÜLKEDE OLMAYAN HİZMET HİÇ BASILMIYOR. Eskiden
+                   kart kesik çizgili duruyor ve "… için yürütmüyoruz"
+                   diyordu. Burak: "İngiltere'de vize ve oturum yok ya, onu
+                   oraya direkt hiç koyma. İngiltere için yürütmüyoruz
+                   demene gerek yok." */
+                if (!s) return null;
 
                 /* Adres elle kurulmuyor: serviceHref() ne diyorsa o. Fark
                    görünür — şirket kuruluşunun ayrı bir sayfası yok, ülke
@@ -1631,23 +1619,13 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                 </SmartLink>
 
                 {/* Masaüstündeki ızgarayla aynı kural: liste birleşim üzerinden
-                    basılıyor, o ülkede olmayan hizmet satırı kaybolmuyor,
-                    "yürütmüyoruz" diyor. Adres yine serviceHref()'ten.
+                    basılıyor, o ülkede olmayan hizmet satırı hiç basılmıyor
+                    (07.10.2026). Adres yine serviceHref()'ten.
                     Mobil sınır uyarısı da masaüstündeki gibi kaldırıldı. */}
                 {SERVICE_UNIVERSE.map((u) => {
                   const s = sheetOwn.get(u.slug);
                   const Icon = SVC_ICON[u.slug];
-                  if (!s) {
-                    return (
-                      <span key={u.slug} className="onv-m-row" data-dead="">
-                        <span className="onv-m-ic" aria-hidden="true">
-                          <Icon size={16} strokeWidth={2} />
-                        </span>
-                        {u.title}
-                        <em>{COUNTRY_NAME[sheetCountry]} için yok</em>
-                      </span>
-                    );
-                  }
+                  if (!s) return null;
                   return (
                     <SmartLink
                       key={u.slug}

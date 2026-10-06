@@ -88,19 +88,18 @@
 }
 .dbe-liste {
   display: grid;
-  gap: 8px;
-  margin: 6px 0 0;
+  gap: 12px;
+  margin: 8px 0 0;
   padding: 0;
   list-style: none;
 }
+/* maddeler kutusuz, düz satır (Burak: "box içine almana gerek yok, ikonları
+   var zaten, direkt yaz") */
 .dbe-liste li {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
-  border-radius: var(--r-sm);
-  background: var(--paper);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--text-900);
 }
@@ -116,31 +115,32 @@
   color: var(--blue-900);
 }
 
-/* ---- VIP vize hizmeti ---- */
+/* ---- VIP vize hizmeti · tek gece kart ---- */
 .dbe-vip {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 16px;
+  gap: 32px;
   margin-top: var(--space-head);
+  padding: 28px;
+  border: 1px solid #4a3a17;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  color: #ffffff;
 }
 @media (min-width: 1024px) {
   .dbe-vip {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap: 24px;
-    align-items: stretch;
+    gap: 40px 56px;
+    padding: 40px;
   }
-  .dbe-vip > * {
-    display: grid;
+  .dbe-vip-alt {
+    grid-column: 1 / -1;
   }
 }
 .dbe-sure {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 32px;
-  border-radius: var(--r-panel);
-  background: var(--night);
-  color: #ffffff;
 }
 .dbe-sure-k {
   font-size: 14px;
@@ -171,7 +171,7 @@
 /* çubuk boyu gün sayısıyla orantılı: 12 gün tam, 5 gün 5/12 */
 .dbe-cubuk[data-tip="vip"] .dbe-cubuk-ray i {
   width: 41.6%;
-  background: var(--blue-700);
+  background: #e0a43c;
 }
 .dbe-cubuk b {
   font-size: 20px;
@@ -179,34 +179,21 @@
   letter-spacing: -0.01em;
   color: #c9c9c9;
 }
-.dbe-cubuk[data-tip="vip"] b,
-.dbe-cubuk[data-tip="vip"] .dbe-cubuk-ad {
+.dbe-cubuk[data-tip="vip"] b {
   color: #ffffff;
 }
-.dbe-vip-alt {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-top: auto;
-  padding-top: 20px;
-  border-top: 1px solid var(--night-line);
+.dbe-cubuk[data-tip="vip"] .dbe-cubuk-ad {
+  color: #e9b558;
 }
-.dbe-vip-fiyat {
-  font-size: 14px;
-  color: var(--on-dark-2);
-}
-.dbe-vip-fiyat b {
-  margin-right: 6px;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--green-300);
+.dbe-vip-sag {
+  display: grid;
+  align-content: center;
+  gap: 22px;
 }
 .dbe-kapsam {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
+  gap: 22px 24px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -220,32 +207,54 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px 18px;
-  border: 1px solid #ecdcb8;
-  border-radius: var(--r-lg);
-  background: var(--white);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.35;
-  color: var(--text-900);
-  transition: border-color 160ms linear, background-color 160ms linear;
-}
-@media (hover: hover) {
-  .dbe-kapsam li:hover {
-    border-color: #e0a43c;
-    background: #fffaf0;
-  }
+  color: #ffffff;
 }
 .dbe-ic {
   display: inline-flex;
   flex: none;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
-  background: var(--amber-100);
-  color: #8a5200;
+  background: #2a1f0c;
+  color: #e9b558;
+}
+.dbe-vip-alt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 24px;
+  border-top: 1px solid #4a3a17;
+}
+.dbe-vip-fiyat {
+  font-size: 14px;
+  color: var(--on-dark-2);
+}
+.dbe-vip-fiyat b {
+  margin-right: 6px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--green-300);
+}
+.dbe-vip-rozet {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 6px 12px;
+  border: 1px solid #6b5220;
+  border-radius: var(--r-pill);
+  background: #1d1608;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #e9b558;
 }
 
 /* ============================================================ FİYAT FORMU
@@ -620,45 +629,15 @@ button.dfy-kutu,
     transform: none;
   }
   .dfy-i-b,
-  .dbe-kapsam li,
   .dfy-kutu,
   .dfy-adim button {
     transition: none;
   }
 }
 
-/* ---- VIP · amber katmanı (06.10.2026, ikinci tur) ----
-   Burak: "VIP kısmını daha VIP hissettirecek şekilde yapabiliriz, bizim
-   amber rengi falan içine girsin." Amber sitede şart ve risk rengi; BU
-   BÖLÜMDE bilerek "ayrıcalık" anlamında kullanılıyor (Burak'ın isteği),
-   başka bölüme taşınmaz. Işık ve parıltı yok: düz renk, ince çizgi.
-   Ölçülen/hesaplanan: #e9b558 / #080808 10,6:1 · #8a5200 / #fcf1de 5,9:1. */
-.dbe-vip-rozet {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  width: fit-content;
-  padding: 6px 12px;
-  border: 1px solid #6b5220;
-  border-radius: var(--r-pill);
-  background: #1d1608;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: #e9b558;
-}
-.dbe-sure {
-  border: 1px solid #4a3a17;
-}
-.dbe-cubuk[data-tip="vip"] .dbe-cubuk-ray i {
-  background: #e0a43c;
-}
-.dbe-cubuk[data-tip="vip"] .dbe-cubuk-ad {
-  color: #e9b558;
-}
-.dbe-vip-alt {
-  border-top-color: #4a3a17;
-}
+/* ---- VIP · amber (06.10.2026). Burak: "VIP kısmını daha VIP hissettirecek
+   şekilde yapabiliriz, bizim amber rengi içine girsin." Amber sitede şart
+   ve risk rengi; BU BÖLÜMDE bilerek "ayrıcalık". Işık ve parıltı yok. ---- */
 /* fiyat panelindeki VIP kartı: seçili değilken de amber çerçeve ve rozet */
 .dfy-ek[data-vip]:not([data-on="true"]) {
   border-color: #d9b56a;

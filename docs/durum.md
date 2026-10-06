@@ -4955,6 +4955,22 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (4) · ana sayfa 3+3, VIP tek kart, özet kısa, hero üçüncü tur
+
+- Ana sayfa hizmetleri: altı kart AYNI kart, 3 + 3, hepsi sahneli (üç yeni sahne: vergi,
+  kurumsal danışmanlık, AML). Başlık, satır ve "Ülkeye özel hizmeti görün" tek satır.
+- Menüde o ülkede olmayan hizmet artık hiç basılmıyor ("… için yürütmüyoruz" kalktı).
+- Dubai · VIP: tek gece kart; solda süre kıyası, sağda altı madde kutusuz amber ikonlu
+  satırlar, altta fiyat ve düğme.
+- Dubai · üç serbest bölge: maddeler kutusuz; bölüm zemini beyaz (kırık beyaz kalktı).
+- Kurulum akışı · özet: sayfa A4 boyuna uzamıyor, içeriği kadar.
+- /lab/dubai-hero-kart üçüncü tur: G1 Belgeler (düz belge kartı, üç belge sırayla),
+  G2 Rozetler derli. Karar bekliyor; onaylanınca giriş öteki ülkelere ve hizmet
+  sayfalarına da uygulanacak (Burak: "her yerde aynı olacak").
+- Burak'ın kararları: üç yeni hizmette fiyat verilmeyecek; kapsamlarını Murat Bey
+  yazacak; Meydan ve DWTC baz fiyatları "bence doğru"; 2-3 yıllık lisans fiyatları
+  gelecek; DWTC logosu bulunacak.
+
 ## 07.10.2026 (3) · altı hizmet, VIP sade, logolar, hover, hero ikinci tur
 
 - ALTI HİZMET eklendi (services.ts · YENI): Vergi danışmanlığı, Kurumsal danışmanlık, AML

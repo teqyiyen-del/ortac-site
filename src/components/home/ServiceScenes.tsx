@@ -6,8 +6,7 @@ import {
   Fingerprint,
   Landmark,
   ScrollText,
-  UserRound,
-} from "lucide-react";
+  UserRound, Percent, ShieldCheck} from "lucide-react";
 import { BrandBadge } from "@/components/shared/BrandMark";
 import { BRANDS, type BrandKey } from "@/lib/brands";
 
@@ -364,6 +363,115 @@ export function SceneVisa() {
       <text x="122" y="128" className="svx-t">
         Kimlik kartı
       </text>
+    </Scene>
+  );
+}
+
+/* ------------------------------------------------------------------------
+   07.10.2026 · ÜÇ YENİ SAHNE (altı uzmanlık; HomeServices 3+3'e döndü).
+   Burak: "alttaki dörtlü de yukarıdaki gibi gözükmeli." Aynı kutu, aynı
+   palet, aynı giriş hareketi. Kural aynı: hiçbir sahne oran, tutar ya da
+   kesin sonuç ima etmiyor (yüzde işareti bir oran değil, konunun simgesi). */
+
+/* Vergi: solda beyan satırları (işaretli), sağda yüzde halkası. */
+export function SceneTax() {
+  const reduce = useReducedMotion();
+  return (
+    <Scene>
+      <rect x="8" y="14" width="304" height="152" rx="16" className="svx-box" />
+      <text x="26" y="42" className="svx-t">
+        Beyan
+      </text>
+      {[0, 1, 2].map((i) => (
+        <motion.g
+          key={i}
+          initial={{ opacity: 0, x: -8 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={VIEW}
+          transition={{ duration: reduce ? 0 : 0.4, delay: reduce ? 0 : 0.15 + i * 0.12, ease: EASE }}
+        >
+          <rect x="26" y={60 + i * 30} width="18" height="18" rx="5" className="svx-chip-ok" />
+          <Check x={30} y={64 + i * 30} width={10} height={10} strokeWidth={3.2} className="svx-ic-ok" />
+          <rect x="54" y={65 + i * 30} width={[96, 72, 84][i]} height="8" rx="4" className={i === 0 ? "svx-bar-mid" : "svx-bar"} />
+        </motion.g>
+      ))}
+      <circle cx="238" cy="96" r="44" className="svx-halo" />
+      <motion.circle
+        cx="238"
+        cy="96"
+        r="34"
+        className="svx-ring"
+        initial={{ pathLength: 0, opacity: 0 }}
+        whileInView={{ pathLength: 1, opacity: 1 }}
+        viewport={VIEW}
+        transition={{ duration: reduce ? 0 : 0.8, delay: reduce ? 0 : 0.35, ease: EASE }}
+      />
+      <Percent x={224} y={82} width={28} height={28} strokeWidth={2.2} className="svx-ic-b" />
+    </Scene>
+  );
+}
+
+/* Kurumsal danışmanlık: üstte tek yapı, altında üç kol; yapılandırma. */
+export function SceneAdvisory() {
+  const reduce = useReducedMotion();
+  const kol = [64, 160, 256];
+  return (
+    <Scene>
+      <rect x="8" y="14" width="304" height="152" rx="16" className="svx-box" />
+      <rect x="112" y="32" width="96" height="36" rx="10" className="svx-box-b" />
+      <rect x="128" y="46" width="64" height="8" rx="4" className="svx-bar-b" />
+      <path d="M160 68 V88 M64 88 H256 M64 88 V106 M160 88 V106 M256 88 V106" className="svx-line-b svx-flow" />
+      {kol.map((x, i) => (
+        <motion.g
+          key={x}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={VIEW}
+          transition={{ duration: reduce ? 0 : 0.45, delay: reduce ? 0 : 0.3 + i * 0.12, ease: EASE }}
+        >
+          <rect x={x - 38} y="106" width="76" height="40" rx="10" className="svx-box-2" />
+          <rect x={x - 24} y="118" width={[40, 48, 34][i]} height="7" rx="3.5" className="svx-bar-mid" />
+          <rect x={x - 24} y="131" width={[28, 22, 30][i]} height="6" rx="3" className="svx-bar" />
+        </motion.g>
+      ))}
+    </Scene>
+  );
+}
+
+/* AML ve uyum: ortada kalkan, iki yanında iki konu rozeti. */
+export function SceneCompliance() {
+  const reduce = useReducedMotion();
+  return (
+    <Scene>
+      <rect x="8" y="14" width="304" height="152" rx="16" className="svx-box" />
+      <circle cx="160" cy="90" r="46" className="svx-halo" />
+      <motion.g
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={VIEW}
+        transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : 0.2, ease: EASE }}
+        style={{ transformOrigin: "160px 90px" }}
+      >
+        <ShieldCheck x={132} y={62} width={56} height={56} strokeWidth={1.7} className="svx-ic-b" />
+      </motion.g>
+      {[
+        { x: 26, t: "AML" },
+        { x: 234, t: "UBO" },
+      ].map((c, i) => (
+        <motion.g
+          key={c.t}
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={VIEW}
+          transition={{ duration: reduce ? 0 : 0.4, delay: reduce ? 0 : 0.5 + i * 0.15, ease: EASE }}
+        >
+          <rect x={c.x} y="78" width="60" height="24" rx="12" className="svx-chip-ok" />
+          <text x={c.x + 30} y="94" textAnchor="middle" className="svx-t svx-tok">
+            {c.t}
+          </text>
+        </motion.g>
+      ))}
+      <path d="M86 90 H114 M206 90 H234" className="svx-line-b svx-flow" />
     </Scene>
   );
 }

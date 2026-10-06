@@ -26,8 +26,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
-import { ArrowRight, BadgeCheck, ChevronRight, Info, MapPin, Percent, Timer } from "lucide-react";
-import { Flag } from "@/components/shared/CountryPicker";
+import { ArrowRight, BadgeCheck, ChevronRight, IdCard, Info, Landmark, MapPin, Percent, Timer } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import { STAGES } from "@/components/shared/HeroDubaiCards";
 import { FACTS } from "@/lib/brand";
@@ -55,18 +54,27 @@ const ASAMA = STAGES.map((s, i) => ({
 }));
 
 /* FOTOĞRAFIN ÜSTÜ · ADAYLAR · /lab/dubai-hero-kart
-   İlk tur (K1 Sahne, K2 Şerit, K3 Köşe; aşama kartının üç biçimi) elendi.
-   Burak (07.10.2026): "şu anki hâlâ daha iyi duruyor. İlla aşamaları
-   anlatacak bir şeyler koymak zorunda değiliz; tamamen farklı
-   düşünebilirsin, estetik olsun yeter." İkinci tur aşama anlatmıyor:
+   1. tur (K1 Sahne, K2 Şerit, K3 Köşe): elendi, "şu anki hâlâ daha iyi".
+   2. tur (F1 Rozetler, F2 Lisans, F3 Sade): Burak: "ticaret lisansı
+      mantıklı, bu tarz kartlar koyabiliriz, arada bir değişebilir; ama eğik
+      olmasına gerek yok. Sade hiç okey değil. Rozetler mantıklı ama çok
+      dağınık, random."
+   3. tur (07.10.2026), ikisi de F'lerden türedi:
      s6  canlıdaki: aşama kartı
-     f1  Rozetler: fotoğrafın üstünde üç küçük cam rozet, üç doğrulanmış olgu
-     f2  Lisans: sol altta hafif eğik bir "ticaret lisansı" kartı (süs)
-     f3  Sade: yalnız fotoğraf, sol altta bayraklı küçük bir yer etiketi
-   Rozetlerdeki üç olgu sitede zaten yazılı ve teyitli: %100 yabancı
-   sahiplik (teklif PDF'i), 5-6 günde kuruluş (teyit · Dubai kuruluş 1),
-   375.000 AED'ye kadar %0 (teyit · Dubai kuruluş 3). */
-export type DubaiKart = "s6" | "f1" | "f2" | "f3";
+     g1  Belgeler: düz duran belge kartı, sırayla üç belge (ticaret lisansı,
+         Emirates ID, kurumsal hesap dosyası); süs, satırlar yer tutucu
+     g2  Rozetler · derli: aynı üç olgu, sol altta hizalı tek sütun
+   Rozetlerdeki olgular teyitli: %100 yabancı sahiplik (teklif PDF'i),
+   5-6 günde kuruluş (teyit · Dubai kuruluş 1), 375.000 AED'ye kadar %0
+   (teyit · Dubai kuruluş 3). Banka kartı sonuç ima etmiyor: "başvuru
+   dosyası" diyor, "hesap açıldı" demiyor. */
+export type DubaiKart = "s6" | "g1" | "g2";
+
+const BELGE = [
+  { k: "lisans", ad: "Ticaret lisansı", Icon: BadgeCheck, cipler: ["Serbest bölge", "Dubai"] },
+  { k: "kimlik", ad: "Emirates ID", Icon: IdCard, cipler: ["Oturum izni"] },
+  { k: "banka", ad: "Kurumsal hesap", Icon: Landmark, cipler: ["Başvuru dosyası"] },
+] as const;
 
 function Cizim({ a }: { a: (typeof ASAMA)[number] }) {
   /* çizimin animasyonu hero.css'te `.dhs .hkc-scene[data-on]` kapısına
@@ -89,10 +97,10 @@ function Kart({ tip, i, git, reduce }: { tip: DubaiKart; i: number; git: (k: num
     transition: { duration: 0.28, ease: EASE },
   };
 
-  if (tip === "f1")
+  if (tip === "g2")
     return (
       <ul className="dhr-rozetler" aria-label="Dubai'de şirket: üç olgu">
-        <li data-yer="1">
+        <li>
           <span className="dhr-rozet-ic" aria-hidden="true">
             <BadgeCheck size={18} strokeWidth={2} />
           </span>
@@ -100,7 +108,7 @@ function Kart({ tip, i, git, reduce }: { tip: DubaiKart; i: number; git: (k: num
             <b>%100</b> yabancı sahiplik
           </span>
         </li>
-        <li data-yer="2">
+        <li>
           <span className="dhr-rozet-ic" aria-hidden="true">
             <Timer size={18} strokeWidth={2} />
           </span>
@@ -108,7 +116,7 @@ function Kart({ tip, i, git, reduce }: { tip: DubaiKart; i: number; git: (k: num
             <b>5-6 günde</b> kuruluş
           </span>
         </li>
-        <li data-yer="3">
+        <li>
           <span className="dhr-rozet-ic" data-ton="amber" aria-hidden="true">
             <Percent size={18} strokeWidth={2} />
           </span>
@@ -119,34 +127,58 @@ function Kart({ tip, i, git, reduce }: { tip: DubaiKart; i: number; git: (k: num
       </ul>
     );
 
-  if (tip === "f2")
+  if (tip === "g1") {
+    const b = BELGE[i % BELGE.length];
     return (
-      <div className="dhr-lisans" aria-hidden="true">
-        <div className="dhr-lisans-ust">
-          <span className="dhr-lisans-t">Ticaret lisansı</span>
-          <span className="dhr-lisans-muhur">
-            <BadgeCheck size={20} strokeWidth={2} />
-          </span>
-        </div>
-        <span className="dhr-lisans-ad" />
-        <span className="dhr-lisans-s" />
-        <span className="dhr-lisans-s" data-kisa="" />
-        <div className="dhr-lisans-alt">
-          <span>Serbest bölge</span>
-          <span>Dubai</span>
-        </div>
+      <div className="dhr-belge" aria-hidden="true">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={b.k} className="dhr-belge-ic" {...gecis}>
+            <div className="dhr-belge-ust">
+              <span className="dhr-belge-t">{b.ad}</span>
+              <span className="dhr-belge-muhur">
+                <b.Icon size={20} strokeWidth={2} />
+              </span>
+            </div>
+            {b.k === "kimlik" ? (
+              <div className="dhr-belge-kimlik">
+                <span className="dhr-belge-yuz" />
+                <span>
+                  <span className="dhr-belge-ad" />
+                  <span className="dhr-belge-s" />
+                </span>
+              </div>
+            ) : b.k === "banka" ? (
+              <>
+                <span className="dhr-belge-no">
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className="dhr-belge-s" data-kisa="" />
+              </>
+            ) : (
+              <>
+                <span className="dhr-belge-ad" />
+                <span className="dhr-belge-s" />
+                <span className="dhr-belge-s" data-kisa="" />
+              </>
+            )}
+            <div className="dhr-belge-alt">
+              {b.cipler.map((c) => (
+                <span key={c}>{c}</span>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+        <span className="dhr-belge-nokta">
+          {BELGE.map((x, k) => (
+            <i key={x.k} data-on={k === i % BELGE.length || undefined} />
+          ))}
+        </span>
       </div>
     );
-
-  if (tip === "f3")
-    return (
-      <p className="dhr-yer">
-        <span className="dhr-yer-b" aria-hidden="true">
-          <Flag country="dubai" />
-        </span>
-        Dubai · Birleşik Arap Emirlikleri
-      </p>
-    );
+  }
 
   return (
     <div className="dhr-kart">
