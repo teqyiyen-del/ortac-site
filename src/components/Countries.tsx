@@ -502,8 +502,9 @@ const R_BANK_APPLY: CmpRow = {
      · Para gruplarının kanal matrisi — bu turun bütün amacı o matrisi ana
        sayfadan buraya taşımaktı; ana sayfada tek satırlık özeti (R_CARDS)
        zaten var. */
+/* 06.10.2026 · R_COST ana sayfadan çıktı. Burak: "ana sayfadan fiyatları
+   kaldıracağız." Satır /ulkeler'deki ayrıntılı tabloda duruyor. */
 export const HOME_CMP_ROWS: CmpRow[] = [
-  R_COST,
   R_DAYS,
   R_STRUCT,
   R_WHO,

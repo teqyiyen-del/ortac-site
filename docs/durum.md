@@ -4955,16 +4955,25 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
-## 06.10.2026 · Dubai fiyat paneli: baz fiyat + eklenenler (canlıda, rakamlar teyit bekliyor)
+## 06.10.2026 · Dubai: baz fiyat paneli, üç serbest bölge, VIP bölümü; ana sayfada fiyat yok
 
-Dubai ülke sayfasındaki fiyat bölümü artık paket değil: serbest bölge seçilir (baz fiyat,
-1 yıllık lisans dahil), üstüne lisans yılı, vize (kişi başı), VIP vize ve yıllık muhasebe
-eklenir; toplam satır satır oluşur. Bileşen: `components/country/DubaiFiyat.tsx`.
-`pricing.ts`'e dokunulmadı; İngiltere ve KKTC eski panelde.
+Kaynak: müşterinin kendi teklif PDF'i (ORTAC Accounting Services LLC, Dubai Free Zone
+teklifi, 06.10.2026). Rakamlar tek yerde: `src/lib/dubaiFiyat.ts`.
 
-- Kesin (müşterinin teklif aracından): IFZA 5.120, vize 1.953, VIP 800.
-- Burak'ın yaklaşık söylediği: muhasebe aylık 200, yıllık 2.000 (10 ay fiyatına).
-- YER TUTUCU, müşteriden gelecek: öteki iki serbest bölgenin adı ve baz fiyatı
-  (şimdilik Meydan 5.400, DWTC 6.900), ek lisans yılı fiyatı (IFZA 4.200 varsayıldı).
-- Açık: sitenin öteki yerlerindeki Dubai fiyatı (menü, kartlar) hâlâ eski 3.900;
-  "…'den başlayan" diline geçiş ayrı tur.
+- Dubai fiyat bölümü paket değil: serbest bölge (baz, 1 yıl lisans dahil) + lisans yılı +
+  vize + VIP + yıllık muhasebe. Ekler anahtar düğme değil, iki büyük onay kartı.
+- Yeni bölüm: "Üç serbest bölge" (yapı seçiminin altı) ve "VIP vize hizmeti" (fiyatın altı).
+  `components/country/DubaiEkler.tsx`, `css/dubai-ek.css`.
+- Ana sayfadan fiyat kalktı: fiyat bölümü (PriceSummary) akıştan çıktı, üç ülke kıyas
+  tablosundaki "kuruluş maliyeti" satırı ana sayfada basılmıyor (/ulkeler'de duruyor).
+
+Rakamların durumu:
+- Kesin: IFZA 5.120, vize 1.953, VIP 800, muhasebe standart 350 / ay (PDF madde 9.3).
+- TÜRETİLDİ, müşteri doğrulayacak: Meydan 5.300, DWTC 5.820 (PDF paket toplamlarının vergi
+  satırından geri hesap; paket = baz + 1 vize + VIP varsayımı IFZA'da tutuyor).
+- YER TUTUCU: ek lisans yılı fiyatı (IFZA 4.200, Meydan 4.400, DWTC 4.800).
+- Yıllık muhasebe 3.500 = 10 ay × 350 (Burak'ın "10 ay fiyatına" tarifi). Burak sözlü
+  "aylık 200 gibi" demişti; PDF 350 diyor, PDF esas alındı. Teyit edilecek.
+- Açık: menüdeki ve öteki sayfalardaki Dubai fiyatı hâlâ eski 3.900; "…'den başlayan"
+  diline geçiş ayrı tur. PDF'te sitede henüz olmayan kalemler var: pasif şirket muhasebesi
+  950 / yıl, yüksek hacim 600 / ay, KDV beyanı 350 / çeyrek.

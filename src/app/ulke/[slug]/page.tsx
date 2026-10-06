@@ -6,6 +6,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import CountryPricing from "@/components/CountryPricing";
 import DubaiFiyat from "@/components/country/DubaiFiyat";
+import { DubaiBolgeler, DubaiVip } from "@/components/country/DubaiEkler";
 import CountryProcess from "@/components/CountryProcess";
 import CountryStructures from "@/components/CountryStructures";
 import CountryDocs from "@/components/CountryDocs";
@@ -136,6 +137,9 @@ export default async function CountryPage({ params }: { params: Params }) {
             kartlı bir deneme bir tur yaşadı ve Burak "çok yazı dolu … yapı
             seçme kısmını hiç kullanamıyor olabiliriz" dedi; kaldırıldı. */}
         {c.structures && <CountryStructures data={c.structures} />}
+        {/* 06.10.2026 · üç serbest bölge (yalnız Dubai): yapı seçiminin hemen
+            altı, çünkü "serbest bölge" dendikten sonraki soru "hangisi". */}
+        {slug === "dubai" && <DubaiBolgeler />}
 
         {/* ---------- avantajlar · GERİ GELDİ ----------
              Bu bölüm bir tur kaldırılmıştı ve KALDIRILMASI BİR HATAYDI.
@@ -243,6 +247,10 @@ export default async function CountryPage({ params }: { params: Params }) {
             {slug === "dubai" ? <DubaiFiyat /> : <CountryPricing country={slug} />}
           </div>
         </section>
+
+        {/* 06.10.2026 · VIP vize hizmeti (yalnız Dubai): fiyat panelindeki
+            "VIP" kartının açıklaması, panelin hemen altında. */}
+        {slug === "dubai" && <DubaiVip />}
 
         {/* ---------- KALDIRILDI · "… hizmetleri" fiyat kartları ----------
              Beş hizmet kartı, her birinin üstünde bir fiyat. Fiyat konusu bu

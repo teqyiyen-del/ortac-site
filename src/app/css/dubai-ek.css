@@ -1,0 +1,309 @@
+/* ============================================================================
+   DUBAİ · SERBEST BÖLGELER + VIP + FİYAT PANELİNDEKİ EK KARTLARI (06.10.2026)
+   Ad alanı .dbe- · bileşenler: country/DubaiEkler.tsx, country/DubaiFiyat.tsx
+   (ikisi de bu dosyayı içe aktarıyor; yalnız Dubai sayfasında yükleniyor).
+   Renk kuralı: ağırlık mavide, yeşil yalnız para. Kutu kenarında şerit yok.
+   Okunan her yazı ≥ 14 px.
+   ========================================================================== */
+
+/* ---- üç serbest bölge ---- */
+.dbe-bolgeler {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 900px) {
+  .dbe-bolgeler {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  /* FadeUp sarmalayıcısı kartı tam yüksekliğe çeksin: üç kart aynı boyda */
+  .dbe-bolgeler > * {
+    display: grid;
+  }
+}
+.dbe-bolge {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.dbe-bolge-ust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.dbe-bolge-ad {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.dbe-rozet {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--blue-100);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-900);
+}
+.dbe-bolge-kime {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.dbe-liste {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dbe-liste li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-900);
+}
+.dbe-liste svg {
+  flex: none;
+  color: var(--blue-700);
+}
+.dbe-bolge-fiyat {
+  margin: auto 0 0;
+  padding-top: 4px;
+  font-size: 14px;
+  color: var(--text-600);
+}
+.dbe-bolge-fiyat b {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--green-600);
+}
+
+/* ---- VIP vize hizmeti ---- */
+.dbe-vip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 1024px) {
+  .dbe-vip {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+  .dbe-vip > * {
+    display: grid;
+  }
+}
+.dbe-sure {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  color: #ffffff;
+}
+.dbe-sure-k {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--on-dark-2);
+}
+.dbe-cubuk {
+  display: grid;
+  gap: 8px;
+}
+.dbe-cubuk-ad {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--on-dark-2);
+}
+.dbe-cubuk-ray {
+  display: block;
+  height: 14px;
+  border-radius: var(--r-pill);
+  background: #1c1c1c;
+}
+.dbe-cubuk-ray i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #6b6b6b;
+}
+/* çubuk boyu gün sayısıyla orantılı: 12 gün tam, 5 gün 5/12 */
+.dbe-cubuk[data-tip="vip"] .dbe-cubuk-ray i {
+  width: 41.6%;
+  background: var(--blue-700);
+}
+.dbe-cubuk b {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #c9c9c9;
+}
+.dbe-cubuk[data-tip="vip"] b,
+.dbe-cubuk[data-tip="vip"] .dbe-cubuk-ad {
+  color: #ffffff;
+}
+.dbe-vip-alt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--night-line);
+}
+.dbe-vip-fiyat {
+  font-size: 14px;
+  color: var(--on-dark-2);
+}
+.dbe-vip-fiyat b {
+  margin-right: 6px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--green-300);
+}
+.dbe-kapsam {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 620px) {
+  .dbe-kapsam {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.dbe-kapsam li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.dbe-ic {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-900);
+}
+
+/* ---- fiyat panelindeki ek kartları (anahtar düğmenin yerine) ----
+   Burak: "VIP hizmet ile muhasebeyi yıllık al kısımlarını daha belirgin yap,
+   böyle switch butonu gibi değil." Artık paket kartlarıyla aynı dilde iki
+   büyük kutu: solda onay kutusu, ortada ad ve tek satır, sağda tutar.
+   Seçilince kart beyaza döner (paket kartının seçili hâli). */
+.dbe-ekler {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+.dbe-ek {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, 0.03);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms linear, background-color 160ms linear;
+}
+@media (hover: hover) {
+  .dbe-ek:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+.dbe-ek-kutu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  color: transparent;
+}
+.dbe-ek-ad {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.dbe-ek-alt {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--on-dark-2);
+}
+.dbe-ek-tutar {
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: #ffffff;
+}
+.dbe-ek[data-on="true"] {
+  border-color: #ffffff;
+  background: #ffffff;
+}
+.dbe-ek[data-on="true"] .dbe-ek-kutu {
+  border-color: var(--blue-700);
+  background: var(--blue-700);
+  color: #ffffff;
+}
+.dbe-ek[data-on="true"] .dbe-ek-ad,
+.dbe-ek[data-on="true"] .dbe-ek-tutar {
+  color: var(--night);
+}
+.dbe-ek[data-on="true"] .dbe-ek-alt {
+  color: var(--text-600);
+}
+.dbe-ek:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+.dbe-ipucu {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--on-dark-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dbe-ek {
+    transition: none;
+  }
+}

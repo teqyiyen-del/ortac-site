@@ -10,12 +10,12 @@
      · VIP vize hizmeti: tek, 800 $
      · muhasebe: aylık zorunlu (200 $); yıllık alınırsa 10 ay fiyatına (2.000 $)
 
-   RAKAMLARIN KAYNAĞI. Müşterinin teklif ekranından (ekran görüntüsü):
-   IFZA kuruluş 1 yıl 5.120 $ · vize 1.953 $ · VIP vize 800 $. Muhasebe
-   200 / 2.000 $ Burak'ın sözü ("gibi düşünebilirsin").
-   SWAP · TEYİT BEKLEYEN: Meydan ve DWTC baz fiyatı ile 2. ve 3. yılın
-   lisans farkı ELİMİZDE YOK; aşağıdaki değerler gösterim için yer tutucu,
-   müşteriden gelince değişecek (docs/durum.md).
+   RAKAMLAR lib/dubaiFiyat.ts'te (kaynakları ve hangisinin teyit beklediği
+   orada yazılı).
+
+   EKLER ANAHTAR DEĞİL, KART (aynı gün, ikinci tur). Burak: "VIP hizmet ile
+   muhasebeyi yıllık al kısımlarını daha belirgin yap, böyle switch butonu
+   gibi değil." İki büyük onay kartı (.dbe-ek · css/dubai-ek.css).
 
    Görünüm eski panelin (CountryPricing · .ip-) aynısı; fiyat dosyasına
    (lib/pricing.ts) dokunulmadı, öteki iki ülke eski paneli kullanıyor. */
@@ -26,22 +26,8 @@ import { ArrowRight, Check } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import { gtm } from "@/lib/gtm";
 
-const money = (n: number) => `$${n.toLocaleString("tr-TR")}`;
-
-type Bolge = "ifza" | "meydan" | "dwtc";
-const BOLGE: Record<Bolge, { ad: string; baz: number; yilEk: number; teyit?: boolean }> = {
-  ifza: { ad: "IFZA", baz: 5120, yilEk: 4200 },
-  /* SWAP · iki bölgenin rakamı yer tutucu */
-  meydan: { ad: "Meydan", baz: 5400, yilEk: 4400, teyit: true },
-  dwtc: { ad: "DWTC", baz: 6900, yilEk: 5600, teyit: true },
-};
-const BOLGELER: Bolge[] = ["ifza", "meydan", "dwtc"];
-const VIZE = 1953;
-const VIP = 800;
-const MUH_AYLIK = 200;
-const MUH_YILLIK = 2000;
-/** sitenin her yerinde yazılacak "…'den başlayan" rakam: en düşük baz */
-export const DUBAI_BASLANGIC = Math.min(...BOLGELER.map((b) => BOLGE[b].baz));
+import { BOLGE, BOLGELER, DUBAI_BASLANGIC, MUH_AYLIK, MUH_YILLIK, VIP, VIZE, money, type Bolge } from "@/lib/dubaiFiyat";
+import "@/app/css/dubai-ek.css";
 
 export default function DubaiFiyat() {
   const [bolge, setBolge] = useState<Bolge>("ifza");
@@ -104,7 +90,7 @@ export default function DubaiFiyat() {
           </div>
         </div>
 
-        <div className="ip-field ip-field-row">
+        <div className="ip-field">
           <div className="ip-mini">
             <span className="ip-label">Vize (kişi)</span>
             <div className="ip-step">
@@ -118,42 +104,56 @@ export default function DubaiFiyat() {
             </div>
             <span className="ip-inc">kişi başı {money(VIZE)}</span>
           </div>
+        </div>
 
-          <div className="ip-switches">
+        <div className="ip-field">
+          <span className="ip-label">Ek hizmetler</span>
+          <div className="dbe-ekler">
             {[
-              { on: vip, set: setVip, label: "VIP vize hizmeti", ek: `+${money(VIP)}` },
-              { on: yillik, set: setYillik, label: "Muhasebeyi yıllık al", ek: "10 ay fiyatına" },
-            ].map((sw) => (
+              {
+                on: vip,
+                set: setVip,
+                ad: "VIP vize hizmeti",
+                alt: "Karşılama, özel araç, Türkçe danışman. Dubai'de yaklaşık 5 iş günü.",
+                tutar: `+${money(VIP)}`,
+              },
+              {
+                on: yillik,
+                set: setYillik,
+                ad: "Muhasebeyi yıllık alın",
+                alt: `12 ay hizmet, 10 ay fiyatına. Aylık ödemede ${money(MUH_AYLIK)}.`,
+                tutar: `+${money(MUH_YILLIK)}`,
+              },
+            ].map((ek) => (
               <button
-                key={sw.label}
+                key={ek.ad}
                 type="button"
-                role="switch"
-                aria-checked={sw.on}
-                className="ip-toggle"
-                data-on={sw.on}
-                onClick={() => sw.set(!sw.on)}
+                role="checkbox"
+                aria-checked={ek.on}
+                className="dbe-ek"
+                data-on={ek.on}
+                onClick={() => ek.set(!ek.on)}
               >
-                <span className="ip-track" aria-hidden="true">
-                  <span />
+                <span className="dbe-ek-kutu" aria-hidden="true">
+                  <Check size={16} strokeWidth={3} />
                 </span>
-                <span className="ip-toggle-t">
-                  {sw.label}
-                  <b>{sw.ek}</b>
+                <span>
+                  <span className="dbe-ek-ad">{ek.ad}</span>
+                  <span className="dbe-ek-alt">{ek.alt}</span>
                 </span>
+                <span className="dbe-ek-tutar">{ek.tutar}</span>
               </button>
             ))}
           </div>
         </div>
-        <p className="ip-hint">
-          Muhasebe zorunlu: aylık {money(MUH_AYLIK)}. Yıllık alırsanız {money(MUH_YILLIK)} (10 ay fiyatına).
-        </p>
+        <p className="dbe-ipucu">Muhasebe her şirket için zorunlu; yıllık almazsanız aylık ödenir.</p>
       </div>
 
       <aside className="ip-out">
         <span className="ip-out-k">Tahmini kurulum tutarı</span>
         <span className="ip-total">{money(toplam)}</span>
         <span className="ip-out-u">
-          tek seferlik · {money(DUBAI_BASLANGIC)}&apos;den başlayan fiyatlarla
+          KDV hariç · {money(DUBAI_BASLANGIC)}&apos;den başlayan fiyatlarla
         </span>
 
         <div className="ip-lines">

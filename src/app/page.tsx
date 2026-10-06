@@ -6,7 +6,6 @@ import HomeServices from "@/components/home/HomeServices";
 import ProcessScroll from "@/components/ProcessScroll";
 import Profiles from "@/components/home/Profiles";
 import TrustLayer from "@/components/TrustLayer";
-import PriceSummary from "@/components/home/PriceSummary";
 import HomeBlog from "@/components/home/HomeBlog";
 import HomeFaq from "@/components/home/HomeFaq";
 import Footer from "@/components/Footer";
@@ -57,17 +56,16 @@ export default function Home() {
             Neden Ortac girişin hemen altına ALINMADI: "orası oraya göre
             tasarlanmamış."
 
-            AÇIK KONU · FİYAT BÖLÜMÜ (PriceSummary). Burak: "buraya fiyat
-            yazıp yazılmaması konusunu Murat abiye sorarız … muhtemelen ana
-            sayfada yazmayız, ilgili sayfalara yönlendiririz." Karar gelene
-            kadar bölüm olduğu gibi duruyor. */}
+            FİYAT BÖLÜMÜ KALKTI · 06.10.2026. Burak: "ana sayfadan fiyatları
+            kaldıracağız." Ana sayfa fiyat konuşmuyor; fiyat ülke
+            sayfalarında. Bileşen (home/PriceSummary.tsx) duruyor, akıştan
+            çıktı. */}
         <ThreeCountries />
         <HomeServices />
         <TrustLayer />
         <Profiles />
         <Chain />
         <ProcessScroll />
-        <PriceSummary />
         <HomeBlog />
         <HomeFaq />
       </main>

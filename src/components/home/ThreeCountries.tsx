@@ -915,8 +915,7 @@ export default function ThreeCountries() {
             >
               <table className="uk3-tbl">
                 <caption className="sr-only">
-                  Üç ülke yan yana, sekiz temel ölçütte: kuruluş maliyeti, tipik
-                  süre, yapı, kim için, oturum, kurumlar vergisi, banka başvurusu
+                  Üç ülke yan yana, yedi temel ölçütte: tipik süre, yapı, kim için, oturum, kurumlar vergisi, banka başvurusu
                   ve kart tahsilatı. Sütun başlıkları birer düğmedir; seçtiğiniz
                   ülke tabloda işaretlenir ve hesaplayıcıya da onunla geçersiniz.
                   Ölçüt ölçüt tam kıyas ülkeler sayfasında.
@@ -1081,7 +1080,7 @@ export default function ThreeCountries() {
                 görünmüyor. Etiketsiz bırakmak STANCE_LIMITS'e aykırı olurdu:
                 yan yana duran üç oran, sınırı söylenmezse kişiye özel bir vergi
                 görüşü gibi okunur. Aynı cümle /ulkeler'in ayağında da var. */}
-            <Foot note="Tutarlar temsilîdir, süreler tipik aralıktır; vergi satırı genel çerçevedir." />
+            <Foot note="Süreler tipik aralıktır; vergi satırı genel çerçevedir." />
           </div>
         </div>
 
