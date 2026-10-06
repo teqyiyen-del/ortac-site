@@ -4954,3 +4954,17 @@ Aynı sorunu geciktiren iki alışkanlık:
 - Alt ajan kayıtları birikiyor. Sonuçlar zaten commit mesajlarında ve kod
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
+
+## 06.10.2026 · Dubai fiyat paneli: baz fiyat + eklenenler (canlıda, rakamlar teyit bekliyor)
+
+Dubai ülke sayfasındaki fiyat bölümü artık paket değil: serbest bölge seçilir (baz fiyat,
+1 yıllık lisans dahil), üstüne lisans yılı, vize (kişi başı), VIP vize ve yıllık muhasebe
+eklenir; toplam satır satır oluşur. Bileşen: `components/country/DubaiFiyat.tsx`.
+`pricing.ts`'e dokunulmadı; İngiltere ve KKTC eski panelde.
+
+- Kesin (müşterinin teklif aracından): IFZA 5.120, vize 1.953, VIP 800.
+- Burak'ın yaklaşık söylediği: muhasebe aylık 200, yıllık 2.000 (10 ay fiyatına).
+- YER TUTUCU, müşteriden gelecek: öteki iki serbest bölgenin adı ve baz fiyatı
+  (şimdilik Meydan 5.400, DWTC 6.900), ek lisans yılı fiyatı (IFZA 4.200 varsayıldı).
+- Açık: sitenin öteki yerlerindeki Dubai fiyatı (menü, kartlar) hâlâ eski 3.900;
+  "…'den başlayan" diline geçiş ayrı tur.

@@ -5,6 +5,7 @@ import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import CountryPricing from "@/components/CountryPricing";
+import DubaiFiyat from "@/components/country/DubaiFiyat";
 import CountryProcess from "@/components/CountryProcess";
 import CountryStructures from "@/components/CountryStructures";
 import CountryDocs from "@/components/CountryDocs";
@@ -233,11 +234,13 @@ export default async function CountryPage({ params }: { params: Params }) {
               />
               <FadeUp delay={0.2}>
                 <p className="sec-lead sec-lead-dark">
-                  {name} için paket ve ek hizmetleri seçin; tutar sağda satır satır oluşur.
+                  {slug === "dubai" ? "Serbest bölgeyi ve eklemek istediklerinizi seçin; tutar sağda satır satır oluşur." : `${name} için paket ve ek hizmetleri seçin; tutar sağda satır satır oluşur.`}
                 </p>
               </FadeUp>
             </div>
-            <CountryPricing country={slug} />
+            {/* 06.10.2026 · Dubai'de paket yok: baz fiyat + ekler
+                (country/DubaiFiyat.tsx). Öteki iki ülke eski panelde. */}
+            {slug === "dubai" ? <DubaiFiyat /> : <CountryPricing country={slug} />}
           </div>
         </section>
 
