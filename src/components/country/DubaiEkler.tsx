@@ -170,9 +170,11 @@ const VIP_KAPSAM: { Icon: LucideIcon; t: string }[] = [
    (/lab/dubai-vip · iki kart, büyük rakam, gün gün). Burak: "büyük rakamı
    istemedim. İki kartta sağ tarafın beyaz olması rahatsız etti; tek kartın
    içinde olması daha iyi hissettiriyordu. Altı maddenin alt alta durması
-   daha sağlıklı; V3'ü uygularsan orada da olabilir." Sonuç: tek gece kart;
-   solda gün gün kıyas (on iki kare: standart dolu, VIP beşte bitiyor),
-   sağda altı madde TEK SÜTUN, altta fiyat ve düğme. */
+   daha sağlıklı." Sonuç: tek gece kart; solda süre kıyası ve düğme, sağda
+   altı madde TEK SÜTUN, sağa yaslı. Gün gün kareler bir tur yaşadı; Burak:
+   "kutu kutu olan yeri eskisi gibi tek şerit yapsak daha iyi; VIP'te neler
+   var kısmını sağa daya; sarı çizgiyi sevmiyorum; düğme mavi yanmasın,
+   sarı olsun." */
 export function DubaiVip() {
   return (
     <section id="vip" className="sec-pad" style={{ background: "var(--white)" }}>
@@ -196,23 +198,34 @@ export function DubaiVip() {
 
         <FadeUp>
           <div className="dbe-vip">
-            <div className="dbe-v4-ust">
+            <div className="dbe-sure">
               <span className="dbe-vip-rozet">
                 <Crown size={15} strokeWidth={2} aria-hidden="true" />
                 VIP
               </span>
-              <span className="dbe-sure-k">Dubai&apos;de geçireceğiniz iş günleri</span>
-              {(["standart", "vip"] as const).map((tip) => (
-                <div key={tip} className="dbe-v4-sira" data-tip={tip}>
-                  <span className="dbe-cubuk-ad">{tip === "vip" ? "VIP" : "Standart"}</span>
-                  <span className="dbe-v4-gunler" aria-hidden="true">
-                    {Array.from({ length: 12 }, (_, g) => (
-                      <i key={g} data-dolu={g < (tip === "vip" ? 5 : 12) || undefined} />
-                    ))}
-                  </span>
-                  <b>{tip === "vip" ? "yaklaşık 5 iş günü" : "yaklaşık 10-12 iş günü"}</b>
-                </div>
-              ))}
+              <span className="dbe-sure-k">Dubai&apos;de geçireceğiniz süre</span>
+              <div className="dbe-cubuk" data-tip="standart">
+                <span className="dbe-cubuk-ad">Standart</span>
+                <span className="dbe-cubuk-ray">
+                  <i />
+                </span>
+                <b>yaklaşık 10-12 iş günü</b>
+              </div>
+              <div className="dbe-cubuk" data-tip="vip">
+                <span className="dbe-cubuk-ad">VIP</span>
+                <span className="dbe-cubuk-ray">
+                  <i />
+                </span>
+                <b>yaklaşık 5 iş günü</b>
+              </div>
+              {/* fiyat düğmenin içinde; ayrı fiyat satırı ve üstündeki çizgi
+                  kalktı (Burak: "çizgi şeyini sevmiyorum … fiyatı ekleyince
+                  daha mantıklı buton"). Düğme amber, üstüne gelince de amber. */}
+              <SmartLink href="#fiyat" className="dbe-vip-btn">
+                Kurulumuma ekle
+                <b>+{money(VIP)}</b>
+                <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
+              </SmartLink>
             </div>
 
             <div className="dbe-vip-sag">
@@ -227,16 +240,6 @@ export function DubaiVip() {
                   </li>
                 ))}
               </ul>
-            </div>
-
-            <div className="dbe-vip-alt">
-              <span className="dbe-vip-fiyat">
-                <b>{money(VIP)}</b> tek seferlik
-              </span>
-              <SmartLink href="#fiyat" className="btn btn-primary">
-                Fiyata ekleyin
-                <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-              </SmartLink>
             </div>
           </div>
         </FadeUp>

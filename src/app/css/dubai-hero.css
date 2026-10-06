@@ -107,6 +107,9 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
   border: 1px solid var(--border);
   color: var(--text-900);
 }
+.dhr-btn b {
+  font-weight: 700;
+}
 @media (hover: hover) {
   .dhr-btn-mavi:hover {
     background: var(--blue-800);
@@ -246,20 +249,25 @@ body:has(.dhr) .onv:not([data-solid="true"]) {
 /* rozetler */
 .dhr-rozetler {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-auto-rows: 1fr;
   gap: 8px;
+  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
+/* satır kırılabiliyor: hizmet sayfalarında rozet bir cümle (ülke
+   sayfalarındaki kısa olgular zaten tek satır) */
 .dhr-rozetler > li {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
   padding: 8px 14px 8px 8px;
   border-radius: 16px;
   font-size: 14px;
-  white-space: nowrap;
+  line-height: 1.3;
 }
 .dhr-rozetler b {
   font-weight: 700;

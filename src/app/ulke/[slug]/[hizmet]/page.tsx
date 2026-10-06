@@ -71,6 +71,9 @@ export default async function ServicePage({ params }: { params: Params }) {
           crumb={`${name} · ${svc.title}`}
           title={`${name}'de ${kucult(svc.title)}.`}
           lead={svc.line}
+          /* foto giriş: rozetler kapsamın ilk üç maddesi */
+          rozetler={svc.includes.slice(0, 3)}
+          cta={{ label: svc.from !== null ? "Bu hizmetle başlayın" : "Bizimle iletişime geçin", href: svc.from !== null ? `/basla?ulke=${slug}&hizmet=${svc.slug}` : "/iletisim" }}
         />
 
         <section className="sec-pad" style={{ background: "var(--white)" }}>

@@ -1590,6 +1590,22 @@ body {
   border: 0;
   background: transparent;
 }
+/* her seçim grubu kendi kutusunda: etiket de kutunun içinde. Sağdaki sonuç
+   paneli büyük bir kutu; sol sütun etiketle başlayınca üst kenarlar
+   hizalanmıyordu (Burak: "serbest bölge yazısını da alttaki üç seçeneği de
+   büyük bir boksa al"). */
+.sec-night.gece-kart .ip-form {
+  gap: 12px;
+}
+.sec-night.gece-kart .ip-form .ip-field {
+  padding: 20px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+.sec-night.gece-kart .ip-form .dfy-iki {
+  gap: 12px;
+}
 @media (min-width: 900px) {
   .gece-kart {
     padding: 36px;

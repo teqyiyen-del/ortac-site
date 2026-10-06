@@ -133,9 +133,6 @@
     gap: 40px 56px;
     padding: 40px;
   }
-  .dbe-vip-alt {
-    grid-column: 1 / -1;
-  }
 }
 .dbe-sure {
   display: flex;
@@ -190,6 +187,12 @@
   align-content: center;
   gap: 22px;
 }
+/* geniş ekranda liste kartın sağ kenarına yaslı (sağda boşluk kalıyordu) */
+@media (min-width: 1024px) {
+  .dbe-vip-sag {
+    justify-self: end;
+  }
+}
 /* altı madde TEK SÜTUN (Burak: "alt alta durması daha sağlıklı") */
 .dbe-kapsam {
   display: grid;
@@ -219,24 +222,40 @@
   background: #2a1f0c;
   color: #e9b558;
 }
-.dbe-vip-alt {
-  display: flex;
-  flex-wrap: wrap;
+/* amber düğme: fiyat içinde. #1d1608 / #e9b558 hesapla 9,6:1 */
+.dbe-vip-btn {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding-top: 24px;
-  border-top: 1px solid #4a3a17;
+  gap: 10px;
+  width: fit-content;
+  height: 52px;
+  margin-top: 8px;
+  padding-inline: 22px;
+  border-radius: var(--r-pill);
+  background: #e9b558;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1d1608;
+  text-decoration: none;
+  transition: background-color 160ms linear;
 }
-.dbe-vip-fiyat {
-  font-size: 14px;
-  color: var(--on-dark-2);
-}
-.dbe-vip-fiyat b {
-  margin-right: 6px;
-  font-size: 28px;
+.dbe-vip-btn b {
   font-weight: 700;
-  color: var(--green-300);
+}
+.dbe-vip-btn svg {
+  transition: transform 220ms var(--ease-out-quint);
+}
+@media (hover: hover) {
+  .dbe-vip-btn:hover {
+    background: #f3c873;
+  }
+  .dbe-vip-btn:hover svg {
+    transform: translateX(3px);
+  }
+}
+.dbe-vip-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
 .dbe-vip-rozet {
   display: inline-flex;
@@ -250,44 +269,6 @@
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: #e9b558;
-}
-
-/* ---- VIP · gün gün kıyas (lab'daki V3; iki ve rakam adayları silindi) ---- */
-.dbe-v4-ust {
-  display: grid;
-  gap: 20px;
-  align-content: start;
-}
-.dbe-v4-sira {
-  display: grid;
-  gap: 10px;
-}
-.dbe-v4-gunler {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 6px;
-}
-.dbe-v4-gunler i {
-  aspect-ratio: 1;
-  border-radius: 8px;
-  background: #1c1c1c;
-}
-.dbe-v4-sira[data-tip="standart"] .dbe-v4-gunler i[data-dolu] {
-  background: #6b6b6b;
-}
-.dbe-v4-sira[data-tip="vip"] .dbe-v4-gunler i[data-dolu] {
-  background: #e0a43c;
-}
-.dbe-v4-sira b {
-  font-size: 20px;
-  font-weight: 700;
-  color: #c9c9c9;
-}
-.dbe-v4-sira[data-tip="vip"] b {
-  color: #ffffff;
-}
-.dbe-v4-sira[data-tip="vip"] .dbe-cubuk-ad {
   color: #e9b558;
 }
 

@@ -327,6 +327,37 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
       style={{ "--mh-ink": dest.ink, background: "var(--white)" } as React.CSSProperties}
     >
       <div className="container-o">
+        {/* 07.10.2026 (2) · BAŞLIK KARTIN DIŞINDA. Bir tur başlık da gece
+            kartın içindeydi; Burak: "siyahın içine komple gömdük, garip oldu;
+            başlığı en azından dışarıda olması lazım, fiyatlar kısmında daha
+            okey." Başlık ve açıklama açık zeminde (vurgu sitenin mavisi: ülke
+            rengi gece zemin için seçilmişti); ülke seçici ve üç yol kartta. */}
+        {/* aria-live: seçim başlığı değiştiriyor ama odak seçicide kalıyor.
+            SplitWords görünmez tam metni de bastığı için ekran okuyucu yeni
+            başlığı bir bütün cümle olarak duyuyor. */}
+        <div className="sec-head" aria-live="polite">
+          {/* key ile yeniden kuruluyor: kelimeler sitenin kendi açılış
+              hareketiyle tekrar geliyor, swap "tıklandı" hissi veriyor.
+              Hareketi kapatmış ziyaretçide key sabit — metin sessizce
+              değişiyor, aynı hareket tekrar tekrar oynamıyor. */}
+          <SplitWords
+            key={reduced ? "static" : dest.key}
+            as="h2"
+            text={`Kazancınızı ${dest.dative} nasıl getirirsiniz?`}
+            /* Vurgu artık "nasıl getirirsiniz?" değil ülkenin kendisi: bölümün
+               konusu hangi ülke olduğu. Başlıkta tek vurgu bırakıldı, ikincisi
+               eklenseydi aynı satırda üç renk olacaktı. */
+            accent={dest.dative}
+            className="h2"
+            style={{ color: "var(--text-900)" }}
+          />
+          <FadeUp delay={0.2}>
+            <p className="sec-lead">
+              Üç yol var. Hangisinin size uyduğu mukimliğinize ve gelir tipinize bağlı.
+            </p>
+          </FadeUp>
+        </div>
+
         <div className="sec-night gece-kart">
         <FadeUp className="mh-pick">
           <span className="mh-pick-lb" id={labelId}>
@@ -364,33 +395,6 @@ export default function MoneyHome({ country, name }: { country: Country; name: s
             ))}
           </div>
         </FadeUp>
-
-        {/* aria-live: seçim başlığı değiştiriyor ama odak seçicide kalıyor.
-            SplitWords görünmez tam metni de bastığı için ekran okuyucu yeni
-            başlığı bir bütün cümle olarak duyuyor. */}
-        <div className="sec-head sec-head-dark" aria-live="polite">
-          {/* key ile yeniden kuruluyor: kelimeler sitenin kendi açılış
-              hareketiyle tekrar geliyor, swap "tıklandı" hissi veriyor.
-              Hareketi kapatmış ziyaretçide key sabit — metin sessizce
-              değişiyor, aynı hareket tekrar tekrar oynamıyor. */}
-          <SplitWords
-            key={reduced ? "static" : dest.key}
-            as="h2"
-            text={`Kazancınızı ${dest.dative} nasıl getirirsiniz?`}
-            /* Vurgu artık "nasıl getirirsiniz?" değil ülkenin kendisi: bölümün
-               konusu hangi ülke olduğu. Başlıkta tek vurgu bırakıldı, ikincisi
-               eklenseydi aynı satırda üç renk olacaktı. */
-            accent={dest.dative}
-            accentColor={dest.ink}
-            className="h2"
-            style={{ color: "#ffffff" }}
-          />
-          <FadeUp delay={0.2}>
-            <p className="sec-lead sec-lead-dark">
-              Üç yol var. Hangisinin size uyduğu mukimliğinize ve gelir tipinize bağlı.
-            </p>
-          </FadeUp>
-        </div>
 
         <StepSwitcher steps={routeSteps} dark />
 

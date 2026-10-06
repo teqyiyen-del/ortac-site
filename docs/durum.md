@@ -4955,6 +4955,25 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (7) · foto giriş her ülke ve hizmet sayfasında; VIP, fiyat, kazanç düzeltmeleri
+
+- FOTO GİRİŞ YAYILDI: Dubai'de seçilen giriş `shared/FotoGiris.tsx` oldu; PageHero'nun
+  ülke dalı ve "art" dalı onu basıyor. Etkilenen sayfalar: üç ülke sayfası, Dubai
+  muhasebe (ve alt sayfaları), banka, vize, genel hizmet şablonu (vergi, kurumsal
+  danışmanlık, AML), sektör sayfaları, Dubai açılış sayfası (/lp). Eski siyah iki sütunlu
+  giriş ve sahne kartları PageHero'dan silindi (git'te). Kompakt siyah başlık (blog,
+  iletişim, araçlar, kaynaklar, hakkımızda …) DOKUNULMADI; sıradaki aday.
+  Rozetler: Dubai, İngiltere ve KKTC için teyitli üç olgu (PageHero · ULKE); hizmet
+  sayfalarında sayfanın kendi güven satırları ya da kapsamın ilk üç maddesi. Hizmet
+  sayfalarında fotoğraf ülkenin fotoğrafı (hepsi Dubai); hizmete özel fotoğraf yok.
+- VIP: kareler yerine yine tek şerit; madde listesi sağa yaslı; sarı ayraç çizgisi
+  kalktı; fiyat amber düğmenin içinde ("Kurulumuma ekle +$800"), hover amber.
+- Fiyat: gece kartın içinde her seçim grubu kendi kutusunda (etiket kutunun içinde),
+  sol sütunun üstü sağ panelle hizalı.
+- Kazancınızı nasıl getirirsiniz: başlık ve açıklama kartın dışında, açık zeminde.
+  Burak "komple beyaza da çekebiliriz" dedi; içerik (üç yol + şema) şimdilik gece
+  kartta, tam beyaz sürüm istenirse ayrı tur (bölümün stilleri gece için yazılı).
+
 ## 07.10.2026 (6) · tam siyah bölüm yok, VIP son hâl, giriş G3 canlıda
 
 - ZEMİN KURALI (Burak): bölüm zemini beyaz ve kırık beyaz sırayla; TAM SİYAH BÖLÜM YOK.
