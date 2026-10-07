@@ -2699,6 +2699,24 @@ body {
     padding: 156px 0 80px;
   }
 }
+/* 07.10.2026 · KISA BAŞLIK FOTOĞRAF ÜSTÜNDE (PageHero · kompakt dal).
+   Fotoğraf --ph-foto ile geliyor; perde bir maske: yazının olduğu sol taraf
+   koyu (0,90), sağ taraf fotoğrafı gösteriyor (0,55). Telefonda yazı ekranın
+   tamamında olduğu için düz perde (0,82). Fotoğraflar koyu tonlu seçildi
+   (lib/media.ts · BASLIK_FOTO). */
+.ph-foto {
+  background-color: var(--night);
+  background-image:
+    linear-gradient(to right, rgba(8, 8, 8, 0.9) 0%, rgba(8, 8, 8, 0.8) 45%, rgba(8, 8, 8, 0.55) 100%),
+    var(--ph-foto);
+  background-size: cover;
+  background-position: center;
+}
+@media (max-width: 767.5px) {
+  .ph-foto {
+    background-image: linear-gradient(rgba(8, 8, 8, 0.82), rgba(8, 8, 8, 0.82)), var(--ph-foto);
+  }
+}
 .ph-crumb {
   display: flex;
   align-items: center;

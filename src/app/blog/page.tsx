@@ -132,7 +132,9 @@ export default function BlogIndexPage() {
           crumb="Blog"
           title="Blog yazıları ve ülke rehberleri."
           accent="ülke rehberleri."
-          lead="Bir yazı bir konuyu açıyor: maliyet kalemi, vergi kaydı, banka görüşmesi, yıl sonu kapanışı. Ülke rehberi ise bir ülkede nelerin yapılabildiğini anlatıyor ve ayrı bir bölüm değil, buradaki beş kategoriden biri. Üstteki şerit listeyi süzüyor."
+          /* 07.10.2026 · dört satırdan iki satıra: başlık artık fotoğrafın
+             üstünde, uzun açıklama kalabalık duruyordu (kural: en fazla 2 satır) */
+          lead="Maliyet kalemi, vergi kaydı, banka görüşmesi, yıl sonu kapanışı: her yazı bir konuyu açıyor."
         />
 
         {/* Bölümün kökü: şerit burada süzgeç. Kategori sayfaları aynı bileşeni

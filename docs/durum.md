@@ -4955,6 +4955,20 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (12) · kısa sayfa başlığı fotoğraf üstünde, site geneli
+
+- PageHero kompakt dalı (blog, kategori ve yazı sayfaları, gelişmeler, e-kitaplar, kaynaklar,
+  araçlar ve araç sayfaları, ülkeler, iletişim, hakkımızda, kariyer, basında biz, iş
+  ortaklığı): siyah zemin ve yıldızlı katman yerine fotoğraf ve perde (.ph-foto). Boyut ve
+  yazı aynı. Fotoğraf sayfa türüne göre, adresin başından (lib/media.ts · BASLIK_FOTO):
+  yazı sayfaları (belge imzalayan el), araçlar ve ülkeler (koyu ekranda grafik), kurumsal
+  (toplantı masası). Üçü de koyu tonlu.
+- Blog başlığının açıklaması iki satıra indi.
+- İletişim sayfasının açıklaması dört satır ve "formun gönderimi henüz açılmadı" diyor;
+  dokunulmadı, Burak'a söylendi.
+- Lab'daki başlık denemeleri (/lab/acik-baslik, /lab/foto-baslik) silindi.
+- Kontrast ölçülmedi (deneme derinliği); perde 0,90 → 0,55, fotoğraflar koyu.
+
 ## 07.10.2026 (11) · lab: fotoğraflı kısa başlık
 
 - /lab/foto-baslik (blog) ve /lab/foto-baslik/araclar: kısa siyah sayfa başlığı aynı boyda,

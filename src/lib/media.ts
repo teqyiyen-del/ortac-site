@@ -231,3 +231,23 @@ export const HIZMET_FOTO: { ara: RegExp; foto: string }[] = [
   // masada belge imzalayan el
   { ara: /AML|uyum/i, foto: U("1450101499163-c8848c66ca85") },
 ];
+
+/* ----------------------------------------------- kısa sayfa başlıkları
+   07.10.2026 · Kısa siyah sayfa başlığı (PageHero · kompakt dal) artık bir
+   fotoğrafın üstünde. Lab'da açık zeminli üç seçenek denendi, beğenilmedi;
+   Burak: "direkt görsel üzerine yapsak … şu anki boyutunda, biraz koyuluk
+   ki yazılar okunsun" → "tamam böyle olsun, sayfa türüne göre paylaştır,
+   hepsine uygula."
+   Fotoğraf SAYFA TÜRÜNE göre, adresin başına bakılarak seçiliyor; üç tür,
+   üç kare. Hepsi bu dosyada zaten olan, bakılmış kareler ve KOYU tonlu
+   (açık tonlu karede açıklama yazısı okunmuyordu; lab'da görüldü).
+   Eşleşmeyen adres kurumsal kareye düşer. */
+const BASLIK_YAZI = U("1450101499163-c8848c66ca85", 1800); // masada belge imzalayan el
+const BASLIK_ARAC = U("1560221328-12fe60f83ab8", 1800); // koyu ekranda çizgi grafikler
+const BASLIK_KURUM = U("1517048676732-d65bc937f952", 1800); // ahşap masada toplantı
+export const BASLIK_FOTO: { on: string[]; foto: string }[] = [
+  { on: ["/blog", "/gelismeler", "/e-kitaplar", "/kaynaklar", "/rehberler"], foto: BASLIK_YAZI },
+  { on: ["/araclar", "/uygunluk-testi", "/ulkeler"], foto: BASLIK_ARAC },
+  { on: ["/iletisim", "/hakkimizda", "/kariyer", "/basinda-biz", "/is-ortakligi"], foto: BASLIK_KURUM },
+];
+export const BASLIK_FOTO_VARSAYILAN = BASLIK_KURUM;

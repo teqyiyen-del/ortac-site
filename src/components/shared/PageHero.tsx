@@ -28,7 +28,8 @@ import { useLenis } from "@/components/Providers";
 import { FACTS, type CountrySlug } from "@/lib/brand";
 import { gtm } from "@/lib/gtm";
 import FotoGiris, { type FotoRozet } from "@/components/shared/FotoGiris";
-import { COUNTRY_PHOTO, HIZMET_FOTO } from "@/lib/media";
+import { BASLIK_FOTO, BASLIK_FOTO_VARSAYILAN, COUNTRY_PHOTO, HIZMET_FOTO } from "@/lib/media";
+import { usePathname } from "next/navigation";
 import { DUBAI_BASLANGIC, money } from "@/lib/dubaiFiyat";
 
 
@@ -91,7 +92,6 @@ export default function PageHero({
   trust,
   rozetler,
   belge,
-  backdrop = "yildiz",
 }: {
   crumb: string;
   title: string;
@@ -228,9 +228,9 @@ export default function PageHero({
    * bloklarda, ölçülmüş gerekçeleriyle duruyor — buradaki üç dönüş yolundan
    * hangisinin .ph-split bastığı oradaki ayrımın tek girdisi.
    */
-  backdrop?: "plain" | "grid" | "yildiz";
 }) {
   const lenis = useLenis();
+  const yol = usePathname() ?? "";
 
   /* Katman saf CSS: her karede JS yok, sunucuda da aynı biçimde basılıyor
      (rastgelelik yok, hidrasyon farkı yok). Sıra önemli — ızgara altta,
@@ -246,24 +246,6 @@ export default function PageHero({
 
      Sıra `-b` sonra `-a`: uzak katman altta. Ölçüler ve periyotlar
      css/pagehero-yildiz.css'te. */
-  const zeminVar = backdrop !== "plain";
-  const yildizZemin = backdrop === "yildiz";
-  const backdropLayer = zeminVar ? (
-    <div className="phg-bg" data-zemin={yildizZemin ? "yildiz" : "izgara"} aria-hidden="true">
-      {yildizZemin ? (
-        /* data-yaricap="serbest": çizim (bkz. Footer.tsx · kcta-gok). */
-        <span data-yaricap="serbest" style={{ display: "contents" }}>
-          <span className="phy-yildiz phy-yildiz-b" />
-          <span className="phy-yildiz phy-yildiz-a" />
-          <span className="phy-kayan phy-kayan-1" />
-          <span className="phy-kayan phy-kayan-2" />
-        </span>
-      ) : (
-        <div className="phg-grid" />
-      )}
-      <div className="phg-glow" />
-    </div>
-  ) : null;
 
   const [head, tail] = accent && title.endsWith(accent)
     ? [title.slice(0, -accent.length), accent]
@@ -289,9 +271,14 @@ export default function PageHero({
 
   /* default: the compact header every other inner page already uses */
   if (!country && !art && !rozetler) {
+    /* 07.10.2026 · ZEMİN FOTOĞRAF. Başlığın boyutu, yazısı ve boşlukları
+       aynı; siyah zeminin (ve yıldızlı katmanın) yerine sayfa türünün
+       fotoğrafı ve üstünde soldan sağa açılan perde geldi (globals.css ·
+       .ph-foto). Fotoğraf adresin başına göre seçiliyor (lib/media.ts ·
+       BASLIK_FOTO). Karar yolu orada. */
+    const foto = BASLIK_FOTO.find((b) => b.on.some((o) => yol === o || yol.startsWith(`${o}/`)))?.foto ?? BASLIK_FOTO_VARSAYILAN;
     return (
-      <section className={zeminVar ? "ph phg" : "ph"}>
-        {backdropLayer}
+      <section className="ph ph-foto" style={{ "--ph-foto": `url(${foto})` } as React.CSSProperties}>
         <div className="container-o">
           {crumbNav}
           <h1 className="ph-title">
