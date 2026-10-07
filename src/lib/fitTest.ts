@@ -624,7 +624,7 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
            söylüyor ve önceki üç kutuyla karışmıyor. */
         label: "Karışık (tek bir yer yok)",
         weights: { dubai: 2, ingiltere: 2 },
-        why: "Tek bir yer yoksa ayırt edici olan tahsilat genişliği; Stripe, PayPal ve Wise Dubai ile İngiltere'de çalışıyor, KKTC'de çalışmıyor (brand.ts · PAY_MATRIX), bu yüzden ikisi eşit, KKTC sıfır.",
+        why: "Tek bir yer yoksa ayırt edici olan tahsilat genişliği; Stripe ve PayPal Dubai ile İngiltere'de çalışıyor, KKTC'de çalışmıyor (brand.ts · PAY_MATRIX), bu yüzden ikisi eşit, KKTC sıfır.",
       },
     ],
   },
@@ -822,14 +822,14 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
       {
         id: "odeme",
         label: "Ödeme kuruluşu hesabı yeterli",
-        hint: "Wise, Payoneer",
+        hint: "Payoneer",
         icon: "wallet",
         /* EKSİ KALKTI (bu turda) · KKTC −2 → 0. Kaynak K2'ydi (PAY_MATRIX ·
            Ödeme kuruluşu: Wise ✗, Payoneer ✗) ve soru izinli iki sorudan biri
            değil. BU SATIRDA KAYIP EN AZ: zaten sayfa düzeyinde ret yoktu,
            yalnız matris hücresi vardı ve öteki iki ülke artıyı alıyor. */
         weights: { ingiltere: 3, dubai: 2 },
-        why: "İngiltere sayfası pratikte ödeme kuruluşu hesabıyla başlandığını yazıyor (countryContent · İngiltere clarify); Wise ve Payoneer iki ülkede de çalışıyor, KKTC'de ikisi de ✗ (brand.ts · PAY_MATRIX · Ödeme kuruluşu). KKTC sıfır: desteklenmeyen iki hücre, öteki ikisinin artısı üzerinden ifade ediliyor.",
+        why: "İngiltere sayfası pratikte ödeme kuruluşu hesabıyla başlandığını yazıyor (countryContent · İngiltere clarify); Payoneer iki ülkede de çalışıyor, KKTC'de ikisi de ✗ (brand.ts · PAY_MATRIX · Ödeme kuruluşu). KKTC sıfır: desteklenmeyen iki hücre, öteki ikisinin artısı üzerinden ifade ediliyor.",
       },
       {
         /* 27.09.2026 · YENİ ŞIK. Teyit (KKTC 12): "özellikle TL hesaba

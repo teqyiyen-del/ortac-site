@@ -521,7 +521,7 @@ const PARA_ROWS: CmpRow[] = PAY_MATRIX.flatMap<CmpRow>((g) => {
     k: g.title,
     /* Grubun kendi açıklaması veriden geliyor: "Banka değil; farklı lisans ve
        koruma rejimi" uyarısı bu yüzden ayrı bir dipnot bloğu istemiyor —
-       uyardığı satırın, yani Wise ile Payoneer'ın tam üstünde duruyor. */
+       uyardığı satırın, yani Payoneer'ın tam üstünde duruyor. */
     hint: g.hint,
     i: GROUP_ICON[g.title] ?? Wallet,
     cell: (c) => <ChanCell g={g} c={c} />,

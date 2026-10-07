@@ -124,7 +124,7 @@ export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
   ingiltere: [
     { key: "kurulus", label: "Şirket Kuruluşu", href: "/ingiltere", meta: "$1.200 · 3-7 gün" },
     { key: "muhasebe", label: "Muhasebe & Vergi", href: "/ingiltere/muhasebe", meta: "aylık" },
-    { key: "banka-hesabi", label: "Banka & Ödeme", href: "/ingiltere/banka-hesabi", meta: "Wise · Payoneer" },
+    { key: "banka-hesabi", label: "Banka & Ödeme", href: "/ingiltere/banka-hesabi", meta: "Payoneer" },
     { key: "sponsor-licence", label: "Sponsor Licence", href: "/ingiltere/sponsor-licence" },
     { key: "adres", label: "Şirket Adresi", href: "/ingiltere/adres", meta: "yıllık" },
   ],
@@ -253,7 +253,7 @@ export const PAY_MATRIX: MatrixGroup[] = [
     title: "Ödeme kuruluşu",
     hint: "Banka değil; farklı lisans ve koruma rejimi",
     rows: [
-      { name: "Wise", cells: { dubai: "yes", ingiltere: "yes", kktc: "no" } },
+      /* Wise satırı 07.10.2026'da çıktı (müşteri: "ödeme sistemlerinde Wise yok"; Burak: "Wise'ı her yerden çıkar") */
       { name: "Payoneer", cells: { dubai: "yes", ingiltere: "yes", kktc: "no" } },
     ],
   },

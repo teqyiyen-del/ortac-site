@@ -9,8 +9,7 @@ import {
   FileText,
   FileCheck,
 } from "lucide-react";
-import { BrandBadge } from "@/components/shared/BrandMark";
-import { BRANDS, type BrandKey } from "@/lib/brands";
+import { BRANDS, type Brand, type BrandKey } from "@/lib/brands";
 import { GKRY_D, KKTC_D, NOKTA, TR_D } from "@/lib/geo/trKktc";
 
 /* Schematic drawings for the country advantage cards.
@@ -122,15 +121,48 @@ function FigVergiKktc() {
   );
 }
 
+/* ---- LOGO PLAKASI (07.10.2026) ----
+   Burak: "hepsinin logolarını bul koy … boxların spacingleri bozulmuş, text
+   uzunluğundan; fixle." Banka ve tahsilat çizimlerinde satır artık "küçük
+   baş harf + ad" değil, açık bir plaka ve içinde markanın KENDİ LOGOSU
+   (ad logonun içinde, ayrıca yazılmıyor; taşan yazı sorunu da böyle bitti).
+   Kaynak sırası: dosya (public/brands) → tam logo (wordmark yolları, renkli
+   varyant varsa o) → simge + ad → yalnız ad. İç SVG `meet` ile ortalıyor;
+   logo plakaya sığacak kadar küçülüyor, oranı bozulmuyor. */
+function LogoPlaka({ brand, x, y, w, h }: { brand: BrandKey; x: number; y: number; w: number; h: number }) {
+  const b: Brand = BRANDS[brand];
+  const ix = x + 10;
+  const iy = y + 5;
+  const iw = w - 20;
+  const ih = h - 10;
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} rx="8" fill="#ffffff" />
+      {b.dosya ? (
+        <image href={b.dosya.src} x={ix} y={iy} width={iw} height={ih} preserveAspectRatio="xMidYMid meet" />
+      ) : b.wordmark ? (
+        <svg x={ix} y={iy} width={iw} height={ih} viewBox={b.wordmark.viewBox} preserveAspectRatio="xMidYMid meet">
+          {(b.wordmark.renkli ?? b.wordmark.parts).map((p, i) => (
+            <path key={i} d={p.d} fill={p.fill ?? "#1c1c1c"} />
+          ))}
+        </svg>
+      ) : (
+        <text x={x + w / 2} y={y + h / 2 + 4} textAnchor="middle" style={{ fill: "#1c1c1c", fontWeight: 700 }}>
+          {b.title}
+        </text>
+      )}
+    </g>
+  );
+}
+
 /* ---- dossier in, corporate account out ----
    Hangi bankalarla çalıştığımız artık yazıyla değil işaretle: kartın metni
    "Wio ve Mashreq NeoBiz" diyorsa çizimde de o iki plaka duruyor. Liste
    ülkenin kendi verisinden (`pros[].brands`) geliyor, burada sabit değil. */
 function FigBank({ brands }: { brands: BrandKey[] }) {
   const list = brands.length ? brands.slice(0, 4) : (["wio", "mashreq"] as BrandKey[]);
-  /* dört bankada 2 × 2 (07.10.2026 · ENBD ve FAB eklendi); hücre dar olduğu
-     için kısa ad. İki bankada eskisi gibi alt alta, tam ad. */
-  const KISA: Partial<Record<BrandKey, string>> = { wio: "Wio", mashreq: "Mashreq", emiratesnbd: "ENBD", fab: "FAB" };
+  /* dört bankada 2 × 2 (07.10.2026 · ENBD ve FAB eklendi), iki bankada alt
+     alta; her hücre bir logo plakası */
   const dort = list.length > 2;
   return (
     <Fig>
@@ -154,16 +186,10 @@ function FigBank({ brands }: { brands: BrandKey[] }) {
 
       {list.map((b, i) => {
         const x = dort ? 108 + (i % 2) * 100 : 108;
-        const y = dort ? 64 + Math.floor(i / 2) * 34 : 66 + i * 34;
-        return (
-          <g key={b}>
-            <rect x={x} y={y} width={dort ? 94 : 194} height="28" rx="9" className="gv2-box" />
-            <BrandBadge brand={b} x={x + 6} y={y + 4} size={20} radius={6} />
-            <text x={x + 34} y={y + 18} className="gv2-t9">
-              {dort ? (KISA[b] ?? BRANDS[b].title) : BRANDS[b].title}
-            </text>
-          </g>
-        );
+        /* dörtlüde plaka 33 yüksek: Mashreq ve FAB logoları dik, alçak plakada
+           küçük kalıyordu */
+        const y = dort ? 61 + Math.floor(i / 2) * 37 : 66 + i * 34;
+        return <LogoPlaka key={b} brand={b} x={x} y={y} w={dort ? 94 : 194} h={dort ? 33 : 28} />;
       })}
     </Fig>
   );
@@ -384,41 +410,35 @@ function FigBadge() {
    diyorsa ekranda o üç işaret duruyor. Kanal listesi ülkenin verisinden
    geliyor; ikiye düşerse çizim iki raya iniyor. */
 function FigCard({ brands }: { brands: BrandKey[] }) {
-  const list = (brands.length ? brands : (["stripe", "paypal", "wise"] as BrandKey[])).slice(0, 4);
-  /* 07.10.2026 · dört kanal sığsın diye (Amazon Payment Services, Network
-     International uzun adlar): soldaki kart daraldı (72), sağdaki kutular
-     genişledi (204), satır 28. Raylar kartın ortasından (y 76) açılıyor. */
-  const h = 28;
-  const bosluk = list.length === 4 ? 6 : 10;
+  const list = (brands.length ? brands : (["stripe", "paypal"] as BrandKey[])).slice(0, 5);
+  /* 07.10.2026 · beş kanala kadar (Stripe, PayPal, Binance, Amazon Payment
+     Services, Network International). Satır sayısı arttıkça satır alçalıyor;
+     raylar kartın ortasından (y 76) açılıyor. Her satır bir logo plakası. */
+  const h = list.length >= 5 ? 24 : 28;
+  const bosluk = list.length >= 5 ? 4 : list.length === 4 ? 6 : 10;
   const toplam = list.length * h + (list.length - 1) * bosluk;
   const ilk = 76 - toplam / 2;
   const ys = list.map((_, i) => ilk + i * (h + bosluk));
 
   return (
     <Fig>
-      <rect x="4" y="44" width="72" height="64" rx="13" className="gv2-box-b" />
-      <rect x="15" y="57" width="22" height="16" rx="5" className="gv2-chip-w gv2-cip" />
-      <path d="M26 57 V73" className="gv2-line-b gv2-cip-l" />
-      <rect x="15" y="86" width="30" height="6" rx="3" className="gv2-bar-b" />
-      <rect x="50" y="86" width="14" height="6" rx="3" className="gv2-bar-b gv2-faint" />
+      <rect x="30" y="44" width="72" height="64" rx="13" className="gv2-box-b" />
+      <rect x="41" y="57" width="22" height="16" rx="5" className="gv2-chip-w gv2-cip" />
+      <path d="M52 57 V73" className="gv2-line-b gv2-cip-l" />
+      <rect x="41" y="86" width="30" height="6" rx="3" className="gv2-bar-b" />
+      <rect x="76" y="86" width="14" height="6" rx="3" className="gv2-bar-b gv2-faint" />
 
       {ys.map((y) => {
         const mid = y + h / 2;
-        const d = Math.abs(mid - 76) < 1 ? "M76 76 H102" : `M76 76 C 90 76, 90 ${mid}, 102 ${mid}`;
+        const d = Math.abs(mid - 76) < 1 ? "M102 76 H128" : `M102 76 C 116 76, 116 ${mid}, 128 ${mid}`;
         return <path key={`r${y}`} d={d} className="gv2-line-b gv2-flow" />;
       })}
       {ys.map((y) => (
-        <ArrowR key={`a${y}`} x={102} y={y + h / 2} blue />
+        <ArrowR key={`a${y}`} x={128} y={y + h / 2} blue />
       ))}
 
       {list.map((b, i) => (
-        <g key={b}>
-          <rect x="112" y={ys[i]} width="204" height={h} rx="9" className="gv2-box" />
-          <BrandBadge brand={b} x={118} y={ys[i] + 4} size={20} radius={6} />
-          <text x={146} y={ys[i] + 18} className="gv2-t9">
-            {BRANDS[b].title}
-          </text>
-        </g>
+        <LogoPlaka key={b} brand={b} x={138} y={ys[i]} w={152} h={h} />
       ))}
     </Fig>
   );

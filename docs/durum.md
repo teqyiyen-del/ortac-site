@@ -4955,6 +4955,20 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (16) · logolar, Binance, Wise her yerden çıktı
+
+- Dubai banka ve tahsilat kartları: satırlar artık açık plakada markanın kendi logosu
+  (ProSchema · LogoPlaka). Tahsilat: Stripe, PayPal, Binance, Amazon Payment Services,
+  Network International. Banka: Wio, Mashreq, Emirates NBD, FAB.
+  Logo dosyaları public/brands/: fab.svg ve network.svg Wikimedia Commons'tan, aps.svg
+  Amazon Payment Services'in kendi sitesinden. Müşteri kendi dosyalarını gönderirse değişir.
+- WISE SİTEDEN ÇIKTI (Burak: "her yerden çıkar"): ödeme tablosu satırı, ana sayfa banka
+  sahnesi (yerine Binance), ortak şeridi, İngiltere ve KKTC ödeme listeleri, sektör ve
+  uygunluk testi cümleleri, menü künyeleri. brands.ts'teki kayıt duruyor (kullanılmıyor).
+  İngiltere'de "Wise ya da Tide gibi dijital hesapla başlanıyor" cümlesi "Tide gibi" oldu;
+  İngiltere içeriği gözden geçirilirken yeniden bakılmalı.
+- Hakkımızda başlığının fotoğrafı değişti (ilk kutuyla aynıydı): Dubai silueti.
+
 ## 07.10.2026 (15) · Murat Bey'in cevapları, müşteri revizeleri, KVKK taslağı
 
 Murat Bey (Burak aktardı): Meydan 5.300 ve DWTC 5.820 doğru. Muhasebe yıllık = 10 ay

@@ -167,7 +167,7 @@ export function SceneBanking() {
   const rails: { y: number; brand: BrandKey }[] = [
     { y: 36, brand: "stripe" },
     { y: 86, brand: "paypal" },
-    { y: 136, brand: "wise" },
+    { y: 136, brand: "binance" },
   ];
   return (
     <Scene>

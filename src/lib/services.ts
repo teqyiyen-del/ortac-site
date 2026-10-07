@@ -83,7 +83,7 @@ function banking(c: Country): Service {
   const p = PRICING[c];
   const banks: Record<Country, string> = {
     dubai: "Wio · Mashreq NeoBiz",
-    ingiltere: "Wise · Revolut Business",
+    ingiltere: "Revolut Business",
     kktc: "Yerel banka",
   };
   const hard: Record<Country, string> = {

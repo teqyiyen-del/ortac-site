@@ -120,6 +120,8 @@ export type Brand = {
   hex?: string;
   /** resmî işaret gelene kadar kullanılacak baş harf(ler) */
   mono?: string;
+  /** logo bir DOSYA olarak duruyorsa (public/brands): yolu ve en-boy ölçüsü */
+  dosya?: { src: string; w: number; h: number };
 };
 
 export const BRANDS = {
@@ -406,9 +408,17 @@ export const BRANDS = {
      FAB ekle"; tahsilat kartında "Stripe · PayPal · Amazon Payment Services
      · Network International". Üçünün de resmî logo dosyası ELİMİZDE YOK
      (SWAP:BRAND_ASSET): baş harfle basılıyor, logo uydurulmuyor. */
-  fab: { title: "FAB", mono: "FA" },
-  aps: { title: "Amazon Payment Services", mono: "AP" },
-  network: { title: "Network International", mono: "NI" },
+  /* aynı gün: logolar bulundu (Burak: "hepsinin logolarını bul koy").
+     Dosyalar public/brands/ altında, olduğu gibi (renkli, kendi çizimleri):
+       fab.svg      Wikimedia Commons · "First Abu Dhabi Bank Logo.svg"
+       network.svg  Wikimedia Commons · "Network International logo.svg"
+       aps.svg      paymentservices.amazon.com'un kendi sitesindeki logo
+     `dosya` yalnız çizim sahnelerindeki açık plakada kullanılıyor
+     (country/ProSchema.tsx · LogoPlaka). Müşteri kendi dosyalarını
+     gönderirse bunlar değişir. */
+  fab: { title: "FAB", mono: "FA", dosya: { src: "/brands/fab.svg", w: 533.66, h: 312.77 } },
+  aps: { title: "Amazon Payment Services", mono: "AP", dosya: { src: "/brands/aps.svg", w: 217.453, h: 21.999 } },
+  network: { title: "Network International", mono: "NI", dosya: { src: "/brands/network.svg", w: 47.007, h: 12.344 } },
 } as const satisfies Record<string, Brand>;
 
 /* SWAP:BRAND_ASSET — HÂLÂ EKSİK OLANLAR

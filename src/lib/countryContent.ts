@@ -273,10 +273,11 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         icon: "card",
         /* 07.10.2026 · müşteri revizesi: "ödeme sistemlerinde Wise yok";
            bu kart için liste "Stripe · PayPal · Amazon Payment Services ·
-           Network International". Eski cümle wamo, Wise ve Payoneer'i
+           Network International". Eski cümle wamo, Payoneer'i
            sayıyordu. */
-        brands: ["stripe", "paypal", "aps", "network"],
-        line: "Stripe, PayPal, Amazon Payment Services ve Network International ile kartla tahsilat kurulabiliyor.",
+        /* aynı gün: "Binance'i de ekle, Wise'ı her yerden çıkar." */
+        brands: ["stripe", "paypal", "binance", "aps", "network"],
+        line: "Stripe, PayPal, Binance, Amazon Payment Services ve Network International ile tahsilat kurulabiliyor.",
       },
       {
         /* "Oturum vizesi alabiliyorsunuz" idi. -abiliyorsunuz kalıbı bir
@@ -436,7 +437,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       { profile: "E-ticaret ve dijital ürün", you: "Online satış yapıyorsanız", ok: true, why: "Kartla tahsilat ve lojistik tarafı sorunsuz kurulur.", ikon: "magaza", },
       { profile: "Körfez ve Orta Doğu'ya satış", you: "Körfez'e satıyorsanız", ok: true, why: "Yerel şirket, yerel müşteride güven ve ödeme kolaylığı.", ikon: "kure", },
       { profile: "Oturum vizesi isteyen", you: "Oturum vizesi istiyorsanız", ok: true, why: "Ortak vizesi ve Emirates ID süreç içinde alınır.", ikon: "kimlik", },
-      { profile: "SaaS ve ajanslar", you: "SaaS veya ajans işletiyorsanız", ok: true, why: "Stripe, PayPal ve Wise bağlantısı kurulabiliyor.", ikon: "kod", },
+      { profile: "SaaS ve ajanslar", you: "SaaS veya ajans işletiyorsanız", ok: true, why: "Stripe ve PayPal bağlantısı kurulabiliyor.", ikon: "kod", },
       { profile: "Kuruluş bütçesi dar olan", you: "Bütçeniz darsa", ok: false, why: "Üç ülkenin en yüksek kuruluş ve yenileme maliyeti burada.", ikon: "cuzdan", alt: "ingiltere" },
       { profile: "Hiç seyahat edemeyecek olan", you: "Hiç seyahat edemeyecekseniz", ok: false, why: "Banka imzası ve vize için bir kez gelmek şart.", ikon: "ucak", alt: "ingiltere" },
       { profile: "Yalnızca AB'ye fatura kesen", you: "Yalnızca AB'ye fatura kesiyorsanız", ok: false, why: "İngiltere Ltd bu profilde daha az sürtünme yaratır.", ikon: "fis", alt: "ingiltere" },
@@ -587,8 +588,8 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         /* [RESMÎ] sağlayıcı sayfaları, docs/ingiltere-mevzuat.md · 7. */
         title: "Ödeme altyapısı açık",
         icon: "card",
-        brands: ["stripe", "paypal", "wise"],
-        line: "Stripe, PayPal, Wise, Amazon ve Etsy İngiltere şirketiyle çalışıyor. Stripe için İngiltere'de bir banka hesabı yeterli.",
+        brands: ["stripe", "paypal"],
+        line: "Stripe, PayPal, Amazon ve Etsy İngiltere şirketiyle çalışıyor. Stripe için İngiltere'de bir banka hesabı yeterli.",
       },
       {
         /* [RESMÎ] direktörün İngiltere'de yaşaması gerekmiyor; kimlik
@@ -630,7 +631,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         },
         {
           title: "Tescil kolay, banka değil",
-          line: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; pratikte Wise ya da Tide gibi dijital hesapla başlanıyor.",
+          line: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; pratikte Tide gibi dijital hesapla başlanıyor.",
         },
       ],
     },
@@ -811,7 +812,6 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         { ad: "Shopify Payments", ikon: "sepet", grup: "tahsilat", etiket: "E-ticaret", durum: "var", not: "Shopify mağazanızda kartla ödeme." },
         { ad: "Amazon UK", ikon: "kutu", grup: "pazaryeri", etiket: "Pazaryeri", durum: "var", not: "Amazon'un İngiltere pazaryerinde satıcı hesabı." },
         { ad: "Etsy", ikon: "magaza", grup: "pazaryeri", etiket: "Pazaryeri", durum: "var", not: "Etsy mağazası ve Etsy Payments ile tahsilat." },
-        { ad: "Wise", brand: "wise" as BrandKey, grup: "hesap", etiket: "Hesap", durum: "var", not: "Çok para birimli işletme hesabı ve yurt dışı transfer." },
         /* [MÜŞTERİ] 23.09.2026 · Burak: "Payoneer'i falan da ekleyebilirsin
            … bunların hepsi çalışıyor de, Binance'i falan da koy, oldu
            bitti." Üçü resmî kaynakla teyitli değil (teyit listesi · 4 · 11):
@@ -853,7 +853,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
       {
         q: "Banka hesabı açabilecek miyim?",
-        a: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; HSBC küçük işletme hesabı için İngiltere vergi mukimliği istiyor. Pratikte Wise ya da Tide gibi dijital hesapla başlanıyor.",
+        a: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; HSBC küçük işletme hesabı için İngiltere vergi mukimliği istiyor. Pratikte Tide gibi dijital hesapla başlanıyor.",
       },
       {
         q: "Stripe için İngiltere mi, başka bir ülke mi?",
@@ -953,7 +953,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         /* teyit (KKTC 24, 25): yerel bankanın sanal POS'uyla (Tiko)
            kartla tahsilat mümkün; uluslararası ödeme kuruluşları çalışmıyor */
         title: "Global ödeme kuruluşları yok",
-        line: "Stripe, PayPal ve Wise KKTC şirketiyle çalışmıyor. Kartla tahsilat yerel bankanın sanal POS'uyla yapılıyor.",
+        line: "Stripe ve PayPal KKTC şirketiyle çalışmıyor. Kartla tahsilat yerel bankanın sanal POS'uyla yapılıyor.",
       },
       {
         title: "KKTC içine satış vergili",
@@ -1184,7 +1184,6 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         { ad: "Sanal POS (Tiko)", ikon: "kart", durum: "var", not: "Kartla tahsilat; ödeme KKTC'deki şirket hesabına geliyor." },
         { ad: "Stripe", brand: "stripe" as BrandKey, durum: "yok", not: "Ülke listesinde KKTC yok." },
         { ad: "PayPal", brand: "paypal" as BrandKey, durum: "yok", not: "Ülke listesinde KKTC yok." },
-        { ad: "Wise", brand: "wise" as BrandKey, durum: "yok", not: "Desteklenen ülkeler arasında KKTC yok." },
         /* teyit (KKTC 27): "eskiden açan çok müşteri oldu, sonradan
            açılamamaya başlandı" */
         { ad: "Payoneer", brand: "payoneer" as BrandKey, durum: "yok", not: "Eskiden açılıyordu; bugün KKTC şirketiyle açılmıyor." },
@@ -1250,7 +1249,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         /* [RESMÎ] stripe.com/global: listede Cyprus (güney) var, KKTC yok. */
         q: "Stripe kullanabilir miyim?",
         /* teyit (KKTC 24, 25) */
-        a: "Hayır. Stripe'ın ülke listesinde KKTC yok; PayPal ve Wise'ta da yok. Kartla tahsilatı yerel bankanın sanal POS'uyla yapıyorsunuz, ödemeler KKTC'deki şirket hesabına geliyor.",
+        a: "Hayır. Stripe'ın ülke listesinde KKTC yok; PayPal'da da yok. Kartla tahsilatı yerel bankanın sanal POS'uyla yapıyorsunuz, ödemeler KKTC'deki şirket hesabına geliyor.",
       },
       {
         /* [RESMÎ] 63/2006 md. 11-13. */

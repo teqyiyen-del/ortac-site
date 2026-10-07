@@ -596,13 +596,13 @@ const SceneCommerce: SceneFn = () => (
 );
 
 /* Danışmanlık: müşteriden gelen havale ödeme kuruluşundan geçiyor.
-   Wise ve Payoneer sayfanın ikinci ekseninde adıyla geçiyor. */
+   Payoneer sayfanın ikinci ekseninde adıyla geçiyor. */
 const SceneConsulting: SceneFn = () => (
   <SceneChannel
-    label="Müşteri panelinden çıkan üç kanal, Wise ve Payoneer işaretlerini taşıyan ödeme paneline, oradan şirkete bağlanıyor."
+    label="Müşteri panelinden çıkan üç kanal, Payoneer ve Stripe işaretlerini taşıyan ödeme paneline, oradan şirkete bağlanıyor."
     words={["Müşteri", "Ödeme", "Şirket"]}
     sources={[Users, Briefcase, Globe]}
-    middle={{ brands: ["wise", "payoneer"] }}
+    middle={{ brands: ["payoneer", "stripe"] }}
     target={Building2}
   />
 );

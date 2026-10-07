@@ -1088,7 +1088,7 @@ export default function ThreeCountries() {
             BÖLÜMÜN ALTINDAKİ İKİ DİPNOT KUTUSU KALKTI.
 
             Burada .uk3-notes içinde iki kutu vardı:
-              · "Ödeme kuruluşu hesabı, banka hesabı değildir. Wise ve Payoneer
+              · "Ödeme kuruluşu hesabı, banka hesabı değildir. Payoneer
                  farklı lisansa tabidir."
               · "Hesabı banka açar, karar bankanındır. Onay taahhüdü vermiyoruz.
                  Dosyayı hazırlar, süreci yürütürüz."
@@ -1103,7 +1103,7 @@ export default function ThreeCountries() {
                  bölümde İKİ yerde basılıyor: açılan panelin para kartında
                  (.uk3-mgh) ve yukarıdaki kıyas tablosunun aynı adlı satır
                  başlığının altında. Yani uyarı kaybolmadı, konusunun yanına
-                 taşındı — Wise ile Payoneer'ın tam üstüne.
+                 taşındı — Payoneer'ın tam üstüne.
                → src/components/home/PaymentInfra.tsx:194'te daha uzun bir hâli
                  duruyor AMA O BİLEŞEN RENDER EDİLMİYOR: ana sayfadan çıkarıldı
                  (bkz. src/app/page.tsx) ve başka hiçbir yerden import edilmiyor.

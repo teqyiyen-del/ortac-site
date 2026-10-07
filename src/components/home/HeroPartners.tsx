@@ -78,7 +78,8 @@ const PLATE = MARK + 12;
    (üstünde etiket yok, roller ülke ve hizmet sayfalarında). Şerit sonsuz
    döndüğü için sıra "sonda kalmak" anlamına gelmiyor; her ad döngünün bir
    yerinde ortada. */
-const EXTRA = ["Wise"];
+/* 07.10.2026 · Wise şeritten çıktı (müşteri revizesi; Burak: "Wise'ı her yerden çıkar") */
+const EXTRA: string[] = [];
 const NAMES = [...PARTNERS.map((p) => p.name), ...EXTRA];
 
 /* Bir "yarı" ekranın en genişinden geniş olmalı, yoksa -50%'lik sıçramada

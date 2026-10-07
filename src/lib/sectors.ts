@@ -481,7 +481,7 @@ const YAZILIM: Sector = {
         },
         {
           icon: "card",
-          text: "SaaS ve ajans profilinde Stripe, PayPal ve Wise bağlantısı kurulabiliyor.",
+          text: "SaaS ve ajans profilinde Stripe ve PayPal bağlantısı kurulabiliyor.",
         },
         {
           icon: "id",
@@ -682,7 +682,7 @@ const OFFER_NOTE =
 const DUBAI_COST = "Kuruluş ve yıllık yenileme maliyeti üç ülkenin en yükseği. İkinci yıl yenilemesini baştan planlamak gerekiyor.";
 const UK_BANK = "Geleneksel bankada yerleşik olmayan ortak için onay oranı düşük; pratikte ödeme kuruluşu hesabıyla başlanıyor.";
 const TR_HOME = "Şirket fiilen Türkiye'den yönetiliyorsa Türkiye'de vergilenme riski doğabiliyor; kâr payını da Türkiye'de beyan ediyorsunuz.";
-const KKTC_PAY = "Stripe, PayPal ve Wise KKTC şirketiyle çalışmıyor.";
+const KKTC_PAY = "Stripe ve PayPal KKTC şirketiyle çalışmıyor.";
 /* 27.09.2026 · teyit (KKTC 22, 35): imza ve banka yerinde */
 const KKTC_STRUCTURE_NOTE = "En az iki ortak; imza ve banka hesabı için bir kez KKTC'ye geliyorsunuz, yabancı ortağın sermaye payı bankada bloke ediliyor.";
 
@@ -915,7 +915,7 @@ const DANISMANLIK: Sector = {
         title: "Ödeme hangi kanaldan geliyor",
         line: "Havale, ödeme kuruluşu ya da kart; kanal ülke seçeneklerini daraltıyor.",
         detail:
-          "Kurumsal müşteri çoğunlukla havaleyle ödüyor ve üç ülkede de şirket hesabına gelebiliyor. Wise ve Payoneer Dubai ve İngiltere şirketiyle çalışıyor; Wise ve Payoneer KKTC şirketiyle çalışmıyor. Kartla ödeme alacaksanız Stripe ve PayPal yalnız Dubai ve İngiltere'de açılıyor; KKTC'de yerel sanal POS var.",
+          "Kurumsal müşteri çoğunlukla havaleyle ödüyor ve üç ülkede de şirket hesabına gelebiliyor. Payoneer Dubai ve İngiltere şirketiyle çalışıyor, KKTC şirketiyle çalışmıyor. Kartla ödeme alacaksanız Stripe ve PayPal yalnız Dubai ve İngiltere'de açılıyor; KKTC'de yerel sanal POS var.",
       },
       {
         icon: "users",
@@ -973,7 +973,7 @@ const DANISMANLIK: Sector = {
       fit: [
         { icon: "split", text: "Kararı müşterinizin yeri veriyor: BAE dışı için serbest bölge, BAE içi için mainland." },
         { icon: "id", text: "Ortak vizesi ve Emirates ID süreç içinde alınıyor." },
-        { icon: "card", text: "Wise, Payoneer, Stripe ve PayPal Dubai şirketiyle kurulabiliyor." },
+        { icon: "card", text: "Payoneer, Stripe ve PayPal Dubai şirketiyle kurulabiliyor." },
       ],
       cells: {
         structure: {
@@ -1058,7 +1058,7 @@ const DANISMANLIK: Sector = {
       a: "Bu alanlar düzenlenmiş meslekler ve ülkenin kurumundan ayrıca izin ya da kayıt istiyor; örneğin BAE'de vergi temsilciliği FTA siciline kayıt istiyor. Faaliyet tanımını kuruluşta bu ayrıma göre yazıyor, gereken iznin kapsamını önden konuşuyoruz.",
     },
     {
-      q: "Ödemeleri Wise veya Payoneer ile alabilir miyim?",
+      q: "Ödemeleri Payoneer ile alabilir miyim?",
       /* teyit (KKTC 26, 27) */
       a: "Dubai ve İngiltere şirketiyle evet. KKTC şirketiyle ikisi de çalışmıyor.",
     },
