@@ -59,40 +59,88 @@ body:has(.abk) .onv:not([data-solid="true"]) {
   line-height: 1.55;
   color: var(--text-600);
 }
-/* künye: üç küçük kutu, sayfada ne olduğunu sayıyla söylüyor */
-.abk-kunye {
+/* ---- b2 · ortalı ---- */
+.abk[data-tip="b2"] .abk-yazi {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin: 0;
+  justify-items: center;
+  text-align: center;
 }
-.abk-kunye > div {
-  display: grid;
-  gap: 4px;
-  padding: 16px 18px;
+.abk[data-tip="b2"] .abk-h1 {
+  max-width: 22ch;
+}
+.abk-cipler {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+.abk-cip {
+  padding: 8px 16px;
   border: 1px solid var(--border);
-  border-radius: var(--r-lg);
+  border-radius: var(--r-pill);
+  background: var(--white);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-900);
+  text-decoration: none;
+  transition: border-color 160ms linear;
+}
+/* ---- b3 · içindekiler kutusu ---- */
+.abk-icinde {
+  display: grid;
+  gap: 2px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
   background: var(--white);
 }
-.abk-kunye dt {
-  order: 2;
+.abk-icinde-k {
+  margin-bottom: 6px;
   font-size: 14px;
   color: var(--text-600);
 }
-.abk-kunye dd {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+.abk-icinde-s {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+  font-size: 15px;
+  font-weight: 600;
   color: var(--text-900);
+  text-decoration: none;
+}
+.abk-icinde-s svg {
+  color: var(--blue-700);
+  transition: transform 220ms var(--ease-out-quint);
+}
+@media (hover: hover) {
+  .abk-cip:hover {
+    border-color: var(--blue-700);
+  }
+  .abk-icinde-s:hover svg {
+    transform: translateX(3px);
+  }
 }
 @media (min-width: 1024px) {
   .abk {
     padding: 136px 0 56px;
   }
-  .abk-grid[data-kunye] {
-    grid-template-columns: minmax(0, 1fr) 400px;
+  .abk[data-tip="b3"] .abk-grid {
+    grid-template-columns: minmax(0, 1fr) 360px;
     gap: 64px;
   }
+}
+@media (prefers-reduced-motion: reduce) {
+  .abk-cip,
+  .abk-icinde-s svg {
+    transition: none;
+  }
+}
+/* lab: üç örnek alt alta, ilki dışındakilerde menü payı yok */
+
+.abk-sayfa .lhz-lab-ad + .abk {
+  padding-top: 40px;
 }

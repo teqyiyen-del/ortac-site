@@ -72,10 +72,12 @@ export const BANKA_DUBAI = {
     accent: "banka hesabı",
     /* [ONAYLI] ikinci cümle countryContent.ts · dubai · intro kartının satırı. */
     lead: "Kurumsal hesap ve tahsilat kanalları şirket kuruluşunun içinde kuruluyor. Başvuru dosyasını bankanın istediği formatta biz hazırlıyoruz; hesap kararını banka veriyor.",
-    /* 07.10.2026 · hizmet sayfalarının giriş düğmesi tek kalıp: "Teklif
-       isteyin" → /iletisim (Burak: "hepsinde farklı bir şey yazıyor, bir
-       elden geçir"). "Kurulumu başlat" akışı yalnız şirket kuruluşuna ait. */
-    cta: { label: "Teklif isteyin", href: "/iletisim" },
+    /* 07.10.2026 · hizmet sayfalarının giriş düğmesi tek kalıp: "İletişime
+       geçin" → /iletisim. Bir tur "Teklif isteyin" idi; Burak: "bunlarla
+       ilgili bir teklif almıyoruz; bu hizmetlerin hepsi şirket kuruluşunun
+       içinde var, ayrıca alınabilen bir şey mantığında değil. Hepsini
+       iletişime geçe yönlendirmemiz lazım." */
+    cta: { label: "İletişime geçin", href: "/iletisim" },
     trust: [
       /* [ONAYLI] countryContent.ts · dubai · steps */
       { icon: "dosya" as BankaIkon, line: "Dosya bankanın istediği formatta hazırlanıyor." },

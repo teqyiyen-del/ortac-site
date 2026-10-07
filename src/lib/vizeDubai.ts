@@ -61,10 +61,12 @@ export const VIZE_DUBAI = {
        Aile vizesi de Ortac'ta; eskiden "kuruluş paketinin dışında" diye
        ayrı tutuluyordu. */
     lead: "Ortak, çalışan ve aile vizesi: başvuruların ve randevuların tamamını biz yürütüyoruz. Sağlık kontrolü ve biyometri için bir kez BAE'de bulunmanız yeterli.",
-    /* 07.10.2026 · hizmet sayfalarının giriş düğmesi tek kalıp: "Teklif
-       isteyin" → /iletisim (Burak: "hepsinde farklı bir şey yazıyor, bir
-       elden geçir"). "Kurulumu başlat" akışı yalnız şirket kuruluşuna ait. */
-    cta: { label: "Teklif isteyin", href: "/iletisim" },
+    /* 07.10.2026 · hizmet sayfalarının giriş düğmesi tek kalıp: "İletişime
+       geçin" → /iletisim. Bir tur "Teklif isteyin" idi; Burak: "bunlarla
+       ilgili bir teklif almıyoruz; bu hizmetlerin hepsi şirket kuruluşunun
+       içinde var, ayrıca alınabilen bir şey mantığında değil. Hepsini
+       iletişime geçe yönlendirmemiz lazım." */
+    cta: { label: "İletişime geçin", href: "/iletisim" },
     trust: [
       /* [TEYİT] randevu takibi Ortac'ta */
       { icon: "randevu" as VizeIkon, line: "Başvuru ve randevular bizden." },

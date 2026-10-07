@@ -4955,6 +4955,16 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (10) · düğme "İletişime geçin", araçlar menüsü çıkışı, açık başlık üç seçenek
+
+- Hizmet sayfalarının düğmesi "İletişime geçin" → /iletisim. KURAL (Burak): bu hizmetlerin
+  hepsi şirket kuruluşunun içinde; ayrıca alınan bir şey değil, "teklif" dili kullanılmaz.
+- Menü · Araçlar: alttaki "Ülke karşılaştırma" yerine "Tüm araçlar"; ızgaradaki
+  "Tüm araçlar" kartı kalktı.
+- /lab/acik-baslik: fotoğraflı ve sayılı örnekler elendi. Üç seçenek: B1 Yalın,
+  B2 Ortalı (altında bölüm bağlantıları), B3 İçindekiler kutusu. Karar bekliyor.
+- Üç yeni hizmet sayfası "şimdilik böyle dolsun" (Burak); ileride geliştirilecek.
+
 ## 07.10.2026 (9) · üç hizmet sayfası doldu, kurulum penceresi sayfanın üstünde, menüde bayraklar
 
 - Dubai · vergi danışmanlığı, kurumsal danışmanlık, AML ve uyum sayfalarının içeriği yazıldı

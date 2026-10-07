@@ -842,15 +842,6 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
           {[...CALC_TILES, ...USE_TILES].map((t) => (
             <CardLink key={t.label} t={t} onGo={onGo} />
           ))}
-          <CardLink
-            t={{
-              label: "Tüm araçlar",
-              href: "/araclar",
-              hint: `${LIVE_TOOLS.length} araç, her biri kendi sayfasında`,
-              icon: Wrench,
-            }}
-            onGo={onGo}
-          />
         </div>
 
         {/* Etek, Hizmetler panelindeki kalıbın aynısı: solda bölümün çekincesi,
@@ -865,8 +856,11 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
             {/* "Tüm araçlar" buradan ÇIKTI: ızgaranın sekizinci kutusu oldu
                 (yukarıdaki nota bak). İki yerde aynı bağlantı, aynı panelde
                 iki kez sayılırdı. */}
-            <SmartLink href="/ulkeler" className="onv-foot-l" data-strong="" onClick={onGo}>
-              Ülke karşılaştırma
+            {/* 07.10.2026 · Burak: "ülke karşılaştırma niye var? Onun yerine
+                oraya tüm araçlar butonunu koy; kart olarak durmasına gerek
+                yok." Izgaradaki "Tüm araçlar" kartı kalktı, çıkış burada. */}
+            <SmartLink href="/araclar" className="onv-foot-l" data-strong="" onClick={onGo}>
+              Tüm araçlar
               <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
             </SmartLink>
           </span>

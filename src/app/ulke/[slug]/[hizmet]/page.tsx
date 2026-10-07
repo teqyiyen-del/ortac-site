@@ -112,7 +112,7 @@ export default async function ServicePage({ params }: { params: Params }) {
             accent={`${kucult(svc.title)}.`}
             lead={svc.line}
             rozetler={svc.includes.slice(0, 3)}
-            cta={{ label: "Teklif isteyin", href: "/iletisim" }}
+            cta={{ label: "İletişime geçin", href: "/iletisim" }}
           />
 
           <section className="sec-pad" style={{ background: "var(--white)" }}>

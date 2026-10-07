@@ -9,54 +9,70 @@
    küçük bir fotoğraf karosu (süs) ve üstünde tek cam etiket. Onaylanırsa
    PageHero'nun kompakt dalına taşınır. Ad alanı .abk- (css/lab-acik-baslik.css). */
 
-import { ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import "@/app/css/lab-acik-baslik.css";
 
-/* 07.10.2026 (2) · FOTOĞRAFSIZ. İlk örnekte sağda küçük bir fotoğraf vardı;
-   Burak: "görsel olmasına gerek yok, zaten aşağıda görseller varken biraz
-   saçma duruyor. Daha farklı bir yöntem deneyebilirsin." Şimdi yalnız yazı:
-   solda başlık ve tek cümle, sağda sayfanın künyesi (üç küçük kutu: o
-   sayfada ne var). Künye sayfadan sayfaya değişir; yoksa sağ taraf boş
-   kalmaz, başlık tam genişliğe yayılır. */
+/* 07.10.2026 (3) · ÜÇ SEÇENEK, FOTOĞRAFSIZ VE SAYISIZ. Fotoğraflı ilk örnek
+   ("aşağıda görseller varken saçma duruyor") ve sayılı künye ("sayısal veri
+   koymak istemiyorum, birkaç seçenek düşünsene") elendi.
+     b1  Yalın: yalnız yazı, solda; sağ taraf boş
+     b2  Ortalı: başlık ve cümle ortada, altında sayfanın bölümlerine giden
+         küçük bağlantılar
+     b3  İçindekiler: solda başlık, sağda beyaz kutuda "Bu sayfada" listesi */
+export type AcikTip = "b1" | "b2" | "b3";
+
 export default function AcikBaslik({
+  tip,
   iz,
   baslik,
   vurgu,
   lead,
-  kunye,
+  baglantilar,
 }: {
+  tip: AcikTip;
   iz: string;
   baslik: string;
   vurgu?: string;
   lead: string;
-  kunye?: { deger: string; ad: string }[];
+  /** b2 ve b3: sayfanın bölümleri */
+  baglantilar: { ad: string; href: string }[];
 }) {
   const [bas, kuyruk] = vurgu && baslik.endsWith(vurgu) ? [baslik.slice(0, -vurgu.length), vurgu] : [baslik, ""];
   return (
-    <section className="abk">
-      <div className="container-o abk-grid" data-kunye={kunye ? "" : undefined}>
-        <div>
+    <section className="abk" data-tip={tip}>
+      <div className="container-o abk-grid">
+        <div className="abk-yazi">
           <nav className="abk-iz" aria-label="Sayfa yolu">
             <SmartLink href="/">Ana sayfa</SmartLink>
             <ChevronRight size={14} strokeWidth={2} aria-hidden="true" />
             <span>{iz}</span>
           </nav>
-          <h1 className="abk-h1">
+          <h2 className="abk-h1">
             {bas}
             {kuyruk && <span>{kuyruk}</span>}
-          </h1>
+          </h2>
           <p className="abk-lead">{lead}</p>
+          {tip === "b2" && (
+            <div className="abk-cipler">
+              {baglantilar.map((b) => (
+                <SmartLink key={b.ad} href={b.href} className="abk-cip">
+                  {b.ad}
+                </SmartLink>
+              ))}
+            </div>
+          )}
         </div>
-        {kunye && (
-          <dl className="abk-kunye">
-            {kunye.map((k) => (
-              <div key={k.ad}>
-                <dt>{k.ad}</dt>
-                <dd>{k.deger}</dd>
-              </div>
+        {tip === "b3" && (
+          <nav className="abk-icinde" aria-label="Bu sayfada">
+            <span className="abk-icinde-k">Bu sayfada</span>
+            {baglantilar.map((b) => (
+              <SmartLink key={b.ad} href={b.href} className="abk-icinde-s">
+                {b.ad}
+                <ArrowRight size={15} strokeWidth={2} aria-hidden="true" />
+              </SmartLink>
             ))}
-          </dl>
+          </nav>
         )}
       </div>
     </section>

@@ -588,10 +588,12 @@ export const ACCOUNTING_DUBAI = {
              bağımsız denetim). Sıralamayı bu dosya zaten böyle kurmuş:
              limits listesinin ilk maddesi.
              (11.09.2026 · BU SATIR DEĞİŞTİ, yukarıdaki hero notunda.) */
-    /* 07.10.2026 · hizmet sayfalarının giriş düğmesi tek kalıp: "Teklif
-       isteyin" → /iletisim (Burak: "hepsinde farklı bir şey yazıyor, bir
-       elden geçir"). "Kurulumu başlat" akışı yalnız şirket kuruluşuna ait. */
-    cta: { label: "Teklif isteyin", href: "/iletisim" },
+    /* 07.10.2026 · hizmet sayfalarının giriş düğmesi tek kalıp: "İletişime
+       geçin" → /iletisim. Bir tur "Teklif isteyin" idi; Burak: "bunlarla
+       ilgili bir teklif almıyoruz; bu hizmetlerin hepsi şirket kuruluşunun
+       içinde var, ayrıca alınabilen bir şey mantığında değil. Hepsini
+       iletişime geçe yönlendirmemiz lazım." */
+    cta: { label: "İletişime geçin", href: "/iletisim" },
     trust: [
       /* Lisans satırı kısaldı: "Kendi muhasebe lisansımız:" öneki düştü,
          çünkü aynı söz artık hero'nun başlığında ("kendi lisansımızla"). */
@@ -1432,7 +1434,7 @@ export const ACCOUNTING_DUBAI = {
   closing: {
     title: "Dubai şirketinizin muhasebesini birlikte yönetelim.",
     accent: "birlikte yönetelim.",
-    cta: { label: "Teklif isteyin", href: "/basla" },
+    cta: { label: "İletişime geçin", href: "/iletisim" },
   },
 
   /* ------------------------------------------------------------------ 11 · sonra
