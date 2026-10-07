@@ -4955,6 +4955,47 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (17) · KKTC muhasebe ve banka sayfaları Dubai'yle aynı bölümlerde
+
+Burak: "Kıbrıs'ın muhasebe sayfası kısa … Dubai'deki section'ları bir bak, aynıları
+Kıbrıs'ta da olsun, paralel git. Eksikleri araştır, Murat abiye soracağımızı yaz."
+
+- /kktc/muhasebe artık kendi sayfası (`app/kktc/muhasebe`, metin `lib/accountingKktc.ts`):
+  giriş (ücret kutulu) · dört karo · beş aşamalı açılır kapsam · yıl takvimi · defter
+  sahnesi ve dört karşılık · ücret (aktif 270 € / ay, pasif 900 € / yıl) · sekiz soru.
+  Bölümler Dubai'nin bileşenleri (`services/AccountingSections`); artık veri alıyorlar.
+- /kktc/banka-hesabi artık kendi sayfası (`app/kktc/banka-hesabi`, metin `lib/bankaKktc.ts`):
+  giriş · kurumsal hesap (sahne, üç satır, bankanın baktıkları) · ödeme ve tahsilat (sanal
+  POS, TL ve döviz havale; Stripe ve PayPal "çalışmıyor") · beş adım · belgeler · sekiz soru.
+  Gövde iki ülkede ortak: `components/services/BankaSayfa.tsx` (Dubai sayfasından taşındı).
+- `app/kktc/[hizmet]` bu iki adresi artık üretmiyor (KENDI_SAYFASI). `lib/hizmetIcerik.ts`
+  içindeki KKTC bloğu kalktı.
+- DÜZELTİLDİ, sorulmadan (müşteri revizesi): /dubai/banka-hesabi üç bankada ve Payoneer'de
+  kalmıştı. Şimdi Wio, Mashreq, ENBD, FAB; ödemede Stripe, PayPal, Binance, Amazon Payment
+  Services, Network International.
+- Kaynak: KKTC teklif belgesi, teyit cevapları (KKTC 19, 20, 22, 24, 25, 51) ve
+  docs/kktc-mevzuat.md. Yeni rakam, süre, banka adı yazılmadı.
+
+Dubai'de olup KKTC'de BİLEREK olmayan üç bölüm: Murat Bey'in alıntısı ve imza kutusu,
+"muhasebecinizi değiştirmek mi istiyorsunuz", ihtiyaç bulucu. Sebep: bilgi yok.
+
+MURAT BEY'E SORULACAKLAR (KKTC muhasebe ve banka):
+1. KKTC şirketinin defterini kim imzalıyor? Sayfaya "defterinizi imzalayan" kutusu koyalım
+   mı, KKTC için bir cümleniz olur mu?
+2. Yıllık hesap ve beyan hangi ayda veriliyor? Geç kalınırsa ceza var mı?
+3. Her yıl tam olarak ne veriliyor: beyanname, bilanço, denetçi raporu? Denetçi raporu
+   270 € / 900 € ücrete dahil mi? (KKTC 19'un devamı.)
+4. Yıllık faaliyet harcı ve adres yenilemesi ne zaman, ne kadar?
+5. Başka bir ofisteki KKTC şirketinin muhasebesini devralıyor muyuz? Adres ve temsilci de
+   bize mi geçiyor?
+6. Belgeler bize hangi yoldan geliyor (müşteri paneli, e-posta)? Rapor dönüyor muyuz?
+7. "Standart kapsam" ayda kaç işleme kadar? (Dubai'de 500.)
+8. Banka: hesap açılışı kabaca ne kadar sürüyor, şahsen gitmek her bankada şart mı?
+9. Türkiye bankasında hesap hangi durumda mümkün oluyor?
+10. Sanal POS (Tiko) için aranan şart var mı (site, ciro, sektör)? Adını sayfada yazmaya
+    devam edelim mi?
+11. Yurt dışından gelen döviz için müşterinin bilmesi gereken sınır ya da masraf var mı?
+
 ## 07.10.2026 (16) · logolar, Binance, Wise her yerden çıktı
 
 - Dubai banka ve tahsilat kartları: satırlar artık açık plakada markanın kendi logosu

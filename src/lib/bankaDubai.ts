@@ -62,9 +62,35 @@ import type { BrandKey } from "@/lib/brands";
        olanı işaretleyin").
      · Gövde baştan sona beyaz; tek koyu şey hero ve kapanış. */
 
-export type BankaIkon = "dosya" | "tekrar" | "kart" | "pazar" | "kripto" | "dunya" | "faaliyet" | "ortak" | "kaynak" | "hacim" | "secim" | "imza" | "karar" | "kanal";
+export type BankaIkon = "dosya" | "tekrar" | "kart" | "pazar" | "kripto" | "dunya" | "faaliyet" | "ortak" | "kaynak" | "hacim" | "secim" | "imza" | "karar" | "kanal" | "banka" | "nakit" | "yok";
+
+/* 07.10.2026 · ORTAK BİÇİM. Sayfanın gövdesi components/services/BankaSayfa'ya
+   taşındı; Dubai ve KKTC aynı biçimde veri veriyor (lib/bankaKktc.ts).
+   Satırda `brand` varsa logo, yoksa `logo` ikonu basılıyor. `yok` etiketi
+   amber yapıyor ("bu kanal çalışmıyor"). Sahne karosu dört tane. */
+export type BankaSahneKaro = { brand: BrandKey } | { icon: BankaIkon } | { yazi: string };
+export type BankaSatir = { brand?: BrandKey; logo?: BankaIkon; name: string; line: string };
+export type BankaKanal = BankaSatir & { tag: string; icon: BankaIkon; yok?: boolean };
+type Madde = { icon: BankaIkon; title: string; line: string };
+export type BankaVeri = {
+  ulke: string;
+  hero: { crumb: string; title: string; accent: string; lead: string; cta: { label: string; href: string }; trust: { icon: BankaIkon; line: string }[] };
+  bank: {
+    id: string; heading: string; accent: string; lead: string;
+    /** soldaki hesap sahnesi: IBAN satırının yerine geçen küçük yazı ve dört gider */
+    hesap: { alt: string; giderler: string[] };
+    items: BankaSatir[];
+    checks: { heading: string; items: Madde[] };
+  };
+  pay: { id: string; heading: string; accent: string; lead: string; sahne: BankaSahneKaro[]; items: BankaKanal[] };
+  steps: { id: string; heading: string; accent: string; lead: string; exit: { href: string; label: string }; items: Madde[] };
+  docs: { heading: string; accent: string; lead: string; data: CountryContent["docs"] };
+  faq: { id: string; heading: string; accent: string; items: Faq[] };
+  closing: { title: string; accent: string; cta: { label: string; href: string } };
+};
 
 export const BANKA_DUBAI = {
+  ulke: "Dubai",
   /* ------------------------------------------------------------------ hero */
   hero: {
     crumb: "Dubai · Banka & Ödeme",
@@ -107,10 +133,14 @@ export const BANKA_DUBAI = {
     heading: "Kurumsal banka hesabı.",
     accent: "banka hesabı.",
     lead: "Bankacılık lisansı olan kurumda açılan, şirketin ana hesabı. Faturalar, maaşlar, vergi ve tedarikçi ödemeleri buradan yürüyor; hangi bankanın uygun olduğunu başvurudan önce birlikte belirliyoruz.",
+    hesap: { alt: "AE•• •••• •••• ••••", giderler: ["Tedarikçi ödemesi", "Maaşlar", "Vergi", "Faturalar"] },
+    /* 07.10.2026 · müşteri revizesi: dört banka (Wio, Mashreq, ENBD, FAB).
+       Ülke sayfası aynı gün düzelmişti, bu sayfa üç bankada kalmıştı. */
     items: [
       { brand: "wio" as BrandKey, name: "Wio Business", line: "Dijital banka; hesap baştan sona çevrim içi yönetiliyor." },
       { brand: "mashreq" as BrandKey, name: "Mashreq NeoBiz", line: "Mashreq'in küçük ve orta ölçekli şirketlere dijital hesabı." },
       { brand: "emiratesnbd" as BrandKey, name: "Emirates NBD", line: "BAE'nin büyük bankalarından; geleneksel kurumsal hesap." },
+      { brand: "fab" as BrandKey, name: "First Abu Dhabi Bank", line: "BAE'nin en büyük bankası; geleneksel kurumsal hesap." },
     ],
     /* "Bankanın başvuruda baktığı şeyler" — [TEYİT]. Bankaların müşteri
        tanıma (KYC) sürecinin genel başlıkları; belge listesiyle (aşağıda)
@@ -141,11 +171,16 @@ export const BANKA_DUBAI = {
     heading: "Ödeme ve tahsilat kanalları.",
     accent: "tahsilat kanalları.",
     lead: "Banka değil; farklı lisans ve koruma rejimi. Kartla, pazaryerinden ve yurt dışından gelen tahsilatı toplayıp banka hesabınıza aktarıyor. Hangisinin gerektiği satış biçiminize bağlı.",
+    /* 07.10.2026 · müşteri revizesi: Stripe, PayPal, Binance, Amazon Payment
+       Services, Network International. Payoneer listeden çıktı. Sahnede dört
+       karo: üç markanın işareti ve kart (son iki kanal kartla tahsilat). */
+    sahne: [{ brand: "stripe" }, { brand: "paypal" }, { brand: "binance" }, { icon: "kart" }],
     items: [
       { brand: "stripe" as BrandKey, name: "Stripe", line: "Sitenizde ve uygulamanızda kartla tahsilat.", tag: "Kartla satış", icon: "kart" as BankaIkon },
-      { brand: "payoneer" as BrandKey, name: "Payoneer", line: "Pazaryerlerinden ve yurt dışındaki müşteriden ödeme alma.", tag: "Yurt dışı müşteri", icon: "dunya" as BankaIkon },
       { brand: "paypal" as BrandKey, name: "PayPal", line: "Platform ve pazaryeri üzerinden tahsilat.", tag: "Pazaryeri", icon: "pazar" as BankaIkon },
       { brand: "binance" as BrandKey, name: "Binance", line: "Binance Pay ile müşteriden kripto ödeme alma.", tag: "Kripto ödeme", icon: "kripto" as BankaIkon },
+      { brand: "aps" as BrandKey, name: "Amazon Payment Services", line: "Bölgedeki müşteriden çevrim içi kartla tahsilat.", tag: "Kartla satış", icon: "kart" as BankaIkon },
+      { brand: "network" as BrandKey, name: "Network International", line: "Kartla tahsilat ve POS altyapısı.", tag: "POS ve kart", icon: "kart" as BankaIkon },
     ],
   },
 
@@ -255,4 +290,4 @@ export const BANKA_DUBAI = {
     accent: "birlikte kuralım.",
     cta: { label: "Kuruluşu başlatın", href: "/basla" },
   },
-};
+} satisfies BankaVeri & { scenes: unknown; sceneFoot: string };

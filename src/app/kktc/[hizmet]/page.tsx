@@ -10,8 +10,16 @@ const withSlug = async (params: Params) => {
   return { slug: "kktc", hizmet };
 };
 
+/* 07.10.2026 · /kktc/muhasebe ve /kktc/banka-hesabi'nin kendi klasörü var
+   (Dubai'ninkilerle aynı bölümler). Bu şablon aynı adresi üretirse üretim
+   derlemesinde ŞABLON KAZANIYOR (app/dubai/[hizmet]'teki not); o yüzden
+   burada üretilmiyorlar. */
+const KENDI_SAYFASI = new Set(["muhasebe", "banka-hesabi"]);
+
 export function generateStaticParams() {
-  return pagedServicesFor("kktc").map((s) => ({ hizmet: s.slug }));
+  return pagedServicesFor("kktc")
+    .filter((s) => !KENDI_SAYFASI.has(s.slug))
+    .map((s) => ({ hizmet: s.slug }));
 }
 
 export const generateMetadata = ({ params }: { params: Params }) =>

@@ -23,8 +23,8 @@ import type { ServiceSlug } from "@/lib/services";
    beyanı, özel danışmanlık ve transfer fiyatlandırmasını aylık muhasebenin
    DIŞINDA sayıyor (madde 9.7). İki sayfa bu yüzden ayrı.
 
-   KKTC içeriği dosyanın sonunda (kendi belgesinden). İngiltere için içerik
-   YOK (kaynak belge yok); o sayfalar kapalı. */
+   KKTC'nin iki sayfası kendi dosyasında (dosyanın sonundaki not). İngiltere
+   için içerik YOK (kaynak belge yok); o sayfalar kapalı. */
 
 export type HizmetIkon =
   | "yuzde" | "kalkan" | "kisi" | "harita" | "katman" | "ortak" | "takvim" | "masa"
@@ -177,107 +177,11 @@ const DUBAI: Partial<Record<ServiceSlug, HizmetIcerik>> = {
   },
 };
 
-/* ================================================================ KKTC
-   KAYNAK müşterinin KKTC teklif belgesi: "KKTC Serbest Bölge Şirket
-   Kuruluşu ve Muhasebe Hizmetleri" (Ortac International Accounting,
-   06.10.2026). Muhasebe madde 6'dan (aktif 270 € / ay, pasif 900 € / yıl),
-   banka madde 7 ve "Dikkate Alınması Gereken Hususlar"dan. Belgede olmayan
-   banka adı, süre ya da oran yazılmadı. */
-const KKTC: Partial<Record<ServiceSlug, HizmetIcerik>> = {
-  muhasebe: {
-    kartlar: {
-      baslik: "Muhasebede ne yapıyoruz?",
-      vurgu: "ne yapıyoruz?",
-      lead: "Şirket vergi ödemese de kayıt tutmak ve yıllık beyan vermek zorunda.",
-      items: [
-        { icon: "dosya", kim: "Her ay", title: "Kayıt", line: "Banka hareketlerini, gelir ve gider işlemlerini düzenli kaydediyoruz." },
-        { icon: "takvim", kim: "Dönem dönem", title: "Beyan ve uyum", line: "Muhasebe, beyan ve uyum yükümlülüklerinizi biz takip ediyoruz." },
-        { icon: "terazi", kim: "Yıl sonu", title: "Yıllık hesaplar", line: "Yıllık hesapları hazırlıyor, beyanları ilgili mercilere sunuyoruz." },
-      ],
-    },
-    fiyat: {
-      baslik: "Ücret, şirketin durumuna göre.",
-      vurgu: "şirketin durumuna göre.",
-      lead: "İki hâl var; hangisinde olduğunuzu banka hesabı ve faaliyet belirliyor.",
-      items: [
-        { ad: "Aktif şirket", tutar: "€270 / ay", line: "Banka hesabının açıldığı aydan itibaren, şirket aktif olduğu sürece." },
-        { ad: "Pasif şirket", tutar: "€900 / yıl", line: "Banka hesabı ve ticari faaliyeti olmayan şirket için yıllık hesap ve beyan." },
-      ],
-    },
-    kurallar: {
-      baslik: "Bilmeniz gereken dört şey.",
-      vurgu: "dört şey.",
-      lead: "Serbest Bölge şirketinde muhasebe şöyle işliyor:",
-      items: [
-        { icon: "yuzde", title: "Muafiyet muhasebeyi kaldırmıyor", line: "Vergi muafiyeti, kayıt tutma ve yıllık beyan yükümlülüğünü ortadan kaldırmıyor." },
-        { icon: "banka", title: "Hesap açılınca aktif sayılırsınız", line: "Yıl içinde hesap açılır ya da faaliyet başlarsa o aydan itibaren aylık hizmete geçiliyor." },
-        { icon: "dosya", title: "Kuruluş bedeline dahil değil", line: "Muhasebe kuruluş tutarının içinde değil; ayrıca yürütülüyor ve faturalanıyor." },
-        { icon: "tik", title: "Belgeler sizden", line: "Banka hareketleri, faturalar ve sözleşmeler zamanında iletilmeli." },
-      ],
-    },
-    adimlar: {
-      baslik: "Nasıl ilerliyor?",
-      vurgu: "ilerliyor?",
-      lead: "Dört adım; muhasebe banka hesabıyla başlıyor.",
-      items: [
-        { icon: "bayrak", title: "Şirket kuruluyor", line: "Kuruluş ve Serbest Bölge işlemleri tamamlanıyor." },
-        { icon: "banka", title: "Hesap açılınca başlıyoruz", line: "Banka hesabının açıldığı ay, aylık hizmetin ilk ayı." },
-        { icon: "dosya", title: "Her ay kaydediyoruz", line: "Belgeleri gönderiyorsunuz; kayıtları biz tutuyoruz." },
-        { icon: "takvim", title: "Yıl sonunda kapatıyoruz", line: "Yıllık hesaplar hazırlanıyor, beyanlar veriliyor." },
-      ],
-      cikis: { label: "KKTC'de şirket kuruluşuna bakın", href: "/kktc" },
-    },
-    sss: [
-      { q: "Şirket vergi ödemiyorsa neden muhasebe tutuluyor?", a: "Serbest Bölge şirketinin vergi muafiyetinden yararlanması, muhasebe kayıtlarının tutulması ve yıllık hesap ile beyanların hazırlanması yükümlülüğünü ortadan kaldırmıyor." },
-      { q: "Pasif şirket ne demek?", a: "Banka hesabı bulunmayan ve o hesap dönemi boyunca ticari faaliyeti ya da finansal işlemi olmayan şirket. Pasif şirketin de yıllık hesapları hazırlanıyor ve beyanları veriliyor." },
-      { q: "Yıl içinde pasiften aktife geçersem ne olur?", a: "Banka hesabı açıldığı ya da ticari faaliyet başladığı aydan itibaren aylık hizmet uygulanıyor." },
-      { q: "İşlem hacmim yüksekse ücret değişir mi?", a: "Standart kapsamı önemli ölçüde aşan işlem hacmi, geçmiş dönem kayıtları ya da özel raporlama gerekirse önceden bilgi veriyor ve ayrıca ücretlendiriyoruz." },
-    ],
-  },
-
-  "banka-hesabi": {
-    kartlar: {
-      baslik: "Bankada neyi üstleniyoruz?",
-      vurgu: "neyi üstleniyoruz?",
-      lead: "Dosyayı biz hazırlıyoruz; kararı banka veriyor.",
-      items: [
-        { icon: "banka", kim: "KKTC", title: "Yerel banka hesabı", line: "KKTC'deki yerel bankalarda kurumsal hesap başvurusu için hazırlık ve yönlendirme." },
-        { icon: "bayrak", kim: "Türkiye", title: "Türkiye bankaları", line: "Gerekli değerlendirme ve onaylar alınırsa Türkiye bankalarıyla çalışmak da mümkün olabiliyor." },
-        { icon: "tik", kim: "Tahsilat", title: "Kartla tahsilat", line: "Uygun şirketler için çalıştığımız yerel ödeme kuruluşlarına başvuru desteği." },
-      ],
-    },
-    kurallar: {
-      baslik: "Kurmadan önce bilmeniz gerekenler.",
-      vurgu: "bilmeniz gerekenler.",
-      lead: "Bankacılık, KKTC'de şirket kurmadan önce konuşulması gereken en önemli konu.",
-      items: [
-        { icon: "terazi", title: "Karar bankanın", line: "Banka kendi kurallarına göre bağımsız karar veriyor; hesap açılışı garanti edilemiyor." },
-        { icon: "harita", title: "Uluslararası erişim sınırlı", line: "Yüksek tutarlı uluslararası transfer ve bazı ödeme kuruluşlarına erişim sınırlı olabiliyor." },
-        { icon: "ara", title: "Banka belge ister", line: "Faaliyetinize, müşteri ve tedarikçilerinize, sözleşme ve faturalarınıza, paranın kaynağına bakıyor." },
-        { icon: "dosya", title: "İlk günden düzen", line: "Gerçek ticari faaliyet, düzenli muhasebe, sözleşme ve fatura altyapısı işi kolaylaştırıyor." },
-      ],
-    },
-    adimlar: {
-      baslik: "Nasıl ilerliyor?",
-      vurgu: "ilerliyor?",
-      lead: "Dört adım; ilki şirket kurulmadan önce.",
-      items: [
-        { icon: "ara", title: "İhtiyacınızı konuşuyoruz", line: "Hangi para biriminde, kimden tahsilat yapacağınızı kuruluştan önce netleştiriyoruz." },
-        { icon: "dosya", title: "Dosyayı hazırlıyoruz", line: "Bankanın isteyeceği belgeleri ve açıklamaları derliyoruz." },
-        { icon: "banka", title: "Banka değerlendiriyor", line: "Ek belge ya da açıklama isterse birlikte yanıtlıyoruz." },
-        { icon: "takvim", title: "Hesapla muhasebe başlıyor", line: "Hesabın açıldığı ay, aylık muhasebenin ilk ayı." },
-      ],
-      cikis: { label: "KKTC muhasebe hizmetine bakın", href: "/kktc/muhasebe" },
-    },
-    sss: [
-      { q: "Banka hesabı açılmasını garanti ediyor musunuz?", a: "Hayır. Bankalar kendi KYC, AML ve risk politikalarına göre bağımsız karar veriyor. Biz hazırlık ve yönlendirme desteği veriyoruz." },
-      { q: "Yurt dışındaki bankalarla çalışabilir miyim?", a: "KKTC şirketlerinin uluslararası bankalara ve bazı uluslararası ödeme kuruluşlarına doğrudan erişimi sınırlı olabiliyor. İngiltere, Avrupa Birliği ya da BAE'deki şirketlere kıyasla daha dar bir alan; kuruluştan önce birlikte değerlendiriyoruz." },
-      { q: "Kredi kartıyla tahsilat yapabilir miyim?", a: "Uygun şirketler için çalıştığımız yerel ödeme kuruluşları üzerinden başvuru desteği veriyoruz. Kabul, limitler ve komisyon oranları o kuruluşun kendi değerlendirmesine bağlı." },
-      { q: "Banka benden ne isteyebilir?", a: "Şirketin faaliyetlerini, müşteri ve tedarikçi ilişkilerini, sözleşmeleri, faturaları ve paranın kaynağını inceleyebilir. Yüksek tutarlı ya da olağan dışı işlemlerde ek belge isteyebilir." },
-    ],
-  },
-};
+/* KKTC'nin muhasebe ve banka içeriği 07.10.2026'da buradan çıktı: iki sayfa
+   Dubai'ninkilerle aynı bölümleri basan kendi dosyalarına taşındı
+   (app/kktc/muhasebe, app/kktc/banka-hesabi · lib/accountingKktc.ts,
+   lib/bankaKktc.ts). */
 
 export function hizmetIcerik(c: Country, slug: string): HizmetIcerik | undefined {
-  return c === "dubai" ? DUBAI[slug as ServiceSlug] : c === "kktc" ? KKTC[slug as ServiceSlug] : undefined;
+  return c === "dubai" ? DUBAI[slug as ServiceSlug] : undefined;
 }

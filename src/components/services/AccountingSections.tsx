@@ -36,6 +36,8 @@ import {
   ACC_PRICE_FOOTNOTE,
   ACCOUNTING_DUBAI as C,
   type AccChip,
+  type AccGain,
+  type AccStrength,
   type AccIcon,
   type AccNeedIcon,
   type AccStrengthIcon,
@@ -115,8 +117,8 @@ function priceText(p: { usd: number; plusVat: boolean; qualifier?: string }) {
    <ul>'un doğrudan çocuğu <div> oluyordu; erişilebilirlik ağacında liste "0
    öğe" okunuyordu). Kutu artık FadeUp'ın kabı (.svm-karo-in); görünüm aynı,
    gerekçe ve ölçü svc-muhasebe.css · 2. bölümde. */
-export function AccountingStrengths() {
-  const S = C.strengths;
+export function AccountingStrengths({ veri }: { veri?: { id: string; heading: string; accent: string; items: AccStrength[] } } = {}) {
+  const S = veri ?? C.strengths;
   return (
     <section id={S.id} className="sec-pad svm-sec">
       <div className="container-o">
@@ -411,6 +413,7 @@ export function AccountingSwitch() {
 
 type Sinir = { t: string; l: string };
 
+export type KapsamKalem = Kalem;
 type Kalem = {
   /** React anahtarı. */
   id: string;
@@ -577,15 +580,27 @@ const KARSILIK_TON: Partial<Record<string, "yesil" | "amber">> = {
   chart: "yesil",
 };
 
-export function AccountingScope() {
+export function AccountingScope({
+  baslik,
+  kalemler,
+  haric,
+}: {
+  /** verilmezse Dubai (C.scope, KALEMLER, ACC_EXCLUDES); KKTC kendi verisini geçiyor */
+  baslik?: { id: string; heading: string; accent: string; excludesLead: string };
+  kalemler?: Kalem[];
+  haric?: string[];
+} = {}) {
+  const B = baslik ?? C.scope;
+  const K = kalemler ?? KALEMLER;
+  const H = haric ?? ACC_EXCLUDES;
   return (
-    <section id={C.scope.id} className="sec-pad svm-sec">
+    <section id={B.id} className="sec-pad svm-sec">
       <div className="container-o">
         <div className="sec-head">
-          <SplitWords as="h2" text={C.scope.heading} accent={C.scope.accent} className="h2" />
+          <SplitWords as="h2" text={B.heading} accent={B.accent} className="h2" />
         </div>
         <div className="svm-kp-a">
-          {KALEMLER.map((k, i) => (
+          {K.map((k, i) => (
             <FadeUp key={k.id} delay={0.06 + i * 0.05}>
               <details className="svm-kp-a-it">
                 <summary>
@@ -609,11 +624,11 @@ export function AccountingScope() {
         {/* Kapanış satırı: services.ts'teki hariç listesi — aynı bilginin
             teklifte hangi sözcüklerle geçtiği. Rozet sınıfı (.svm-tag) eski
             sayfanın sınır şeridinden, aynı iş için. */}
-        {ACC_EXCLUDES.length > 0 && (
+        {H.length > 0 && (
           <FadeUp delay={0.3}>
             <p className="svm-kp-haric">
-              {C.scope.excludesLead}{" "}
-              {ACC_EXCLUDES.map((e) => (
+              {B.excludesLead}{" "}
+              {H.map((e) => (
                 <span className="svm-tag" key={e}>
                   {e}
                 </span>
@@ -658,8 +673,7 @@ const DAL = [
    geçiyor; bu dosya ve CSS yalnız değer veriyor. Sahne aria-hidden ve tek
    bir etiket, rakam ya da tarih taşımıyor — söylediği her şey yanındaki
    satırlarda yazılı. Dal ikonları satırlarınkiyle aynı (gains[].icon). */
-function DefterSahne() {
-  const items = C.gains.items;
+function DefterSahne({ items }: { items: AccGain[] }) {
   return (
     <svg
       viewBox="0 0 340 300"
@@ -729,8 +743,8 @@ function DefterSahne() {
   );
 }
 
-export function AccountingGains() {
-  const G = C.gains;
+export function AccountingGains({ veri }: { veri?: { id: string; heading: string; accent: string; items: AccGain[] } } = {}) {
+  const G = veri ?? C.gains;
   return (
     <section id={G.id} className="sec-pad svm-sec">
       <div className="container-o">
@@ -740,7 +754,7 @@ export function AccountingGains() {
         <div className="svm-fy">
           <FadeUp className="svm-fy-card" delay={0.06}>
             <div className="svm-fy-stage" aria-hidden="true">
-              <DefterSahne />
+              <DefterSahne items={G.items} />
             </div>
           </FadeUp>
 

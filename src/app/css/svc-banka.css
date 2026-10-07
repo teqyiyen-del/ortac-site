@@ -847,3 +847,34 @@
   40% { transform: translateX(150px); opacity: 1; }
   48%, 100% { transform: translateX(150px); opacity: 0; }
 }
+
+/* 07.10.2026 · ORTAK GÖVDE EKLERİ (components/services/BankaSayfa).
+   KKTC satırlarında marka yok: logo yerinde mavi ikon karosu. Ödeme
+   sahnesinde karo marka yerine kısa yazı (₺ € $) olabiliyor. "Çalışmıyor"
+   etiketi amber (şart/risk rengi). */
+.svb-s-logo-ik {
+  width: 52px;
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.svb-akis-yazi {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--blue-700);
+}
+.svb-akis-s > svg.lucide {
+  color: var(--blue-700);
+}
+.svb-s-etiket[data-yok] {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+.svb-s-dosya {
+  display: block;
+  max-width: 108px;
+  max-height: 30px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
