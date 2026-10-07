@@ -4955,6 +4955,13 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (11) · lab: fotoğraflı kısa başlık
+
+- /lab/foto-baslik (blog) ve /lab/foto-baslik/araclar: kısa siyah sayfa başlığı aynı boyda,
+  zemini fotoğraf ve soldan sağa açılan perde. Açık zeminli üç seçenek (/lab/acik-baslik)
+  beğenilmedi. Onaylanırsa PageHero kompakt dala `foto` propu; her sayfaya bir fotoğraf
+  seçmek ve perdede kontrast ölçmek gerekecek (açık tonlu fotoğrafta açıklama yazısı sınırda).
+
 ## 07.10.2026 (10) · düğme "İletişime geçin", araçlar menüsü çıkışı, açık başlık üç seçenek
 
 - Hizmet sayfalarının düğmesi "İletişime geçin" → /iletisim. KURAL (Burak): bu hizmetlerin
