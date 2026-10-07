@@ -270,6 +270,8 @@ const STATIC_LIVE = [
      KKTC'nin hizmet alt sayfaları öteki hizmetler gibi kapalı. */
   /* 07.10.2026 · KKTC muhasebe ve banka: içerikleri KKTC teklif belgesinden
      yazıldı (lib/hizmetIcerik.ts · KKTC). Öteki KKTC hizmet sayfaları kapalı. */
+  /* KVKK aydınlatma metni · taslak, hukukçu onayı bekliyor (app/kvkk) */
+  "/kvkk",
   "/kktc/muhasebe",
   "/kktc/banka-hesabi",
   "/dubai/vergi",

@@ -402,6 +402,13 @@ export const BRANDS = {
       ],
     },
   },
+  /* 07.10.2026 · müşteri revizesi (WhatsApp, Burak iletti): "Bankaya ENBD ve
+     FAB ekle"; tahsilat kartında "Stripe · PayPal · Amazon Payment Services
+     · Network International". Üçünün de resmî logo dosyası ELİMİZDE YOK
+     (SWAP:BRAND_ASSET): baş harfle basılıyor, logo uydurulmuyor. */
+  fab: { title: "FAB", mono: "FA" },
+  aps: { title: "Amazon Payment Services", mono: "AP" },
+  network: { title: "Network International", mono: "NI" },
 } as const satisfies Record<string, Brand>;
 
 /* SWAP:BRAND_ASSET — HÂLÂ EKSİK OLANLAR

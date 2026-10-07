@@ -127,7 +127,11 @@ function FigVergiKktc() {
    "Wio ve Mashreq NeoBiz" diyorsa çizimde de o iki plaka duruyor. Liste
    ülkenin kendi verisinden (`pros[].brands`) geliyor, burada sabit değil. */
 function FigBank({ brands }: { brands: BrandKey[] }) {
-  const list = brands.length ? brands.slice(0, 2) : (["wio", "mashreq"] as BrandKey[]);
+  const list = brands.length ? brands.slice(0, 4) : (["wio", "mashreq"] as BrandKey[]);
+  /* dört bankada 2 × 2 (07.10.2026 · ENBD ve FAB eklendi); hücre dar olduğu
+     için kısa ad. İki bankada eskisi gibi alt alta, tam ad. */
+  const KISA: Partial<Record<BrandKey, string>> = { wio: "Wio", mashreq: "Mashreq", emiratesnbd: "ENBD", fab: "FAB" };
+  const dort = list.length > 2;
   return (
     <Fig>
       <rect x="4" y="46" width="58" height="62" rx="12" className="gv2-box" />
@@ -148,22 +152,19 @@ function FigBank({ brands }: { brands: BrandKey[] }) {
       </text>
       <path d="M102 54 H308" className="gv2-line" />
 
-      {list.map((b, i) => (
-        <g key={b}>
-          <rect
-            x="108"
-            y={66 + i * 34}
-            width="194"
-            height="28"
-            rx="9"
-            className={i === 0 ? "gv2-box-b gv2-g" : "gv2-box"}
-          />
-          <BrandBadge brand={b} x={116} y={70 + i * 34} size={20} radius={6} />
-          <text x={146} y={84 + i * 34} className="gv2-t9">
-            {BRANDS[b].title}
-          </text>
-        </g>
-      ))}
+      {list.map((b, i) => {
+        const x = dort ? 108 + (i % 2) * 100 : 108;
+        const y = dort ? 64 + Math.floor(i / 2) * 34 : 66 + i * 34;
+        return (
+          <g key={b}>
+            <rect x={x} y={y} width={dort ? 94 : 194} height="28" rx="9" className="gv2-box" />
+            <BrandBadge brand={b} x={x + 6} y={y + 4} size={20} radius={6} />
+            <text x={x + 34} y={y + 18} className="gv2-t9">
+              {dort ? (KISA[b] ?? BRANDS[b].title) : BRANDS[b].title}
+            </text>
+          </g>
+        );
+      })}
     </Fig>
   );
 }
@@ -383,35 +384,38 @@ function FigBadge() {
    diyorsa ekranda o üç işaret duruyor. Kanal listesi ülkenin verisinden
    geliyor; ikiye düşerse çizim iki raya iniyor. */
 function FigCard({ brands }: { brands: BrandKey[] }) {
-  const list = (brands.length ? brands : (["stripe", "paypal", "wise"] as BrandKey[])).slice(0, 3);
-  /* üç rayda 44/80/116, iki rayda 58/102 — orta ray hep kartın hizasında */
-  const ys = list.length === 3 ? [28, 64, 100] : list.length === 2 ? [42, 86] : [64];
+  const list = (brands.length ? brands : (["stripe", "paypal", "wise"] as BrandKey[])).slice(0, 4);
+  /* 07.10.2026 · dört kanal sığsın diye (Amazon Payment Services, Network
+     International uzun adlar): soldaki kart daraldı (72), sağdaki kutular
+     genişledi (204), satır 28. Raylar kartın ortasından (y 76) açılıyor. */
+  const h = 28;
+  const bosluk = list.length === 4 ? 6 : 10;
+  const toplam = list.length * h + (list.length - 1) * bosluk;
+  const ilk = 76 - toplam / 2;
+  const ys = list.map((_, i) => ilk + i * (h + bosluk));
 
   return (
     <Fig>
-      <rect x="4" y="40" width="126" height="80" rx="14" className="gv2-box-b" />
-      <rect x="22" y="58" width="26" height="19" rx="5" className="gv2-chip-w gv2-cip" />
-      <path d="M35 58 V77" className="gv2-line-b gv2-cip-l" />
-      <rect x="22" y="92" width="52" height="7" rx="3.5" className="gv2-bar-b" />
-      <rect x="82" y="92" width="26" height="7" rx="3.5" className="gv2-bar-b gv2-faint" />
+      <rect x="4" y="44" width="72" height="64" rx="13" className="gv2-box-b" />
+      <rect x="15" y="57" width="22" height="16" rx="5" className="gv2-chip-w gv2-cip" />
+      <path d="M26 57 V73" className="gv2-line-b gv2-cip-l" />
+      <rect x="15" y="86" width="30" height="6" rx="3" className="gv2-bar-b" />
+      <rect x="50" y="86" width="14" height="6" rx="3" className="gv2-bar-b gv2-faint" />
 
       {ys.map((y) => {
-        const mid = y + 16;
-        const d =
-          mid === 80
-            ? "M130 80 H186"
-            : `M130 80 C 158 80, 158 ${mid}, 186 ${mid}`;
+        const mid = y + h / 2;
+        const d = Math.abs(mid - 76) < 1 ? "M76 76 H102" : `M76 76 C 90 76, 90 ${mid}, 102 ${mid}`;
         return <path key={`r${y}`} d={d} className="gv2-line-b gv2-flow" />;
       })}
       {ys.map((y) => (
-        <ArrowR key={`a${y}`} x={186} y={y + 16} blue />
+        <ArrowR key={`a${y}`} x={102} y={y + h / 2} blue />
       ))}
 
       {list.map((b, i) => (
         <g key={b}>
-          <rect x="196" y={ys[i]} width="120" height="32" rx="10" className="gv2-box" />
-          <BrandBadge brand={b} x={204} y={ys[i] + 5} size={22} radius={7} />
-          <text x={234} y={ys[i] + 21} className="gv2-t9">
+          <rect x="112" y={ys[i]} width="204" height={h} rx="9" className="gv2-box" />
+          <BrandBadge brand={b} x={118} y={ys[i] + 4} size={20} radius={6} />
+          <text x={146} y={ys[i] + 18} className="gv2-t9">
             {BRANDS[b].title}
           </text>
         </g>

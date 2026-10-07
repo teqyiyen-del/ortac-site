@@ -4955,6 +4955,28 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (15) · Murat Bey'in cevapları, müşteri revizeleri, KVKK taslağı
+
+Murat Bey (Burak aktardı): Meydan 5.300 ve DWTC 5.820 doğru. Muhasebe yıllık = 10 ay
+fiyatına, doğru. Dubai'deki yedi hizmet (altı başlık + vize) onaylı. KKTC'de BÜTÜN kalemler
+zorunlu, tutar tek: 9.920 €. Ek lisans yılı fiyatı soruldu, bekleniyor. İngiltere teklif
+belgesi gelecek. Kurulum penceresinin sonu müşteri paneline bağlanacak; adresi ve WhatsApp
+numarasını Burak verecek (Murat Bey'e sorulmaz).
+
+- Fiyat bölümü: sol taraf tek siyah blok, sağdaki tutar kutusu ayrı.
+- Dubai yıllık muhasebe satırında "%17 indirim".
+- KKTC fiyat bölümü seçim değil kapsam: dört kalem düz satır (hepsi dahil), yalnız muhasebe
+  türü seçiliyor. Girişte "…'den başlayan" yok: "€9.920 kuruluş ve ilk yıl, her şey dahil".
+- Müşteri revizeleri (WhatsApp): banka kartı Wio, Mashreq, ENBD, FAB (dört plaka);
+  tahsilat kartı Stripe, PayPal, Amazon Payment Services, Network International; Wise
+  çıktı. FAB, Amazon Payment Services ve Network International logoları YOK, baş harfle.
+  AÇIK: aynı yazışmada "Stripe, PayPal, Binance" de geçiyor; Binance'in nereye gireceği ve
+  sitenin öteki yerlerindeki Wise / wamo / Payoneer (ödeme tablosu, ana sayfa banka sahnesi,
+  "SaaS ve ajanslar" satırı) Burak'a soruldu, dokunulmadı.
+- /kvkk: aydınlatma metni TASLAĞI yazıldı (aramaya kapalı); kurulum penceresindeki cümle
+  oraya bağlı. Hukukçu onayı ve şunlar bekliyor: veri sorumlusunun tam unvanı (Dubai ve
+  KKTC tüzel kişileri yazıldı), başvuru e-postası, saklama süreleri.
+
 ## 07.10.2026 (14) · fiyat alanında dış kart yok, kurulum penceresinde KKTC
 
 - Fiyat bölümü (üç ülke): dıştaki büyük siyah kart kalktı; her seçim grubu ve sonuç paneli

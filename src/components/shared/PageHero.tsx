@@ -30,7 +30,7 @@ import FotoGiris, { type FotoRozet } from "@/components/shared/FotoGiris";
 import { BASLIK_FOTO, BASLIK_FOTO_VARSAYILAN, COUNTRY_PHOTO, HIZMET_FOTO } from "@/lib/media";
 import { usePathname } from "next/navigation";
 import { DUBAI_BASLANGIC, money } from "@/lib/dubaiFiyat";
-import { KKTC_KURULUS, euro } from "@/lib/kktcFiyat";
+import { KKTC_TOPLAM, euro } from "@/lib/kktcFiyat";
 
 
 /* ============================================================
@@ -362,8 +362,10 @@ export default function PageHero({
                 <b>{money(DUBAI_BASLANGIC)}</b>&apos;den başlayan fiyatlarla
               </>
             ) : country === "kktc" ? (
+              /* KKTC'de kalemlerin hepsi zorunlu: "…'den başlayan" yanlış olur
+                 (Burak, 07.10.2026). Tek ve tam tutar. */
               <>
-                <b>{euro(KKTC_KURULUS)}</b>&apos;dan başlayan fiyatlarla
+                <b>{euro(KKTC_TOPLAM)}</b> kuruluş ve ilk yıl, her şey dahil
               </>
             ) : undefined
           }

@@ -128,7 +128,9 @@ export function DubaiSecimFormu({
       Icon: Calculator,
       ad: "Muhasebeyi yıllık alın",
       vip: false,
-      alt: `12 ay hizmet, 10 ay fiyatına`,
+      /* Burak: "yıllıkta 10 ay fiyatına yapıyoruz; oraya yüzde şu kadar
+         indirim diye bilgi gir." 2 / 12 = %16,7 → %17. */
+      alt: `12 ay hizmet, 10 ay fiyatına · %${Math.round((1 - MUH_YILLIK / (MUH_AYLIK * 12)) * 100)} indirim`,
       tutar: `+${money(MUH_YILLIK)}`,
       bilgi: `Muhasebe her şirket için zorunlu. Yıllık almazsanız aylık ${money(MUH_AYLIK)} ödenir.`,
       href: "/dubai/muhasebe",

@@ -429,7 +429,7 @@ export function SatisPenceresi({
                   </div>
                   <p className="sat-secim-t">
                     <span>{ulke === "kktc" ? "Kuruluş ve ilk yıl tutarı" : "Tahmini tutar · KDV hariç"}</span>
-                    <b>{ulke === "kktc" ? euro(kktcToplam(kktc)) : money(dubaiToplam(secim))}</b>
+                    <b>{ulke === "kktc" ? euro(kktcToplam()) : money(dubaiToplam(secim))}</b>
                   </p>
                 </section>
               )}
@@ -507,11 +507,13 @@ export function SatisPenceresi({
                     />
                   </div>
                   {ozetM ? (
-                    /* KVKK aydınlatma satırı. Metnin sayfası henüz yok
-                       (SWAP:KVKK); bağlantı o gelince eklenecek. */
+                    /* KVKK aydınlatma satırı; metin /kvkk'de (taslak, onay bekliyor) */
                     <p className="sat-kvkk">
-                      Bilgileriniz yalnızca kuruluş sürecinizi yürütmek için kullanılır; devam ederek KVKK aydınlatma
-                      metnini kabul etmiş olursunuz.
+                      Bilgileriniz yalnızca kuruluş sürecinizi yürütmek için kullanılır. Devam ederek{" "}
+                      <a href="/kvkk" target="_blank" rel="noopener">
+                        kişisel verilerin korunması metnini
+                      </a>{" "}
+                      okuduğunuzu kabul etmiş olursunuz.
                     </p>
                   ) : (
                     <p className="sat-swap">
@@ -577,7 +579,7 @@ export function SatisPenceresi({
                           </tr>
                         </thead>
                         <tbody>
-                          {(ulke === "kktc" ? kktcSatirlar(kktc) : dubaiSatirlar(secim)).map((l) => (
+                          {(ulke === "kktc" ? kktcSatirlar() : dubaiSatirlar(secim)).map((l) => (
                             <tr key={l.ad}>
                               <td>{l.ad}</td>
                               <td>{ulke === "kktc" ? euro(l.tutar) : money(l.tutar)}</td>
@@ -587,7 +589,7 @@ export function SatisPenceresi({
                         <tfoot>
                           <tr>
                             <th scope="row">{ulke === "kktc" ? "Toplam" : "Toplam · KDV hariç"}</th>
-                            <td>{ulke === "kktc" ? euro(kktcToplam(kktc)) : money(dubaiToplam(secim))}</td>
+                            <td>{ulke === "kktc" ? euro(kktcToplam()) : money(dubaiToplam(secim))}</td>
                           </tr>
                         </tfoot>
                       </table>

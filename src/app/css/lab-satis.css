@@ -1527,3 +1527,9 @@ button.sat-adim-b:focus-visible {
   min-height: 0;
   padding: 12mm 14mm;
 }
+
+.sat-kvkk a {
+  color: var(--blue-900);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

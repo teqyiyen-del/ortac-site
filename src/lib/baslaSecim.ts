@@ -8,14 +8,14 @@ import { KKTC_VARSAYILAN, type KktcSecim } from "@/lib/kktcFiyat";
    seçili açılıyor. */
 export type BaslaOnceden = { ulke: "dubai"; dubai: DubaiSecim } | { ulke: "kktc"; kktc: KktcSecim };
 
-/** panelden pencereye: /basla?ulke=kktc&adres=1&muh=aktif */
+/** panelden pencereye: /basla?ulke=kktc&muh=aktif */
 export function kktcBaslaHref(x: KktcSecim): string {
-  return `/basla?ulke=kktc&adres=${x.adres ? "1" : "0"}&muh=${x.muhasebe}`;
+  return `/basla?ulke=kktc&muh=${x.muhasebe}`;
 }
 
 export function baslaOku(q: Record<string, string | string[] | undefined>): BaslaOnceden | null {
   if (q.ulke === "kktc")
-    return { ulke: "kktc", kktc: { adres: q.adres !== "0", muhasebe: q.muh === "pasif" ? "pasif" : "aktif" } };
+    return { ulke: "kktc", kktc: { muhasebe: q.muh === "pasif" ? "pasif" : "aktif" } };
   const d = dubaiSecimOku(q);
   return d ? { ulke: "dubai", dubai: d } : null;
 }

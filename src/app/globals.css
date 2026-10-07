@@ -1595,20 +1595,18 @@ body {
 .gece-alan > .ip {
   margin-top: 0;
 }
+/* sol taraf TEK BLOK (07.10.2026 · Burak: "sol taraf çok ayrı ayrı kaldı,
+   orayı tek bir blok yap, sağ taraf ayrı dursun"): bütün seçim grupları
+   aynı gece kutunun içinde, grupların kendi çerçevesi yok. */
 .sec-night.gece-alan .ip-form {
-  gap: 12px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-.sec-night.gece-alan .ip-form .ip-field {
-  padding: 24px;
+  gap: 28px;
+  padding: 28px;
   border: 0;
   border-radius: var(--r-panel);
   background: var(--night);
 }
 .sec-night.gece-alan .ip-form .dfy-iki {
-  gap: 12px;
+  gap: 28px;
 }
 .sec-night.gece-alan .ip-out {
   border: 0;
@@ -8118,4 +8116,33 @@ li {
   font-size: 15px;
   line-height: 1.5;
   color: var(--text-600);
+}
+
+/* 07.10.2026 · yasal metin sayfaları (/kvkk). Dar ölçü, okunur satır. */
+.yasal {
+  display: grid;
+  gap: 36px;
+  max-width: 72ch;
+}
+.yasal h2 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.yasal p,
+.yasal li {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-600);
+}
+.yasal p {
+  margin: 0 0 10px;
+}
+.yasal ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
 }

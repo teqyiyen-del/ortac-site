@@ -254,9 +254,11 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
            satırdan başlığa çıktı ve çizimdeki iki plakayla (brands) aynı şeyi
            söylüyor. Markasız "Kurumsal banka hesabı" elendi: düz ama somut
            değil, kartın taşıdığı tek doğrulanabilir bilgiyi de kaybediyordu. */
-        title: "Wio ve Mashreq NeoBiz'de kurumsal hesap",
+        /* 07.10.2026 · müşteri revizesi: "Bankaya ENBD ve FAB ekle ve bence
+           logolarını koy." Başlık dört bankayı sayıyor, çizimde dört plaka. */
+        title: "Wio, Mashreq, ENBD ve FAB'da kurumsal hesap",
         icon: "bank",
-        brands: ["wio", "mashreq"],
+        brands: ["wio", "mashreq", "emiratesnbd", "fab"],
         /* Alt satır başlıkla aynı cümleyi tekrar etmesin diye yeniden yazıldı;
            YENİ BİLGİ YOK. İki olgu da sitede zaten yazılı: dosyanın bankanın
            istediği formatta hazırlandığı (steps · "GSM hattı ve banka hesabı")
@@ -269,8 +271,12 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       {
         title: "Global tahsilat kanalları açık",
         icon: "card",
-        brands: ["stripe", "paypal", "wise"],
-        line: "Stripe, PayPal ve wamo ile kartla tahsilat kurulabiliyor; Wise ve Payoneer hesapları BAE şirketiyle çalışıyor.",
+        /* 07.10.2026 · müşteri revizesi: "ödeme sistemlerinde Wise yok";
+           bu kart için liste "Stripe · PayPal · Amazon Payment Services ·
+           Network International". Eski cümle wamo, Wise ve Payoneer'i
+           sayıyordu. */
+        brands: ["stripe", "paypal", "aps", "network"],
+        line: "Stripe, PayPal, Amazon Payment Services ve Network International ile kartla tahsilat kurulabiliyor.",
       },
       {
         /* "Oturum vizesi alabiliyorsunuz" idi. -abiliyorsunuz kalıbı bir

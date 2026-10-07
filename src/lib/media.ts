@@ -253,6 +253,6 @@ const BASLIK_KURUM = U("1517048676732-d65bc937f952", 1800); // ahşap masada top
 export const BASLIK_FOTO: { on: string[]; foto: string }[] = [
   { on: ["/blog", "/gelismeler", "/e-kitaplar", "/kaynaklar", "/rehberler"], foto: BASLIK_YAZI },
   { on: ["/araclar", "/uygunluk-testi", "/ulkeler"], foto: BASLIK_ARAC },
-  { on: ["/iletisim", "/hakkimizda", "/kariyer", "/basinda-biz", "/is-ortakligi"], foto: BASLIK_KURUM },
+  { on: ["/iletisim", "/hakkimizda", "/kariyer", "/basinda-biz", "/is-ortakligi", "/kvkk"], foto: BASLIK_KURUM },
 ];
 export const BASLIK_FOTO_VARSAYILAN = BASLIK_KURUM;

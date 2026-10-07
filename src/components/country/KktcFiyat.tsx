@@ -14,13 +14,11 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowRight, Building2, Calculator, Check, FileBadge, MapPin, Moon } from "lucide-react";
+import { ArrowRight, Building2, Calculator, Check, FileBadge, MapPin, Moon, Percent } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import { gtm } from "@/lib/gtm";
 import {
-  KKTC_ADRES,
-  KKTC_HARC,
-  KKTC_KURULUS,
+  KKTC_KALEMLER,
   KKTC_MUH_AKTIF,
   KKTC_MUH_PASIF,
   KKTC_VARSAYILAN,
@@ -36,97 +34,76 @@ import "@/app/css/dubai-ek.css";
    basıyor (components/lab/SatisAkisi.tsx), Dubai'deki DubaiSecimFormu gibi. */
 export function KktcSecimFormu({ secim, onSecim }: { secim: KktcSecim; onSecim: (s: KktcSecim) => void }) {
   return (
-      <div className="ip-form">
-        <div className="ip-field">
-          <span className="ip-label">Kuruluş · zorunlu</span>
-          <div className="dfy-uc dfy-uc-iki">
-            <div className="dfy-kutu dfy-bolge" data-on="true">
-              <span className="dfy-ic" aria-hidden="true">
-                <Building2 size={18} strokeWidth={1.9} />
-              </span>
-              <span className="dfy-ad">Şirket kuruluşu</span>
-              <span className="dfy-alt">Başvuru, onay takibi ve tescil</span>
-              <span className="dfy-tutar">{euro(KKTC_KURULUS)}</span>
-            </div>
-            <div className="dfy-kutu dfy-bolge" data-on="true">
-              <span className="dfy-ic" aria-hidden="true">
-                <FileBadge size={18} strokeWidth={1.9} />
-              </span>
-              <span className="dfy-ad">Faaliyet harcı</span>
-              <span className="dfy-alt">Serbest Bölge izni, yıllık</span>
-              <span className="dfy-tutar">{euro(KKTC_HARC)}</span>
-            </div>
-          </div>
-        </div>
+    <div className="ip-form">
+      {/* KAPSAM, SEÇİM DEĞİL (07.10.2026 · 2). Dört kalemin hepsi zorunlu;
+          ilk hâlde seçili beyaz kutular olarak basılıyordu ve "seçebilecekmiş
+          gibi" duruyordu (Burak). Şimdi düz, tıklanmayan satırlar: ikon, ad,
+          tutar. */}
+      <div className="ip-field">
+        <span className="ip-label">Kuruluş ve ilk yıl · hepsi dahil</span>
+        <ul className="dfy-kapsam">
+          {KKTC_KALEMLER.map((k, i) => {
+            const Icon = KALEM_IKON[i] ?? Check;
+            return (
+              <li key={k.ad}>
+                <span className="dfy-ic" aria-hidden="true">
+                  <Icon size={18} strokeWidth={1.9} />
+                </span>
+                <span className="dfy-ek-m">
+                  <span className="dfy-ad">{k.ad}</span>
+                  <span className="dfy-alt">{k.alt}</span>
+                </span>
+                <span className="dfy-tutar">{euro(k.tutar)}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-        <div className="ip-field">
-          <span className="ip-label">Adres</span>
-          <div className="dfy-ekler">
+      <div className="ip-field">
+        <span className="ip-label">Muhasebe · kuruluştan sonra, siz seçiyorsunuz</span>
+        <div className="dfy-uc dfy-uc-iki">
+          {(
+            [
+              { k: "aktif", Icon: Calculator, ad: "Aktif şirket", alt: "Banka hesabı açıldığı aydan itibaren", tutar: `${euro(KKTC_MUH_AKTIF)} / ay` },
+              { k: "pasif", Icon: Moon, ad: "Pasif şirket", alt: "Hesabı ve faaliyeti olmayan şirket", tutar: `${euro(KKTC_MUH_PASIF)} / yıl` },
+            ] as const
+          ).map((m) => (
             <button
+              key={m.k}
               type="button"
-              role="checkbox"
-              aria-checked={secim.adres}
-              className="dfy-kutu dfy-ek"
-              data-on={secim.adres}
-              onClick={() => onSecim({ ...secim, adres: !secim.adres })}
+              className="dfy-kutu dfy-bolge"
+              data-on={secim.muhasebe === m.k}
+              aria-pressed={secim.muhasebe === m.k}
+              onClick={() => onSecim({ ...secim, muhasebe: m.k })}
             >
               <span className="dfy-ic" aria-hidden="true">
-                <MapPin size={18} strokeWidth={1.9} />
+                <m.Icon size={18} strokeWidth={1.9} />
               </span>
-              <span className="dfy-ek-m">
-                <span className="dfy-ad">Kayıtlı adres ve yasal temsilcilik</span>
-                <span className="dfy-alt">Yıllık. Kendi adresinizi beyan ederseniz gerekmez.</span>
-              </span>
-              <span className="dfy-tutar">+{euro(KKTC_ADRES)}</span>
-              <span className="dfy-tik" aria-hidden="true">
-                <Check size={14} strokeWidth={3} />
-              </span>
+              <span className="dfy-ad">{m.ad}</span>
+              <span className="dfy-alt">{m.alt}</span>
+              <span className="dfy-tutar">{m.tutar}</span>
             </button>
-          </div>
-        </div>
-
-        <div className="ip-field">
-          <span className="ip-label">Muhasebe · kuruluştan sonra</span>
-          <div className="dfy-uc dfy-uc-iki">
-            {(
-              [
-                { k: "aktif", Icon: Calculator, ad: "Aktif şirket", alt: "Banka hesabı açıldığı aydan itibaren", tutar: `${euro(KKTC_MUH_AKTIF)} / ay` },
-                { k: "pasif", Icon: Moon, ad: "Pasif şirket", alt: "Hesabı ve faaliyeti olmayan şirket", tutar: `${euro(KKTC_MUH_PASIF)} / yıl` },
-              ] as const
-            ).map((m) => (
-              <button
-                key={m.k}
-                type="button"
-                className="dfy-kutu dfy-bolge"
-                data-on={secim.muhasebe === m.k}
-                aria-pressed={secim.muhasebe === m.k}
-                onClick={() => onSecim({ ...secim, muhasebe: m.k })}
-              >
-                <span className="dfy-ic" aria-hidden="true">
-                  <m.Icon size={18} strokeWidth={1.9} />
-                </span>
-                <span className="dfy-ad">{m.ad}</span>
-                <span className="dfy-alt">{m.alt}</span>
-                <span className="dfy-tutar">{m.tutar}</span>
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
+    </div>
   );
 }
 
+const KALEM_IKON = [Building2, FileBadge, MapPin, Percent];
+
 export default function KktcFiyat() {
   const [secim, setSecim] = useState<KktcSecim>(KKTC_VARSAYILAN);
-  const satirlar = kktcSatirlar(secim);
-  const toplam = kktcToplam(secim);
+  const satirlar = kktcSatirlar();
+  const toplam = kktcToplam();
 
   return (
     <div className="ip">
       <KktcSecimFormu secim={secim} onSecim={setSecim} />
 
       <aside className="ip-out">
-        <span className="ip-out-k">Kuruluş ve ilk yıl tutarı</span>
+        <span className="ip-out-k">Kuruluş ve ilk yıl · toplam</span>
         <span className="ip-total">{euro(toplam)}</span>
         <span className="ip-out-u">yaklaşık 30-40 iş günü</span>
 

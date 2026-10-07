@@ -463,6 +463,35 @@ button.dfy-kutu {
   outline-offset: 2px;
 }
 
+/* ---- kapsam satırları (KKTC: zorunlu kalemler; seçim değil) ---- */
+.dfy-kapsam {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dfy-kapsam li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+  color: var(--text-900);
+}
+.dfy-kapsam li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+.dfy-kapsam li:last-child {
+  padding-bottom: 0;
+}
+.sec-night .dfy-kapsam li {
+  border-top-color: var(--night-line);
+  color: #ffffff;
+}
+
 /* ---- "i" düğmesi ve balonu ---- */
 .dfy-i {
   position: absolute;
