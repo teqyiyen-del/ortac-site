@@ -9,30 +9,33 @@
    küçük bir fotoğraf karosu (süs) ve üstünde tek cam etiket. Onaylanırsa
    PageHero'nun kompakt dalına taşınır. Ad alanı .abk- (css/lab-acik-baslik.css). */
 
-import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import "@/app/css/lab-acik-baslik.css";
 
+/* 07.10.2026 (2) · FOTOĞRAFSIZ. İlk örnekte sağda küçük bir fotoğraf vardı;
+   Burak: "görsel olmasına gerek yok, zaten aşağıda görseller varken biraz
+   saçma duruyor. Daha farklı bir yöntem deneyebilirsin." Şimdi yalnız yazı:
+   solda başlık ve tek cümle, sağda sayfanın künyesi (üç küçük kutu: o
+   sayfada ne var). Künye sayfadan sayfaya değişir; yoksa sağ taraf boş
+   kalmaz, başlık tam genişliğe yayılır. */
 export default function AcikBaslik({
   iz,
   baslik,
   vurgu,
   lead,
-  foto,
-  etiket,
+  kunye,
 }: {
   iz: string;
   baslik: string;
   vurgu?: string;
   lead: string;
-  foto: string;
-  etiket: string;
+  kunye?: { deger: string; ad: string }[];
 }) {
   const [bas, kuyruk] = vurgu && baslik.endsWith(vurgu) ? [baslik.slice(0, -vurgu.length), vurgu] : [baslik, ""];
   return (
     <section className="abk">
-      <div className="container-o abk-grid">
+      <div className="container-o abk-grid" data-kunye={kunye ? "" : undefined}>
         <div>
           <nav className="abk-iz" aria-label="Sayfa yolu">
             <SmartLink href="/">Ana sayfa</SmartLink>
@@ -45,10 +48,16 @@ export default function AcikBaslik({
           </h1>
           <p className="abk-lead">{lead}</p>
         </div>
-        <div className="abk-foto" aria-hidden="true">
-          <Image src={foto} alt="" fill sizes="(min-width: 1024px) 420px, 100vw" className="abk-img" />
-          <span className="abk-etiket">{etiket}</span>
-        </div>
+        {kunye && (
+          <dl className="abk-kunye">
+            {kunye.map((k) => (
+              <div key={k.ad}>
+                <dt>{k.ad}</dt>
+                <dd>{k.deger}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
       </div>
     </section>
   );

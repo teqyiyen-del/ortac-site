@@ -145,7 +145,7 @@ export default async function AltHizmetSayfasi({ params }: { params: Params }) {
           title={h.hero.title}
           accent={h.hero.accent}
           lead={h.hero.lead}
-          cta={{ label: "Teklif isteyin", href: "/basla" }}
+          cta={{ label: "Teklif isteyin", href: "/iletisim" }}
           art={
             <aside className="mah-kunye" aria-labelledby="mah-kunye-t">
               <p id="mah-kunye-t" className="mah-kunye-ust">

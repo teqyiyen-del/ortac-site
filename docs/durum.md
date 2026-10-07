@@ -4955,6 +4955,29 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (9) · üç hizmet sayfası doldu, kurulum penceresi sayfanın üstünde, menüde bayraklar
+
+- Dubai · vergi danışmanlığı, kurumsal danışmanlık, AML ve uyum sayfalarının içeriği yazıldı
+  (lib/hizmetIcerik.ts; kalıp vize sayfasının kısa kalıbı: üç kart, dört kural, dört adım,
+  SSS). Kaynak teklif PDF'i; fiyat yok. İngiltere ve KKTC için içerik yok, sayfalar kapalı.
+  ALTI BAŞLIK İLE SİTE PARALEL Mİ (Burak sordu): evet ama iki çakışma var. "Muhasebe ve
+  vergi" sayfası KDV ve beyanı zaten anlatıyor; "Vergi danışmanlığı" bunun danışmanlık
+  yanı (hangi rejim, serbest bölge avantajı, mukimlik). İki sayfa birbirine bağlanıyor.
+  Murat Bey ikisini tek başlıkta isterse birleştirilir. Vize altı başlığın dışında,
+  yalnız Dubai'de.
+- KURULUM PENCERESİ artık ayrı sayfaya götürmüyor: /basla'ya giden her bağlantı
+  bulunulan sayfanın üstünde açılıyor, adres `#basla` oluyor, `basla_open` olayı
+  gönderiliyor (components/basla/BaslaKatmani.tsx, kök düzende). Geri tuşu kapatıyor.
+  /basla sayfası doğrudan gelenler için duruyor.
+- Hizmet girişleri: rozetlerde onay işareti yerine konuya göre ikon; başlıkta mavi vurgu
+  her sayfada; düğme tek kalıp ("Teklif isteyin" → /iletisim). Ülke sayfalarında düğmelerin
+  altındaki iki satır duruyor (ülkenin dürüst kısıtı orada), hizmet sayfalarında yok.
+- Menü · Araçlar: açıklama yazıları kalktı; her aracın sağında yuvarlak bayrak, üç ülkeyi
+  kapsayanda üç bayrak, ülkesizde dünya.
+- /lab/acik-baslik: fotoğraflı örnek beğenilmedi; yeni örnek fotoğrafsız, sağda üç küçük
+  künye kutusu (yazı, kategori, ülke sayısı). Karar bekliyor.
+- Hizmet sayfalarına özel fotoğraf (media.ts · HIZMET_FOTO); vize için uygun kare yok.
+
 ## 07.10.2026 (8) · hizmet sayfalarına özel fotoğraf; lab: açık sayfa başlığı örneği
 
 - Hizmet sayfalarının girişinde artık hizmetin kendi fotoğrafı (lib/media.ts ·

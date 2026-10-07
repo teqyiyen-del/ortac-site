@@ -72,7 +72,10 @@ export const BANKA_DUBAI = {
     accent: "banka hesabı",
     /* [ONAYLI] ikinci cümle countryContent.ts · dubai · intro kartının satırı. */
     lead: "Kurumsal hesap ve tahsilat kanalları şirket kuruluşunun içinde kuruluyor. Başvuru dosyasını bankanın istediği formatta biz hazırlıyoruz; hesap kararını banka veriyor.",
-    cta: { label: "Kuruluşu başlatın", href: "/basla" },
+    /* 07.10.2026 · hizmet sayfalarının giriş düğmesi tek kalıp: "Teklif
+       isteyin" → /iletisim (Burak: "hepsinde farklı bir şey yazıyor, bir
+       elden geçir"). "Kurulumu başlat" akışı yalnız şirket kuruluşuna ait. */
+    cta: { label: "Teklif isteyin", href: "/iletisim" },
     trust: [
       /* [ONAYLI] countryContent.ts · dubai · steps */
       { icon: "dosya" as BankaIkon, line: "Dosya bankanın istediği formatta hazırlanıyor." },

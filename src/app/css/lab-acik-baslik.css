@@ -59,44 +59,40 @@ body:has(.abk) .onv:not([data-solid="true"]) {
   line-height: 1.55;
   color: var(--text-600);
 }
-.abk-foto {
-  position: relative;
-  height: 200px;
-  overflow: clip;
-  border-radius: var(--r-panel);
-  background: var(--night);
+/* künye: üç küçük kutu, sayfada ne olduğunu sayıyla söylüyor */
+.abk-kunye {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
 }
-.abk-img {
-  object-fit: cover;
+.abk-kunye > div {
+  display: grid;
+  gap: 4px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
 }
-.abk-etiket {
-  position: absolute;
-  left: 14px;
-  bottom: 14px;
-  padding: 6px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: var(--r-pill);
-  background: rgba(12, 12, 12, 0.78);
+.abk-kunye dt {
+  order: 2;
   font-size: 14px;
-  font-weight: 600;
-  color: #ffffff;
+  color: var(--text-600);
 }
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .abk-etiket {
-    background: rgba(12, 12, 12, 0.36);
-    -webkit-backdrop-filter: blur(14px) saturate(1.2);
-    backdrop-filter: blur(14px) saturate(1.2);
-  }
+.abk-kunye dd {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--text-900);
 }
 @media (min-width: 1024px) {
   .abk {
     padding: 136px 0 56px;
   }
-  .abk-grid {
-    grid-template-columns: minmax(0, 1fr) 420px;
+  .abk-grid[data-kunye] {
+    grid-template-columns: minmax(0, 1fr) 400px;
     gap: 64px;
-  }
-  .abk-foto {
-    height: 240px;
   }
 }

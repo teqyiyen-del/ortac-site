@@ -37,7 +37,7 @@ export default function FotoGiris({
   /** kırıntının son parçası: "Ülkeler · Dubai" */
   iz: React.ReactNode;
   baslik: string;
-  /** başlığın mavi ve alt satıra inen kuyruğu; `baslik` bununla bitmeli */
+  /** başlığın mavi parçası; sondaysa alt satıra iner, ortadaysa yerinde kalır */
   vurgu?: string;
   lead: string;
   /** düğmelerin üstündeki "…'den başlayan" satırı (yalnız fiyatı net sayfada) */
@@ -48,7 +48,10 @@ export default function FotoGiris({
   belge: { ad: string; cip: string };
   rozetler: FotoRozet[];
 }) {
-  const [bas, kuyruk] = vurgu && baslik.endsWith(vurgu) ? [baslik.slice(0, -vurgu.length), vurgu] : [baslik, ""];
+  /* vurgu başlığın sonundaysa kendi satırına iner (ülke sayfaları); ortasındaysa
+     yerinde, yalnız rengi değişir ("Dubai'de banka hesabı ve ödeme altyapısı.") */
+  const sonda = !!vurgu && baslik.endsWith(vurgu);
+  const yer = vurgu ? baslik.indexOf(vurgu) : -1;
   return (
     <section className="dhr">
       <div className="container-o dhr-grid">
@@ -59,8 +62,15 @@ export default function FotoGiris({
             <span>{iz}</span>
           </nav>
           <h1 className="dhr-h1">
-            {bas}
-            {kuyruk && <span>{kuyruk}</span>}
+            {vurgu && yer >= 0 ? (
+              <>
+                {baslik.slice(0, yer)}
+                <span data-ic={sonda ? undefined : ""}>{vurgu}</span>
+                {baslik.slice(yer + vurgu.length)}
+              </>
+            ) : (
+              baslik
+            )}
           </h1>
           <p className="dhr-lead">{lead}</p>
           {fiyat && <p className="dhr-fiyat">{fiyat}</p>}

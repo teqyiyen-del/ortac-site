@@ -14,7 +14,15 @@ import {
   MonitorSmartphone,
   Percent,
   Timer,
-  Wallet,} from "lucide-react";
+  Wallet,
+  Receipt,
+  Fingerprint,
+  ShieldCheck,
+  FileCheck,
+  Globe,
+  Layers,
+  Handshake,
+} from "lucide-react";
 import { Flag } from "@/components/shared/CountryPicker";
 import { useLenis } from "@/components/Providers";
 import { FACTS, type CountrySlug } from "@/lib/brand";
@@ -403,16 +411,35 @@ export default function PageHero({
     /* fotoğraf: hizmetin kendi karesi (lib/media.ts · HIZMET_FOTO; kırıntının
        son parçasında aranıyor), yoksa ülkenin fotoğrafı */
     const hizmetFoto = HIZMET_FOTO.find((h) => h.ara.test(parca.slice(1).join(" ")))?.foto;
-    const satirlar = rozetler ?? (trust ?? []).map((t) => t.line);
+    /* Rozet ikonu: sayfanın güven satırları kendi ikonuyla geliyor; yalnız
+       metin olarak gelen rozetlerde (genel hizmet şablonu) ikon metindeki
+       konuya göre seçiliyor. Hepsine onay işareti koymak ilk hâliydi;
+       Burak: "ikisine de tik atmışsın … onlara da ikon koy, mantıklı olsun." */
+    const rozetIkon = (m: string): LucideIcon =>
+      /KDV/i.test(m) ? Receipt
+      : /vergi|beyan/i.test(m) ? Percent
+      : /faydalanıcı|UBO|PSC/i.test(m) ? Fingerprint
+      : /AML|uyum|mevzuat/i.test(m) ? ShieldCheck
+      : /goAML|kayıt/i.test(m) ? FileCheck
+      : /pazar/i.test(m) ? Globe
+      : /yapılandırma|yapı/i.test(m) ? Layers
+      : /danışman|plan/i.test(m) ? Handshake
+      : /Companies House/i.test(m) ? Landmark
+      : Check;
     return (
       <FotoGiris
         iz={crumb}
         baslik={title}
-        vurgu={accent}
+        /* vurgu verilmemişse ilk kelimeden ("Dubai'de") sonrası mavi */
+        vurgu={accent ?? title.replace(/^\S+\s+/, "")}
         lead={lead}
         foto={hizmetFoto ?? COUNTRY_PHOTO[fotoUlke]}
         belge={belge ?? { ad: parca[parca.length - 1] ?? crumb, cip: parca.length > 1 ? ulkeAdi : "Ortac" }}
-        rozetler={satirlar.slice(0, 3).map((m) => ({ icon: ic(Check), metin: m.replace(/\.$/, "") }))}
+        rozetler={
+          rozetler
+            ? rozetler.slice(0, 3).map((m) => ({ icon: ic(rozetIkon(m)), metin: m.replace(/\.$/, "") }))
+            : (trust ?? []).slice(0, 3).map((t) => ({ icon: t.icon, metin: t.line.replace(/\.$/, "") }))
+        }
         dugmeler={
           cta ? (
             <>

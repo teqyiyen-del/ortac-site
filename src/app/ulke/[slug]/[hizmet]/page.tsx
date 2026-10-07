@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import SmartLink from "@/components/shared/SmartLink";
 import { notFound, redirect } from "next/navigation";
-import { ArrowRight, Check, Minus } from "lucide-react";
+import { ArrowRight, Check, Minus, Percent, ShieldCheck, UserRound, MapPin, Layers, Users, CalendarClock, Armchair, ArrowLeftRight, CircleOff, FileText, Fingerprint, Flag, Landmark, Hourglass, CheckCheck, Search, Scale, type LucideIcon} from "lucide-react";
+import SplitWords from "@/components/shared/SplitWords";
+import CountryFaq from "@/components/CountryFaq";
+import { hizmetIcerik, type HizmetIkon } from "@/lib/hizmetIcerik";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
@@ -40,6 +43,27 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
+const HIZMET_IKON: Record<HizmetIkon, LucideIcon> = {
+  yuzde: Percent,
+  kalkan: ShieldCheck,
+  kisi: UserRound,
+  harita: MapPin,
+  katman: Layers,
+  ortak: Users,
+  takvim: CalendarClock,
+  masa: Armchair,
+  devir: ArrowLeftRight,
+  kapat: CircleOff,
+  dosya: FileText,
+  parmak: Fingerprint,
+  bayrak: Flag,
+  banka: Landmark,
+  saat: Hourglass,
+  tik: CheckCheck,
+  ara: Search,
+  terazi: Scale,
+};
+
 const money = (n: number) => `$${n.toLocaleString("tr-TR")}`;
 /* Başlık cümle içine giriyor ("Dubai'de …"): kelimeler küçülüyor, ama
    kısaltmalar (AML) büyük kalıyor. */
@@ -62,6 +86,146 @@ export default async function ServicePage({ params }: { params: Params }) {
   const siblings = pagedServicesFor(slug).filter((s) => s.slug !== svc.slug);
   const others = COUNTRY_SLUGS.filter((c) => c !== slug).filter((c) => serviceFor(c, svc.slug));
   const total = svc.lines.reduce((a, l) => a + (l.amount ?? 0), 0);
+
+  /* 07.10.2026 · ZENGİN DÜZEN. İçeriği yazılmış hizmette (lib/hizmetIcerik.ts;
+     şimdilik Dubai · vergi, kurumsal danışmanlık, AML) eski "kapsam + teklif
+     kutusu" şablonu yerine vize sayfasının kısa kalıbı basılıyor: üç kart,
+     dört kural karosu, dört adım, SSS. Sınıflar vize sayfasınınkiler
+     (.svz-, css/svc-vize.css). */
+  const icerik = hizmetIcerik(slug, svc.slug);
+  if (icerik) {
+    const bolum = (b: { baslik: string; vurgu: string; lead: string }) => (
+      <div className="sec-head">
+        <SplitWords as="h2" text={b.baslik} accent={b.vurgu} className="h2" />
+        <FadeUp delay={0.2}>
+          <p className="sec-lead">{b.lead}</p>
+        </FadeUp>
+      </div>
+    );
+    return (
+      <>
+        <Nav />
+        <main>
+          <PageHero
+            crumb={`${name} · ${svc.title}`}
+            title={`${name}'de ${kucult(svc.title)}.`}
+            accent={`${kucult(svc.title)}.`}
+            lead={svc.line}
+            rozetler={svc.includes.slice(0, 3)}
+            cta={{ label: "Teklif isteyin", href: "/iletisim" }}
+          />
+
+          <section className="sec-pad" style={{ background: "var(--white)" }}>
+            <div className="container-o">
+              {bolum(icerik.kartlar)}
+              <ul className="svz-tur">
+                {icerik.kartlar.items.map((t, i) => {
+                  const I = HIZMET_IKON[t.icon];
+                  return (
+                    <li key={t.title}>
+                      <FadeUp className="svz-tur-k" delay={0.1 + i * 0.06}>
+                        <span className="svz-tur-bas">
+                          <span className="svz-ic" aria-hidden="true">
+                            <I size={20} strokeWidth={1.9} />
+                          </span>
+                          <span className="svz-tur-sp">{t.kim}</span>
+                        </span>
+                        <h3 className="svz-tur-t">{t.title}</h3>
+                        <p className="svz-tur-s">{t.line}</p>
+                      </FadeUp>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </section>
+
+          <section className="sec-pad" style={{ background: "var(--paper)" }}>
+            <div className="container-o">
+              {bolum(icerik.kurallar)}
+              <ul className="svz-kor">
+                {icerik.kurallar.items.map((c, i) => {
+                  const I = HIZMET_IKON[c.icon];
+                  return (
+                    <li key={c.title}>
+                      <FadeUp className="svz-kor-k" delay={0.08 + i * 0.05}>
+                        <span className="svz-ic" aria-hidden="true">
+                          <I size={18} strokeWidth={1.9} />
+                        </span>
+                        <div>
+                          <b>{c.title}</b>
+                          <p>{c.line}</p>
+                        </div>
+                      </FadeUp>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </section>
+
+          <section className="sec-pad" style={{ background: "var(--white)" }}>
+            <div className="container-o">
+              {bolum(icerik.adimlar)}
+              <ol className="svz-adim">
+                {icerik.adimlar.items.map((st, i) => {
+                  const I = HIZMET_IKON[st.icon];
+                  return (
+                    <li key={st.title}>
+                      <FadeUp className="svz-adim-k" delay={0.1 + i * 0.06}>
+                        <span className="svz-ic svz-adim-ic" aria-hidden="true">
+                          <I size={18} strokeWidth={1.9} />
+                        </span>
+                        <span className="svz-adim-n" aria-hidden="true">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <h3 className="svz-adim-t">{st.title}</h3>
+                        <p className="svz-adim-s">{st.line}</p>
+                      </FadeUp>
+                    </li>
+                  );
+                })}
+              </ol>
+              {icerik.adimlar.cikis && (
+                <SmartLink href={icerik.adimlar.cikis.href} className="svz-cik">
+                  {icerik.adimlar.cikis.label}
+                  <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
+                </SmartLink>
+              )}
+            </div>
+          </section>
+
+          <section className="sec-pad" style={{ background: "var(--paper)" }}>
+            <div className="container-o">
+              <div className="sec-head">
+                <SplitWords as="h2" text="Sık sorulanlar." accent="sorulanlar." className="h2" />
+              </div>
+              <CountryFaq items={icerik.sss} />
+            </div>
+          </section>
+
+          <section className="sec-pad" style={{ background: "var(--white)" }}>
+            <div className="container-o">
+              <CountryCross
+                title="Dubai'deki diğer hizmetler"
+                items={[{ country: slug, href: `/${slug}` }]}
+              />
+              <div className="sp-sib" style={{ marginTop: 20 }}>
+                {siblings.map((x) => (
+                  <SmartLink key={x.slug} href={serviceHref(slug, x.slug)}>
+                    {x.title}
+                    <ArrowRight size={14} strokeWidth={2.1} />
+                  </SmartLink>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <FinalCta />
+        </main>
+      </>
+    );
+  }
 
   return (
     <>

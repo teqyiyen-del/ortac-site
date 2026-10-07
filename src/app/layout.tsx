@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import BaslaKatmani from "@/components/basla/BaslaKatmani";
 
 /* Single font across the whole site (client call). Poppins carries every role —
    DISPLAY/SUBHEAD/BODY/UI by weight, DATA/TAG by weight + tracking. */
@@ -64,7 +65,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          {/* /basla'ya giden her bağlantıyı sayfanın üstünde açılan pencereye
+              çeviren dinleyici (07.10.2026 · gerekçe bileşenin başında) */}
+          <BaslaKatmani />
+        </Providers>
       </body>
     </html>
   );

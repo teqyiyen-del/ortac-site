@@ -24,6 +24,7 @@ import {
   type LucideIcon,
   Percent,
   ShieldCheck,
+  Globe,
 } from "lucide-react";
 
 import Logo from "@/components/shared/Logo";
@@ -193,7 +194,10 @@ export const SERVICE_UNIVERSE: { slug: ServiceSlug; title: string }[] = (() => {
 /* 25.09.2026 · SVC_ICON, SERVICE_UNIVERSE, Tile ve üç kart listesi dışa
    açıldı: /lab/mobil-nav adayları menünün verisini buradan okuyor, elle
    yazılmış ikinci kopya yok. */
-export type Tile = { label: string; href: string; hint: string; icon: LucideIcon };
+/* `ulke` yalnız araç kartlarında dolu (07.10.2026): kartın sağında yuvarlak
+   bayrak (tek ülke), üç bayrak ("hepsi") ya da dünya (null = ülkeden
+   bağımsız). Tanımsızsa kart bir araç değil, hiçbir şey basılmıyor. */
+export type Tile = { label: string; href: string; hint: string; icon: LucideIcon; ulke?: CountrySlug | "hepsi" | null };
 
 /* ============================================================ ARAÇLAR PANELİ
    Panel bu turda yeniden kuruldu. Eski hâli tek sırada dört karttı — müşterinin
@@ -253,7 +257,12 @@ const metaKisalt = (m: string) =>
 
 const tileOf = (id: ToolId): Tile => {
   const t = NAV_TOOLS.find((x) => x.id === id)!;
-  return { label: t.title, href: t.href, hint: metaKisalt(t.meta), icon: TOOL_ICON[t.id] };
+  /* 07.10.2026 · KÜNYE YAZISI KALKTI, BAYRAK GELDİ. Burak: "o açıklama
+     yazılarına gerek yok, sadece başlıkları yazsın. Bir ülkeyle alakalıysa
+     o ülkenin bayrağı olsun; global bir konuysa dünya ikonu; birden çok
+     ülkeyi kapsıyorsa o ülkeleri birden koy. Yuvarlak olsun." Künye
+     erişilebilir adda duruyor (ekran okuyucu ülkeyi duysun). */
+  return { label: t.title, href: t.href, hint: metaKisalt(t.meta), icon: TOOL_ICON[t.id], ulke: t.country };
 };
 
 /* Üst sıra — huninin tepesi. */
@@ -470,7 +479,30 @@ const EASE = [0.22, 1, 0.36, 1] as const;
    Tek kolonda alt satır sağa kaçıyor ama SIRA değişmiyor: aria-label DOM
    sırasını değil metni sabitliyor, yani şerit hangi düzende basılırsa
    basılsın duyulan cümle aynı. */
+/** Araç kartının sağındaki ülke işareti: yuvarlak bayrak(lar) ya da dünya. */
+function UlkeIsareti({ ulke }: { ulke: CountrySlug | "hepsi" | null }) {
+  if (ulke === null)
+    return (
+      <span className="onv-bay-grup" aria-hidden="true">
+        <span className="onv-bay onv-bay-dunya">
+          <Globe size={13} strokeWidth={2} />
+        </span>
+      </span>
+    );
+  const liste: CountrySlug[] = ulke === "hepsi" ? ["dubai", "ingiltere", "kktc"] : [ulke];
+  return (
+    <span className="onv-bay-grup" aria-hidden="true">
+      {liste.map((c) => (
+        <span key={c} className="onv-bay">
+          <Flag country={c} />
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function CardLink({ t, onGo }: { t: Tile; onGo: () => void }) {
+  const arac = t.ulke !== undefined;
   return (
     <SmartLink
       href={t.href}
@@ -483,7 +515,8 @@ function CardLink({ t, onGo }: { t: Tile; onGo: () => void }) {
       </span>
       <span className="onv-card-tx">
         <b>{t.label}</b>
-        <em>{t.hint}</em>
+        {/* bayraklar künyenin yerinde: tek satırlık kartta sağa yaslı */}
+        {arac ? <UlkeIsareti ulke={t.ulke ?? null} /> : <em>{t.hint}</em>}
       </span>
     </SmartLink>
   );
@@ -1666,7 +1699,13 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                         <t.icon size={16} strokeWidth={2} />
                       </span>
                       {t.label}
-                      <ChevronRight className="onv-m-ok" size={16} strokeWidth={2} aria-hidden="true" />
+                      {t.ulke !== undefined ? (
+                        <span className="onv-m-ok">
+                          <UlkeIsareti ulke={t.ulke} />
+                        </span>
+                      ) : (
+                        <ChevronRight className="onv-m-ok" size={16} strokeWidth={2} aria-hidden="true" />
+                      )}
                     </SmartLink>
                   ))}
                 </div>
