@@ -4955,6 +4955,19 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (14) · fiyat alanında dış kart yok, kurulum penceresinde KKTC
+
+- Fiyat bölümü (üç ülke): dıştaki büyük siyah kart kalktı; her seçim grubu ve sonuç paneli
+  kendi siyah kutusu, doğrudan kırık beyaz zeminde (`.sec-night.gece-alan`). MoneyHome'daki
+  büyük kart (`.gece-kart`) duruyor.
+- KKTC girişinde "€4.900'dan başlayan fiyatlarla".
+- Kurulum penceresinde KKTC seçilebiliyor: ikinci adım KKTC fiyat formu, özet euro.
+  KKTC fiyat panelindeki düğme seçimi taşıyor (/basla?ulke=kktc&adres=1&muh=aktif).
+  Ülke sayfasındaki "Hemen Başla" o ülke seçili, ikinci adımdan açıyor; menüdeki
+  "Kurulumu Başlat" baştan (lib/baslaSecim.ts).
+- Burak: KKTC sayfasındaki sermaye ve harç satırları kalsın; KKTC hizmet sayfaları "biraz
+  kısa" (ileride büyütülecek).
+
 ## 07.10.2026 (13) · KKTC: yeni fiyat paneli, Girne fotoğrafı, muhasebe ve banka sayfaları
 
 Kaynak: KKTC teklif belgesi (Ortac International Accounting, 06.10.2026); Burak:

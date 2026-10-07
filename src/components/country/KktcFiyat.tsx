@@ -10,7 +10,7 @@
        edebilirsiniz; belge madde 5)
      · muhasebe: aktif mi pasif mi; kuruluş tutarına girmiyor, yanında
        ayrı yazıyor (belge madde 6)
-   Düğme iletişime gidiyor: kurulum akışı (/basla) şimdilik yalnız Dubai. */
+   Düğme kurulum penceresini seçimle açıyor (07.10.2026: pencereye KKTC eklendi). */
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
@@ -29,15 +29,13 @@ import {
   kktcToplam,
   type KktcSecim,
 } from "@/lib/kktcFiyat";
+import { kktcBaslaHref } from "@/lib/baslaSecim";
 import "@/app/css/dubai-ek.css";
 
-export default function KktcFiyat() {
-  const [secim, setSecim] = useState<KktcSecim>(KKTC_VARSAYILAN);
-  const satirlar = kktcSatirlar(secim);
-  const toplam = kktcToplam(secim);
-
+/* Seçim formu ayrı bileşen: kurulum penceresinin ikinci adımı da bunu
+   basıyor (components/lab/SatisAkisi.tsx), Dubai'deki DubaiSecimFormu gibi. */
+export function KktcSecimFormu({ secim, onSecim }: { secim: KktcSecim; onSecim: (s: KktcSecim) => void }) {
   return (
-    <div className="ip">
       <div className="ip-form">
         <div className="ip-field">
           <span className="ip-label">Kuruluş · zorunlu</span>
@@ -70,7 +68,7 @@ export default function KktcFiyat() {
               aria-checked={secim.adres}
               className="dfy-kutu dfy-ek"
               data-on={secim.adres}
-              onClick={() => setSecim({ ...secim, adres: !secim.adres })}
+              onClick={() => onSecim({ ...secim, adres: !secim.adres })}
             >
               <span className="dfy-ic" aria-hidden="true">
                 <MapPin size={18} strokeWidth={1.9} />
@@ -102,7 +100,7 @@ export default function KktcFiyat() {
                 className="dfy-kutu dfy-bolge"
                 data-on={secim.muhasebe === m.k}
                 aria-pressed={secim.muhasebe === m.k}
-                onClick={() => setSecim({ ...secim, muhasebe: m.k })}
+                onClick={() => onSecim({ ...secim, muhasebe: m.k })}
               >
                 <span className="dfy-ic" aria-hidden="true">
                   <m.Icon size={18} strokeWidth={1.9} />
@@ -115,6 +113,17 @@ export default function KktcFiyat() {
           </div>
         </div>
       </div>
+  );
+}
+
+export default function KktcFiyat() {
+  const [secim, setSecim] = useState<KktcSecim>(KKTC_VARSAYILAN);
+  const satirlar = kktcSatirlar(secim);
+  const toplam = kktcToplam(secim);
+
+  return (
+    <div className="ip">
+      <KktcSecimFormu secim={secim} onSecim={setSecim} />
 
       <aside className="ip-out">
         <span className="ip-out-k">Kuruluş ve ilk yıl tutarı</span>
@@ -151,12 +160,13 @@ export default function KktcFiyat() {
           </span>
         </div>
 
+        {/* seçim adresle kurulum penceresine gidiyor (lib/baslaSecim.ts) */}
         <SmartLink
-          href="/iletisim"
+          href={kktcBaslaHref(secim)}
           className="btn btn-primary btn-full"
           onClick={() => gtm("country_config_start", { country: "kktc", total: toplam })}
         >
-          İletişime geçin
+          Bu kurulumla başlayın
           <ArrowRight size={15} strokeWidth={2.1} />
         </SmartLink>
 

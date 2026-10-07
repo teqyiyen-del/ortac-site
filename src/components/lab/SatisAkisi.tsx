@@ -130,6 +130,9 @@ import {
 
 import { DubaiSecimFormu } from "@/components/country/DubaiFiyat";
 import { DUBAI_VARSAYILAN, dubaiSatirlar, dubaiToplam, type DubaiSecim } from "@/lib/dubaiFiyat";
+import { KktcSecimFormu } from "@/components/country/KktcFiyat";
+import { KKTC_VARSAYILAN, euro, kktcSatirlar, kktcToplam, type KktcSecim } from "@/lib/kktcFiyat";
+import type { BaslaOnceden } from "@/lib/baslaSecim";
 import "@/app/css/lab-satis.css";
 import "@/app/css/dubai-ek.css";
 
@@ -147,6 +150,9 @@ const ULKELER: Country[] = ["dubai", "ingiltere", "kktc"];
 /* Müşteri: "şimdi Dubai üzerinden sadece şu an onu yapalım." Öteki iki ülke
    görünüyor ama seçilemiyor; akışın üç ülkeli olacağı ilk adımda belli. */
 const ACIK: Country = "dubai";
+/* 07.10.2026 · özet akışında KKTC de açık (Burak: "Kıbrıs'ı da ekleyebilirsin
+   … orada da benzer mantığı yapacaksın"). İngiltere'nin fiyat modeli yok. */
+const OZET_ACIK: Country[] = ["dubai", "kktc"];
 
 const TIERS: Tier[] = ["basic", "gold", "platinium"];
 /* Paketler sabit: faaliyet seçilmiyor. configure() bir faaliyet istiyor;
@@ -199,7 +205,7 @@ export function SatisPenceresi({
   acik: boolean;
   akis: Akis;
   /** fiyat panelinden gelen seçim: ülke ve seçim dolu, akış 2. adımdan açılır */
-  onceden?: DubaiSecim | null;
+  onceden?: BaslaOnceden | null;
   /** Sunum modu: adımlar arasında bilgi girmeden geçilir (bkz. ornekDoldur). */
   sunum: boolean;
   onKapat: () => void;
@@ -210,8 +216,9 @@ export function SatisPenceresi({
      oturum), yani bu başlatıcılar her açılışta yeniden çalışıyor; kapatıp
      yeniden açan kişi yarım bir akışa değil başa düşüyor. */
   const [adim, setAdim] = useState(onceden ? 1 : 0);
-  const [ulke, setUlke] = useState<Country | null>(onceden ? "dubai" : null);
-  const [secim, setSecim] = useState<DubaiSecim>(onceden ?? DUBAI_VARSAYILAN);
+  const [ulke, setUlke] = useState<Country | null>(onceden ? onceden.ulke : null);
+  const [secim, setSecim] = useState<DubaiSecim>(onceden?.ulke === "dubai" ? onceden.dubai : DUBAI_VARSAYILAN);
+  const [kktc, setKktc] = useState<KktcSecim>(onceden?.ulke === "kktc" ? onceden.kktc : KKTC_VARSAYILAN);
   const [tier, setTier] = useState<Tier | null>(null);
   const [kisi, setKisi] = useState<Kisi>({ ad: "", soyad: "", eposta: "", telefon: "" });
   const [dokundu, setDokundu] = useState(false);
@@ -261,9 +268,9 @@ export function SatisPenceresi({
     const tarih = new Date();
     const yy = String(tarih.getFullYear()).slice(-2);
     const mm = String(tarih.getMonth() + 1).padStart(2, "0");
-    const kod = ozet([kisi.eposta, kisi.ad, kisi.soyad, ulke, tier, JSON.stringify(secim)].join("|"));
-    return `ORT-DXB-${yy}${mm}-${kod}`;
-  }, [adim, ulke, tier, kisi, secim]);
+    const kod = ozet([kisi.eposta, kisi.ad, kisi.soyad, ulke, tier, JSON.stringify(ulke === "kktc" ? kktc : secim)].join("|"));
+    return `ORT-${ulke === "kktc" ? "KKTC" : "DXB"}-${yy}${mm}-${kod}`;
+  }, [adim, ulke, tier, kisi, secim, kktc]);
 
   /* ------------------------------------------------------- SUNUM MODU
      Müşteri: "içinde rahatça dolaşabilmek için bilgi girmesem de devam
@@ -379,7 +386,7 @@ export function SatisPenceresi({
                   <h2 id="sat-a0" className="sat-soru">Şirketinizi hangi ülkede kuruyorsunuz?</h2>
                   <div className="sat-ulkeler" role="radiogroup" aria-labelledby="sat-a0">
                     {ULKELER.map((c) => {
-                      const acikMi = c === ACIK;
+                      const acikMi = ozetM ? OZET_ACIK.includes(c) : c === ACIK;
                       return (
                         <label key={c} className="sat-ulke" data-kapali={!acikMi || undefined}>
                           <input
@@ -395,7 +402,7 @@ export function SatisPenceresi({
                           </span>
                           <span className="sat-ulke-t">
                             <b>{COUNTRY_LABELS[c]}</b>
-                            <span>{acikMi ? PRICING[c].license : "Yakında bu akışta"}</span>
+                            <span>{!acikMi ? "Yakında bu akışta" : ozetM && c === "kktc" ? "Serbest Liman ve Bölge şirketi" : PRICING[c].license}</span>
                           </span>
                           <span className="sat-tik" aria-hidden="true">
                             <Check size={14} strokeWidth={2.6} />
@@ -414,11 +421,15 @@ export function SatisPenceresi({
                 <section aria-labelledby="sat-a1o">
                   <h2 id="sat-a1o" className="sat-soru">Kurulumunuzu seçin</h2>
                   <div className="sat-secim">
-                    <DubaiSecimFormu secim={secim} onSecim={setSecim} />
+                    {ulke === "kktc" ? (
+                      <KktcSecimFormu secim={kktc} onSecim={setKktc} />
+                    ) : (
+                      <DubaiSecimFormu secim={secim} onSecim={setSecim} />
+                    )}
                   </div>
                   <p className="sat-secim-t">
-                    <span>Tahmini tutar · KDV hariç</span>
-                    <b>{money(dubaiToplam(secim))}</b>
+                    <span>{ulke === "kktc" ? "Kuruluş ve ilk yıl tutarı" : "Tahmini tutar · KDV hariç"}</span>
+                    <b>{ulke === "kktc" ? euro(kktcToplam(kktc)) : money(dubaiToplam(secim))}</b>
                   </p>
                 </section>
               )}
@@ -553,7 +564,7 @@ export function SatisPenceresi({
                           </span>
                           {COUNTRY_LABELS[ulke]} şirket kuruluşu
                         </p>
-                        <p>{PRICING[ulke].license}</p>
+                        <p>{ozetM && ulke === "kktc" ? "Serbest Liman ve Bölge şirketi" : PRICING[ulke].license}</p>
                       </div>
                     </div>
 
@@ -566,17 +577,17 @@ export function SatisPenceresi({
                           </tr>
                         </thead>
                         <tbody>
-                          {dubaiSatirlar(secim).map((l) => (
+                          {(ulke === "kktc" ? kktcSatirlar(kktc) : dubaiSatirlar(secim)).map((l) => (
                             <tr key={l.ad}>
                               <td>{l.ad}</td>
-                              <td>{money(l.tutar)}</td>
+                              <td>{ulke === "kktc" ? euro(l.tutar) : money(l.tutar)}</td>
                             </tr>
                           ))}
                         </tbody>
                         <tfoot>
                           <tr>
-                            <th scope="row">Toplam · KDV hariç</th>
-                            <td>{money(dubaiToplam(secim))}</td>
+                            <th scope="row">{ulke === "kktc" ? "Toplam" : "Toplam · KDV hariç"}</th>
+                            <td>{ulke === "kktc" ? euro(kktcToplam(kktc)) : money(dubaiToplam(secim))}</td>
                           </tr>
                         </tfoot>
                       </table>

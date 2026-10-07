@@ -236,9 +236,11 @@ export default async function CountryPage({ params }: { params: Params }) {
         {/* 07.10.2026 · TAM SİYAH BÖLÜM YOK. Burak: "komple arka planı siyah
             olan bir yer kullanmak istemiyorum; siyah bir yoğunluk koymak
             istediğimiz yerlerde büyük kartta olsun, VIP kartı gibi." Bölüm
-            zemini kırık beyaz, başlık koyu yazı; yapılandırıcı tek büyük gece
-            kartın içinde (.gece-kart · sec-night yalnız zemin rengi veriyor,
-            panelin gece stilleri ona bağlı). */}
+            zemini kırık beyaz, başlık koyu yazı. Yapılandırıcı bir tur tek büyük
+            gece kartın içindeydi; Burak: "dışındaki siyah kartı kaldır,
+            boksların hepsi kendi siyah olsun, direkt alana yayılsınlar."
+            Şimdi her seçim grubu ve sonuç paneli kendi gece kutusu, doğrudan
+            açık zeminde (.gece-alan). */}
         <section id="fiyat" className="sec-pad" style={{ background: "var(--paper)" }}>
           <div className="container-o">
             <div className="sec-head">
@@ -268,7 +270,7 @@ export default async function CountryPage({ params }: { params: Params }) {
             </div>
             {/* 06.10.2026 · Dubai'de paket yok: baz fiyat + ekler
                 (country/DubaiFiyat.tsx). Öteki iki ülke eski panelde. */}
-            <div className="sec-night gece-kart">
+            <div className="sec-night gece-alan">
               {slug === "dubai" ? <DubaiFiyat /> : slug === "kktc" ? <KktcFiyat /> : <CountryPricing country={slug} />}
             </div>
           </div>

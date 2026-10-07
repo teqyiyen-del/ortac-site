@@ -13,9 +13,9 @@
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { SatisPenceresi } from "@/components/lab/SatisAkisi";
-import type { DubaiSecim } from "@/lib/dubaiFiyat";
+import type { BaslaOnceden } from "@/lib/baslaSecim";
 
-export default function BaslaAkis({ onceden }: { onceden: DubaiSecim | null }) {
+export default function BaslaAkis({ onceden }: { onceden: BaslaOnceden | null }) {
   const [acik, setAcik] = useState(true);
   const [oturum, setOturum] = useState(0);
   return (

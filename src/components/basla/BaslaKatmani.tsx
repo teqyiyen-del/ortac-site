@@ -22,7 +22,7 @@
    olarak iniyor; her sayfaya yalnız bu küçük dinleyici giriyor. */
 
 import { useEffect, useRef, useState, type ComponentType } from "react";
-import { dubaiSecimOku, type DubaiSecim } from "@/lib/dubaiFiyat";
+import { baslaOku, baslaSayfadan, type BaslaOnceden } from "@/lib/baslaSecim";
 import { gtm } from "@/lib/gtm";
 
 const HASH = "#basla";
@@ -31,7 +31,7 @@ type PencereProps = {
   acik: boolean;
   akis: "ozet";
   sunum: boolean;
-  onceden?: DubaiSecim | null;
+  onceden?: BaslaOnceden | null;
   onKapat: () => void;
 };
 
@@ -39,7 +39,7 @@ export default function BaslaKatmani() {
   const [Pencere, setPencere] = useState<ComponentType<PencereProps> | null>(null);
   const [acik, setAcik] = useState(false);
   const [oturum, setOturum] = useState(0);
-  const [onceden, setOnceden] = useState<DubaiSecim | null>(null);
+  const [onceden, setOnceden] = useState<BaslaOnceden | null>(null);
   /* pencereyi biz mi açtık (geçmişe kayıt ekledik mi): kapatırken geri mi
      gidilecek, yoksa yalnız hash mi silinecek */
   const ekledik = useRef(false);
@@ -48,7 +48,7 @@ export default function BaslaKatmani() {
     const yukle = () =>
       import("@/components/lab/SatisAkisi").then((m) => setPencere(() => m.SatisPenceresi as ComponentType<PencereProps>));
 
-    const ac = (secim: DubaiSecim | null, kaynak: string) => {
+    const ac = (secim: BaslaOnceden | null, kaynak: string) => {
       setOnceden(secim);
       setOturum((n) => n + 1);
       setAcik(true);
@@ -69,7 +69,10 @@ export default function BaslaKatmani() {
       const q = Object.fromEntries(url.searchParams.entries());
       window.history.pushState(null, "", HASH);
       ekledik.current = true;
-      ac(dubaiSecimOku(q), a.closest("header, nav") ? "menu" : "sayfa");
+      /* seçim adreste yoksa: ülke sayfasındaysak o ülke, varsayılan seçimle
+         (menüdeki düğme hariç: o her sayfada aynı, baştan başlatır) */
+      const menu = !!a.closest("header, nav");
+      ac(baslaOku(q) ?? (menu ? null : baslaSayfadan(window.location.pathname)), menu ? "menu" : "sayfa");
     };
 
     const hash = () => {

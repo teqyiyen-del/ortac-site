@@ -13,7 +13,7 @@
 import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import BaslaAkis from "@/components/basla/BaslaAkis";
-import { dubaiSecimOku } from "@/lib/dubaiFiyat";
+import { baslaOku } from "@/lib/baslaSecim";
 
 export const metadata: Metadata = {
   title: "Kurulumu başlat | Ortac Global",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function BaslaPage({ searchParams }: { searchParams: SearchParams }) {
-  const onceden = dubaiSecimOku(await searchParams);
+  const onceden = baslaOku(await searchParams);
   return (
     <>
       <Nav />

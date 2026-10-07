@@ -30,6 +30,7 @@ import FotoGiris, { type FotoRozet } from "@/components/shared/FotoGiris";
 import { BASLIK_FOTO, BASLIK_FOTO_VARSAYILAN, COUNTRY_PHOTO, HIZMET_FOTO } from "@/lib/media";
 import { usePathname } from "next/navigation";
 import { DUBAI_BASLANGIC, money } from "@/lib/dubaiFiyat";
+import { KKTC_KURULUS, euro } from "@/lib/kktcFiyat";
 
 
 /* ============================================================
@@ -359,6 +360,10 @@ export default function PageHero({
             country === "dubai" ? (
               <>
                 <b>{money(DUBAI_BASLANGIC)}</b>&apos;den başlayan fiyatlarla
+              </>
+            ) : country === "kktc" ? (
+              <>
+                <b>{euro(KKTC_KURULUS)}</b>&apos;dan başlayan fiyatlarla
               </>
             ) : undefined
           }

@@ -1583,28 +1583,36 @@ body {
 .gece-kart > .ip {
   margin-top: 0;
 }
-/* kartın kendisi yüzey: içindeki form ikinci bir çerçeve ve dolgu taşımıyor
-   (kart içinde kart içinde kart oluyordu; telefonda seçenekler sığmıyordu) */
-.sec-night.gece-kart .ip-form {
+/* FİYAT ALANI (07.10.2026): dış kart yok; her seçim grubu ve sonuç paneli
+   kendi gece kutusu, doğrudan açık zeminde. .sec-night yalnız içerideki gece
+   stillerini açmak için duruyor, zemini burada kapalı. */
+.sec-night.gece-alan {
+  background: transparent;
+}
+.sec-head + .gece-alan {
+  margin-top: var(--space-head);
+}
+.gece-alan > .ip {
+  margin-top: 0;
+}
+.sec-night.gece-alan .ip-form {
+  gap: 12px;
   padding: 0;
   border: 0;
   background: transparent;
 }
-/* her seçim grubu kendi kutusunda: etiket de kutunun içinde. Sağdaki sonuç
-   paneli büyük bir kutu; sol sütun etiketle başlayınca üst kenarlar
-   hizalanmıyordu (Burak: "serbest bölge yazısını da alttaki üç seçeneği de
-   büyük bir boksa al"). */
-.sec-night.gece-kart .ip-form {
+.sec-night.gece-alan .ip-form .ip-field {
+  padding: 24px;
+  border: 0;
+  border-radius: var(--r-panel);
+  background: var(--night);
+}
+.sec-night.gece-alan .ip-form .dfy-iki {
   gap: 12px;
 }
-.sec-night.gece-kart .ip-form .ip-field {
-  padding: 20px;
-  border: 1px solid var(--night-line);
-  border-radius: var(--r-lg);
-  background: var(--night-2);
-}
-.sec-night.gece-kart .ip-form .dfy-iki {
-  gap: 12px;
+.sec-night.gece-alan .ip-out {
+  border: 0;
+  background: var(--night);
 }
 @media (min-width: 900px) {
   .gece-kart {
