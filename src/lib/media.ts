@@ -252,9 +252,12 @@ const BASLIK_ARAC = U("1560221328-12fe60f83ab8", 1800); // koyu ekranda çizgi g
 const BASLIK_KURUM = U("1517048676732-d65bc937f952", 1800); // ahşap masada toplantı
 export const BASLIK_FOTO: { on: string[]; foto: string }[] = [
   /* hakkımızda ayrı: kurumsal kare (toplantı masası) o sayfanın ilk kutusunda
-     da var, başlıkla aynı fotoğraf alt alta geliyordu (Burak, 07.10.2026).
-     Başlıkta Dubai silueti. Sıra önemli: ilk eşleşen kazanıyor. */
-  { on: ["/hakkimizda"], foto: U("1512453979798-5ea266f8880c", 1800) },
+     da var, başlıkla aynı fotoğraf alt alta geliyordu. İlk düzeltmede Dubai
+     silueti kondu; Burak: "niye Dubai koyuyorsun, ana sayfadakini alıp
+     getirmiş; git başka bir şey koy." Sitede başka yerde KULLANILMAYAN yeni
+     bir kare: cam bölmeli loş ofis, solda toplantı odası (Unsplash, sekiz
+     kare yan yana açılıp seçildi). Sıra önemli: ilk eşleşen kazanıyor. */
+  { on: ["/hakkimizda"], foto: U("1541746972996-4e0b0f43e02a", 1800) },
   { on: ["/blog", "/gelismeler", "/e-kitaplar", "/kaynaklar", "/rehberler"], foto: BASLIK_YAZI },
   { on: ["/araclar", "/uygunluk-testi", "/ulkeler"], foto: BASLIK_ARAC },
   { on: ["/iletisim", "/hakkimizda", "/kariyer", "/basinda-biz", "/is-ortakligi", "/kvkk"], foto: BASLIK_KURUM },
