@@ -4979,6 +4979,11 @@ Kıbrıs'ta da olsun, paralel git. Eksikleri araştır, Murat abiye soracağım�
 Dubai'de olup KKTC'de BİLEREK olmayan üç bölüm: Murat Bey'in alıntısı ve imza kutusu,
 "muhasebecinizi değiştirmek mi istiyorsunuz", ihtiyaç bulucu. Sebep: bilgi yok.
 
+07.10.2026 (18): sorular Murat Bey'e /teyit/kktc sayfasıyla gidiyor (her sorunun altına
+yazıp "Cevapları kopyala"; on ikinci soru Dubai ek lisans yılı fiyatı). Aynı tur, Murat
+Bey'in iki revizesi: fiyat özetinde "Lisans · 1 ek yıl" yerine "2. yıl lisansı"; VIP
+kartının alt satırı "Dubai'de kalma süresi 5 iş günü."
+
 MURAT BEY'E SORULACAKLAR (KKTC muhasebe ve banka):
 1. KKTC şirketinin defterini kim imzalıyor? Sayfaya "defterinizi imzalayan" kutusu koyalım
    mı, KKTC için bir cümleniz olur mu?

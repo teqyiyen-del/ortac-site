@@ -48,7 +48,9 @@ export function dubaiSatirlar(x: DubaiSecim): DubaiSatir[] {
   const b = BOLGE[x.bolge];
   return [
     { ad: `${b.ad} kuruluş · 1 yıllık lisans`, tutar: b.baz, baz: true },
-    ...(x.yil > 1 ? [{ ad: `Lisans · ${x.yil - 1} ek yıl`, tutar: (x.yil - 1) * b.yilEk }] : []),
+    /* 07.10.2026 · Murat Bey: "Lisans 1 ek yıl kelimesini sevmedim." Satır
+       artık hangi yılın lisansı olduğunu söylüyor. */
+    ...(x.yil > 1 ? [{ ad: x.yil === 2 ? "2. yıl lisansı" : "2. ve 3. yıl lisansı", tutar: (x.yil - 1) * b.yilEk }] : []),
     ...(x.vize > 0 ? [{ ad: `Vize · ${x.vize} kişi`, tutar: x.vize * VIZE }] : []),
     ...(x.vip ? [{ ad: "VIP vize hizmeti", tutar: VIP }] : []),
     ...(x.yillik ? [{ ad: "Muhasebe · yıllık (10 ay fiyatına)", tutar: MUH_YILLIK }] : []),

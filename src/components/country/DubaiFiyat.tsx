@@ -117,7 +117,8 @@ export function DubaiSecimFormu({
       Icon: Crown,
       ad: "Vize hizmeti",
       vip: true,
-      alt: "Dubai'de yaklaşık 5 iş günü",
+      /* 07.10.2026 · Murat Bey: "VIP'de altında tam şöyle yaz" */
+      alt: "Dubai'de kalma süresi 5 iş günü.",
       tutar: `+${money(VIP)}`,
       bilgi: "Havalimanında karşılama, özel araç ve Türkçe danışman. Randevular siz gelmeden kurulur.",
       href: "/dubai#vip",
