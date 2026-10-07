@@ -8065,3 +8065,49 @@ li {
     animation: none;
   }
 }
+
+/* 07.10.2026 · hizmet sayfasında fiyat kutuları (genel hizmet şablonu ·
+   icerik.fiyat; şimdilik KKTC muhasebe). Yeşil = para. */
+.hzf {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .hzf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.hzf > li {
+  display: grid;
+}
+.hzf-k {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.hzf-ad {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.hzf-tutar {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--green-600);
+}
+.hzf-s {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-600);
+}

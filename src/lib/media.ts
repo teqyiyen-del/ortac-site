@@ -62,7 +62,12 @@ export const photoThumb = (url: string, w = 240) => url.replace(/([?&]w=)\d+/, `
 export const COUNTRY_PHOTO: Record<"dubai" | "ingiltere" | "kktc", string> = {
   dubai: U("1512453979798-5ea266f8880c"),
   ingiltere: U("1533929736458-ca588d08c8be"), // Tower Bridge · London
-  kktc: U("1507525428034-b723cf961d3e"), // Mediterranean coast — stand-in for Girne
+  /* 07.10.2026 · Girne Limanı ve Kalesi. Eski kare gün batımında bir
+     kumsaldı (temsilî, KKTC değil); Burak: "deniz koymak yerine Kıbrıs
+     kalesinden bir şeyler … PDF'deki görsel güzel duruyor, o kafada."
+     Unsplash'te "kyrenia harbour" aramasından, sekiz kare yan yana açılıp
+     seçildi: solda kale, önde liman ve tekneler, arkada Beşparmaklar. */
+  kktc: U("1678798876265-24bbfd4091df"),
 };
 
 /* ------------------------------------------------------- rehber kapakları

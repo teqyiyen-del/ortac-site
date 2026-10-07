@@ -194,7 +194,8 @@ export default function IletisimPage() {
           crumb="İletişim"
           title="Bizimle iletişime geçin."
           accent="iletişime geçin."
-          lead="Dubai, İngiltere ve KKTC ofislerimizin telefonu, WhatsApp hattı ve e-postası aşağıda; doğrudan arayın ya da yazın. Aşağıdaki seçici haritayı, adresi ve kanalları birlikte değiştiriyor. Formun gönderimi ise henüz açılmadı."
+          /* 07.10.2026 · dört satırdan iki satıra (Burak: "bu kadar uzuna gerek yok") */
+          lead="Dubai, İngiltere ve KKTC ofislerimizin telefonu, WhatsApp hattı ve e-postası aşağıda. Doğrudan arayın ya da yazın."
         />
 
         <ContactSections />

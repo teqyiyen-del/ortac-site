@@ -8,7 +8,6 @@ import {
   Landmark,
   MapPin,
   type LucideIcon,
-  Anchor,
   BadgeCheck,
   Check,
   MonitorSmartphone,
@@ -326,12 +325,14 @@ export default function PageHero({
           { icon: ic(Landmark), metin: <><b>Companies House</b> tescili</> },
         ],
       },
+      /* KKTC teklif belgesi (07.10.2026): KKTC dışı müşteriden kazançta
+         kurumlar vergisi %0 (madde 4), 30-40 iş günü (madde 2) */
       kktc: {
-        belge: { ad: "Tescil belgesi", cip: "Serbest Liman" },
+        belge: { ad: "Tescil belgesi", cip: "Serbest Liman ve Bölge" },
         rozetler: [
-          { icon: ic(Anchor), metin: <><b>Serbest Liman</b> şirketi</> },
+          { icon: ic(Percent), ton: "amber", metin: <>KKTC dışı kazançta <b>%0</b></> },
+          { icon: ic(Timer), metin: <><b>30-40 iş gününde</b> kuruluş</> },
           { icon: ic(Wallet), metin: <><b>TL hesap</b> açılabiliyor</> },
-          { icon: ic(MapPin), metin: <>Türkiye&apos;ye <b>yakın</b> operasyon</> },
         ],
       },
     };

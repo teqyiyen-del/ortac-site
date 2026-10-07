@@ -6,6 +6,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import CountryPricing from "@/components/CountryPricing";
 import DubaiFiyat from "@/components/country/DubaiFiyat";
+import KktcFiyat from "@/components/country/KktcFiyat";
 import { DubaiBolgeler, DubaiVip } from "@/components/country/DubaiEkler";
 import CountryProcess from "@/components/CountryProcess";
 import CountryStructures from "@/components/CountryStructures";
@@ -250,21 +251,25 @@ export default async function CountryPage({ params }: { params: Params }) {
                   aynı aksan rengi. */}
               <SplitWords
                 as="h2"
-                text="Kurulumunuzu seçin, fiyat anında çıksın."
-                accent="fiyat anında çıksın."
+                text={slug === "kktc" ? "KKTC'de kuruluş, kalem kalem." : "Kurulumunuzu seçin, fiyat anında çıksın."}
+                accent={slug === "kktc" ? "kalem kalem." : "fiyat anında çıksın."}
                 className="h2"
                 style={{ color: "var(--text-900)" }}
               />
               <FadeUp delay={0.2}>
                 <p className="sec-lead">
-                  {slug === "dubai" ? "Serbest bölgeyi ve eklemek istediklerinizi seçin; tutar sağda satır satır oluşur." : `${name} için paket ve ek hizmetleri seçin; tutar sağda satır satır oluşur.`}
+                  {slug === "dubai"
+                    ? "Serbest bölgeyi ve eklemek istediklerinizi seçin; tutar sağda satır satır oluşur."
+                    : slug === "kktc"
+                      ? "Kuruluş ve ilk yılın kalemleri açık yazılı; adres hizmetini ve muhasebe türünü siz seçiyorsunuz."
+                      : `${name} için paket ve ek hizmetleri seçin; tutar sağda satır satır oluşur.`}
                 </p>
               </FadeUp>
             </div>
             {/* 06.10.2026 · Dubai'de paket yok: baz fiyat + ekler
                 (country/DubaiFiyat.tsx). Öteki iki ülke eski panelde. */}
             <div className="sec-night gece-kart">
-              {slug === "dubai" ? <DubaiFiyat /> : <CountryPricing country={slug} />}
+              {slug === "dubai" ? <DubaiFiyat /> : slug === "kktc" ? <KktcFiyat /> : <CountryPricing country={slug} />}
             </div>
           </div>
         </section>

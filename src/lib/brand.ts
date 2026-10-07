@@ -81,7 +81,9 @@ export const FACTS: Record<CountrySlug, CountryFacts> = {
     /* 27.09.2026 · teyit (KKTC 32): "en azından 30 iş günü sürüyor".
        forWhom: teyit (KKTC 12) "TL hesaba ihtiyacı olana öneriyoruz",
        (KKTC 46) "düşük demek yanlış, en pahalısıdır". */
-    days: "en az 30 iş günü",
+    /* 07.10.2026 · "en az 30 iş günü" → "30-40 iş günü" (KKTC teklif
+       belgesi, madde 2: "yaklaşık 30-40 iş günü") */
+    days: "30-40 iş günü",
     tag: "Türkiye'ye yakın",
     forWhom: "Türkiye'ye yakın operasyon, TL hesap",
     limit: "AB üyesi değil; Güney Kıbrıs ile aynı ülke değil",

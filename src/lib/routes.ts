@@ -268,6 +268,10 @@ const STATIC_LIVE = [
   /* 07.10.2026 · altı ana başlığın üç yenisi (services.ts · YENI). Dubai'de
      açık; genel hizmet şablonunda, fiyatsız ("teklife bağlı"). İngiltere ve
      KKTC'nin hizmet alt sayfaları öteki hizmetler gibi kapalı. */
+  /* 07.10.2026 · KKTC muhasebe ve banka: içerikleri KKTC teklif belgesinden
+     yazıldı (lib/hizmetIcerik.ts · KKTC). Öteki KKTC hizmet sayfaları kapalı. */
+  "/kktc/muhasebe",
+  "/kktc/banka-hesabi",
   "/dubai/vergi",
   "/dubai/kurumsal-danismanlik",
   "/dubai/aml-uyum",

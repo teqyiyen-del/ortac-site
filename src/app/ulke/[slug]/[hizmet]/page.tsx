@@ -111,7 +111,7 @@ export default async function ServicePage({ params }: { params: Params }) {
             title={`${name}'de ${kucult(svc.title)}.`}
             accent={`${kucult(svc.title)}.`}
             lead={svc.line}
-            rozetler={svc.includes.slice(0, 3)}
+            rozetler={icerik.kartlar.items.map((k) => k.title)}
             cta={{ label: "İletişime geçin", href: "/iletisim" }}
           />
 
@@ -140,7 +140,26 @@ export default async function ServicePage({ params }: { params: Params }) {
             </div>
           </section>
 
-          <section className="sec-pad" style={{ background: "var(--paper)" }}>
+          {icerik.fiyat && (
+            <section className="sec-pad" style={{ background: "var(--paper)" }}>
+              <div className="container-o">
+                {bolum(icerik.fiyat)}
+                <ul className="hzf">
+                  {icerik.fiyat.items.map((f, i) => (
+                    <li key={f.ad}>
+                      <FadeUp className="hzf-k" delay={0.1 + i * 0.06}>
+                        <span className="hzf-ad">{f.ad}</span>
+                        <b className="hzf-tutar">{f.tutar}</b>
+                        <p className="hzf-s">{f.line}</p>
+                      </FadeUp>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          )}
+
+          <section className="sec-pad" style={{ background: icerik.fiyat ? "var(--white)" : "var(--paper)" }}>
             <div className="container-o">
               {bolum(icerik.kurallar)}
               <ul className="svz-kor">
@@ -164,7 +183,7 @@ export default async function ServicePage({ params }: { params: Params }) {
             </div>
           </section>
 
-          <section className="sec-pad" style={{ background: "var(--white)" }}>
+          <section className="sec-pad" style={{ background: icerik.fiyat ? "var(--paper)" : "var(--white)" }}>
             <div className="container-o">
               {bolum(icerik.adimlar)}
               <ol className="svz-adim">
@@ -195,7 +214,7 @@ export default async function ServicePage({ params }: { params: Params }) {
             </div>
           </section>
 
-          <section className="sec-pad" style={{ background: "var(--paper)" }}>
+          <section className="sec-pad" style={{ background: icerik.fiyat ? "var(--white)" : "var(--paper)" }}>
             <div className="container-o">
               <div className="sec-head">
                 <SplitWords as="h2" text="Sık sorulanlar." accent="sorulanlar." className="h2" />
@@ -204,10 +223,10 @@ export default async function ServicePage({ params }: { params: Params }) {
             </div>
           </section>
 
-          <section className="sec-pad" style={{ background: "var(--white)" }}>
+          <section className="sec-pad" style={{ background: icerik.fiyat ? "var(--paper)" : "var(--white)" }}>
             <div className="container-o">
               <CountryCross
-                title="Dubai'deki diğer hizmetler"
+                title={`${name} için diğer hizmetler`}
                 items={[{ country: slug, href: `/${slug}` }]}
               />
               <div className="sp-sib" style={{ marginTop: 20 }}>

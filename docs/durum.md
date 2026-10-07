@@ -4955,6 +4955,28 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (13) · KKTC: yeni fiyat paneli, Girne fotoğrafı, muhasebe ve banka sayfaları
+
+Kaynak: KKTC teklif belgesi (Ortac International Accounting, 06.10.2026); Burak:
+"bilgisi doğrulanmış bir veri."
+
+- /kktc fiyat bölümü: eski temsilî üç paket (USD) yerine belgedeki kalemler (EURO):
+  kuruluş 4.900, yıllık faaliyet harcı 2.700, kayıtlı adres ve yasal temsilcilik 2.000 +
+  %16 KDV (aç/kapa), muhasebe aktif 270 / ay ya da pasif 900 / yıl (ayrı yazıyor).
+  `components/country/KktcFiyat.tsx`, `lib/kktcFiyat.ts`. Düğme iletişime gidiyor.
+- Giriş: fotoğraf Girne Limanı ve Kalesi (Unsplash, sekiz kare arasından seçildi);
+  rozetler belgeden (KKTC dışı kazançta %0, 30-40 iş günü, TL hesap). Süre her yerde
+  "30-40 iş günü" (FACTS).
+- /kktc/muhasebe ve /kktc/banka-hesabi açıldı; içerik belgeden (lib/hizmetIcerik.ts · KKTC).
+  Muhasebede fiyat kutuları var.
+- AÇIK: /kktc sayfasının öteki bölümlerinde eski rakamlar duruyor ve belgeyle
+  karşılaştırılmadı: başvuru harcı 2.000 USD, tescil harcı 2.500 USD (teyit · KKTC 18),
+  adım süreleri (3 + 3 + 10 + 14). Belgede kuruluş tek kalem 4.900 €. Hangisi sayfada
+  kalacak, Burak'a soruldu.
+- AÇIK: KKTC'de "Hemen Başla" kurulum penceresini açıyor ama pencerede yalnız Dubai
+  seçilebiliyor.
+- İletişim sayfasının açıklaması iki satıra indi.
+
 ## 07.10.2026 (12) · kısa sayfa başlığı fotoğraf üstünde, site geneli
 
 - PageHero kompakt dalı (blog, kategori ve yazı sayfaları, gelişmeler, e-kitaplar, kaynaklar,
