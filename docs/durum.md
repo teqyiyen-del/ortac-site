@@ -4955,6 +4955,17 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 07.10.2026 (8) · hizmet sayfalarına özel fotoğraf; lab: açık sayfa başlığı örneği
+
+- Hizmet sayfalarının girişinde artık hizmetin kendi fotoğrafı (lib/media.ts ·
+  HIZMET_FOTO): muhasebe, vergi, banka, kurumsal danışmanlık, AML. Hepsi depoda zaten olan,
+  bakılmış kareler. VİZE İÇİN UYGUN KARE YOK (eldeki "visa" karesi bir otobüs); vize
+  sayfası Dubai fotoğrafında. Yeni fotoğraf seçilecekse Burak'tan ya da Unsplash'ten
+  bakılarak eklenmeli.
+- /lab/acik-baslik: blog, iletişim, araçlar gibi sayfaların kısa siyah başlığının açık
+  zeminli tek örneği, gerçek blog sayfasının üstünde. Karar bekliyor; onaylanırsa
+  PageHero'nun kompakt dalına taşınır (yaklaşık on beş sayfa birden değişir).
+
 ## 07.10.2026 (7) · foto giriş her ülke ve hizmet sayfasında; VIP, fiyat, kazanç düzeltmeleri
 
 - FOTO GİRİŞ YAYILDI: Dubai'de seçilen giriş `shared/FotoGiris.tsx` oldu; PageHero'nun

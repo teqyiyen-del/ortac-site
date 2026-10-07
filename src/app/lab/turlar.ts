@@ -125,6 +125,13 @@ export const LAB_DURUM_RENK: Record<LabDurum, string> = {
 
 export const LAB_TURLARI: LabTur[] = [
   {
+    href: "/lab/acik-baslik",
+    t: "Açık sayfa başlığı",
+    n: "tek örnek · blog",
+    l: "Blog, iletişim, araçlar gibi sayfaların kısa siyah başlığının açık zeminli örneği",
+    durum: "suruyor",
+  },
+  {
     href: "/lab/hizmet-hero",
     t: "Hizmet sayfası girişi",
     /* 06.10.2026 · S6 Dubai sayfasında canlı (country/DubaiHero.tsx) */

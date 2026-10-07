@@ -20,7 +20,7 @@ import { useLenis } from "@/components/Providers";
 import { FACTS, type CountrySlug } from "@/lib/brand";
 import { gtm } from "@/lib/gtm";
 import FotoGiris, { type FotoRozet } from "@/components/shared/FotoGiris";
-import { COUNTRY_PHOTO } from "@/lib/media";
+import { COUNTRY_PHOTO, HIZMET_FOTO } from "@/lib/media";
 import { DUBAI_BASLANGIC, money } from "@/lib/dubaiFiyat";
 
 
@@ -400,6 +400,9 @@ export default function PageHero({
     const parca = crumb.split(" · ");
     const ulkeAdi = parca[0] ?? "";
     const fotoUlke: CountrySlug = /ngiltere/.test(ulkeAdi) ? "ingiltere" : /KKTC/.test(ulkeAdi) ? "kktc" : "dubai";
+    /* fotoğraf: hizmetin kendi karesi (lib/media.ts · HIZMET_FOTO; kırıntının
+       son parçasında aranıyor), yoksa ülkenin fotoğrafı */
+    const hizmetFoto = HIZMET_FOTO.find((h) => h.ara.test(parca.slice(1).join(" ")))?.foto;
     const satirlar = rozetler ?? (trust ?? []).map((t) => t.line);
     return (
       <FotoGiris
@@ -407,7 +410,7 @@ export default function PageHero({
         baslik={title}
         vurgu={accent}
         lead={lead}
-        foto={COUNTRY_PHOTO[fotoUlke]}
+        foto={hizmetFoto ?? COUNTRY_PHOTO[fotoUlke]}
         belge={belge ?? { ad: parca[parca.length - 1] ?? crumb, cip: parca.length > 1 ? ulkeAdi : "Ortac" }}
         rozetler={satirlar.slice(0, 3).map((m) => ({ icon: ic(Check), metin: m.replace(/\.$/, "") }))}
         dugmeler={

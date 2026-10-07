@@ -210,3 +210,24 @@ const SECTOR_PHOTO_ANY: SectorPhotoSet = {
 
 export const sectorPhoto = (slug: string): SectorPhotoSet =>
   SECTOR_PHOTO[slug] ?? SECTOR_PHOTO_ANY;
+
+/* ------------------------------------------------- hizmet sayfası girişleri
+   07.10.2026 · Burak: "hizmet sayfalarına da özel fotoğraf koy." Foto giriş
+   (shared/FotoGiris) hizmet sayfalarında ülkenin fotoğrafını basıyordu;
+   artık hizmetin kendi karesi. Hepsi bu dosyada ZATEN OLAN, göz kontrolünden
+   geçmiş kareler (07.10.2026'da küçük hâlleri yan yana açılıp bakıldı):
+   yeni kimlik uydurulmadı. Vize için uygun kare YOK (PHOTO.visa bir otobüs
+   karesi çıktı); vize sayfası ülke fotoğrafında kalıyor.
+   Anahtar, sayfa kırıntısında aranan kelime (PageHero · hizmet dalı). */
+export const HIZMET_FOTO: { ara: RegExp; foto: string }[] = [
+  // dizüstü bilgisayar başında, rakamlı kâğıtların üstünde kalem tutan eller
+  { ara: /Muhasebe/i, foto: U("1454165804606-c3d57bc86b40") },
+  // masada vergi formları, hesap makinesi ve kalem
+  { ara: /Vergi/i, foto: U("1554224155-6726b3ff858f") },
+  // ATM tuş takımında şifre giren el
+  { ara: /Banka/i, foto: U("1601597111158-2fceff292cdc") },
+  // ahşap masada toplantı: not alan eller, defterler
+  { ara: /danışmanlık/i, foto: U("1517048676732-d65bc937f952") },
+  // masada belge imzalayan el
+  { ara: /AML|uyum/i, foto: U("1450101499163-c8848c66ca85") },
+];
