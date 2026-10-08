@@ -96,6 +96,18 @@ export default function OnceSonra() {
     const h1 = hazir(1);
     cerceve[0]?.addEventListener("load", h0);
     cerceve[1]?.addEventListener("load", h1);
+    /* Çerçeveler sunucudan gelen HTML'de: yayında sayfa, React bu etkiyi
+       çalıştırmadan ÖNCE yüklenmiş olabiliyor ve "load" bir daha gelmiyor
+       (yayında eşleme çalışmıyordu, geliştirme sunucusunda çalışıyordu).
+       Zaten yüklenmiş çerçeve elle "hazır" sayılıyor. */
+    cerceve.forEach((c, k) => {
+      try {
+        const d = c?.contentDocument;
+        if (d && d.readyState === "complete" && c?.contentWindow?.location.href !== "about:blank") hazir(k)();
+      } catch {
+        /* erişilemiyorsa load olayını bekle */
+      }
+    });
     return () => {
       window.clearTimeout(zaman);
       cerceve[0]?.removeEventListener("load", h0);
