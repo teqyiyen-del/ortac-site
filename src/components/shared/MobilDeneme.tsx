@@ -16,11 +16,25 @@
 
 import "@/app/css/mobil-deneme.css";
 import { useEffect } from "react";
+import { MOBIL_KISA, MOBIL_KISA_SECICI } from "@/lib/mobilKisa";
 
 export default function MobilDeneme() {
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
-    if (q.get("mobil") === "yeni") document.documentElement.dataset.mobil = "yeni";
+    const yeni = q.get("mobil") === "yeni";
+    if (yeni) document.documentElement.dataset.mobil = "yeni";
+    /* telefon yazıları (lib/mobilKisa.ts): yalnız işaret açıkken ve telefonda */
+    if (yeni && window.matchMedia("(max-width: 767px)").matches) {
+      const bos = (x: string) => x.replace(/\s+/g, " ").trim();
+      document.querySelectorAll<HTMLElement>(MOBIL_KISA_SECICI).forEach((el) => {
+        if (el.children.length > 0 || el.dataset.uzun) return;
+        const metin = bos(el.textContent ?? "");
+        const es = MOBIL_KISA.find(([bas]) => metin.startsWith(bas));
+        if (!es || es[1] === metin) return;
+        el.dataset.uzun = metin;
+        el.textContent = es[1];
+      });
+    }
     const git = q.get("git");
     if (!git) return;
     const t = window.setTimeout(() => {

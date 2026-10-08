@@ -9,7 +9,159 @@
   display: none;
 }
 
+/* ---- İKİ SÜRÜMLÜ ÇİZİMLER (components/mobil/Mini · Ikili) · HER ZAMAN AÇIK
+   Masaüstü çizimi .m-buyuk, telefon çizimi .m-mini içinde. İşaret yokken
+   telefon sürümü gizli, büyük sürüm sarmalayıcısı görünmez (display:
+   contents: düzen eskisiyle aynı). Sarmalayıcı araya girdiği için "doğrudan
+   çocuk" yazan iki eski kuralın karşılığı da burada. */
+.m-buyuk {
+  display: contents;
+}
+.m-buyuk.m-blok {
+  display: block;
+}
+.m-mini {
+  display: none;
+}
+/* süreç sahnesinde iki sürümü taşıyan tek kutu (SurecP3'ün ölçü kabı için) */
+.msv-ikili {
+  display: block;
+  min-width: 0;
+}
+/* telefon kareleri küçük basıldığı için çizgileri bir kademe açık */
+.mh .svx-box {
+  fill: #1a1c20;
+  stroke: #3d414a;
+}
+.mh .svx-bar {
+  fill: #6a707b;
+}
+.mh .svx-bar-mid {
+  fill: #4d525c;
+}
+.hx-stage > .m-buyuk > .svx,
+.advx-fig > .m-buyuk > .gv2-svg {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
 @media (max-width: 767px) {
+  /* ======================================================================
+     A · TELEFON ÖLÇEĞİ (08.10 üçüncü tur · Burak: "başlıkları, yazı
+     boyutlarını, görselleri her şeyi adam gibi sırala")
+     375 px'te ölçülen bugünkü hâl: sayfa başlığı 34 / 38 / 40, bölüm başlığı
+     32 (çoğu iki üç satır), kart başlığı 14 ile 24 arasında dokuz ayrı boy,
+     en küçük yazı 9,5. Yeni ölçek tek merdiven:
+       sayfa başlığı 32 · bölüm başlığı 26 · kart başlığı 18 · adım 20
+       giriş cümlesi 16 · bölüm cümlesi 15 · gövde 14-15 · etiket en az 12
+     Bölüm boşluğu 64 → 48, başlık ile içerik arası 32 → 24.
+     ====================================================================== */
+  :root[data-mobil="yeni"] {
+    --fs-h1: 32px;
+    --fs-h2: 26px;
+    --fs-h3: 21px;
+    --fs-h4: 17px;
+    --fs-lead: 16px;
+    --sp-head: 24px;
+    --sp-sec: 48px;
+  }
+  html[data-mobil="yeni"] :is(.dhr-h1, .hak-h1, .ph-title, .ph-h1) {
+    font-size: 32px;
+    line-height: 1.08;
+  }
+  html[data-mobil="yeni"] .kcta-t {
+    font-size: 28px;
+    line-height: 1.1;
+  }
+  html[data-mobil="yeni"] .h2 {
+    font-size: 26px;
+    line-height: 1.12;
+  }
+  html[data-mobil="yeni"] :is(.dhr-lead, .ph-lead) {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  html[data-mobil="yeni"] .sec-lead {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  html[data-mobil="yeni"] .sec-head {
+    gap: 8px;
+  }
+  /* kart başlıkları: dokuz ayrı boy yerine tek boy */
+  html[data-mobil="yeni"]
+    :is(.hx-t, .bn-title, .aut-title, .advx-t, .ndx-t, .svz-tur-t, .svz-adim-t, .svb-adim-t, .ab-dy-t, .kyn-door-t, .krm-item-t, .pt-model-h, .pt-h3, .blg-lead-t, .bh-lead-t, .aft-sum-t, .aft-entry-t, .svb-bak-h, .kmt-q, .kmt-frame-h, .dbe-bolge-ad, .kyn-book-t, .bh-row-t) {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+  html[data-mobil="yeni"] .srp-h {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+  html[data-mobil="yeni"] :is(.srp-l, .svz-tur-s, .cfit-why) {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  /* 12 px'in altında yazı kalmıyor */
+  html[data-mobil="yeni"]
+    :is(.kyn-seed-tag, .ys-pin, .txm-unit, .kyn-up-mm, .bh-kind, .bh-seed, .bh-flag, .krm-seed, .kyn-book-fmt, .uyg-sum-h, .uyg-sum-note, .uk3-tbl-corner, .sxk-corner, .uk3-blabel, .uk3-mgt) {
+    font-size: 12px;
+  }
+  html[data-mobil="yeni"] :is(.kyn-up-kv dt, .ab-dy-blg-imza i, .ctry-grouph span, .kyn-pick-b i) {
+    font-size: 12px;
+  }
+  /* 12 px yazılmış CÜMLELER 14'e çıkıyor (etiket değil, okunacak yazı) */
+  html[data-mobil="yeni"] :is(.ys-watch, .aft-total-n, .ct-note, .srp-note, .kyn-dl-note, .ft2-legal) {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ======================================================================
+     B · TELEFON ÇİZİMLERİ: büyük çizim gizli, sade sürüm açık
+     ====================================================================== */
+  html[data-mobil="yeni"] .m-buyuk {
+    display: none;
+  }
+  html[data-mobil="yeni"] .m-mini {
+    display: block;
+  }
+
+  /* süreç: adım yazısı, hemen altında çizimi, sonra çubuklar ve dipnot
+     (bugün çizim en altta, adımdan iki ekran uzakta) */
+  html[data-mobil="yeni"] .srp-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  html[data-mobil="yeni"] .srp-left {
+    display: contents;
+  }
+  html[data-mobil="yeni"] .srp-stack {
+    order: 1;
+  }
+  html[data-mobil="yeni"] .cpr-card {
+    order: 2;
+    box-shadow: none;
+  }
+  html[data-mobil="yeni"] .srp-bars {
+    order: 3;
+  }
+  html[data-mobil="yeni"] .srp-foot {
+    order: 4;
+  }
+  html[data-mobil="yeni"] .cpr-body {
+    padding: 14px;
+  }
+  html[data-mobil="yeni"] .cpr-stage,
+  html[data-mobil="yeni"] .cpr-slide {
+    width: 100%;
+  }
+  /* sahne kabı en uzun sahnenin boyunda duruyor; kısa sahne ortada dursun */
+  html[data-mobil="yeni"] .cpr-slide {
+    align-self: center;
+  }
+
   /* STRATEJİ (Burak, 08.10 ikinci tur): "sağa kaydırmalı istemiyorum; hepsi
      ekranda dursun alt alta ama daha kısa. Yüksekliği fazla olan kartların
      yazılarını, görsellerini ya da birleştirerek azalt." Yana kaydırma hâli
@@ -23,7 +175,7 @@
   }
   html[data-mobil="yeni"] .hx-card {
     display: grid;
-    grid-template-columns: 124px minmax(0, 1fr);
+    grid-template-columns: 112px minmax(0, 1fr);
     grid-template-areas: "sahne govde" "secici secici";
     align-items: center;
   }
@@ -35,7 +187,7 @@
     margin: 8px 0 8px 8px;
     padding: 8px;
   }
-  html[data-mobil="yeni"] .hx-stage > svg {
+  html[data-mobil="yeni"] .hx-stage .mh {
     display: block;
     width: 100%;
     height: auto;
@@ -125,13 +277,31 @@
     gap: 8px;
   }
 
-  /* ---- 5 · ÜLKE AVANTAJLARI (1.520 → ~1.050): çizim duruyor ama %60
-     ölçekte ve kısa bir şeritte */
+  /* ---- 5 · ÜLKE AVANTAJLARI (1.520 → ~1.150): çizimin telefon sürümü
+     (ProSchemaMini): kısa şerit, büyük biçim, 13 px yazı */
   html[data-mobil="yeni"] .advx {
     gap: 10px;
   }
-  html[data-mobil="yeni"] .advx-fig {
-    zoom: 0.6;
+  html[data-mobil="yeni"] .advx-card > .advx-fig {
+    height: auto;
+    padding: 12px 14px;
+  }
+  html[data-mobil="yeni"] .advx-fig .gv2-mini {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: none;
+  }
+  html[data-mobil="yeni"] .gv2-mini text {
+    font-size: 14px;
+  }
+  html[data-mobil="yeni"] .gv2-mini .gv2-buyuk {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  html[data-mobil="yeni"] .gv2-mini .gv2-orta {
+    font-size: 18px;
+    font-weight: 700;
   }
   html[data-mobil="yeni"] .advx-body {
     padding-bottom: 12px;
@@ -154,16 +324,37 @@
     gap: 12px;
     padding: 10px 52px 10px 10px;
   }
-  html[data-mobil="yeni"] .dfy-bolge .dfy-alt {
+  html[data-mobil="yeni"] .dfy-uc:not(.dfy-uc-iki) .dfy-bolge .dfy-alt {
     display: none;
+  }
+  /* KKTC'de muhasebe türü kutusu: açıklaması adın altında kalıyor */
+  html[data-mobil="yeni"] .dfy-uc-iki .dfy-bolge {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "ic ad tutar" "ic alt tutar";
+    padding-right: 14px;
+  }
+  html[data-mobil="yeni"] .dfy-uc-iki .dfy-bolge .dfy-ic {
+    grid-area: ic;
+  }
+  html[data-mobil="yeni"] .dfy-uc-iki .dfy-bolge .dfy-ad {
+    grid-area: ad;
+  }
+  html[data-mobil="yeni"] .dfy-uc-iki .dfy-bolge .dfy-alt {
+    grid-area: alt;
+  }
+  html[data-mobil="yeni"] .dfy-uc-iki .dfy-bolge .dfy-tutar {
+    grid-area: tutar;
   }
   html[data-mobil="yeni"] .dfy-yil .dfy-ic,
   html[data-mobil="yeni"] .dfy-ek .dfy-ic {
     display: none;
   }
   html[data-mobil="yeni"] .dfy-yil {
+    grid-template-columns: minmax(0, 1fr);
     justify-items: center;
-    padding: 14px 8px;
+    min-height: 52px;
+    padding: 12px 8px;
+    text-align: center;
   }
   html[data-mobil="yeni"] .dfy-yil .dfy-ad {
     justify-self: center;
@@ -228,6 +419,100 @@
     display: none;
   }
 
+  /* ---- İNGİLTERE FİYAT PAKETLERİ: üç büyük kutu yerine üç şerit (ad ve
+     içerik solda, fiyat sağda) */
+  html[data-mobil="yeni"] .ip-tier {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "ad fiyat" "ic fiyat";
+    align-items: center;
+    gap: 2px 12px;
+    padding: 12px 14px;
+  }
+  html[data-mobil="yeni"] .ip-tier-n {
+    grid-area: ad;
+  }
+  html[data-mobil="yeni"] .ip-tier-i {
+    grid-area: ic;
+    font-size: 13px;
+  }
+  html[data-mobil="yeni"] .ip-tier-p {
+    grid-area: fiyat;
+    margin: 0;
+  }
+
+  /* ---- ADIM KARTLARI (vize, banka, genel hizmet sayfası): ikon başlığın
+     üstünde ayrı satırdaydı; ikon, başlık ve sıra numarası tek satır */
+  html[data-mobil="yeni"] :is(.svz-adim-k, .svb-adim-k) {
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    grid-template-areas: "ic t n" "s s s";
+    column-gap: 12px;
+    padding: 16px;
+  }
+  html[data-mobil="yeni"] :is(.svz-adim-t, .svb-adim-t) {
+    margin: 0;
+  }
+  html[data-mobil="yeni"] :is(.svz-adim-s, .svb-adim-s) {
+    margin-top: 10px;
+  }
+  html[data-mobil="yeni"] .svz-tur-k {
+    padding: 16px;
+  }
+  html[data-mobil="yeni"] .svz-tur-k .svz-ic {
+    width: 40px;
+    height: 40px;
+  }
+  html[data-mobil="yeni"] .svz-tur-t {
+    margin-top: 12px;
+  }
+
+  /* ---- BANKA SAYFASI: banka ve kanal satırında logo üstte ayrı satırdı;
+     logo solda, ad ve cümle sağında. "Bankanın baktığı şeyler" de ikon solda. */
+  html[data-mobil="yeni"] .svb-s {
+    grid-template-columns: 84px minmax(0, 1fr);
+    align-items: center;
+    gap: 6px 14px;
+    padding: 12px 14px;
+  }
+  html[data-mobil="yeni"] .svb-s-logo {
+    grid-row: 1 / span 2;
+    width: 84px;
+    height: 44px;
+    place-items: center start;
+    overflow: hidden;
+  }
+  html[data-mobil="yeni"] .svb-s-logo :is(svg, img) {
+    max-width: 84px;
+  }
+  html[data-mobil="yeni"] .svb-s-etiket {
+    grid-column: 2;
+    justify-self: start;
+    height: 26px;
+    font-size: 13px;
+  }
+  html[data-mobil="yeni"] .svb-s-t {
+    font-size: 16px;
+  }
+  html[data-mobil="yeni"] .svb-bak-k {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+  }
+  html[data-mobil="yeni"] .svb-bak-k .svb-ic {
+    flex: none;
+    margin: 0;
+  }
+  html[data-mobil="yeni"] .svb-bak {
+    margin-top: 28px;
+  }
+
+  /* ---- SEKTÖR SAYFASI: ülke çizimleri süs; yarı boya iniyor */
+  html[data-mobil="yeni"] .sxc-art {
+    --sxa-h: 150px;
+    padding: 12px;
+  }
+
   /* ---- 8 · BLOG LİSTESİ (4.300 → ~1.750): ilk altı yazı, sonra düğme */
   html[data-mobil="yeni"]:not([data-blog-tum]) .bh-list > li:nth-child(n + 7) {
     display: none;
@@ -249,13 +534,225 @@
     cursor: pointer;
   }
 
-  /* ---- 9 · HAKKIMIZDA DAYANAK (2.147 → ~1.600): sahneler %62 ölçekte */
+  /* ---- 9 · HAKKIMIZDA DAYANAK (2.147 → ~1.750) */
   html[data-mobil="yeni"] .ab-dy {
     gap: 10px;
   }
+  /* sahneler küçültülmüyor (yazıları okunmaz oluyordu); boş pay alınıyor,
+     beş halkalı liste iki sütuna geçiyor, harita kısalıyor */
   html[data-mobil="yeni"] .ab-dy-sahne {
-    zoom: 0.62;
+    height: auto;
+    min-height: 0;
+    padding: 12px;
   }
+  html[data-mobil="yeni"] .ab-dy-ekip {
+    display: block;
+    height: auto;
+  }
+  html[data-mobil="yeni"] .ab-dy-ekip-l {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  html[data-mobil="yeni"] .ab-dy-ekip-s {
+    flex: 0 1 auto;
+    width: auto;
+  }
+  html[data-mobil="yeni"] .ab-dy-harita {
+    min-height: 150px;
+  }
+  html[data-mobil="yeni"] .ab-dy-k {
+    padding-bottom: 18px;
+  }
+}
+
+/* ------------------------------------------------ TELEFON SAHNELERİ (.ms)
+   mobil/Mini · MiniSurec ve MiniAkis. Koyu sahne kartının içinde durur.
+   Yazı 14-15 px, etiket 13; kabın genişliğiyle küçülmez. */
+.ms {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  font-family: var(--font-sans);
+  text-align: left;
+  letter-spacing: -0.005em;
+}
+.ms-bas {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+}
+.ms-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: #12243a;
+  color: #9cc6f5;
+}
+.ms-bas-t {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+.ms-bas-t b {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #ffffff;
+}
+.ms-bas-t i {
+  font-style: normal;
+  font-size: 14px;
+  line-height: 1.3;
+  color: #a4a8b0;
+}
+.ms-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  height: 28px;
+  padding: 0 11px;
+  border: 1px solid #1f5c3f;
+  border-radius: 999px;
+  background: #123024;
+  color: #6fd39f;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ms-pill[data-ton="mavi"] {
+  border-color: #2b4f7d;
+  background: #12243a;
+  color: #9cc6f5;
+}
+.ms-buyuk {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 14px;
+  border: 1px solid #26282d;
+  border-radius: 14px;
+  background: #141518;
+}
+.ms-buyuk b {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+.ms-l {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ms-l li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #26282d;
+  border-radius: 12px;
+  background: #141518;
+  font-size: 14px;
+  color: #d7d9de;
+}
+.ms-l li[data-secili] {
+  border-color: #2b4f7d;
+  background: #12243a;
+  color: #ffffff;
+  font-weight: 600;
+}
+.ms-tik {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: #123024;
+  color: #6fd39f;
+}
+.ms-ad {
+  flex: 1;
+  min-width: 0;
+}
+.ms-deger {
+  flex: none;
+  font-size: 14px;
+  font-weight: 400;
+  color: #a4a8b0;
+  white-space: nowrap;
+}
+.ms-l li[data-secili] .ms-deger {
+  color: #9cc6f5;
+}
+.ms-dip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #a4a8b0;
+}
+.ms-dip svg {
+  flex: none;
+  color: #5c9eeb;
+}
+.ms-akis {
+  gap: 8px;
+}
+.ms-dugum {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid #26282d;
+  border-radius: 14px;
+  background: #141518;
+}
+.ms-dugum[data-vurgu] {
+  border-color: #2b4f7d;
+  background: #12243a;
+}
+.ms-dugum b {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.ms-dugum i {
+  font-style: normal;
+  font-size: 14px;
+  color: #a4a8b0;
+}
+.ms-oklar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 20px;
+  padding: 2px 0;
+}
+.ms-oklar span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #9cc6f5;
+}
+.ms-oklar span[data-geri] svg {
+  transform: rotate(180deg);
+}
+.ms-oklar span[data-para] {
+  color: #6fd39f;
 }
 
 /* ---------------------------------------------------- /lab/mobil sayfası

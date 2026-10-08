@@ -13,7 +13,8 @@ import {
 } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import ProSchema from "@/components/country/ProSchema";
+import ProSchema, { ProSchemaMini } from "@/components/country/ProSchema";
+import { Ikili } from "@/components/mobil/Mini";
 import type { Pro } from "@/lib/countryContent";
 
 /* Ülke avantajları — bento.
@@ -280,7 +281,10 @@ export default function CountryPros({ pros, name }: { pros: Pro[]; name: string 
                   {/* çizim üstündeki iddiayı tekrar eder, kendi başına bilgi
                       taşımaz — ekran okuyucuya görünmüyor */}
                   <figure className="advx-fig" aria-hidden="true">
-                    <ProSchema kind={x.fig ?? x.icon} brands={x.brands} />
+                    <Ikili
+                      buyuk={<ProSchema kind={x.fig ?? x.icon} brands={x.brands} />}
+                      mini={<ProSchemaMini kind={x.fig ?? x.icon} brands={x.brands} />}
+                    />
                   </figure>
                 </article>
               </FadeUp>

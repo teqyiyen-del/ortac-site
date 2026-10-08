@@ -1,5 +1,6 @@
 "use client";
 
+import { Ikili, MiniHizmet } from "@/components/mobil/Mini";
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import { ArrowRight, ChevronDown, Globe } from "lucide-react";
@@ -326,7 +327,7 @@ export default function HomeServices() {
             <FadeUp key={c.slug} delay={0.12 + i * 0.05} y={18} className="hx-cell hx-c4">
               <article className="hx-card">
                 <div className="hx-stage" aria-hidden="true">
-                  <c.Scene />
+                  <Ikili buyuk={<c.Scene />} mini={<MiniHizmet slug={c.slug} />} />
                 </div>
 
                 <div className="hx-body">

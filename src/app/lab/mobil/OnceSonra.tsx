@@ -1,56 +1,83 @@
 "use client";
 
 /* ÖNCE / SONRA · iki çerçeve, birlikte kayıyor (08.10.2026)
-   Burak: "çok kasıyor böyle bakarken. Ekranı ikiye bölüp before after'lı bir
-   şey açıyordu, ikisini de kaydırdıkça aynı kayıyordu."
-   İlk hâl on öneriyi alt alta, yirmi çerçeveyle basıyordu (yirmi sayfa birden
-   yükleniyordu). Şimdi aynı anda TEK öneri: solda bugünkü sayfa, sağda aynı
-   sayfa ?mobil=yeni ile. Bir taraf kaç piksel kayarsa öteki de o kadar
-   kayıyor (iki sayfa aynı kaynaktan, çerçevenin penceresine erişilebiliyor). */
+   Burak: "ekranı ikiye bölüp before after'lı bir şey açıyordu, ikisini de
+   kaydırdıkça aynı kayıyordu." Solda bugünkü sayfa, sağda aynı sayfa
+   ?mobil=yeni ile (css/mobil-deneme.css, mobil/Mini, lib/mobilKisa).
+
+   ÜÇÜNCÜ TUR: seçici artık BÖLÜM değil SAYFA (telefon elden geçirmesi bütün
+   sayfayı değiştiriyor). İki taraf artık aynı boyda değil (yeni hâl kısa),
+   o yüzden eşleme piksel piksel değil BAŞLIK BAŞLIK: bir tarafta hangi
+   bölüm başlığının yüzde kaçındaysanız öteki taraf aynı başlığın aynı
+   yüzdesine gidiyor. İki sayfada bölüm başlıkları (h2) aynı ve aynı sırada. */
 
 import { useEffect, useRef, useState } from "react";
 
-const ONERI: { ad: string; yol: string; git: string }[] = [
-  { ad: "Hizmetler", yol: "/", git: ".hx-grid" },
-  { ad: "Sektörler", yol: "/", git: ".skf-grid" },
-  { ad: "Neden Ortac", yol: "/", git: ".bn" },
-  { ad: "Serbest bölgeler", yol: "/dubai", git: ".dbe-bolgeler" },
-  { ad: "Avantajlar", yol: "/dubai", git: ".advx" },
-  { ad: "Dubai fiyat", yol: "/dubai", git: ".dfy-uc" },
-  { ad: "KKTC ödeme", yol: "/kktc", git: ".cod" },
-  { ad: "İngiltere ödeme", yol: "/ingiltere", git: ".cos-kutular" },
-  { ad: "Blog", yol: "/blog", git: ".bh-list" },
-  { ad: "Hakkımızda", yol: "/hakkimizda", git: ".ab-dy" },
+const SAYFA: { ad: string; yol: string }[] = [
+  { ad: "Ana sayfa", yol: "/" },
+  { ad: "Dubai", yol: "/dubai" },
+  { ad: "KKTC", yol: "/kktc" },
+  { ad: "İngiltere", yol: "/ingiltere" },
+  { ad: "Dubai muhasebe", yol: "/dubai/muhasebe" },
+  { ad: "Dubai banka", yol: "/dubai/banka-hesabi" },
+  { ad: "Dubai vize", yol: "/dubai/oturum-vize" },
+  { ad: "Dubai vergi", yol: "/dubai/vergi" },
+  { ad: "KKTC muhasebe", yol: "/kktc/muhasebe" },
+  { ad: "Hakkımızda", yol: "/hakkimizda" },
+  { ad: "İletişim", yol: "/iletisim" },
+  { ad: "Ülkeler", yol: "/ulkeler" },
+  { ad: "Sektör", yol: "/sektorler/e-ticaret" },
+  { ad: "Araçlar", yol: "/araclar" },
+  { ad: "Blog", yol: "/blog" },
+  { ad: "İş ortaklığı", yol: "/is-ortakligi" },
 ];
+
+/* sayfanın çapaları: en üst, her bölüm başlığı, en alt */
+function capalar(w: Window): number[] {
+  const d = w.document;
+  const ust = [...d.querySelectorAll<HTMLElement>("main h2")]
+    .filter((h) => h.offsetParent !== null)
+    .map((h) => h.getBoundingClientRect().top + w.scrollY - 90);
+  const son = Math.max(0, d.documentElement.scrollHeight - w.innerHeight);
+  const temiz = ust.filter((y, i) => y > 0 && y < son && (i === 0 || y > ust[i - 1]));
+  return [0, ...temiz, son];
+}
 
 export default function OnceSonra() {
   const [i, setI] = useState(0);
+  const [boy, setBoy] = useState<[number, number] | null>(null);
   const sol = useRef<HTMLIFrameElement>(null);
   const sag = useRef<HTMLIFrameElement>(null);
-  const o = ONERI[i];
-  const q = `git=${encodeURIComponent(o.git)}`;
+  const o = SAYFA[i];
 
   useEffect(() => {
     const cerceve = [sol.current, sag.current];
-    const son = [0, 0];
-    let kilit = -1;
+    const beklenen = [-1, -1];
     const temizle: (() => void)[] = [];
+    let zaman = 0;
     const bagla = (k: number) => {
       const w = cerceve[k]?.contentWindow;
       const oteki = cerceve[1 - k]?.contentWindow;
       if (!w || !oteki) return;
-      son[k] = w.scrollY;
       const dinle = () => {
-        const fark = w.scrollY - son[k];
-        son[k] = w.scrollY;
         /* öteki tarafın bizim yüzümüzden kaymasını geri yansıtma */
-        if (kilit === k) {
-          kilit = -1;
+        if (beklenen[k] >= 0 && Math.abs(w.scrollY - beklenen[k]) < 3) return;
+        beklenen[k] = -1;
+        const a = capalar(w);
+        const b = capalar(oteki);
+        if (a.length !== b.length) {
+          /* başlık sayısı tutmuyorsa (beklenmez) oranla eşle */
+          const hedef = (w.scrollY / Math.max(1, a[a.length - 1])) * b[b.length - 1];
+          beklenen[1 - k] = hedef;
+          oteki.scrollTo(0, hedef);
           return;
         }
-        if (fark === 0) return;
-        kilit = 1 - k;
-        oteki.scrollBy(0, fark);
+        let n = 0;
+        while (n < a.length - 2 && w.scrollY >= a[n + 1]) n++;
+        const pay = (w.scrollY - a[n]) / Math.max(1, a[n + 1] - a[n]);
+        const hedef = Math.round(b[n] + Math.min(1, Math.max(0, pay)) * (b[n + 1] - b[n]));
+        beklenen[1 - k] = hedef;
+        oteki.scrollTo(0, hedef);
       };
       w.addEventListener("scroll", dinle, { passive: true });
       temizle.push(() => w.removeEventListener("scroll", dinle));
@@ -58,25 +85,41 @@ export default function OnceSonra() {
     const yuklendi = [false, false];
     const hazir = (k: number) => () => {
       yuklendi[k] = true;
-      /* sayfalar kendi bölümüne indikten sonra bağla (MobilDeneme · 700 ms) */
-      if (yuklendi[0] && yuklendi[1]) window.setTimeout(() => [0, 1].forEach(bagla), 1200);
+      if (!(yuklendi[0] && yuklendi[1])) return;
+      zaman = window.setTimeout(() => {
+        [0, 1].forEach(bagla);
+        const h = cerceve.map((c) => c?.contentDocument?.documentElement.scrollHeight ?? 0);
+        setBoy([h[0], h[1]]);
+      }, 1500);
     };
     const h0 = hazir(0);
     const h1 = hazir(1);
     cerceve[0]?.addEventListener("load", h0);
     cerceve[1]?.addEventListener("load", h1);
     return () => {
+      window.clearTimeout(zaman);
       cerceve[0]?.removeEventListener("load", h0);
       cerceve[1]?.removeEventListener("load", h1);
       temizle.forEach((f) => f());
     };
   }, [i]);
 
+  const ekran = (px: number) => (px / 812).toFixed(1).replace(".", ",");
+
   return (
     <main className="lmb">
-      <div className="lmb-ust" role="group" aria-label="Öneri seç">
-        {ONERI.map((x, k) => (
-          <button key={x.ad} type="button" data-on={k === i ? "" : undefined} aria-pressed={k === i} onClick={() => setI(k)}>
+      <div className="lmb-ust" role="group" aria-label="Sayfa seç">
+        {SAYFA.map((x, k) => (
+          <button
+            key={x.yol}
+            type="button"
+            data-on={k === i ? "" : undefined}
+            aria-pressed={k === i}
+            onClick={() => {
+              setBoy(null);
+              setI(k);
+            }}
+          >
             {x.ad}
           </button>
         ))}
@@ -84,15 +127,15 @@ export default function OnceSonra() {
       <div className="lmb-ikili">
         <figure>
           <figcaption>
-            Önce <span>· bugünkü hâl</span>
+            Önce <span>· bugünkü hâl{boy ? ` · ${ekran(boy[0])} ekran` : ""}</span>
           </figcaption>
-          <iframe key={`o${i}`} ref={sol} title={`${o.ad} önce`} src={`${o.yol}?${q}`} />
+          <iframe key={`o${i}`} ref={sol} title={`${o.ad} önce`} src={o.yol} />
         </figure>
         <figure>
           <figcaption data-yeni="">
-            Sonra <span>· öneri</span>
+            Sonra <span>· telefon düzeni{boy ? ` · ${ekran(boy[1])} ekran` : ""}</span>
           </figcaption>
-          <iframe key={`s${i}`} ref={sag} title={`${o.ad} sonra`} src={`${o.yol}?mobil=yeni&${q}`} />
+          <iframe key={`s${i}`} ref={sag} title={`${o.ad} sonra`} src={`${o.yol}?mobil=yeni`} />
         </figure>
       </div>
     </main>

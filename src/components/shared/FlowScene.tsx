@@ -1,5 +1,6 @@
 "use client";
 
+import { Ikili, MiniAkis } from "@/components/mobil/Mini";
 import { useId } from "react";
 import { motion } from "motion/react";
 import { Building2, Globe2, UserRound, type LucideIcon } from "lucide-react";
@@ -134,7 +135,13 @@ export default function FlowScene({
      /lab/secenek aynı bölümü üç kez basınca denetim üç yinelenen id buldu —
      kural sahnenin kendisinde olmalı, çağıranın dikkatinde değil. */
   const uid = `f${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  /* 08.10.2026 · telefonda bu tuval 0,44 ölçekte basılıyor, yazısı 5 px'e
+     iniyor. Telefon sürümü ayrı (mobil/Mini · MiniAkis); hangisinin
+     görüneceğine CSS karar veriyor. */
   return (
+    <Ikili
+      mini={<MiniAkis from={from} to={to} forward={forward} back={back} para={para} />}
+      buyuk={
     <svg
       viewBox={`0 0 ${W} ${H}`}
       className="fs"
@@ -166,5 +173,7 @@ export default function FlowScene({
       <Node x={LEFT_X} spec={from} />
       <Node x={RIGHT_X} spec={to} accent />
     </svg>
+      }
+    />
   );
 }

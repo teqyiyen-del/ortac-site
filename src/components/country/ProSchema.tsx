@@ -248,12 +248,12 @@ function FigPin() {
    Türkiye beyaz kara, güney Kıbrıs silik, KKTC mavi. İstanbul ve Ankara'dan
    Lefkoşa'ya iki kesik yay; kart üstüne gelince akıyor (gv2-flow). Süre ya
    da mesafe yazılmıyor: kartın cümlesi söylüyor ("bir günlük yol"). */
-function FigYakin() {
+function YakinIc() {
   const [ix, iy] = NOKTA.istanbul;
   const [ax, ay] = NOKTA.ankara;
   const [lx, ly] = NOKTA.lefkosa;
   return (
-    <Fig>
+    <>
       <path d={TR_D} className="gv2-kara" />
       <path d={GKRY_D} className="gv2-kara-silik" />
       <path d={KKTC_D} className="gv2-kktc" />
@@ -268,7 +268,7 @@ function FigYakin() {
       <text x={lx + 30} y={ly + 4} className="gv2-tb">
         KKTC
       </text>
-    </Fig>
+    </>
   );
 }
 
@@ -276,6 +276,14 @@ function FigYakin() {
 /* `etiket` / `Ikon` (27.09.2026): KKTC'nin kartı artık "uzaktan kuruluş"
    değil "tek ziyaret, gerisi bizde" (teyit · KKTC 51); aynı üç adım,
    rozet "Bizde". */
+function FigYakin() {
+  return (
+    <Fig>
+      <YakinIc />
+    </Fig>
+  );
+}
+
 function FigRemote({
   etiket = "Uzaktan",
   Ikon = MonitorSmartphone,
@@ -513,6 +521,210 @@ const FIGS: Record<string, () => React.JSX.Element> = {
   badge: FigBadge,
   zap: FigZap,
 };
+
+/* ============================================================================
+   TELEFON SÜRÜMÜ · kısa şerit (08.10.2026)
+   Burak: "avantajlarda görsel yine olsun ama çok daha ona göre ölçekli ve
+   sadeleştirilmiş hâli olabilir." Aynı on iki çizimin özü, 320 × 88'lik bir
+   şeritte: en çok iki üç büyük biçim, yazı 14 birim (telefonda ~13 px).
+   Büyük çizimle AYNI sınıflar (gv2-*), yani renk kuralı da aynı. Hangisinin
+   görüneceğine CSS karar veriyor (CountryPros · Ikili). */
+const VBM = "0 0 320 88";
+
+function Mini({ children, vb = VBM }: { children: React.ReactNode; vb?: string }) {
+  return (
+    <svg viewBox={vb} className="gv2-svg gv2-mini" focusable="false" aria-hidden="true">
+      {children}
+    </svg>
+  );
+}
+
+function IkiKutu({ sol, sag }: { sol: [string, string]; sag: [string, string] }) {
+  return (
+    <Mini>
+      <rect x="2" y="8" width="148" height="72" rx="14" className="gv2-box-b gv2-g" />
+      <text x="76" y="42" textAnchor="middle" className="gv2-t9 gv2-tb gv2-g gv2-buyuk">
+        {sol[0]}
+      </text>
+      <text x="76" y="65" textAnchor="middle" className="gv2-g">
+        {sol[1]}
+      </text>
+      <rect x="158" y="8" width="160" height="72" rx="14" className="gv2-box gv2-a" />
+      {/* uzun söz ("Normal vergi") büyük puntoda kutuya sığmıyor */}
+      <text x="238" y="42" textAnchor="middle" className={`gv2-t9 gv2-tb gv2-a ${sag[0].length > 4 ? "gv2-orta" : "gv2-buyuk"}`}>
+        {sag[0]}
+      </text>
+      <text x="238" y="65" textAnchor="middle" className="gv2-a">
+        {sag[1]}
+      </text>
+    </Mini>
+  );
+}
+
+/* logo plakaları: dörde kadar tek sıra, beşte üç artı iki */
+function MiniLogolar({ brands }: { brands: BrandKey[] }) {
+  const list = brands.slice(0, 5);
+  const iki = list.length > 4;
+  const ust = iki ? list.slice(0, 3) : list;
+  const alt = iki ? list.slice(3) : [];
+  const sira = (l: BrandKey[], y: number, h: number) => {
+    const w = (316 - (l.length - 1) * 8) / l.length;
+    return l.map((b, i) => <LogoPlaka key={b} brand={b} x={2 + i * (w + 8)} y={y} w={w} h={h} />);
+  };
+  return (
+    <Mini>
+      {iki ? (
+        <>
+          {sira(ust, 6, 34)}
+          {sira(alt, 48, 34)}
+        </>
+      ) : (
+        sira(ust, 20, 48)
+      )}
+    </Mini>
+  );
+}
+
+function MiniUcAdim({ etiket, Ikon }: { etiket: string; Ikon: typeof MonitorSmartphone }) {
+  const chips = [
+    { x: 2, label: "Başvuru" },
+    { x: 111, label: "Tescil" },
+    { x: 220, label: "Belgeler" },
+  ];
+  return (
+    <Mini>
+      <rect x="2" y="2" width="112" height="28" rx="14" className="gv2-box-b" />
+      <Ikon x={14} y={8} width={16} height={16} strokeWidth={2.2} className="gv2-ic-b" />
+      <text x="38" y="21" className="gv2-t9 gv2-tb">
+        {etiket}
+      </text>
+      {chips.map(({ x, label }) => (
+        <g key={label}>
+          <rect x={x} y="42" width="98" height="40" rx="12" className="gv2-box" />
+          <text x={x + 49} y="67" textAnchor="middle" className="gv2-t9">
+            {label}
+          </text>
+        </g>
+      ))}
+      <ArrowR x={102} y={62} blue />
+      <ArrowR x={211} y={62} blue />
+    </Mini>
+  );
+}
+
+const MINI: Record<string, () => React.JSX.Element> = {
+  "vergi-dubai": () => <IkiKutu sol={["%0", "İlk 375.000 AED"]} sag={["%9", "Üstü"]} />,
+  "vergi-kktc": () => <IkiKutu sol={["%0", "KKTC dışına satış"]} sag={["Normal vergi", "KKTC içine satış"]} />,
+  id: () => (
+    <Mini>
+      <rect x="60" y="6" width="200" height="76" rx="14" className="gv2-box" />
+      <rect x="74" y="20" width="42" height="48" rx="10" className="gv2-fill-paper" />
+      <UserRound x={83} y={32} width={24} height={24} strokeWidth={1.9} className="gv2-ic-m" />
+      <rect x="128" y="24" width="70" height="8" rx="4" className="gv2-bar-b" />
+      <rect x="128" y="40" width="92" height="6" rx="3" className="gv2-bar" />
+      <rect x="128" y="54" width="26" height="18" rx="5" className="gv2-box-b gv2-cip" />
+      <circle cx="232" cy="58" r="14" className="gv2-box-b" />
+      <Check x={224} y={50} width={16} height={16} strokeWidth={2.6} className="gv2-ic-b" />
+    </Mini>
+  ),
+  pin: () => (
+    <Mini>
+      <rect x="2" y="4" width="316" height="80" rx="16" className="gv2-box" />
+      <path d="M2 32 H318 M2 60 H318 M92 4 V84 M228 4 V84" className="gv2-line gv2-faint" />
+      <circle cx="160" cy="44" r="30" className="gv2-halo" />
+      <circle cx="160" cy="44" r="30" className="gv2-line-b gv2-dash" fill="none" />
+      <circle cx="160" cy="44" r="18" className="gv2-box-b" />
+      <MapPin x={150} y={34} width={20} height={20} strokeWidth={2.1} className="gv2-ic-b" />
+    </Mini>
+  ),
+  remote: () => <MiniUcAdim etiket="Uzaktan" Ikon={MonitorSmartphone} />,
+  "tek-ziyaret": () => <MiniUcAdim etiket="Bizde" Ikon={UserRound} />,
+  wallet: () => (
+    <Mini>
+      <rect x="62" y="2" width="110" height="28" rx="14" className="gv2-box-b" />
+      <Wallet x={76} y={8} width={16} height={16} strokeWidth={2.1} className="gv2-ic-b" />
+      <text x="100" y="21" className="gv2-t9 gv2-tb">
+        Maliyet
+      </text>
+      <path d="M117 30 V40" className="gv2-line-b" />
+      <rect x="6" y="42" width="308" height="14" rx="7" className="gv2-track" />
+      <rect x="6" y="42" width="111" height="14" rx="7" className="gv2-bar-b" />
+      <circle cx="117" cy="49" r="9" className="gv2-knob" />
+      <text x="6" y="80">Düşük</text>
+      <text x="314" y="80" textAnchor="end">
+        Yüksek
+      </text>
+    </Mini>
+  ),
+  badge: () => (
+    <Mini>
+      <rect x="2" y="8" width="72" height="72" rx="13" className="gv2-box" />
+      <rect x="14" y="22" width="44" height="6" rx="3" className="gv2-bar" />
+      <rect x="14" y="34" width="34" height="6" rx="3" className="gv2-bar" />
+      <circle cx="54" cy="60" r="13" className="gv2-box-b" />
+      <Check x={47} y={53} width={14} height={14} strokeWidth={2.6} className="gv2-ic-b" />
+      <path d="M78 44 H92" className="gv2-line-b gv2-flow" />
+      <ArrowR x={92} y={44} blue />
+      {[104, 178, 252].map((x) => (
+        <g key={x}>
+          <rect x={x} y="26" width="66" height="36" rx="11" className="gv2-box" />
+          <rect x={x + 10} y="36" width="16" height="16" rx="5" className="gv2-chip-b" />
+          <Check x={x + 12} y={38} width={12} height={12} strokeWidth={2.8} className="gv2-ic-b" />
+          <rect x={x + 32} y="41" width="24" height="6" rx="3" className="gv2-bar" />
+        </g>
+      ))}
+    </Mini>
+  ),
+  zap: () => (
+    <Mini>
+      <rect x="62" y="2" width="100" height="28" rx="14" className="gv2-box-b" />
+      <Zap x={76} y={8} width={16} height={16} strokeWidth={2.1} className="gv2-ic-b" />
+      <text x="100" y="21" className="gv2-t9 gv2-tb">
+        Tescil
+      </text>
+      <path d="M112 30 V42" className="gv2-line-b" />
+      <path d="M8 50 H312" className="gv2-line" />
+      <path d="M8 50 H112" className="gv2-seg" />
+      <circle cx="8" cy="50" r="5" className="gv2-fill-b" />
+      <circle cx="112" cy="50" r="8" className="gv2-knob" />
+      <circle cx="112" cy="50" r="3.4" className="gv2-fill-b" />
+      <circle cx="312" cy="50" r="5" className="gv2-dot" />
+      <text x="4" y="80">Başvuru</text>
+      <text x="316" y="80" textAnchor="end">
+        Teslim
+      </text>
+    </Mini>
+  ),
+};
+
+function MiniGenel() {
+  return (
+    <Mini>
+      {[2, 110, 218].map((x) => (
+        <g key={x}>
+          <rect x={x} y="22" width="100" height="44" rx="12" className="gv2-box" />
+          <rect x={x + 12} y="35" width="18" height="18" rx="6" className="gv2-chip-b" />
+          <Check x={x + 14} y={37} width={14} height={14} strokeWidth={2.8} className="gv2-ic-b" />
+          <rect x={x + 38} y="41" width="48" height="6" rx="3" className="gv2-bar" />
+        </g>
+      ))}
+    </Mini>
+  );
+}
+
+export function ProSchemaMini({ kind, brands = [] }: { kind?: string; brands?: BrandKey[] }) {
+  if (kind === "bank") return <MiniLogolar brands={brands.length ? brands : (["wio", "mashreq"] as BrandKey[])} />;
+  if (kind === "card") return <MiniLogolar brands={brands.length ? brands : (["stripe", "paypal"] as BrandKey[])} />;
+  /* Türkiye ve KKTC haritası zaten sade; yalnız tuvalin boş üst ve alt payı kırpılıyor */
+  if (kind === "yakin")
+    return (
+      <svg viewBox="0 34 320 116" className="gv2-svg gv2-mini" focusable="false" aria-hidden="true">
+        <YakinIc />
+      </svg>
+    );
+  const Ciz = (kind && MINI[kind]) || MiniGenel;
+  return <Ciz />;
+}
 
 export default function ProSchema({
   kind,

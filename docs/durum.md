@@ -4955,6 +4955,41 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 08.10.2026 (3) · TELEFON ELDEN GEÇİRMESİ (karar bekliyor, canlıyı değiştirmiyor)
+
+Burak: "tüm mobili baştan aşağı elden geçir. Başlıkları, yazı boyutlarını, görselleri
+adam gibi sırala. Mobilde çok küçük görünecek svg görselleri sade bir formatta tekrar üret.
+Mobile özel: svg görseller, yazı puntosu, yazı miktarı. Sonra bana sunarsın."
+Önceki tur kuralı geçerli: yana kaydırma yok, hepsi alt alta ama kısa.
+
+NEREDE DURUYOR. Hepsi `html[data-mobil="yeni"]` işaretinin arkasında; işareti
+`components/shared/MobilDeneme` adreste `?mobil=yeni` görünce koyuyor. Sunum: /lab/mobil
+(on altı sayfa, solda bugünkü hâl, sağda telefon düzeni; kaydırma başlık başlık eşleniyor).
+
+ÜÇ KATMAN
+1. ÖLÇEK (`css/mobil-deneme.css` · A): sayfa başlığı 32, bölüm başlığı 26, kart başlığı 18,
+   adım 20, giriş cümlesi 16, bölüm cümlesi 15; 12 px altında yazı yok; 12 px yazılmış
+   cümleler 14. Bölüm boşluğu 64 → 48, başlık ile içerik arası 32 → 24. Tasarım sisteminin
+   değişkenleri (--fs-*, --sp-*) üstünden.
+2. ÇİZİMLER (`components/mobil/Mini.tsx`, `ProSchema.tsx · ProSchemaMini`): masaüstü
+   çizimi ile telefon çizimi birlikte basılıyor (`Ikili`), seçimi CSS yapıyor. Telefon
+   sürümü yazılanlar: dokuz süreç sahnesi (yazısı 6 px'e iniyordu), para yolu (5 px), altı
+   hizmet karesi, on iki avantaj şeridi. Süreçte sıra da değişti: adım yazısı, hemen altında
+   çizimi, sonra çubuklar (çizim eskiden en alttaydı).
+3. YAZI (`lib/mobilKisa.ts`): kırk altı cümlenin telefon sürümü. ŞİMDİLİK çalışma anında
+   değiştiriliyor (yalnız karar için); onaylanınca bileşenlere taşınacak.
+
+ÖLÇÜM (390 px, bugün → telefon düzeni): ana sayfa 14.815 → 11.170 (%25), Dubai 20.627 →
+17.891, KKTC 18.032 → 15.503, İngiltere 17.088 → 14.999, banka 9.792 → 8.172, hakkımızda
+10.261 → 8.468, blog 7.643 → 5.519. Hiçbir sayfada yatay taşma yok. Masaüstü ölçüleri
+1440'ta aynı (hizmet sahnesi 346 × 248, avantaj çizimi 442 × 234).
+
+CANLIYA ALMA: css'te kuralların başındaki `html[data-mobil="yeni"]` silinir; kısa yazılar
+bileşenlere taşınır; MobilDeneme ve lab sayfası silinir. Bölüm bölüm de alınabilir.
+YAPILMADI: ülke sayfasındaki yapı haritası, İngiltere vergi grafiği, sektör çizimleri ve
+harita için ayrı telefon çizimi (bugünkü hâlleri okunuyor; yalnız etiketleri 12'ye çıktı);
+menü, açılır kutular ve formların dokunarak denenmesi.
+
 ## 08.10.2026 (2) · telefon önce / sonra, dört yeni sayfa, şıklı soru sayfası
 
 TELEFON · ÖNCE / SONRA (karar bekliyor, canlıyı değiştirmiyor)
