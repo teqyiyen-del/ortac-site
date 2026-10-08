@@ -643,7 +643,7 @@ export default function ThreeCountries() {
                        satıra ve üç sütunu birden kaplayarak. Dar ekranda lane
                        gerçek bir bloğa dönüşüyor ve aynı DOM ülke ülke satırlara
                        iniyor. Tek işaretleme, iki yerleşim. */
-                    <div key={c} className="uk3-lane">
+                    <div key={c} className="uk3-lane" data-ulke={c}>
                       <button
                         type="button"
                         className="uk3-pick"

@@ -1411,8 +1411,12 @@
     text-align: left;
   }
 
+  /* 08.10.2026 · Burak: "şuradaki çizgi bozuk." Açık ülkenin altındaki mavi
+     çizgi masaüstünde sekme işareti; telefonda hemen altına köşeleri yuvarlak
+     gri panel geliyor ve düz çizgi panelin üstünde kırık bir kenar gibi
+     duruyordu. Telefonda açık hâli zaten mavi ad ve dönen ok söylüyor. */
   .uk3-pick::after {
-    bottom: -1px;
+    display: none;
   }
 
   .uk3-discwrap {

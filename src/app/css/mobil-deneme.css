@@ -41,11 +41,6 @@
 .m-mini {
   display: none;
 }
-/* süreç sahnesinde iki sürümü taşıyan tek kutu (SurecP3'ün ölçü kabı için) */
-.msv-ikili {
-  display: block;
-  min-width: 0;
-}
 /* telefon kareleri küçük basıldığı için çizgileri bir kademe açık */
 .mh .svx-box {
   fill: #1a1c20;
@@ -145,39 +140,46 @@
     display: block;
   }
 
-  /* süreç: adım yazısı, hemen altında çizimi, sonra çubuklar ve dipnot
-     (bugün çizim en altta, adımdan iki ekran uzakta) */
+  /* SÜREÇ · TEK KART (dördüncü tur). Burak: "çok dip dibe; başlığın altında
+     hemen ikon var … bunları birbirinden ayırmak lazım, yalnız boşluk
+     koyarak değil." Bölüm başlığından sonra artık tek bir kart geliyor:
+     üstte çizim (koyu), altında adımın yazısı, çubuklar ve dipnot. Ayrımı
+     boşluk değil kartın kendisi yapıyor.
+     Çizim, masaüstündekiyle AYNI çizim (telefon için ayrı sahne denemesi
+     geri alındı); yalnız kabın iç payı küçüldü (çizim %12 büyüdü) ve
+     yazıları bir kademe iri. */
   html[data-mobil="yeni"] .srp-grid {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-  }
-  html[data-mobil="yeni"] .srp-left {
-    display: contents;
-  }
-  html[data-mobil="yeni"] .srp-stack {
-    order: 1;
+    gap: 0;
   }
   html[data-mobil="yeni"] .cpr-card {
-    order: 2;
+    order: 1;
+    border-bottom: 0;
+    border-radius: var(--r-panel) var(--r-panel) 0 0;
     box-shadow: none;
   }
-  html[data-mobil="yeni"] .srp-bars {
-    order: 3;
+  html[data-mobil="yeni"] .cpr-body {
+    padding: 10px 6px;
+  }
+  html[data-mobil="yeni"] .srp-left {
+    order: 2;
+    gap: 16px;
+    padding: 18px 16px 16px;
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 var(--r-panel) var(--r-panel);
+    background: var(--white);
   }
   html[data-mobil="yeni"] .srp-foot {
-    order: 4;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
   }
-  html[data-mobil="yeni"] .cpr-body {
-    padding: 14px;
+  html[data-mobil="yeni"] .cpr-card :is(.dv-lbl, .dv-s) {
+    font-size: 14.5px;
   }
-  html[data-mobil="yeni"] .cpr-stage,
-  html[data-mobil="yeni"] .cpr-slide {
-    width: 100%;
-  }
-  /* sahne kabı en uzun sahnenin boyunda duruyor; kısa sahne ortada dursun */
-  html[data-mobil="yeni"] .cpr-slide {
-    align-self: center;
+  html[data-mobil="yeni"] .cpr-card .dv-t {
+    font-size: 16px;
   }
 
   /* STRATEJİ (Burak, 08.10 ikinci tur): "sağa kaydırmalı istemiyorum; hepsi
@@ -186,24 +188,45 @@
      silindi. Araçlar: görseli küçültmek (zoom: sahne aynı kalıyor, ölçeği
      iniyor), tekrar eden satırı gizlemek, iki sütuna geçmek. */
 
-  /* ---- 1 · ANA SAYFA HİZMETLER (2.219 → ~1.050): sahne solda küçük, başlık
-     ve cümle sağda, ülke seçici altta tam genişlik */
+  /* ---- 1 · ANA SAYFA HİZMETLER (2.219 → ~620) · İKİLİ IZGARA (dördüncü tur)
+     Yan yana (kare solda, yazı sağda) hâli için Burak: "biraz karışık oldu,
+     yazı tarafları çok sıkışmış … 2x'li grid yapabiliriz" ve sektörlerdeki
+     ikili ızgarayı görünce: "hizmetler kısmından bahsettiğim bu." Kart: üstte
+     çizim, altında başlık. "Ülkeye özel hizmeti görün" düğmesi görünmüyor
+     ("direkt üstüne tıklarlar"): düğme kartın tamamını kaplıyor, dokununca
+     ülke listesi kartın içinde açılıyor. Sağ üstteki artı bunun işareti. */
   html[data-mobil="yeni"] .hx-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
-  html[data-mobil="yeni"] .hx-card {
-    display: grid;
-    grid-template-columns: 112px minmax(0, 1fr);
-    grid-template-areas: "sahne govde" "secici secici";
-    align-items: center;
+  html[data-mobil="yeni"] .hx-cell {
+    grid-column: auto;
   }
-  html[data-mobil="yeni"] .hx-stage {
-    grid-area: sahne;
+  html[data-mobil="yeni"] .hx-card {
+    position: relative;
+    overflow: visible;
+  }
+  html[data-mobil="yeni"] .hx-card:has(.hxq-btn[aria-expanded="true"]) {
+    z-index: 5;
+  }
+  html[data-mobil="yeni"] .hx-card::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E")
+      center / 13px no-repeat;
+    pointer-events: none;
+  }
+  html[data-mobil="yeni"] .hx-card > .hx-stage {
     height: auto;
     min-height: 0;
-    aspect-ratio: auto;
-    margin: 8px 0 8px 8px;
-    padding: 8px;
+    padding: 14px 18px;
+    border-radius: calc(var(--r-panel) - 1px) calc(var(--r-panel) - 1px) 0 0;
   }
   html[data-mobil="yeni"] .hx-stage .mh {
     display: block;
@@ -211,12 +234,37 @@
     height: auto;
   }
   html[data-mobil="yeni"] .hx-body {
-    grid-area: govde;
-    padding: 12px 14px;
+    padding: 12px 12px 14px;
+  }
+  html[data-mobil="yeni"] .hx-t {
+    font-size: 16px;
+    line-height: 1.25;
+  }
+  html[data-mobil="yeni"] .hx-l {
+    display: none;
   }
   html[data-mobil="yeni"] .hxq {
-    grid-area: secici;
-    padding: 0 8px 8px;
+    position: static;
+    margin: 0;
+    padding: 0;
+  }
+  html[data-mobil="yeni"] .hxq-anchor {
+    position: static;
+  }
+  html[data-mobil="yeni"] .hxq-btn {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border-radius: var(--r-panel);
+    opacity: 0;
+  }
+  html[data-mobil="yeni"] .hxq-pop {
+    right: 6px;
+    bottom: 6px;
+    left: 6px;
+    max-width: none;
   }
 
   /* ---- 2 · ANA SAYFA SEKTÖRLER (1.452 → ~470): iki sütun, cümle gizli */
@@ -242,57 +290,186 @@
     hyphens: none;
   }
 
-  /* ---- 3 · NEDEN ORTAC (2.008 → ~1.350): kartların içindeki süs sahneleri
-     kısalıyor (küre ve onarım akışı gizli, sohbet iki balon, süreç iki satır) */
+  /* ---- 3 · NEDEN ORTAC (dördüncü tur)
+     Küre geri geldi ("onu kaldırma, seviyorum, dikkat de çekiyor"); onarım
+     akışı da geri geldi ("görsellikten çok taviz vermek istemiyorum").
+     İçerikten kısılan: süreç listesi iki satır, dipnotlar yok.
+     Sohbet kutusu SABİT BOYDA: mesajlar gelip giderken kartın boyu
+     değişiyordu; kutu artık bir pencere, yeni mesaj alttan giriyor.
+     SIRA beyaz, siyah, beyaz, siyah: iki siyah kart üst üste gelmiyor
+     (şeffaf süreç ile devralınan dosyalar yer değiştirdi). */
   html[data-mobil="yeni"] .bn {
     gap: 10px;
   }
-  html[data-mobil="yeni"] .aut-stage,
-  html[data-mobil="yeni"] .bn-repair,
   html[data-mobil="yeni"] .bn-foot,
-  html[data-mobil="yeni"] .bn-stream > :nth-child(n + 3),
   html[data-mobil="yeni"] .lt-row:nth-child(n + 3) {
     display: none;
   }
   html[data-mobil="yeni"] .bn-tile {
     min-height: 0;
   }
+  html[data-mobil="yeni"] .bn-stream {
+    justify-content: flex-end;
+    height: 132px;
+    overflow: hidden;
+    /* üstte yarım kalan balon kesik bir şerit gibi durmasın: yumuşak sönüyor */
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30px);
+    mask-image: linear-gradient(to bottom, transparent, #000 30px);
+  }
+  html[data-mobil="yeni"] .bn > .bn-tile:nth-child(3) {
+    order: 4;
+  }
+  html[data-mobil="yeni"] .bn > .bn-tile:nth-child(4) {
+    order: 3;
+  }
 
-  /* ---- 4 · DUBAİ ÜÇ SERBEST BÖLGE (1.350 → ~760): logo kutusu ince şerit,
-     ad (logoda zaten yazıyor) gizli, üç madde yan yana sarıyor */
-  html[data-mobil="yeni"] .dbe-bolgeler {
-    gap: 10px;
-  }
-  html[data-mobil="yeni"] .dbe-bolge-fig {
+  /* ---- ANA SAYFA ÜLKE LİSTESİ: telefonda sıra Dubai, KKTC, İngiltere */
+  html[data-mobil="yeni"] .uk3-grid {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+  }
+  html[data-mobil="yeni"] .uk3-lane[data-ulke="dubai"] {
+    order: 1;
+  }
+  html[data-mobil="yeni"] .uk3-lane[data-ulke="kktc"] {
+    order: 2;
+  }
+  html[data-mobil="yeni"] .uk3-lane[data-ulke="ingiltere"] {
+    order: 3;
+  }
+
+  /* ---- "MEVCUT ŞİRKETİNİZİ TAŞIYIN": sektör ızgarasının altında koca bir
+     kutuydu ("çok gereksiz uzun, yatay bir şerit yap"). İkon, başlık, ok. */
+  html[data-mobil="yeni"] .pf2-move {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
     gap: 12px;
-    height: auto;
-    min-height: 0;
-    padding: 14px 16px;
+    margin-top: 12px;
+    padding: 12px 14px;
   }
-  /* logolar kendi oranını koruyarak küçülüyor (IFZA ve Meydan'ın çizim
-     kutuları farklı; sabit yükseklik Meydan'ı ufaltıyordu) */
-  html[data-mobil="yeni"] .dbe-bolge-fig .bm-chip {
-    zoom: 0.62;
+  html[data-mobil="yeni"] .pf2-move-ic {
+    width: 44px;
+    height: 44px;
   }
-  html[data-mobil="yeni"] .dbe-bolge-fig .dbe-logo-yazi {
-    zoom: 0.8;
+  html[data-mobil="yeni"] .pf2-move h3 {
+    font-size: 16px;
+    line-height: 1.3;
   }
-  html[data-mobil="yeni"] .dbe-bolge-fig .dbe-rozet {
-    position: static;
-  }
-  html[data-mobil="yeni"] .dbe-bolge-ad {
+  html[data-mobil="yeni"] .pf2-move p {
     display: none;
   }
-  html[data-mobil="yeni"] .dbe-bolge-ic {
-    padding-top: 14px;
-    padding-bottom: 16px;
+  html[data-mobil="yeni"] .pf2-move .btn {
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    min-height: 0;
+    padding: 0;
+    gap: 0;
+    font-size: 0;
   }
-  html[data-mobil="yeni"] .dbe-liste {
-    margin-top: 12px;
+
+  /* ---- ŞİRKET DÖNGÜSÜ: "çok kalabalık, her yerde yazı … belki yalnız
+     başlık ve şeritler." Satırda açıklama cümlesi yok: ad, sıklık, şerit. */
+  html[data-mobil="yeni"] .chn-l {
+    display: none;
+  }
+  html[data-mobil="yeni"] .chn-row {
+    align-items: center;
+    gap: 10px 12px;
+    padding: 14px 0;
+  }
+  html[data-mobil="yeni"] .chn-cad {
+    padding-top: 0;
+  }
+  html[data-mobil="yeni"] .chn-note {
+    font-size: 14px;
+  }
+
+  /* ---- 4 · DUBAİ ÜÇ SERBEST BÖLGE · SEKME (dördüncü tur)
+     components/country/BolgeSekme: üç logo yan yana, altında seçilen
+     bölgenin kartı (başlığı ve üç maddesiyle). Gerekçe bileşenin başında. */
+  html[data-mobil="yeni"] .bsk {
+    margin-top: var(--space-head);
+  }
+  html[data-mobil="yeni"] .bsk-serit {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
+  }
+  html[data-mobil="yeni"] .bsk-serit button {
+    display: grid;
+    place-items: center;
+    height: 64px;
+    padding: 0 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    background: var(--white);
+    cursor: pointer;
+  }
+  html[data-mobil="yeni"] .bsk-serit button[data-on] {
+    border-color: var(--blue-700);
+    background: var(--blue-100);
+    box-shadow: inset 0 0 0 1px var(--blue-700);
+  }
+  html[data-mobil="yeni"] .bsk-logo {
+    display: grid;
+    place-items: center;
+    zoom: 0.62;
+  }
+  html[data-mobil="yeni"] .bsk-logo .dbe-logo-yazi {
+    zoom: 1.3;
+  }
+  html[data-mobil="yeni"] .bsk-kart {
+    margin-top: 10px;
+    padding: 18px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-panel);
+    background: var(--white);
+  }
+  html[data-mobil="yeni"] .bsk-bas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  html[data-mobil="yeni"] .bsk-bas h3 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-900);
+  }
+  html[data-mobil="yeni"] .bsk-bas .dbe-rozet {
+    position: static;
+  }
+  html[data-mobil="yeni"] .bsk-kime {
+    margin-top: 8px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-600);
+  }
+  html[data-mobil="yeni"] .bsk-kart .dbe-liste {
+    margin-top: 14px;
+    gap: 8px;
+  }
+
+  /* ---- DUBAİ YAPI SEÇİMİ: karar kuralı cümlesi bir kademe hafif; harita
+     ile iki seçenek kartı ve altındaki düğme arasındaki boşluk dar */
+  html[data-mobil="yeni"] .ys-rule {
+    padding: 14px 16px;
+  }
+  html[data-mobil="yeni"] .ys-rule-t {
+    font-size: 15px;
+    font-weight: 400;
+  }
+  html[data-mobil="yeni"] .ys-grid {
+    gap: 12px;
+    margin-top: 16px;
+  }
+  html[data-mobil="yeni"] .ys-side {
+    gap: 10px;
+  }
+  html[data-mobil="yeni"] .ys-ask {
+    margin-top: 4px;
   }
 
   /* ---- 5 · ÜLKE AVANTAJLARI (1.520 → ~1.150): çizimin telefon sürümü
@@ -322,7 +499,22 @@
     font-weight: 700;
   }
   html[data-mobil="yeni"] .advx-body {
-    padding-bottom: 12px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+  /* çizim zaten kartın görseli: ayrı ikon karosu telefonda ikinci bir
+     görseldi ve kartı sıkıştırıyordu. "Şarta bağlı" etiketi kalıyor. */
+  html[data-mobil="yeni"] .advx-ic {
+    display: none;
+  }
+  html[data-mobil="yeni"] .advx-head:not(:has(.advx-chip)) {
+    display: none;
+  }
+  html[data-mobil="yeni"] .advx-head {
+    margin-bottom: 6px;
+  }
+  html[data-mobil="yeni"] .advx-t {
+    margin-top: 0;
   }
 
   /* ---- 6 · FİYAT FORMU (Dubai 1.784 → ~1.250): serbest bölgeler tek satırlık
@@ -584,9 +776,9 @@
   }
 }
 
-/* ------------------------------------------------ TELEFON SAHNELERİ (.ms)
-   mobil/Mini · MiniSurec ve MiniAkis. Koyu sahne kartının içinde durur.
-   Yazı 14-15 px, etiket 13; kabın genişliğiyle küçülmez. */
+/* ------------------------------------------------ TELEFON SAHNESİ (.ms)
+   mobil/Mini · MiniAkis (para yolu). Koyu sahne kartının içinde durur.
+   Yazı 14-15 px; kabın genişliğiyle küçülmez. */
 .ms {
   display: grid;
   gap: 10px;
@@ -594,137 +786,6 @@
   font-family: var(--font-sans);
   text-align: left;
   letter-spacing: -0.005em;
-}
-.ms-bas {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 36px;
-}
-.ms-ic {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 11px;
-  background: #12243a;
-  color: #9cc6f5;
-}
-.ms-bas-t {
-  display: grid;
-  flex: 1;
-  min-width: 0;
-}
-.ms-bas-t b {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.3;
-  color: #ffffff;
-}
-.ms-bas-t i {
-  font-style: normal;
-  font-size: 14px;
-  line-height: 1.3;
-  color: #a4a8b0;
-}
-.ms-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  flex: none;
-  height: 28px;
-  padding: 0 11px;
-  border: 1px solid #1f5c3f;
-  border-radius: 999px;
-  background: #123024;
-  color: #6fd39f;
-  font-size: 13px;
-  font-weight: 600;
-}
-.ms-pill[data-ton="mavi"] {
-  border-color: #2b4f7d;
-  background: #12243a;
-  color: #9cc6f5;
-}
-.ms-buyuk {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 16px 14px;
-  border: 1px solid #26282d;
-  border-radius: 14px;
-  background: #141518;
-}
-.ms-buyuk b {
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  color: #ffffff;
-}
-.ms-l {
-  display: grid;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.ms-l li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 42px;
-  padding: 0 12px;
-  border: 1px solid #26282d;
-  border-radius: 12px;
-  background: #141518;
-  font-size: 14px;
-  color: #d7d9de;
-}
-.ms-l li[data-secili] {
-  border-color: #2b4f7d;
-  background: #12243a;
-  color: #ffffff;
-  font-weight: 600;
-}
-.ms-tik {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  background: #123024;
-  color: #6fd39f;
-}
-.ms-ad {
-  flex: 1;
-  min-width: 0;
-}
-.ms-deger {
-  flex: none;
-  font-size: 14px;
-  font-weight: 400;
-  color: #a4a8b0;
-  white-space: nowrap;
-}
-.ms-l li[data-secili] .ms-deger {
-  color: #9cc6f5;
-}
-.ms-dip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #a4a8b0;
-}
-.ms-dip svg {
-  flex: none;
-  color: #5c9eeb;
 }
 .ms-akis {
   gap: 8px;

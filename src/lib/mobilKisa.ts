@@ -42,9 +42,16 @@ export const MOBIL_KISA: [bas: string, kisa: string][] = [
   ["Bu kalemler yalnızca şartlar oluştuğunda ya da talep", "Bu kalemler yalnız şart oluşunca ya da siz isteyince doğuyor; gerekenleri teklifte ayrı satır yazıyoruz."],
   ["Faaliyet koduna ve seçtiğiniz otoriteye göre ek belge", "Faaliyet koduna ve otoriteye göre ek belge istenebiliyor."],
 
+  /* avantaj kartları (ikinci tur · "açıklamalar uzun, yazılardan kısalt") */
+  ["Vergi net kâr üzerinden. Kişisel gelir vergisi yok", "Vergi net kâr üzerinden; kişisel gelir vergisi yok."],
+  ["Başvuru dosyasını bankanın istediği formatta biz hazırlıyoruz", "Dosyayı biz hazırlıyoruz, kararı banka veriyor."],
+  ["Stripe, PayPal, Binance, Amazon Payment Services ve Network International ile", "Kartla, platformdan ve kriptoyla tahsilat kurulabiliyor."],
+
   /* ---- KKTC */
   ["KKTC Serbest Liman şirketi, KKTC dışındaki ve Serbest Liman", "KKTC dışına ve Serbest Liman içine yaptığınız işte kurumlar ve gelir vergisi yok. İmza ve banka için bir kez KKTC'ye geliyorsunuz."],
-  ["KKTC dışındaki ve Serbest Liman içindeki şirketlere yapılan işte kurumlar ve gelir vergisi yok, KDV", "KKTC dışına ve Serbest Liman içine yapılan işte vergi ve KDV yok. Yıldız önemli: KKTC içine satışta normal vergi."],
+  ["KKTC dışındaki ve Serbest Liman içindeki şirketlere yapılan işte kurumlar ve gelir vergisi yok, KDV", "KKTC dışına yapılan işte vergi ve KDV yok; KKTC içine satışta normal vergi."],
+  ["İmza ve banka hesabı için bir kez KKTC'ye geliyorsunuz; başvuru", "Bir kez geliyorsunuz; başvuru, onay ve tescil bizde."],
+  ["Hukuk ve ticari pratik Türkiye'ye yakın", "Hukuk ve ticari pratik tanıdık; para transferi serbest."],
   ["Serbest Liman başvurusu, onay ve tescil trafiği", "Başvuru, onay ve tescil KKTC'deki kendi ofisimizden yürüyor."],
   ["Kâr şirkette kalıp şirketin işine harcandıkça", "Kâr şirkette kaldıkça vergi doğmuyor; size kişisel gelir olarak geçtiğinde çıkıyor."],
   ["Uluslararası ödeme kuruluşları KKTC şirketiyle çalışmıyor. Kartla", "Uluslararası ödeme kuruluşları çalışmıyor; kartla tahsilat yerel sanal POS'la."],
@@ -56,6 +63,11 @@ export const MOBIL_KISA: [bas: string, kisa: string][] = [
   ["İngiltere'nin asıl gücü bu. Kartla tahsilat", "İngiltere'nin asıl gücü bu: global ödeme altyapısının hepsi açılıyor."],
   ["İngiltere'de takvim sıkı ve cezalar otomatik", "Takvim sıkı, cezalar otomatik. Dört dosyayı da biz takip ediyoruz."],
   ["İngiltere için paket ve ek hizmetleri seçin", "Paketi ve ekleri seçin; tutar altta oluşur."],
+
+  ["Stripe, PayPal, Amazon ve Etsy İngiltere şirketiyle çalışıyor. Stripe için", "Stripe, PayPal, Amazon ve Etsy İngiltere şirketiyle çalışıyor."],
+  ["Direktörün İngiltere'de yaşaması gerekmiyor. Kimlik doğrulama", "İngiltere'de yaşamanız gerekmiyor; her adım uzaktan."],
+  ["Kimlik doğrulama tamamlandıktan sonra Companies House başvuruyu", "Kimlik doğrulamadan sonra tescil genellikle bir günde."],
+  ["İngiliz Ltd'si müşteri, tedarikçi ve platformlarda tanıdık", "İngiliz Ltd'si müşteri ve platformlarda tanıdık bir yapı."],
 
   /* ---- hizmet sayfaları */
   ["Kurumsal hesap ve tahsilat kanalları şirket kuruluşunun içinde", "Dosyayı bankanın istediği formatta biz hazırlıyoruz; hesap kararını banka veriyor."],

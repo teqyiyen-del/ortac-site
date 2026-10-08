@@ -561,25 +561,31 @@ function IkiKutu({ sol, sag }: { sol: [string, string]; sag: [string, string] })
   );
 }
 
-/* logo plakaları: dörde kadar tek sıra, beşte üç artı iki */
+/* logo plakaları · FERAH (ikinci tur). İlk hâli şeridi kenardan kenara
+   dolduruyordu; Burak: "full logo dolu oldu, çok sıkıştı." Artık iki sıra ve
+   kenarlarda pay var: dörtte 2 + 2, beşte 3 + 2 (alt sıra ortalı), ikide
+   tek sıra. Şerit bu çizimde biraz uzun (320 × 104). */
 function MiniLogolar({ brands }: { brands: BrandKey[] }) {
   const list = brands.slice(0, 5);
-  const iki = list.length > 4;
-  const ust = iki ? list.slice(0, 3) : list;
-  const alt = iki ? list.slice(3) : [];
-  const sira = (l: BrandKey[], y: number, h: number) => {
-    const w = (316 - (l.length - 1) * 8) / l.length;
-    return l.map((b, i) => <LogoPlaka key={b} brand={b} x={2 + i * (w + 8)} y={y} w={w} h={h} />);
+  const ust = list.length <= 2 ? list : list.slice(0, list.length === 4 ? 2 : 3);
+  const alt = list.length <= 2 ? [] : list.slice(ust.length);
+  const w = list.length === 5 ? 86 : 124;
+  const h = 34;
+  const bosluk = 12;
+  const sira = (l: BrandKey[], y: number) => {
+    const toplam = l.length * w + (l.length - 1) * bosluk;
+    const x0 = (320 - toplam) / 2;
+    return l.map((b, i) => <LogoPlaka key={b} brand={b} x={x0 + i * (w + bosluk)} y={y} w={w} h={h} />);
   };
   return (
-    <Mini>
-      {iki ? (
+    <Mini vb="0 0 320 104">
+      {alt.length > 0 ? (
         <>
-          {sira(ust, 6, 34)}
-          {sira(alt, 48, 34)}
+          {sira(ust, 12)}
+          {sira(alt, 58)}
         </>
       ) : (
-        sira(ust, 20, 48)
+        sira(ust, 35)
       )}
     </Mini>
   );

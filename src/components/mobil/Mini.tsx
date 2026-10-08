@@ -11,8 +11,12 @@
    Küçültmek çare değil; telefon için ayrı, sade bir sürüm gerekiyor.
 
    KURAL. Telefon sürümünde yazı 14 px'in altına inmiyor (etiket 13), bir
-   sahnede en çok dört satır var, süs yok. Süreç ve para yolu HTML (yazı
-   kabın genişliğinden bağımsız, hep aynı boyda); hizmet kareleri yazısız SVG.
+   sahnede en çok dört satır var, süs yok. Para yolu HTML (yazı kabın
+   genişliğinden bağımsız, hep aynı boyda); hizmet kareleri yazısız SVG.
+
+   SÜREÇ SAHNELERİ BURADA DEĞİL. Dokuz sahnenin HTML'den kurulmuş telefon
+   sürümü bir tur yaşadı ve geri alındı (Burak: "tasarım bozulmuş, önceki
+   hâli bile algılanıyor"); gerekçe scenes/SetupScenes.tsx'te.
 
    NASIL BASILIYOR. <Ikili> iki sürümü de basıyor; hangisinin görüneceğine
    CSS karar veriyor (css/mobil-deneme.css · .m-buyuk / .m-mini). Şimdilik
@@ -20,22 +24,7 @@
    ========================================================================= */
 
 import type { ReactNode } from "react";
-import {
-  ArrowDown,
-  ArrowRight,
-  Check,
-  FileText,
-  IdCard,
-  Landmark,
-  Layers,
-  ListChecks,
-  MapPin,
-  Percent,
-  ScrollText,
-  ShieldCheck,
-  Tag,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowDown, Check, Landmark, Percent, ShieldCheck } from "lucide-react";
 
 export function Ikili({ buyuk, mini }: { buyuk: ReactNode; mini: ReactNode }) {
   return (
@@ -43,144 +32,6 @@ export function Ikili({ buyuk, mini }: { buyuk: ReactNode; mini: ReactNode }) {
       <span className="m-buyuk">{buyuk}</span>
       <span className="m-mini">{mini}</span>
     </>
-  );
-}
-
-/* ------------------------------------------------------------ SÜREÇ SAHNESİ
-   Dokuz adım türü (SetupScenes · SceneKind). İçerik masaüstü sahnesindeki
-   kelimelerle aynı: örnek şirket Velocity Trading, örnek kişi Mert Kayacan;
-   hiçbir satır bir banka ya da otorite kararını ima etmiyor. */
-type Satir = { ad: string; deger?: string; ok?: boolean; secili?: boolean };
-type Surec = {
-  Ikon: LucideIcon;
-  baslik: string;
-  alt?: string;
-  rozet?: { t: string; ton: "ok" | "mavi" };
-  buyuk?: string;
-  satirlar?: Satir[];
-  dip?: string;
-};
-
-const SUREC: Record<string, Surec> = {
-  name: { Ikon: Tag, baslik: "Aday şirket adı", buyuk: "Velocity Trading", rozet: { t: "Uygun", ton: "ok" }, dip: "Tescil otoritesine ön başvuru iletildi" },
-  form: {
-    Ikon: FileText,
-    baslik: "Başvuru formu",
-    satirlar: [
-      { ad: "Ad Soyad", deger: "Mert Kayacan", ok: true },
-      { ad: "Faaliyet", deger: "E-ticaret", ok: true },
-      { ad: "Ülke", deger: "Türkiye", ok: true },
-    ],
-  },
-  activity: {
-    Ikon: Layers,
-    baslik: "Faaliyet",
-    satirlar: [{ ad: "E-ticaret", secili: true }, { ad: "Danışmanlık" }, { ad: "Ticaret ve dağıtım" }],
-    dip: "Lisans sınıfı: ticari lisans",
-  },
-  jurisdiction: {
-    Ikon: MapPin,
-    baslik: "Kuruluş tipi",
-    satirlar: [
-      { ad: "Serbest bölge", deger: "Dışa satış", secili: true },
-      { ad: "Mainland", deger: "İç pazara" },
-      { ad: "Offshore", deger: "Varlık tutma" },
-    ],
-  },
-  licence: {
-    Ikon: ScrollText,
-    baslik: "Tescil ve lisans",
-    rozet: { t: "Onaylandı", ton: "ok" },
-    satirlar: [
-      { ad: "Faaliyet sınıfı", deger: "Ticari" },
-      { ad: "Geçerlilik", deger: "1 yıl" },
-    ],
-  },
-  identity: {
-    Ikon: IdCard,
-    baslik: "Kimlik kartı",
-    alt: "Mert Kayacan",
-    satirlar: [{ ad: "Sağlık kontrolü", ok: true }, { ad: "Biyometri", ok: true }, { ad: "Kimlik başvurusu", ok: true }],
-  },
-  registry: {
-    Ikon: ListChecks,
-    baslik: "Kayıtlar",
-    satirlar: [
-      { ad: "Kayıtlı adres", deger: "Tanımlandı", ok: true },
-      { ad: "Vergi kaydı", deger: "Açıldı", ok: true },
-    ],
-  },
-  bank: {
-    Ikon: Landmark,
-    baslik: "İş hesabı",
-    alt: "Velocity Trading",
-    satirlar: [
-      { ad: "Banka dosyası", deger: "Hazırlandı", ok: true },
-      { ad: "Hesap açılışı", deger: "Tamamlandı", ok: true },
-    ],
-  },
-  handover: {
-    Ikon: FileText,
-    baslik: "Paneliniz",
-    rozet: { t: "Teslim edildi", ton: "ok" },
-    satirlar: [{ ad: "Tescil belgesi", ok: true }, { ad: "Vergi kaydı", ok: true }, { ad: "Ana sözleşme", ok: true }],
-  },
-};
-
-export function MiniSurec({ tur }: { tur: string }) {
-  const s = SUREC[tur];
-  if (!s) return null;
-  return (
-    <div className="ms">
-      <div className="ms-bas">
-        <span className="ms-ic">
-          <s.Ikon size={17} strokeWidth={1.9} />
-        </span>
-        <span className="ms-bas-t">
-          <b>{s.baslik}</b>
-          {s.alt && <i>{s.alt}</i>}
-        </span>
-        {s.rozet && !s.buyuk && (
-          <span className="ms-pill" data-ton={s.rozet.ton}>
-            <Check size={13} strokeWidth={3} />
-            {s.rozet.t}
-          </span>
-        )}
-      </div>
-      {s.buyuk && (
-        <div className="ms-buyuk">
-          <b>{s.buyuk}</b>
-          {s.rozet && (
-            <span className="ms-pill" data-ton={s.rozet.ton}>
-              <Check size={13} strokeWidth={3} />
-              {s.rozet.t}
-            </span>
-          )}
-        </div>
-      )}
-      {s.satirlar && (
-        <ul className="ms-l">
-          {s.satirlar.map((r) => (
-            <li key={r.ad} data-secili={r.secili ? "" : undefined}>
-              {r.ok && (
-                <span className="ms-tik">
-                  <Check size={12} strokeWidth={3.2} />
-                </span>
-              )}
-              <span className="ms-ad">{r.ad}</span>
-              {r.deger && <span className="ms-deger">{r.deger}</span>}
-              {r.secili && !r.deger && <span className="ms-deger">Seçildi</span>}
-            </li>
-          ))}
-        </ul>
-      )}
-      {s.dip && (
-        <p className="ms-dip">
-          <ArrowDown size={14} strokeWidth={2.2} />
-          {s.dip}
-        </p>
-      )}
-    </div>
   );
 }
 
@@ -317,9 +168,4 @@ const HIZMET: Record<string, () => ReactNode> = {
 export function MiniHizmet({ slug }: { slug: string }) {
   const Ciz = HIZMET[slug];
   return Ciz ? <>{Ciz()}</> : null;
-}
-
-/* küçük ok: avantaj şeritlerinde ortak */
-export function MiniOk() {
-  return <ArrowRight size={14} strokeWidth={2.4} />;
 }

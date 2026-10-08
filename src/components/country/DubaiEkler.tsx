@@ -37,6 +37,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
 import { BrandChip } from "@/components/shared/BrandMark";
 import { BOLGELER, VIP, money, type Bolge } from "@/lib/dubaiFiyat";
+import BolgeSekme from "@/components/country/BolgeSekme";
 import "@/app/css/dubai-ek.css";
 
 /* 06.10.2026 (ikinci tur) · Burak: "orası biraz kalabalık … tasarımı güzel
@@ -118,6 +119,27 @@ export function DubaiBolgeler() {
           </FadeUp>
         </div>
 
+        {/* telefon denemesi: üç logo sekme, altında seçilen bölgenin kartı
+            (BolgeSekme). Hangisinin görüneceğine CSS karar veriyor. */}
+        <div className="m-mini">
+          <BolgeSekme
+            veri={BOLGELER.map((k) => {
+              const a = BOLGE_ANLATIM[k];
+              return {
+                k,
+                ad: a.tam,
+                kime: a.kime,
+                rozet: a.rozet,
+                logo: <BolgeLogo k={k} />,
+                maddeler: a.maddeler.map(({ Icon, t }) => ({
+                  ikon: <Icon size={16} strokeWidth={2} aria-hidden="true" />,
+                  t,
+                })),
+              };
+            })}
+          />
+        </div>
+        <div className="m-buyuk m-blok">
         <div className="dbe-bolgeler">
           {BOLGELER.map((k, i) => {
             const a = BOLGE_ANLATIM[k];
@@ -146,6 +168,7 @@ export function DubaiBolgeler() {
               </FadeUp>
             );
           })}
+        </div>
         </div>
       </div>
     </section>

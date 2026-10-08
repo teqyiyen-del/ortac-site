@@ -3,7 +3,6 @@
 import { useId, type ReactElement } from "react";
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
-import { MiniSurec } from "@/components/mobil/Mini";
 
 /* Kuruluş adımları, çizilmiş hâlleriyle. Bunlar gece ekranında duruyor, yani
    buradaki her dolgu koyu yüzey değeri — soldaki ray zaten kelimeleri taşıyor,
@@ -857,35 +856,22 @@ export type SceneKind =
   | "bank"
   | "handover";
 
-/* 08.10.2026 · TELEFON SÜRÜMÜ. Bu sahneler 560 birimlik tuvale çizili;
-   telefonda 0,53 ölçekte basılıyor ve yazıları 6 px'e iniyor (ölçüldü).
-   Her sahnenin yanına sade telefon sürümü basılıyor (mobil/Mini · MiniSurec);
-   hangisinin görüneceğine CSS karar veriyor. Sarmalayan TEK kutu, çünkü
-   SurecP3'ün ölçü kabı (.cpr-sizer) doğrudan çocuklarını üst üste yığıyor. */
-const ikili = (Buyuk: () => ReactElement, tur: SceneKind) =>
-  function Sahne() {
-    return (
-      <div className="msv-ikili">
-        <div className="m-buyuk m-blok">
-          <Buyuk />
-        </div>
-        <div className="m-mini">
-          <MiniSurec tur={tur} />
-        </div>
-      </div>
-    );
-  };
-
+/* 08.10.2026 · Telefon için ayrı, HTML'den kurulmuş sade sahneler bir tur
+   yaşadı (mobil/Mini · MiniSurec). Burak: "bazıları kötü olmuş, çok
+   büyütmüşsün, tasarım bozulmuş … mobilde de olsa önceki hâli bile bence
+   algılanıyor; çok ufak dokunuşlarla çözebiliriz." Geri alındı: telefonda da
+   AYNI çizim basılıyor; yalnız kabı genişliyor ve yazıları bir kademe
+   büyüyor (css/mobil-deneme.css). */
 export const SCENE_BY_KIND: Record<SceneKind, () => ReactElement> = {
-  form: ikili(SceneForm, "form"),
-  name: ikili(SceneName, "name"),
-  activity: ikili(SceneActivity, "activity"),
-  jurisdiction: ikili(SceneJurisdiction, "jurisdiction"),
-  licence: ikili(SceneLicence, "licence"),
-  identity: ikili(SceneIdentity, "identity"),
-  registry: ikili(SceneRegistry, "registry"),
-  bank: ikili(SceneBank, "bank"),
-  handover: ikili(SceneHandover, "handover"),
+  form: SceneForm,
+  name: SceneName,
+  activity: SceneActivity,
+  jurisdiction: SceneJurisdiction,
+  licence: SceneLicence,
+  identity: SceneIdentity,
+  registry: SceneRegistry,
+  bank: SceneBank,
+  handover: SceneHandover,
 };
 
 /* Birinci kat: adım başlığının tam karşılığı. countryContent'teki on yedi adımın
@@ -985,10 +971,4 @@ export function stepSceneKind(title: string): SceneKind | null {
 /* Ana sayfa (ProcessScroll) hâlâ beş sabit adım anlatıyor ve çizimleri sırayla
    basıyor; orada adım listesi kod içinde sabit olduğu için indeks güvenli.
    Dizinin sırası o bileşenin rayına bağlı, değiştirilemez. */
-export const SETUP_SCENES = [
-  SCENE_BY_KIND.form,
-  SCENE_BY_KIND.name,
-  SCENE_BY_KIND.licence,
-  SCENE_BY_KIND.bank,
-  SCENE_BY_KIND.handover,
-];
+export const SETUP_SCENES = [SceneForm, SceneName, SceneLicence, SceneBank, SceneHandover];

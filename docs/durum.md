@@ -4955,6 +4955,44 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 08.10.2026 (4) · telefon düzeni, Burak'ın sesli revizeleri (hâlâ deneme, canlı değişmedi)
+
+CANLI DÜZELTME: ana sayfa ülke listesinde açık satırın altındaki mavi çizgi telefonda
+kaldırıldı ("çizgi bozuk": düz çizgi, altındaki yuvarlak köşeli panelin üstünde kırık
+kenar gibi duruyordu).
+
+DENEME DÜZENİNDE DEĞİŞENLER (/lab/mobil, ?mobil=yeni)
+- Ana sayfa ülke sırası telefonda Dubai, KKTC, İngiltere.
+- Hizmetler: yan yana (kare solda) hâli gitti; ikili ızgara, üstte çizim altında başlık.
+  "Ülkeye özel hizmeti görün" düğmesi görünmüyor, kartın tamamı dokunulur, ülke listesi
+  kartın içinde açılıyor (sağ üstte artı).
+- Neden Ortac: küre ve onarım akışı geri geldi; sohbet kutusu sabit boyda (kart artık
+  zıplamıyor); sıra beyaz, siyah, beyaz, siyah.
+- "Mevcut şirketinizi taşıyın" yatay şerit (ikon, başlık, ok).
+- Şirket döngüsü: satırlarda açıklama cümlesi yok; ad, sıklık, şerit.
+- Süreç: HTML'den kurulan telefon sahneleri GERİ ALINDI ("tasarım bozulmuş, önceki hâli
+  bile algılanıyor"). Aynı çizim; kabı büyüdü, yazısı bir kademe iri. Bölüm tek kart: üstte
+  çizim, altında adım yazısı, çubuklar, dipnot ("çok dip dibe" şikâyeti için).
+- Dubai yapı seçimi: karar kuralı cümlesi hafif, kartlar arası boşluk dar.
+- Üç serbest bölge: SEKME (`country/BolgeSekme.tsx`): üç logo yan yana, altında seçilen
+  bölgenin kartı, başlığı ve maddeleriyle.
+- Avantajlar: ikon karosu yok (çizim zaten görsel), cümleler kısa, logo şeritleri ferah.
+BAŞLIK BOYLARI: Burak önce "çok mu küçüldü" dedi, Dubai'ye bakınca "şu an iyi duruyor,
+vazgeçtim"; değişmedi.
+
+RAKİP TARAMASI (telefon genişliğinde ekran görüntüsü, 08.10): Virtuzone, Shuraa, Creative
+Zone, Meydan FZ. Ortak kalıplar: hizmetlerde ikon + başlık, açıklama yok; "neden biz"de
+sekme şeridi (Virtuzone); paket ve avantajlarda noktalı yana kaydırma (Shuraa, Meydan);
+SSS ve alt menüde açılır satır; hesaplayıcıda adım adım sihirbaz (Creative Zone). 1st
+Formations'ın paket sayfası çekilemedi.
+
+ÖLÇÜM (390 px): ana sayfa 14.815 → 10.625 (%28), Dubai 20.627 → 17.006 (%18), KKTC %15,
+İngiltere %14. Yatay taşma yok.
+
+AÇIK: avantaj kartları için Burak kararsız ("hepsini yana kaydırmalı mı yapsak, ama öyle
+de bakmıyorlar"); şimdilik alt alta, kısa. KKTC ve İngiltere'de süreç ve avantaj aynı
+bileşen, aynı düzen.
+
 ## 08.10.2026 (3) · TELEFON ELDEN GEÇİRMESİ (karar bekliyor, canlıyı değiştirmiyor)
 
 Burak: "tüm mobili baştan aşağı elden geçir. Başlıkları, yazı boyutlarını, görselleri
