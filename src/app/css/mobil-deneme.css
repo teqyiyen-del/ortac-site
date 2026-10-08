@@ -25,6 +25,11 @@
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  transition: transform 200ms var(--ease-out-soft);
+}
+/* fiyat formunun yapışık tutarı açıkken etiket onun üstüne çıkıyor */
+html:has(.ip-yapisik[data-acik]) .md-rozet {
+  transform: translateY(-62px);
 }
 
 /* ---- İKİ SÜRÜMLÜ ÇİZİMLER (components/mobil/Mini · Ikili) · HER ZAMAN AÇIK
@@ -39,6 +44,13 @@
   display: block;
 }
 .m-mini {
+  display: none;
+}
+/* yazının telefon sürümü, fiyat formunun yapışık tutarı ve footer dizininin
+   aç/kapa düğmesi: yalnız deneme düzeninde ve telefonda açılıyor */
+.m-kisa,
+.ip-yapisik,
+.ft2-ac {
   display: none;
 }
 /* telefon kareleri küçük basıldığı için çizgileri bir kademe açık */
@@ -140,26 +152,46 @@
     display: block;
   }
 
-  /* SÜREÇ · ÇİZİM ÜSTTE (beşinci tur). Dördüncü turda bölüm tek karta
-     alınmıştı; Burak: "komple box içine alman gerekmiyor, tüm sorun siyah
-     kısmı yukarı koymakla çözülüyormuş." Kutu kalktı: bölüm başlığından
-     sonra çizim (masaüstündekiyle aynı çizim, kabı bir tık büyük, yazısı
-     bir kademe iri), altında adımın yazısı, çubuklar ve dipnot. */
+  /* SÜREÇ · TEK KART, ÇİZİM İÇİNDE ÜSTTE (altıncı tur). Üç hâl yaşadı:
+     dördüncü turda bölüm tek karttı ama siyah çizim kartın üst kenarına
+     yapışıktı (altı düz); beşinci turda kutu kalktı. Burak, hizmet kartının
+     ekran görüntüsüyle: "tamamını box içine almak mantıklı geldi tekrar ama
+     siyah kısmın altını düzenlemeyeceksin, köşeleri yuvarlak kalacak; şu
+     attığım mantıkta: yukarıda görseli, altta kalan şeyler."
+     Yani ana sayfadaki hizmet kartının kalıbı: beyaz çerçeveli kart, içinde
+     10 px payla dört köşesi yuvarlak siyah sahne, altında adımın yazısı,
+     çubuklar ve dipnot. Çizim de bir kademe sade: sahnelerin üst köşe
+     etiketi ve alt satır yazısı (.dv-ust / .dv-alt · scenes/SetupScenes)
+     telefonda yok; aynı bilgi kartın altında zaten yazıyor. */
   html[data-mobil="yeni"] .srp-grid {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 0;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-panel);
+    background: var(--white);
   }
   html[data-mobil="yeni"] .cpr-card {
     order: 1;
+    border-radius: var(--r-lg);
     box-shadow: none;
   }
   html[data-mobil="yeni"] .cpr-body {
-    padding: 10px 6px;
+    padding: 12px 8px;
+  }
+  html[data-mobil="yeni"] .cpr-card :is(.dv-alt, .dv-ust) {
+    display: none;
+  }
+  /* alt cümlesi giden üç sahne yukarıda kalıyordu (üstte 30, altta 60 px
+     boşluk); çizim kendi boyunun %5,5'i kadar iniyor ve ortalanıyor */
+  html[data-mobil="yeni"] .cpr-card .sv-kay {
+    transform: translateY(5.5%);
   }
   html[data-mobil="yeni"] .srp-left {
     order: 2;
     gap: 24px;
+    padding: 22px 10px 12px;
   }
   html[data-mobil="yeni"] .cpr-card :is(.dv-lbl, .dv-s) {
     font-size: 14.5px;
@@ -168,7 +200,14 @@
     font-size: 16px;
   }
 
-  /* STRATEJİ (Burak, 08.10 ikinci tur): "sağa kaydırmalı istemiyorum; hepsi
+  /* İÇ BOŞLUK TABANI (altıncı tur). Burak: "padding'lerin anasını …,
+     her şey kenara çok yakın; padding işini bu kadar abartma." Yer kazanmak
+     için kartların iç boşluğu 10-14 px'e inmişti. Bu dosyadaki hiçbir kart
+     artık 14 px'in altında iç boşlukla basılmıyor: satır 14-16, kart 16-20,
+     panel 24. Yer boşluktan değil içerikten (satır sayısı, tekrar eden
+     cümle, ikinci görsel) kazanılır.
+
+     STRATEJİ (Burak, 08.10 ikinci tur): "sağa kaydırmalı istemiyorum; hepsi
      ekranda dursun alt alta ama daha kısa. Yüksekliği fazla olan kartların
      yazılarını, görsellerini ya da birleştirerek azalt." Yana kaydırma hâli
      silindi. Araçlar: görseli küçültmek (zoom: sahne aynı kalıyor, ölçeği
@@ -230,7 +269,7 @@
     height: auto;
   }
   html[data-mobil="yeni"] .hx-body {
-    padding: 14px 0 14px 14px;
+    padding: 16px 0 16px 16px;
   }
   html[data-mobil="yeni"] .hx-t {
     font-size: 17px;
@@ -275,7 +314,7 @@
   html[data-mobil="yeni"] .skf {
     height: 148px;
     min-height: 0;
-    padding: 12px;
+    padding: 14px;
     column-gap: 6px;
   }
   html[data-mobil="yeni"] .skf-l {
@@ -344,8 +383,8 @@
     grid-template-columns: 44px minmax(0, 1fr) 44px;
     gap: 12px;
     margin-top: 12px;
-    padding: 12px 14px;
-    border-radius: var(--r-lg); /* 70 px'lik şerit: panel (28) değil kart (18) */
+    padding: 14px 16px;
+    border-radius: var(--r-lg); /* 72 px'lik şerit: panel (28) değil kart (18) */
   }
   html[data-mobil="yeni"] .pf2-move-ic {
     width: 44px;
@@ -427,9 +466,11 @@
   html[data-mobil="yeni"] .bsk-logo .dbe-logo-yazi {
     zoom: 1.3;
   }
+  /* altıncı tur · "biraz daha alan aç altındaki box'a; her şey kenara çok
+     yakın": iç boşluk 18/16 → 24, başlık ile cümle ve liste arası açıldı */
   html[data-mobil="yeni"] .bsk-kart {
-    margin-top: 10px;
-    padding: 18px 16px;
+    margin-top: 12px;
+    padding: 24px;
     border: 1px solid var(--border);
     border-radius: var(--r-panel);
     background: var(--white);
@@ -451,20 +492,20 @@
     position: static;
   }
   html[data-mobil="yeni"] .bsk-kime {
-    margin-top: 8px;
+    margin-top: 12px;
     font-size: 15px;
     line-height: 1.5;
     color: var(--text-600);
   }
   html[data-mobil="yeni"] .bsk-kart .dbe-liste {
-    margin-top: 14px;
-    gap: 8px;
+    margin-top: 20px;
+    gap: 12px;
   }
 
   /* ---- DUBAİ YAPI SEÇİMİ: karar kuralı cümlesi bir kademe hafif; harita
      ile iki seçenek kartı ve altındaki düğme arasındaki boşluk dar */
   html[data-mobil="yeni"] .ys-rule {
-    padding: 14px 16px;
+    padding: 16px 18px;
     border-radius: var(--r-lg); /* telefonda üç satır, 120 px: satır (12) değil kutu (18) */
   }
   html[data-mobil="yeni"] .tl-more {
@@ -492,7 +533,7 @@
   }
   html[data-mobil="yeni"] .advx-card > .advx-fig {
     height: auto;
-    padding: 12px 14px;
+    padding: 14px 16px;
   }
   html[data-mobil="yeni"] .advx-fig .gv2-mini {
     display: block;
@@ -530,16 +571,23 @@
     margin-top: 0;
   }
 
-  /* ---- 6 · FİYAT FORMU (Dubai 1.784 → ~1.250): serbest bölgeler tek satırlık
-     üç şerit (ikon, ad, fiyat); yıl kutularında ikon yok; ek hizmette onay
-     kutusu başta, ikon yok, yazıya yer açılıyor; iç boşluklar dar */
+  /* ---- 6 · FİYAT FORMU (Dubai 1.784 → ~1.270): serbest bölgeler tek satırlık
+     üç şerit (ikon, ad, fiyat); yıl kutularında ikon yok; ek hizmet iki
+     satır (onay kutusu, ad, tutar · altında tek cümle).
+     BOŞLUKLAR (altıncı tur). Beşinci turda yer kazanmak için panelin iç
+     boşluğu 28 → 16, satırlarınki 16 → 10'a inmişti; Burak: "her şey kenara
+     çok yakın, padding işini bu kadar abartma, önceki versiyonun padding'leri
+     daha okey." Panel 24, satır 14-16: yer artık boşluktan değil İÇERİKTEN
+     kazanılıyor (ek hizmet kartı dört satırdan ikiye indi). */
   html[data-mobil="yeni"] .sec-night.gece-alan .ip-form,
+  html[data-mobil="yeni"] .ip-form,
   html[data-mobil="yeni"] .ip-out {
-    padding: 20px 16px;
+    padding: 24px;
   }
+  html[data-mobil="yeni"] .ip-form,
   html[data-mobil="yeni"] .sec-night.gece-alan .ip-form,
   html[data-mobil="yeni"] .sec-night.gece-alan .ip-form .dfy-iki {
-    gap: 20px;
+    gap: 24px;
   }
   html[data-mobil="yeni"] :is(.dfy-uc:not(.dfy-uc-iki) .dfy-bolge, .dfy-yil) {
     border-radius: var(--r-md); /* 52-56 px'lik satır: 12 */
@@ -548,10 +596,24 @@
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px;
-    padding: 10px 52px 10px 10px;
+    padding: 14px 52px 14px 14px;
   }
   html[data-mobil="yeni"] .dfy-uc:not(.dfy-uc-iki) .dfy-bolge .dfy-alt {
     display: none;
+  }
+  /* alt alta düzenden kalan boşluklar (ikonun altı, tutarın üstü) tek sırada
+     satırı 74 px'e çıkarıyor, tutarı da addan aşağı itiyordu */
+  html[data-mobil="yeni"] .dfy-uc:not(.dfy-uc-iki) .dfy-bolge .dfy-ic {
+    margin-bottom: 0;
+  }
+  html[data-mobil="yeni"] .dfy-uc:not(.dfy-uc-iki) .dfy-bolge .dfy-tutar {
+    margin-top: 0;
+  }
+  /* satır tek sıra olduğu için "i" düğmesi köşede değil, satırın ortasında */
+  html[data-mobil="yeni"] .dfy-uc:not(.dfy-uc-iki) .dfy-bolge + .dfy-i {
+    top: 50%;
+    right: 12px;
+    margin-top: -15px;
   }
   /* KKTC'de muhasebe türü kutusu: açıklaması adın altında kalıyor */
   html[data-mobil="yeni"] .dfy-uc-iki .dfy-bolge {
@@ -578,31 +640,107 @@
   html[data-mobil="yeni"] .dfy-yil {
     grid-template-columns: minmax(0, 1fr);
     justify-items: center;
-    min-height: 52px;
-    padding: 12px 8px;
+    min-height: 56px;
+    padding: 14px 8px;
     text-align: center;
   }
   html[data-mobil="yeni"] .dfy-yil .dfy-ad {
     justify-self: center;
   }
+  /* EK HİZMET · İKİ SATIR (altıncı tur · "ek hizmetler kısmı dikey olarak
+     daha kısa olabilir"). Eskiden dört satırdı: ad, iki satır cümle, tutar
+     (kart ~130 px). Şimdi üst satırda onay kutusu, ad ve tutar; alt satırda
+     tek cümle ve "i" düğmesi (kart ~92 px). Uzun ad ile uzun cümlenin telefon
+     sürümü bileşende (.m-kisa); VIP'in cümlesi Murat Bey'in yazdığı hâliyle. */
   html[data-mobil="yeni"] .dfy-ek {
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: start;
-    gap: 4px 12px;
-    padding: 14px 48px 14px 14px;
-  }
-  html[data-mobil="yeni"] .dfy-ek .dfy-tik {
-    grid-column: 1;
-    grid-row: 1;
-    margin-top: 2px;
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    grid-template-areas: "tik ad tutar" "alt alt alt";
+    align-items: center;
+    gap: 6px 12px;
+    padding: 16px 16px 12px;
   }
   html[data-mobil="yeni"] .dfy-ek .dfy-ek-m {
-    grid-column: 2;
-    grid-row: 1;
+    display: contents;
+  }
+  html[data-mobil="yeni"] .dfy-ek .dfy-tik {
+    grid-area: tik;
+  }
+  html[data-mobil="yeni"] .dfy-ek .dfy-ad {
+    grid-area: ad;
   }
   html[data-mobil="yeni"] .dfy-ek .dfy-tutar {
-    grid-column: 2;
-    grid-row: 2;
+    grid-area: tutar;
+    font-size: 18px;
+  }
+  html[data-mobil="yeni"] .dfy-ek .dfy-alt {
+    grid-area: alt;
+    display: flex;
+    align-items: center;
+    min-height: 32px;
+    padding-right: 40px;
+  }
+  html[data-mobil="yeni"] .dfy-ek + .dfy-i {
+    top: auto;
+    right: 14px;
+    bottom: 12px;
+    margin-top: 0;
+  }
+
+  /* YAPIŞIK TUTAR (shared/YapisikTutar): seçim yapılırken tutar ekranın
+     altında. Boyu sıfır bir çapa; şerit onun üstünde duruyor, yani formun
+     boyuna eklenmiyor. */
+  html[data-mobil="yeni"] .ip-yapisik {
+    display: block;
+    position: sticky;
+    bottom: 12px;
+    z-index: 6;
+    height: 0;
+    margin-top: -24px; /* formun satır boşluğunu geri alıyor: çapa yer tutmasın */
+    pointer-events: none;
+  }
+  html[data-mobil="yeni"] .ip-yapisik > button {
+    position: absolute;
+    right: -8px;
+    bottom: 0;
+    left: -8px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 14px 0 18px;
+    border: 0;
+    border-radius: var(--r-md);
+    background: var(--white);
+    color: var(--text-900);
+    font: inherit;
+    text-align: left;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 180ms linear, transform 220ms var(--ease-out-soft);
+  }
+  html[data-mobil="yeni"] .ip-yapisik[data-acik] > button {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  html[data-mobil="yeni"] .ip-yapisik-k {
+    font-size: 14px;
+    color: var(--text-600);
+  }
+  html[data-mobil="yeni"] .ip-yapisik-t {
+    font-size: 20px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  /* yazının telefon sürümü (bileşende ikisi de basılı) */
+  html[data-mobil="yeni"] .m-uzun {
+    display: none;
+  }
+  html[data-mobil="yeni"] .m-kisa {
+    display: inline;
   }
 
   /* ---- 7a · KKTC ÖDEME KANALLARI (1.312 → ~520): çalışan ikisi kart,
@@ -638,7 +776,7 @@
     gap: 8px;
   }
   html[data-mobil="yeni"] .cos-k {
-    padding: 12px 16px;
+    padding: 16px 18px;
     min-height: 0;
   }
   html[data-mobil="yeni"] .cos-not {
@@ -653,7 +791,7 @@
     grid-template-areas: "ad fiyat" "ic fiyat";
     align-items: center;
     gap: 2px 12px;
-    padding: 12px 14px;
+    padding: 16px;
   }
   html[data-mobil="yeni"] .ip-tier-n {
     grid-area: ad;
@@ -673,7 +811,7 @@
     grid-template-columns: 40px minmax(0, 1fr) auto;
     grid-template-areas: "ic t n" "s s s";
     column-gap: 12px;
-    padding: 16px;
+    padding: 20px;
   }
   html[data-mobil="yeni"] :is(.svz-adim-t, .svb-adim-t) {
     margin: 0;
@@ -682,7 +820,7 @@
     margin-top: 10px;
   }
   html[data-mobil="yeni"] .svz-tur-k {
-    padding: 16px;
+    padding: 20px;
   }
   html[data-mobil="yeni"] .svz-tur-k .svz-ic {
     width: 40px;
@@ -698,7 +836,7 @@
     grid-template-columns: 84px minmax(0, 1fr);
     align-items: center;
     gap: 6px 14px;
-    padding: 12px 14px;
+    padding: 16px;
   }
   html[data-mobil="yeni"] .svb-s-logo {
     grid-row: 1 / span 2;
@@ -729,8 +867,8 @@
   html[data-mobil="yeni"] .svb-bak-k {
     flex-direction: row;
     align-items: flex-start;
-    gap: 12px;
-    padding: 14px;
+    gap: 14px;
+    padding: 18px;
   }
   html[data-mobil="yeni"] .svb-bak-k .svb-ic {
     flex: none;
@@ -743,7 +881,7 @@
   /* ---- SEKTÖR SAYFASI: ülke çizimleri süs; yarı boya iniyor */
   html[data-mobil="yeni"] .sxc-art {
     --sxa-h: 150px;
-    padding: 12px;
+    padding: 16px;
   }
 
   /* ---- 8 · BLOG LİSTESİ (4.300 → ~1.750): ilk altı yazı, sonra düğme */
@@ -767,6 +905,80 @@
     cursor: pointer;
   }
 
+  /* ---- 10 · FOOTER DİZİNİ · AÇILIR BAŞLIKLAR (altıncı tur, tasarruf)
+     Her sayfanın altında altı sütunluk dizin iki sütunda ~700 px tutuyordu.
+     Telefonda altı başlık alt alta, dokununca açılıyor: kapalıyken ~310 px.
+     Bileşen: Footer · FtKol. */
+  html[data-mobil="yeni"] .ft2-nav {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  html[data-mobil="yeni"] .ft2-col {
+    position: relative;
+    gap: 14px;
+    border-bottom: 1px solid var(--night-line);
+  }
+  html[data-mobil="yeni"] .ft2-col:first-child {
+    border-top: 1px solid var(--night-line);
+  }
+  html[data-mobil="yeni"] .ft2-col[data-acik] {
+    padding-bottom: 18px;
+  }
+  html[data-mobil="yeni"] .ft2-h {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 52px;
+    margin: 0;
+    font-size: 15px;
+  }
+  html[data-mobil="yeni"] .ft2-h::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    margin: -4px 4px 0 0;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    opacity: 0.6;
+    transform: rotate(45deg);
+    transition: transform 200ms var(--ease-out-soft);
+  }
+  html[data-mobil="yeni"] .ft2-col[data-acik] .ft2-h::after {
+    margin-top: 4px;
+    transform: rotate(225deg);
+  }
+  html[data-mobil="yeni"] .ft2-col[data-acik] .ft2-h {
+    margin-bottom: -6px;
+  }
+  html[data-mobil="yeni"] .ft2-ac {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 52px;
+    padding: 0;
+    border: 0;
+    background: none;
+    opacity: 0;
+    cursor: pointer;
+  }
+  html[data-mobil="yeni"] .ft2-col:not([data-acik]) > :is(a, [data-soon]) {
+    display: none;
+  }
+  html[data-mobil="yeni"] .ft2-col:has(.ft2-ac:focus-visible) .ft2-h {
+    outline: 2px solid var(--blue-500);
+    outline-offset: 2px;
+    border-radius: var(--r-sm);
+  }
+
+  /* ---- 11 · ANA SAYFA YAZILAR: öne çıkan kart + beş satırdı (~1.250 px);
+     telefonda öne çıkan + ilk üç satır. Gerisi "Tüm yayınlar" bağlantısında. */
+  html[data-mobil="yeni"] .blg-rail > li:nth-child(n + 4) {
+    display: none;
+  }
+
   /* ---- 9 · HAKKIMIZDA DAYANAK (2.147 → ~1.750) */
   html[data-mobil="yeni"] .ab-dy {
     gap: 10px;
@@ -776,7 +988,7 @@
   html[data-mobil="yeni"] .ab-dy-sahne {
     height: auto;
     min-height: 0;
-    padding: 12px;
+    padding: 16px;
   }
   html[data-mobil="yeni"] .ab-dy-ekip {
     display: block;

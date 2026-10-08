@@ -38,6 +38,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
+import YapisikTutar from "@/components/shared/YapisikTutar";
 import { gtm } from "@/lib/gtm";
 import {
   BOLGE,
@@ -101,12 +102,26 @@ function Bilgi({ ad, metin, href }: { ad: string; metin: string; href: string })
 
 const BOLGE_IKON: Record<Bolge, LucideIcon> = { ifza: Cpu, meydan: Zap, dwtc: Building2 };
 
+/* aynı yazının telefon sürümü: ikisi de basılıyor, seçimi CSS yapıyor
+   (css/mobil-deneme.css · .m-uzun / .m-kisa) */
+function Kisa({ uzun, kisa }: { uzun: string; kisa: string }) {
+  return (
+    <>
+      <span className="m-uzun">{uzun}</span>
+      <span className="m-kisa">{kisa}</span>
+    </>
+  );
+}
+
 export function DubaiSecimFormu({
   secim,
   onSecim,
+  dip,
 }: {
   secim: DubaiSecim;
   onSecim: (s: DubaiSecim) => void;
+  /** formun en altına basılan düğüm (fiyat panelinde telefonun yapışık tutar şeridi) */
+  dip?: React.ReactNode;
 }) {
   const { bolge, yil, vize, vip, yillik } = secim;
   const set = (p: Partial<DubaiSecim>) => onSecim({ ...secim, ...p });
@@ -128,6 +143,10 @@ export function DubaiSecimFormu({
       degis: () => set({ yillik: !yillik }),
       Icon: Calculator,
       ad: "Muhasebeyi yıllık alın",
+      /* telefonda ad ile tutar aynı satırda duruyor; uzun ad sığmıyor.
+         Kısa hâller yalnız deneme düzeninde ve telefonda (.m-kisa). */
+      adKisa: "Yıllık muhasebe",
+      altKisa: `10 ay fiyatına · %${Math.round((1 - MUH_YILLIK / (MUH_AYLIK * 12)) * 100)} indirim`,
       vip: false,
       /* Burak: "yıllıkta 10 ay fiyatına yapıyoruz; oraya yüzde şu kadar
          indirim diye bilgi gir." 2 / 12 = %16,7 → %17. */
@@ -231,9 +250,9 @@ export function DubaiSecimFormu({
                 <span className="dfy-ek-m">
                   <span className="dfy-ad">
                     {ek.vip && <span className="dbe-ek-vip">VIP</span>}
-                    {ek.ad}
+                    {ek.adKisa ? <Kisa uzun={ek.ad} kisa={ek.adKisa} /> : ek.ad}
                   </span>
-                  <span className="dfy-alt">{ek.alt}</span>
+                  <span className="dfy-alt">{ek.altKisa ? <Kisa uzun={ek.alt} kisa={ek.altKisa} /> : ek.alt}</span>
                 </span>
                 <span className="dfy-tutar">{ek.tutar}</span>
                 <span className="dfy-tik" aria-hidden="true">
@@ -245,6 +264,7 @@ export function DubaiSecimFormu({
           ))}
         </div>
       </div>
+      {dip}
     </div>
   );
 }
@@ -257,7 +277,9 @@ export default function DubaiFiyat() {
 
   return (
     <div className="ip">
-      <DubaiSecimFormu secim={secim} onSecim={setSecim} />
+      {/* telefonda seçim yapılırken tutar ekranın altında duruyor
+          (shared/YapisikTutar; yalnız deneme düzeninde ve telefonda görünür) */}
+      <DubaiSecimFormu secim={secim} onSecim={setSecim} dip={<YapisikTutar tutar={money(toplam)} />} />
 
       <aside className="ip-out">
         <span className="ip-out-k">Tahmini kurulum tutarı</span>

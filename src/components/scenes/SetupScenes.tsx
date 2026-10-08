@@ -87,7 +87,7 @@ export function SceneForm() {
       <text x="68" y="60" className="dv-h">
         Başvuru formu
       </text>
-      <text x="492" y="60" className="dv-lbl" textAnchor="end">
+      <text x="492" y="60" className="dv-lbl dv-ust" textAnchor="end">
         Örnek doldurma
       </text>
 
@@ -148,7 +148,7 @@ export function SceneForm() {
       <motion.text
         x="68"
         y="252"
-        className="dv-s"
+        className="dv-s dv-alt"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 1.5 }}
@@ -283,7 +283,7 @@ export function SceneLicence() {
         <text x="104" y="64" className="dv-h">
           Tescil ve lisans
         </text>
-        <text x="104" y="86" className="dv-lbl">
+        <text x="104" y="86" className="dv-lbl dv-ust">
           Şematik özet
         </text>
         <rect x="104" y="102" width="288" height="1" className="dv-ln" />
@@ -346,7 +346,7 @@ export function SceneLicence() {
       <motion.text
         x="488"
         y="246"
-        className="dv-s"
+        className="dv-s dv-alt"
         textAnchor="middle"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -491,7 +491,7 @@ export function SceneActivity() {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
-      className="sv sv-dark"
+      className="sv sv-dark sv-kay"
       role="img"
       aria-label="Faaliyet ve lisans sınıfı eşleştirmesi, şematik"
     >
@@ -584,7 +584,7 @@ export function SceneActivity() {
       <motion.text
         x="40"
         y="288"
-        className="dv-s"
+        className="dv-s dv-alt"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 1.6 }}
@@ -610,7 +610,7 @@ export function SceneJurisdiction() {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
-      className="sv sv-dark"
+      className="sv sv-dark sv-kay"
       role="img"
       aria-label="Kuruluş tipi seçenekleri, biri seçili"
     >
@@ -670,7 +670,7 @@ export function SceneJurisdiction() {
       <motion.text
         x="40"
         y="284"
-        className="dv-s"
+        className="dv-s dv-alt"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 1.3 }}
@@ -692,7 +692,7 @@ export function SceneIdentity() {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
-      className="sv sv-dark"
+      className="sv sv-dark sv-kay"
       role="img"
       aria-label="Sağlık kontrolü, biyometri ve kimlik başvurusu, şematik"
     >
@@ -754,7 +754,7 @@ export function SceneIdentity() {
       <motion.text
         x="40"
         y="284"
-        className="dv-s"
+        className="dv-s dv-alt"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 1.5 }}
@@ -791,7 +791,7 @@ export function SceneRegistry() {
         <text x="104" y="80" className="dv-h">
           Kayıtlar
         </text>
-        <text x="104" y="102" className="dv-lbl">
+        <text x="104" y="102" className="dv-lbl dv-ust">
           Şematik özet
         </text>
         <rect x="104" y="118" width="352" height="1" className="dv-ln" />
@@ -829,7 +829,7 @@ export function SceneRegistry() {
       <motion.text
         x="104"
         y="272"
-        className="dv-s"
+        className="dv-s dv-alt"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 1.5 }}
@@ -855,6 +855,13 @@ export type SceneKind =
   | "registry"
   | "bank"
   | "handover";
+
+/* 08.10.2026 · `dv-alt` ve `dv-ust`: sahnenin altındaki açıklama cümlesi ve
+   sağ üstteki künye ("Örnek doldurma", "Şematik özet"). Telefonda gizleniyor
+   (css/mobil-deneme.css); Burak: "görselin oynadığı yeri biraz
+   sadeleştirebiliriz, aşırı abartmana gerek yok." Çizimin kendisi aynı.
+   `sv-kay`: alt cümlesi gidince çizimi yukarıda kalan üç sahne (faaliyet,
+   kuruluş tipi, kimlik); telefonda bir miktar aşağı kayıp ortalanıyorlar. */
 
 /* 08.10.2026 · Telefon için ayrı, HTML'den kurulmuş sade sahneler bir tur
    yaşadı (mobil/Mini · MiniSurec). Burak: "bazıları kötü olmuş, çok

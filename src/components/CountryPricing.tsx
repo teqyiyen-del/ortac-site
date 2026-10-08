@@ -1,6 +1,7 @@
 "use client";
 
 import SmartLink from "@/components/shared/SmartLink";
+import YapisikTutar from "@/components/shared/YapisikTutar";
 import { useEffect, useState } from "react";
 import { animate, AnimatePresence, motion, useMotionValue } from "motion/react";
 import { ArrowRight, Check } from "lucide-react";
@@ -194,6 +195,8 @@ export default function CountryPricing({ country }: { country: Country }) {
             ))}
           </div>
         </div>
+        {/* telefonda seçim yapılırken tutar ekranın altında (shared/YapisikTutar) */}
+        <YapisikTutar tutar={money(r.total)} />
       </div>
 
       {/* ---------------- live total ---------------- */}

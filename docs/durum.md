@@ -4955,6 +4955,38 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 08.10.2026 (6) · Telefon düzeni altıncı tur: süreç kartı, boşluklar, fiyatta yapışık tutar, footer
+
+Burak'ın beşinci tura cevabı (hizmet kartının ekran görüntüsüyle). Hepsi DENEME düzeninde
+(?mobil=yeni, /lab/mobil); canlı telefon düzeni ve masaüstü değişmedi.
+
+- SÜREÇ ("tamamını box içine almak mantıklı geldi tekrar ama siyah kısmın altını
+  düzenlemeyeceksin, köşeleri yuvarlak kalacak"): ana sayfadaki hizmet kartının kalıbı. Beyaz
+  çerçeveli kart, içinde 10 px payla dört köşesi yuvarlak siyah sahne, altında adım yazısı,
+  çubuklar, dipnot. Çizim bir kademe sade: sahnelerin alt cümlesi ve üst köşe künyesi
+  (`dv-alt`, `dv-ust`) telefonda yok; alt cümlesi giden üç sahne (`sv-kay`) ortalanıyor.
+  Yedi adım üç ülkede tek tek çekilip bakıldı.
+- SERBEST BÖLGE SEKMESİ: "altındaki box'a biraz daha alan aç". İç boşluk 18/16 → 24.
+- BOŞLUKLAR: "padding işini bu kadar abartma, önceki versiyonun padding'leri daha okey."
+  Beşinci turda 10-14 px'e inen bütün iç boşluklar geri açıldı (satır 14-16, kart 16-20,
+  panel 24). Kural mobil-deneme.css'in başında ve hafızada: yer boşluktan kazanılmaz.
+- FİYAT FORMU: ek hizmet kartı dört satırdan ikiye indi (onay kutusu, ad, tutar · altında tek
+  cümle; ~130 → ~92 px). "Muhasebeyi yıllık alın" telefonda "Yıllık muhasebe", cümlesi
+  "10 ay fiyatına · %17 indirim" (bileşende `.m-uzun` / `.m-kisa`; VIP cümlesi aynen).
+  YAPIŞIK TUTAR (`shared/YapisikTutar`): "seçerken bir yandan fiyatı da görebilse iyi
+  olurdu." Form ekrandayken tutar ekranın altında beyaz şeritte; özet görününce kayboluyor,
+  dokununca özete iniyor. Dubai ve İngiltere'de var; KKTC'de tutar sabit, konmadı.
+- TASARRUF TURU ("neyden tasarruf edebiliriz, kafa patlat"), yapılan iki şey:
+  footer dizini açılır başlık (`Footer · FtKol`; her sayfada ~360 px), ana sayfada yazı
+  listesi öne çıkan + üç satır (~300 px). Ana sayfa 14.815 → 10.141 (%32), Dubai 20.627 →
+  16.691 (%19).
+  YAPILMADI, ÖNERİ OLARAK BURAK'A SÖYLENDİ (görsel ya da akış kararı olduğu için):
+  kapanış bölümündeki bayrak yayını kısaltmak (~150 px, her sayfa); ülke sayfasında "süreç
+  içinde ortaya çıkanlar" kartını kapalı açmak (~250 px); "kendi ofisimizden yürütüyoruz"
+  bölümünde haritayı üç kartın yerine değil yanına şerit yapmak (~120 px); giriş
+  fotoğrafını telefonda bir kademe kısaltmak (~100 px); vergi çerçevesinde "aynı rakam
+  Türkiye'de olsaydı" kartını hesaplayıcının altında açılır yapmak (~300 px).
+
 ## 08.10.2026 (5) · Halil'in dalı main'de; telefon düzeni beşinci tur; köşe ölçeği
 
 HALİL'İN DALI (`telefon-duzeltme`, iki commit) main'e alındı (Burak: "performans ve fix

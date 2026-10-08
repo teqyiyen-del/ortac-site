@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import SmartLink from "@/components/shared/SmartLink";
 import { ArrowRight, Mail, MapPin } from "lucide-react";
@@ -382,25 +383,23 @@ export function Ft2Directory({
 
         <div className="ft2-nav">
           {COUNTRY_ORDER.map((c) => (
-            <nav key={c} className="ft2-col" aria-label={COUNTRY_NAME[c]}>
-              <span className="ft2-h">{COUNTRY_NAME[c]}</span>
+            <FtKol key={c} baslik={COUNTRY_NAME[c]}>
               {COUNTRY_SERVICES[c].map((s) => (
                 <SmartLink key={s.key} href={s.href}>
                   {s.label}
                 </SmartLink>
               ))}
-            </nav>
+            </FtKol>
           ))}
 
           {cols.map((col) => (
-            <nav key={col.head} className="ft2-col" aria-label={col.head}>
-              <span className="ft2-h">{col.head}</span>
+            <FtKol key={col.head} baslik={col.head}>
               {col.links.map((l) => (
                 <SmartLink key={l.label} href={l.href} onClick={hashClick?.(l.href)}>
                   {l.label}
                 </SmartLink>
               ))}
-            </nav>
+            </FtKol>
           ))}
         </div>
       </div>
@@ -419,6 +418,31 @@ export function Ft2Directory({
 /* `kapanis` (03.10.2026): ana sayfa kendi kapanış metnini geçiyor (otorite
    sayfası, "Şirketinizi bugün kuralım" demiyor). Öteki sayfalar FinalCta
    üzerinden zaten geçebiliyordu. */
+/* DİZİN SÜTUNU. Masaüstünde ve canlı telefon düzeninde eskisiyle aynı: başlık
+   ve altında bağlantılar. Telefon DENEME düzeninde (css/mobil-deneme.css)
+   altı sütun açılır başlığa dönüyor: dizin her sayfanın altında ~700 px
+   tutuyordu, kapalıyken ~310 px. Burak: "telefonda neyden tasarruf
+   edebiliriz, kafa patlat." Rakip sitelerin telefon footer'ı da böyle.
+   `.ft2-ac` düğmesi yalnız deneme düzeninde ve telefonda var (öbür her yerde
+   `display: none`, yani erişilebilirlik ağacında da yok); başlığın üstünde
+   görünmez durur. Bağlantılar kapalıyken de DOM'da. */
+function FtKol({ baslik, children }: { baslik: string; children: React.ReactNode }) {
+  const [acik, setAcik] = useState(false);
+  return (
+    <nav className="ft2-col" aria-label={baslik} data-acik={acik || undefined}>
+      <span className="ft2-h">{baslik}</span>
+      <button
+        type="button"
+        className="ft2-ac"
+        aria-expanded={acik}
+        aria-label={`${baslik} bağlantıları`}
+        onClick={() => setAcik((v) => !v)}
+      />
+      {children}
+    </nav>
+  );
+}
+
 export default function Footer({ kapanis }: { kapanis?: KapanisMetni } = {}) {
   return (
     <footer className="ft2">
