@@ -4955,6 +4955,32 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 08.10.2026 (5) · Halil'in dalı main'de; telefon düzeni beşinci tur; köşe ölçeği
+
+HALİL'İN DALI (`telefon-duzeltme`, iki commit) main'e alındı (Burak: "performans ve fix
+tarafında, hepsini alabilirsin"). İçinde: ekranda olmayan bölümün animasyonları duruyor
+(`shared/EkranDisiDurdur`), yıldız katmanları transform ile kayıyor, Lenis dokunmatik cihazda
+kurulmuyor (menü açıkken kilit için NavIstemci'de yedek), kısa başlık fotoğrafı telefonda 640
+px, "diğer hizmetler" çipleri ve banka ikon karosu düzeltmesi, kendi izleyicimiz (KAPALI:
+yalnız IZLEME_ACIK=1 ile; açılmadan önce KVKK metnine girmeli). Gerçek telefonda denenmedi;
+menü açıkken arka planın kaymaması iPhone'da elle denenmeli.
+
+DENEME DÜZENİ · BEŞİNCİ TUR (?mobil=yeni, /lab/mobil)
+- Hizmetler: ikili ızgara "güzel olmamış, yatay altı tane fikrine dönelim". Altı yatay kart:
+  kare solda, başlık ve tek cümle sağda, düğme yok; karta dokununca ülke listesi kartın
+  altında açılıyor, sağdaki ok dönüyor.
+- Şirket döngüsü: "dikey spacing aşırı sıkışık". Satır 14 → 22, ad ile şerit arası 10 → 16.
+- Süreç: kutu kalktı ("box'a gerek yok, sorun siyah kısmı yukarı koymakla çözülüyormuş").
+  Çizim üstte, altında adım yazısı, çubuklar, dipnot.
+
+KÖŞE ÖLÇEĞİ ("corner radius tutarsızlıkları var"). Merdiven 8 / 12 / 18 / 28
+(globals.css · :root). CANLIDA düzelenler: fiyat formu kutuları 16 → 18, ikon kutuları ve
+artı eksi düğmeleri 10 → 8, bilgi balonu 14 → 12 (`dubai-ek.css`); giriş rozetleri 16 → 12,
+rozet ikonu 10 → 8 (`dubai-hero.css`). DENEMEDE: hizmet kartı ve "şirketinizi taşıyın"
+şeridi 28 → 18, fiyat satırları 12, karar kuralı kutusu 18. On dört sayfa telefon
+genişliğinde boy kuralıyla tarandı; kalan sapmalar form alanları ve iki eski kutu
+(harita etiketi, sektör sayfasındaki çıkış kutuları).
+
 ## 08.10.2026 (4) · telefon düzeni, Burak'ın sesli revizeleri (hâlâ deneme, canlı değişmedi)
 
 CANLI DÜZELTME: ana sayfa ülke listesinde açık satırın altındaki mavi çizgi telefonda

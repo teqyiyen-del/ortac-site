@@ -110,7 +110,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 10px;
+  border-radius: var(--r-sm); /* 08.10 · 10 → 8: ölçek dışıydı (ikon kutusu) */
   background: var(--blue-100);
   color: var(--blue-900);
 }
@@ -318,7 +318,7 @@
   width: 100%;
   padding: 16px;
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--r-lg); /* 08.10 · 16 → 18: ölçek dışıydı; Burak: "corner radius tutarsızlıkları var" */
   background: var(--white);
   font-family: var(--font-sans);
   text-align: left;
@@ -340,7 +340,7 @@ button.dfy-kutu {
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: var(--r-sm);
   background: var(--paper);
   color: var(--text-900);
 }
@@ -391,7 +391,7 @@ button.dfy-kutu {
   width: 38px;
   height: 38px;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--r-sm);
   background: var(--white);
   color: var(--text-900);
   cursor: pointer;
@@ -525,7 +525,7 @@ button.dfy-kutu {
   width: 260px;
   padding: 14px;
   border: 1px solid #2f2f2f;
-  border-radius: 14px;
+  border-radius: var(--r-md);
   background: #161616;
   font-size: 14px;
   line-height: 1.45;

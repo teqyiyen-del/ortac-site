@@ -140,23 +140,18 @@
     display: block;
   }
 
-  /* SÜREÇ · TEK KART (dördüncü tur). Burak: "çok dip dibe; başlığın altında
-     hemen ikon var … bunları birbirinden ayırmak lazım, yalnız boşluk
-     koyarak değil." Bölüm başlığından sonra artık tek bir kart geliyor:
-     üstte çizim (koyu), altında adımın yazısı, çubuklar ve dipnot. Ayrımı
-     boşluk değil kartın kendisi yapıyor.
-     Çizim, masaüstündekiyle AYNI çizim (telefon için ayrı sahne denemesi
-     geri alındı); yalnız kabın iç payı küçüldü (çizim %12 büyüdü) ve
-     yazıları bir kademe iri. */
+  /* SÜREÇ · ÇİZİM ÜSTTE (beşinci tur). Dördüncü turda bölüm tek karta
+     alınmıştı; Burak: "komple box içine alman gerekmiyor, tüm sorun siyah
+     kısmı yukarı koymakla çözülüyormuş." Kutu kalktı: bölüm başlığından
+     sonra çizim (masaüstündekiyle aynı çizim, kabı bir tık büyük, yazısı
+     bir kademe iri), altında adımın yazısı, çubuklar ve dipnot. */
   html[data-mobil="yeni"] .srp-grid {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 24px;
   }
   html[data-mobil="yeni"] .cpr-card {
     order: 1;
-    border-bottom: 0;
-    border-radius: var(--r-panel) var(--r-panel) 0 0;
     box-shadow: none;
   }
   html[data-mobil="yeni"] .cpr-body {
@@ -164,16 +159,7 @@
   }
   html[data-mobil="yeni"] .srp-left {
     order: 2;
-    gap: 16px;
-    padding: 18px 16px 16px;
-    border: 1px solid var(--border);
-    border-top: 0;
-    border-radius: 0 0 var(--r-panel) var(--r-panel);
-    background: var(--white);
-  }
-  html[data-mobil="yeni"] .srp-foot {
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
+    gap: 24px;
   }
   html[data-mobil="yeni"] .cpr-card :is(.dv-lbl, .dv-s) {
     font-size: 14.5px;
@@ -188,45 +174,55 @@
      silindi. Araçlar: görseli küçültmek (zoom: sahne aynı kalıyor, ölçeği
      iniyor), tekrar eden satırı gizlemek, iki sütuna geçmek. */
 
-  /* ---- 1 · ANA SAYFA HİZMETLER (2.219 → ~620) · İKİLİ IZGARA (dördüncü tur)
-     Yan yana (kare solda, yazı sağda) hâli için Burak: "biraz karışık oldu,
-     yazı tarafları çok sıkışmış … 2x'li grid yapabiliriz" ve sektörlerdeki
-     ikili ızgarayı görünce: "hizmetler kısmından bahsettiğim bu." Kart: üstte
-     çizim, altında başlık. "Ülkeye özel hizmeti görün" düğmesi görünmüyor
-     ("direkt üstüne tıklarlar"): düğme kartın tamamını kaplıyor, dokununca
-     ülke listesi kartın içinde açılıyor. Sağ üstteki artı bunun işareti. */
+  /* ---- 1 · ANA SAYFA HİZMETLER (2.219 → ~700) · ALTI YATAY KART (beşinci tur)
+     Üç hâl yaşadı: (a) kare solda, yazı sağda, altında "ülkeye özel hizmeti
+     görün" düğmesi; (b) ikili ızgara. Burak (b) için: "güzel olmamış, yatay
+     altı tane fikrine dönelim." Şimdi (a)'nın sadeleşmişi: kare solda, başlık
+     ve tek cümle sağda, düğme YOK (kartın tamamı dokunulur, ülke listesi
+     kartın altında açılır; sağdaki ok bunun işareti). Düğme satırı kalkınca
+     yazıya yer açıldı; (a)'daki "yazı sıkışmış" şikâyeti o satırdandı. */
   html[data-mobil="yeni"] .hx-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
-  }
-  html[data-mobil="yeni"] .hx-cell {
-    grid-column: auto;
   }
   html[data-mobil="yeni"] .hx-card {
     position: relative;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    align-items: center;
     overflow: visible;
+    padding-right: 44px;
+    border-radius: var(--r-lg);
   }
   html[data-mobil="yeni"] .hx-card:has(.hxq-btn[aria-expanded="true"]) {
     z-index: 5;
+    border-color: var(--blue-700);
   }
+  /* sağdaki ok: kart açılır, işareti bu */
   html[data-mobil="yeni"] .hx-card::after {
     content: "";
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.14)
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E")
-      center / 13px no-repeat;
+    top: 50%;
+    right: 18px;
+    width: 9px;
+    height: 9px;
+    margin-top: -7px;
+    border-right: 2px solid #8a8a8a;
+    border-bottom: 2px solid #8a8a8a;
+    transform: rotate(45deg);
+    transition: transform 200ms var(--ease-out-soft);
     pointer-events: none;
+  }
+  html[data-mobil="yeni"] .hx-card:has(.hxq-btn[aria-expanded="true"])::after {
+    margin-top: -2px;
+    border-color: var(--blue-700);
+    transform: rotate(225deg);
   }
   html[data-mobil="yeni"] .hx-card > .hx-stage {
     height: auto;
     min-height: 0;
-    padding: 14px 18px;
-    border-radius: calc(var(--r-panel) - 1px) calc(var(--r-panel) - 1px) 0 0;
+    margin: 8px 0 8px 8px;
+    padding: 8px;
+    border-radius: var(--r-md);
   }
   html[data-mobil="yeni"] .hx-stage .mh {
     display: block;
@@ -234,14 +230,16 @@
     height: auto;
   }
   html[data-mobil="yeni"] .hx-body {
-    padding: 12px 12px 14px;
+    padding: 14px 0 14px 14px;
   }
   html[data-mobil="yeni"] .hx-t {
-    font-size: 16px;
+    font-size: 17px;
     line-height: 1.25;
   }
   html[data-mobil="yeni"] .hx-l {
-    display: none;
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 1.4;
   }
   html[data-mobil="yeni"] .hxq {
     position: static;
@@ -257,14 +255,16 @@
     width: 100%;
     height: 100%;
     padding: 0;
-    border-radius: var(--r-panel);
+    border-radius: var(--r-lg);
     opacity: 0;
   }
   html[data-mobil="yeni"] .hxq-pop {
-    right: 6px;
-    bottom: 6px;
-    left: 6px;
+    top: calc(100% + 6px);
+    right: 0;
+    bottom: auto;
+    left: 0;
     max-width: none;
+    transform-origin: top center;
   }
 
   /* ---- 2 · ANA SAYFA SEKTÖRLER (1.452 → ~470): iki sütun, cümle gizli */
@@ -345,6 +345,7 @@
     gap: 12px;
     margin-top: 12px;
     padding: 12px 14px;
+    border-radius: var(--r-lg); /* 70 px'lik şerit: panel (28) değil kart (18) */
   }
   html[data-mobil="yeni"] .pf2-move-ic {
     width: 44px;
@@ -372,10 +373,18 @@
   html[data-mobil="yeni"] .chn-l {
     display: none;
   }
+  /* beşinci tur · "dikey spacing aşırı sıkışık": satır 14 → 22, ad ile
+     şerit arası 10 → 16 (cümle gidince kalan boşluk fazla kısılmıştı) */
   html[data-mobil="yeni"] .chn-row {
     align-items: center;
-    gap: 10px 12px;
-    padding: 14px 0;
+    gap: 16px 12px;
+    padding: 22px 0;
+  }
+  html[data-mobil="yeni"] .chn-head {
+    padding-bottom: 14px;
+  }
+  html[data-mobil="yeni"] .chn-note {
+    margin-top: 20px;
   }
   html[data-mobil="yeni"] .chn-cad {
     padding-top: 0;
@@ -456,6 +465,10 @@
      ile iki seçenek kartı ve altındaki düğme arasındaki boşluk dar */
   html[data-mobil="yeni"] .ys-rule {
     padding: 14px 16px;
+    border-radius: var(--r-lg); /* telefonda üç satır, 120 px: satır (12) değil kutu (18) */
+  }
+  html[data-mobil="yeni"] .tl-more {
+    border-radius: var(--r-lg);
   }
   html[data-mobil="yeni"] .ys-rule-t {
     font-size: 15px;
@@ -527,6 +540,9 @@
   html[data-mobil="yeni"] .sec-night.gece-alan .ip-form,
   html[data-mobil="yeni"] .sec-night.gece-alan .ip-form .dfy-iki {
     gap: 20px;
+  }
+  html[data-mobil="yeni"] :is(.dfy-uc:not(.dfy-uc-iki) .dfy-bolge, .dfy-yil) {
+    border-radius: var(--r-md); /* 52-56 px'lik satır: 12 */
   }
   html[data-mobil="yeni"] .dfy-bolge {
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -802,7 +818,7 @@
   gap: 2px;
   padding: 12px 14px;
   border: 1px solid #26282d;
-  border-radius: 14px;
+  border-radius: var(--r-md);
   background: #141518;
 }
 .ms-dugum[data-vurgu] {
@@ -909,6 +925,6 @@
   width: 100%;
   height: 100%;
   border: 1px solid var(--border);
-  border-radius: 20px;
+  border-radius: var(--r-lg);
   background: var(--white);
 }

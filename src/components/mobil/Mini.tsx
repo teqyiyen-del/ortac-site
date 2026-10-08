@@ -51,7 +51,7 @@ export function MiniAkis({
   para?: "forward" | "back";
 }) {
   return (
-    <div className="ms ms-akis">
+    <div className="ms ms-akis" data-yaricap="serbest">
       <div className="ms-dugum">
         <b>{from.title}</b>
         {from.sub && <i>{from.sub}</i>}
