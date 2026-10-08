@@ -8,6 +8,24 @@
 .md-daha {
   display: none;
 }
+/* deneme düzeni açıkken görünen küçük etiket (yalnız en üst pencerede) */
+.md-rozet {
+  position: fixed;
+  left: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 60;
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--amber-600);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
 
 /* ---- İKİ SÜRÜMLÜ ÇİZİMLER (components/mobil/Mini · Ikili) · HER ZAMAN AÇIK
    Masaüstü çizimi .m-buyuk, telefon çizimi .m-mini içinde. İşaret yokken

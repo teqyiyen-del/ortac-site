@@ -4984,6 +4984,10 @@ NEREDE DURUYOR. Hepsi `html[data-mobil="yeni"]` işaretinin arkasında; işareti
 10.261 → 8.468, blog 7.643 → 5.519. Hiçbir sayfada yatay taşma yok. Masaüstü ölçüleri
 1440'ta aynı (hizmet sahnesi 346 × 248, avantaj çizimi 442 × 234).
 
+TELEFONDA GEZEREK BAKMAK: herhangi bir adrese `?mobil=yeni` eklenince düzen o sekmede
+açık kalıyor (sessionStorage), altta "Telefon denemesi açık · kapat" etiketi çıkıyor;
+`?mobil=eski` ya da etiket kapatıyor.
+
 CANLIYA ALMA: css'te kuralların başındaki `html[data-mobil="yeni"]` silinir; kısa yazılar
 bileşenlere taşınır; MobilDeneme ve lab sayfası silinir. Bölüm bölüm de alınabilir.
 YAPILMADI: ülke sayfasındaki yapı haritası, İngiltere vergi grafiği, sektör çizimleri ve

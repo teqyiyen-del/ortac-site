@@ -141,7 +141,7 @@ export default function OnceSonra() {
           <figcaption>
             Önce <span>· bugünkü hâl{boy ? ` · ${ekran(boy[0])} ekran` : ""}</span>
           </figcaption>
-          <iframe key={`o${i}`} ref={sol} title={`${o.ad} önce`} src={o.yol} />
+          <iframe key={`o${i}`} ref={sol} title={`${o.ad} önce`} src={`${o.yol}?mobil=eski`} />
         </figure>
         <figure>
           <figcaption data-yeni="">
