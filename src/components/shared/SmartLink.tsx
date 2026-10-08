@@ -49,6 +49,19 @@ type Props = Omit<React.ComponentPropsWithoutRef<"a">, "href"> & { href: string 
 const SOON = "Bu sayfa yakında yayında";
 
 export default function SmartLink({ href, children, ...rest }: Props) {
+  /* /panel bir sayfa değil, site DIŞINA yönlendirme (next.config.ts: müşteri
+     paneli). next/link onu her sayfada önceden yüklemeye çalışıyor, yönlendirme
+     başka alan adına gittiği için istek 403 dönüyor ve konsola "Failed to
+     fetch RSC payload" düşüyordu (09.10.2026, canlıda 55 sayfada ölçüldü).
+     Düz <a>: ön yükleme yok, tıklayınca tarayıcı doğrudan gider. */
+  if (href === "/panel") {
+    return (
+      <a href={href} {...rest}>
+        {children}
+      </a>
+    );
+  }
+
   if (isLive(href)) {
     return (
       <Link href={href} {...rest}>
