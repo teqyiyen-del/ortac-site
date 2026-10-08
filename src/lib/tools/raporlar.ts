@@ -252,7 +252,7 @@ export function raporSicKodu(secilenler: SicSatir[]): Rapor {
         baslik: "Defterdeki kodlar",
         ikon: "liste",
         maddeler: secilenler.map((s) => ({
-          t: `${s.kod} — ${s.tanim}`,
+          t: `${s.kod} · ${s.tanim}`,
           d: s.ozel ? `${s.bolum.ad} · Companies House'a özgü kod` : s.bolum.ad,
         })),
       },

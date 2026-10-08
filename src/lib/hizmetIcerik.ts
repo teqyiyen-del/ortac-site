@@ -147,12 +147,12 @@ const DUBAI: Partial<Record<ServiceSlug, HizmetIcerik>> = {
       ],
     },
     kurallar: {
-      baslik: "Bilmeniz gereken dört şey.",
-      vurgu: "dört şey.",
+      baslik: "Bilmeniz gereken dört nokta.",
+      vurgu: "dört nokta.",
       lead: "Uyum bir kez yapılıp biten bir iş değil.",
       items: [
         { icon: "banka", title: "Banka da soruyor", line: "Hesap açarken banka ortaklık yapınıza, gerçek faaliyetinize ve paranın kaynağına bakıyor." },
-        { icon: "saat", title: "Şirket boşta kalsa da sürüyor", line: "Faaliyet göstermemek ya da banka hesabının olmaması yükümlülükleri kaldırmıyor." },
+        { icon: "saat", title: "Şirket faaliyetsiz kalsa da sürüyor", line: "Faaliyet göstermemek ya da banka hesabının olmaması yükümlülükleri kaldırmıyor." },
         { icon: "takvim", title: "Kayıtlar güncel kalmalı", line: "Ortak, yönetici ya da faaliyet değişince kayıtlar da güncelleniyor." },
         { icon: "tik", title: "Belgeler doğru ve eksiksiz", line: "Geçerli pasaport, adres belgesi ve şirket belgeleri zamanında ve eksiksiz verilmeli." },
       ],
@@ -218,9 +218,9 @@ const INGILTERE: Partial<Record<ServiceSlug, HizmetIcerik>> = {
       cikis: { label: "Muhasebe hizmetine bakın", href: "/ingiltere/muhasebe" },
     },
     sss: [
-      { q: "İngiltere'de şirket kurarsam daha az vergi öder miyim?", a: "Bu beklentiyle gelmeyin. Ltd'nin kârı İngiltere'de %19 ile %25 arasında kurumlar vergisine tabi. İngiltere ödeme altyapısı ve tanınırlık için seçiliyor." },
+      { q: "İngiltere'de şirket kurarsam daha az vergi öder miyim?", a: "Bu beklentiyle kurulması doğru olmaz. Ltd'nin kârı İngiltere'de %19 ile %25 arasında kurumlar vergisine tabi. İngiltere ödeme altyapısı ve tanınırlık için seçiliyor." },
       { q: "Şirketi Türkiye'den yönetirsem ne olur?", a: "İşlerin fiilen Türkiye'de yönetildiği bir şirket Türkiye'de de mükellef sayılabiliyor; iki ülke çatışmada karşılıklı anlaşmayla karar veriyor. Durumunuzu görüşmede konuşuyoruz." },
-      { q: "Kâr payı alırsam Türkiye'de vergi öder miyim?", a: "Türkiye'de yaşıyorsanız kâr payını yıllık beyannamenizle beyan ediyorsunuz; şartlar tutarsa yarısı istisna. Kişiye özel vergi görüşü vermiyoruz." },
+      { q: "Kâr payı alırsam Türkiye'de vergi öder miyim?", a: "Türkiye'de yaşıyorsanız kâr payını yıllık beyannamenizle beyan ediyorsunuz; şartlar sağlanırsa yarısı istisna. Kişiye özel vergi görüşü vermiyoruz." },
       { q: "Maaş mı, kâr payı mı?", a: "İkisi de mümkün. Maaş için İngiltere'de bordro (PAYE) kaydı gerekiyor. Hangisinin size uyduğu Türkiye'deki durumunuza bağlı." },
       { q: "Ücreti ne kadar?", a: "Kapsam şirketten şirkete değiştiği için sabit fiyat yazmıyoruz; görüşmeden sonra yazılı olarak bildiriyoruz." },
     ],
@@ -237,7 +237,7 @@ const KKTC: Partial<Record<ServiceSlug, HizmetIcerik>> = {
     kartlar: {
       baslik: "Vergide neye bakıyoruz?",
       vurgu: "neye bakıyoruz?",
-      lead: "Muafiyet şarta bağlı. Burada o şartın sizin işinizde tutup tutmadığına bakıyoruz.",
+      lead: "Muafiyet şarta bağlı. Burada o şartın sizin işinizde sağlanıp sağlanmadığına bakıyoruz.",
       items: [
         { icon: "kalkan", kim: "Serbest Liman şirketi", title: "Muafiyetin şartı", line: "İşinizin KKTC dışına ya da Serbest Liman içine yönelik olup olmadığını değerlendiriyoruz." },
         { icon: "harita", kim: "KKTC içine satış", title: "Yerel satış", line: "KKTC içindeki yerel şirkete satışta normal vergi kuralları işliyor; hangi işlem nereye giriyor, ayırıyoruz." },

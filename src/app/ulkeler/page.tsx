@@ -4,15 +4,17 @@ import PageHero from "@/components/shared/PageHero";
 import Countries from "@/components/Countries";
 import FinalCta from "@/components/FinalCta";
 
+import { sayfaKunye } from "@/lib/seo";
 /* Kıyasın kendi sayfası. Ana sayfadaki ülke bölümü dört temel ölçütte yan yana
    bakış veriyor ve buraya çıkıyor; ayrıntı — vergi çerçevesi, banka başvurusu,
    dürüst kısıt, bütün tahsilat kanalları — burada. Başlık ve giriş metni bu
    ayrımı söylüyor: ziyaretçi buraya "karar veremedim" diye geliyor. */
-export const metadata: Metadata = {
+export const metadata: Metadata = sayfaKunye({
   title: "Ülkeler — Dubai, İngiltere ve KKTC'yi ölçüt ölçüt karşılaştırın | Ortac Global",
   description:
     "Dubai, İngiltere ve KKTC'yi maliyet, süre, oturum, vergi çerçevesi ve tahsilat kanalları başlıklarında tek tabloda karşılaştırın.",
-};
+  yol: "/ulkeler",
+});
 
 export default function UlkelerPage() {
   return (

@@ -17,6 +17,7 @@ import ProSchema, { ProSchemaMini } from "@/components/country/ProSchema";
 import { Ikili } from "@/components/mobil/Mini";
 import type { Pro } from "@/lib/countryContent";
 
+import Tel from "@/components/mobil/Tel";
 /* Ülke avantajları — bento.
  *
  * ============================================================================
@@ -239,9 +240,9 @@ export default function CountryPros({ pros, name }: { pros: Pro[]; name: string 
             {/* 23.09.2026 · iki satır kuralı (Burak: "2 satırdan fazla
                 açıklamaya gerek yok"): üç satırlık iki cümle teke indi.
                 Şart rozeti kartın üstünde zaten görünüyor. */}
-            <p className="sec-lead">
+            <p className="sec-lead"><Tel>
               Her maddenin altında nasıl işlediğini gösteren kendi şeması var.
-            </p>
+            </Tel></p>
           </FadeUp>
         </div>
 
@@ -276,7 +277,7 @@ export default function CountryPros({ pros, name }: { pros: Pro[]; name: string 
                       {conditional && <span className="advx-chip">Şarta bağlı</span>}
                     </div>
                     <h3 className="advx-t">{x.title}</h3>
-                    <p className="advx-p">{x.line}</p>
+                    <p className="advx-p"><Tel>{x.line}</Tel></p>
                   </div>
                   {/* çizim üstündeki iddiayı tekrar eder, kendi başına bilgi
                       taşımaz — ekran okuyucuya görünmüyor */}

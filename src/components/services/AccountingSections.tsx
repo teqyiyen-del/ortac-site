@@ -515,7 +515,7 @@ const KALEMLER: Kalem[] = [
     cipBaslik: C.exchange.usTitle,
     cipler: cikti("Banka ve denetim dosyası"),
     sinirBaslik: C.limits.title,
-    sinir: sinirlar("Bağımsız denetim ayrı bir hizmet", "Banka onayı ve otorite hızı bizde değil"),
+    sinir: sinirlar("Bağımsız denetim ayrı bir hizmet", "Banka onayı ve otorite hızı bize bağlı değil"),
   },
 ];
 

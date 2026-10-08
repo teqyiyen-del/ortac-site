@@ -7,7 +7,7 @@ import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import CountryFaq from "@/components/CountryFaq";
-import CountryPricing from "@/components/CountryPricing";
+import DubaiFiyat from "@/components/country/DubaiFiyat";
 import CountryProcess from "@/components/CountryProcess";
 import CountryOrtac from "@/components/country/CountryOrtac";
 import LandingLeadForm from "@/components/LandingLeadForm";
@@ -93,18 +93,22 @@ export default function DubaiKurulusLanding() {
             <div className="sec-head sec-head-dark">
               <SplitWords
                 as="h2"
-                text="Kurulumunuzu seçin, fiyat anında çıksın."
-                accent="fiyat anında çıksın."
+                text="Kurulumunuzu seçin, fiyatı anında görün."
+                accent="fiyatı anında görün."
                 className="h2"
                 style={{ color: "#ffffff" }}
               />
               <FadeUp delay={0.2}>
                 <p className="sec-lead sec-lead-dark">
-                  Dubai için paket ve ek hizmetleri seçin; tutar sağda satır satır oluşur.
+                  Serbest bölgeyi ve eklemek istediklerinizi seçin; tutar sağda satır satır oluşur.
                 </p>
               </FadeUp>
             </div>
-            <CountryPricing country="dubai" />
+            {/* 09.10.2026 · teslim öncesi bilgi denetimi: burada eski paket
+                paneli duruyordu (3.900 / 5.400 / 8.200 $). Dubai'de paket yok;
+                ülke sayfasındaki panelin aynısı (teklif belgesi: IFZA 5.120,
+                Meydan 5.300, DWTC 5.820 + ekler). */}
+            <DubaiFiyat />
           </div>
         </section>
 
@@ -130,7 +134,7 @@ export default function DubaiKurulusLanding() {
               />
               <FadeUp delay={0.2}>
                 <p className="sec-lead sec-lead-dark">
-                  Üç bilgi yeterli. Faaliyetinize uygun yapıyı ve paketi çıkarıp yazılı teklifle dönüyoruz.
+                  Üç bilgi yeterli. Faaliyetinize uygun yapıyı çıkarıp yazılı teklifle dönüyoruz.
                 </p>
               </FadeUp>
             </div>

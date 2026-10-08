@@ -20,6 +20,7 @@ import {
   MUHASEBE_KOK,
 } from "@/lib/muhasebeAltHizmet";
 
+import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
    DUBAİ MUHASEBE · ALT HİZMET SAYFALARI — /dubai/muhasebe/[alt]
 
@@ -70,6 +71,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     description: h.seo.description,
     alternates: { canonical: url },
     openGraph: {
+      images: [OG_GORSEL],
       type: "article",
       locale: "tr_TR",
       siteName: "Ortac Global",

@@ -18,6 +18,7 @@ import LiveTracker from "@/components/shared/LiveTracker";
 import SplitWords from "@/components/shared/SplitWords";
 import Authority from "@/components/shared/Authority";
 
+import Tel from "@/components/mobil/Tel";
 /* A bento grid, not a third stepper. One wide tile carries the firm's own
    standing, three square tiles carry the other claims — each with its own
    small animation.
@@ -54,7 +55,7 @@ export default function TrustLayer() {
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Yalnızca doğrulanabilir olanı yazıyoruz.</p>
+            <p className="sec-lead"><Tel>Yalnızca doğrulanabilir olanı yazıyoruz.</Tel></p>
           </FadeUp>
         </div>
 
@@ -88,7 +89,7 @@ export default function TrustLayer() {
               <UserRound size={18} strokeWidth={1.9} />
             </span>
             <h3 className="bn-title">Tek muhatap, Türkçe süreç</h3>
-            <p className="bn-line">İsimli bir danışman; kuruluş sonrası da aynı ekip.</p>
+            <p className="bn-line"><Tel>İsimli bir danışman; kuruluş sonrası da aynı ekip.</Tel></p>
             <LiveChat />
 
             <span className="bn-foot">
@@ -109,7 +110,7 @@ export default function TrustLayer() {
               <ListChecks size={18} strokeWidth={1.9} />
             </span>
             <h3 className="bn-title">Şeffaf süreç</h3>
-            <p className="bn-line">Sürpriz kalem çıkmıyor; her aşama panelde görünür.</p>
+            <p className="bn-line"><Tel>Beklenmedik kalem çıkmıyor; her aşama panelde görünür.</Tel></p>
             <LiveTracker />
 
             {/* GÜN SAYILARI PANELDEN TAMAMEN KALKTI. Bir tur önce buraya
@@ -139,10 +140,10 @@ export default function TrustLayer() {
               <Wrench size={18} strokeWidth={1.9} />
             </span>
             <h3 className="bn-title">Devralınan dosyalar</h3>
-            <p className="bn-line">
+            <p className="bn-line"><Tel>
               Eksik kurulmuş şirketleri devralıp yenileme, beyan ve banka aşamasındaki
               açıkları kapatıyoruz.
-            </p>
+            </Tel></p>
             <div className="bn-fixlist">
               {FIXES.map((f, i) => (
                 <motion.div

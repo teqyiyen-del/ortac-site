@@ -4,6 +4,7 @@ import SplitWords from "@/components/shared/SplitWords";
 import OfficeMap from "@/components/shared/OfficeMap";
 import type { Country } from "@/lib/store";
 
+import Tel from "@/components/mobil/Tel";
 /* Ortac × ülke — BASE.
  *
  * Bu bölüm "Ofisimiz burada" iddiasının yeni evi. O madde önce ülke
@@ -152,7 +153,7 @@ export default function CountryOrtac({ country }: { country: Country }) {
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">{p.lead}</p>
+            <p className="sec-lead"><Tel>{p.lead}</Tel></p>
           </FadeUp>
         </div>
 

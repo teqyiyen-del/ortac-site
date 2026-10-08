@@ -43,12 +43,12 @@ export const BANKA_INGILTERE: BankaVeri = {
       { logo: "dunya", name: "Sterlin hesabı neden önemli", line: "Stripe ve Shopify, şirketle aynı ülkede bir banka hesabı istiyor." },
     ],
     checks: {
-      heading: "Hesap açan kurumun baktığı şeyler",
+      heading: "Hesap açan kurumun baktığı başlıklar",
       items: [
         { icon: "faaliyet", title: "Faaliyet", line: "Ne sattığınız, kime sattığınız ve sicildeki faaliyet koduyla örtüşmesi." },
         { icon: "ortak", title: "Direktör ve ortaklar", line: "Kimlik, adres ve şirketteki paylar; nerede yaşadığınız." },
         { icon: "kaynak", title: "Paranın kaynağı", line: "Hesaba girecek paranın nereden geldiği." },
-        { icon: "hacim", title: "Beklenen hacim", line: "Aylık işlem sayısının ve tutarının kabaca tahmini." },
+        { icon: "hacim", title: "Beklenen hacim", line: "Aylık işlem sayısının ve tutarının yaklaşık tahmini." },
       ],
     },
   },
@@ -57,12 +57,12 @@ export const BANKA_INGILTERE: BankaVeri = {
     id: "odeme",
     heading: "Ödeme ve tahsilat kanalları.",
     accent: "tahsilat kanalları.",
-    lead: "İngiltere'nin asıl gücü bu: kartla tahsilat, pazaryeri ve platform ödemelerinin hepsi İngiltere şirketiyle açılıyor.",
+    lead: "İngiltere'nin asıl gücü bu: kartla tahsilat, pazar yeri ve platform ödemelerinin hepsi İngiltere şirketiyle açılıyor.",
     sahne: [{ brand: "stripe" }, { brand: "paypal" }, { brand: "revolut" }, { brand: "binance" }],
     items: [
       { brand: "stripe" as BrandKey, name: "Stripe", line: "Sitenizde ve uygulamanızda kartla tahsilat.", tag: "Kartla satış", icon: "kart" },
       { brand: "paypal" as BrandKey, name: "PayPal", line: "PayPal hesabıyla ödeyen müşteriden tahsilat.", tag: "Online ödeme", icon: "dunya" },
-      { logo: "pazar", name: "Amazon UK ve Etsy", line: "İki pazaryeri de İngiltere şirketini satıcı olarak kabul ediyor.", tag: "Pazaryeri", icon: "pazar" },
+      { logo: "pazar", name: "Amazon UK ve Etsy", line: "İki pazar yeri de İngiltere şirketini satıcı olarak kabul ediyor.", tag: "Pazar yeri", icon: "pazar" },
       { logo: "kart", name: "Shopify Payments", line: "Shopify mağazanızda kartla ödeme; İngiliz banka hesabı istiyor.", tag: "E-ticaret", icon: "kart" },
       { brand: "binance" as BrandKey, name: "Binance", line: "Binance Pay ile müşteriden kripto ödeme alma.", tag: "Kripto ödeme", icon: "kripto" },
     ],
@@ -79,7 +79,7 @@ export const BANKA_INGILTERE: BankaVeri = {
       { icon: "dosya", title: "Şirket tescil ediliyor", line: "Hesap, tescil edilmiş şirket adına açılıyor; kuruluş belgeleri dosyaya giriyor." },
       { icon: "imza", title: "Başvuru", line: "Başvuru çevrim içi yapılıyor; kimlik ve adres doğrulaması isteniyor." },
       { icon: "karar", title: "Kurumun kararı", line: "Hesap kararı tamamen başvurulan kuruma ait; garanti edilemiyor." },
-      { icon: "kanal", title: "Tahsilat kanalları", line: "Hesap açılınca Stripe, PayPal ve pazaryeri hesapları şirket adına bağlanıyor." },
+      { icon: "kanal", title: "Tahsilat kanalları", line: "Hesap açılınca Stripe, PayPal ve pazar yeri hesapları şirket adına bağlanıyor." },
     ],
   },
 

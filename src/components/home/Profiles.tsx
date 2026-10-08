@@ -4,6 +4,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import SektorFotoKartlari from "@/components/shared/SektorFotoKartlari";
 
+import Tel from "@/components/mobil/Tel";
 /* §9 · beyaz zeminde altı sektör. Başlık "Hizmet verdiğimiz sektörler":
    soru olarak sorulduğunda ("kimler için?") liste eksik görünüyordu, sektör
    listesi olarak okununca kapalı bir küme gibi duruyor.
@@ -93,12 +94,14 @@ export default function Profiles() {
             </span>
             <div>
               <h3>Mevcut şirketinizi Ortac&apos;a taşıyın.</h3>
-              <p>
+              <p><Tel>
                 Mevcut kaydınızı, beyanlarınızı ve banka hareketlerinizi inceleyip geçiş planı
                 çıkarıyoruz. Eksik varsa önce tamamlıyoruz.
-              </p>
+              </Tel></p>
             </div>
-            <SmartLink href="/sirket-tasima" className="btn btn-primary">
+            {/* 09.10.2026 · /sirket-tasima yayında değil, düğme soluk ve tıklanmaz
+                duruyordu. Sayfa açılana kadar hedef iletişim. */}
+            <SmartLink href="/iletisim" className="btn btn-primary">
               Şirketimi taşı
               <ArrowRight size={15} strokeWidth={2.1} />
             </SmartLink>

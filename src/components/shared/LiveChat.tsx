@@ -54,7 +54,7 @@ export default function LiveChat() {
           ME
         </span>
         <b>Merve · danışmanınız</b>
-        <i>Çevrimiçi</i>
+        <i>Çevrim içi</i>
       </span>
 
       {/* data-yaricap="serbest": sohbet mokapı bir çizim. Balonun bir köşesi

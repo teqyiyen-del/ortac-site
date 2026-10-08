@@ -233,7 +233,7 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
         rhythm: "yillik",
         inclusion: "gerekli-ise",
         price: { usd: 1400, unit: "yıllık", plusVat: true, qualifier: "başlangıç" },
-        line: "Bazı Free Zone otoriteleri ve belirli büyüklüğe ulaşan şirketler için zorunlu olabiliyor. Sizin bölgenizde zorunlu olup olmadığı lisansınıza bağlı.",
+        line: "Bazı serbest bölge otoriteleri ve belirli büyüklüğe ulaşan şirketler için zorunlu olabiliyor. Sizin bölgenizde zorunlu olup olmadığı lisansınıza bağlı.",
         note: "Ücret işlem hacmine göre değişiyor.",
         months: [12],
       },
@@ -274,11 +274,11 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
         line: "Faaliyet gösteren tüm şirketlerin ticaret lisansını her yıl yenilemesi yasal zorunluluk. Yenilenmezse şirket faaliyetlerine devam edemiyor.",
         scope: [
           "Ticaret lisansının yenilenmesi",
-          "Kayıtlı iş adresinin (Registered Office / Flexi Desk) 1 yıllık kullanım hakkı · yalnızca Free Zone",
+          "Kayıtlı iş adresinin (Registered Office / Flexi Desk) 1 yıllık kullanım hakkı · yalnızca serbest bölge",
           "Resmî kurum yenileme işlemleri",
           "Lisansın yeniden düzenlenip aktif hâle getirilmesi",
         ],
-        note: "Tutar kurulu olduğunuz serbest bölgeye, faaliyet konusuna, ofis tipine ve resmî harçlara göre değişiyor. Kalemin en oynak olanı bu.",
+        note: "Tutar kurulu olduğunuz serbest bölgeye, faaliyet konusuna, ofis tipine ve resmî harçlara göre değişiyor. En değişken kalem bu.",
         months: [12],
       },
     ],
@@ -308,13 +308,13 @@ export const AFTER_SETUP: Partial<Record<Country, AfterSetup>> = {
         },
         {
           id: "lisans-yenileme",
-          label: "Free Zone lisans yenileme",
+          label: "Serbest bölge lisans yenileme",
           qty: "yılda bir, ortalama",
           usd: 4800,
         },
       ],
       anchorNote:
-        "Koşullu ve talebe bağlı kalemler bu toplamın dışında: yalnızca şartlar oluşursa doğuyorlar, o yüzden herkese olacakmış gibi toplanmıyorlar.",
+        "Koşullu ve talebe bağlı kalemler bu toplamın dışında: yalnızca şartlar oluşursa doğuyorlar; bu yüzden toplama katılmıyorlar.",
       outNote:
         "Bu kalemler yalnızca şartlar oluştuğunda ya da talep ettiğinizde doğuyor. Sizin için gerekip gerekmediğini görüşmede netleştiriyor, gerekiyorsa yazılı teklifte ayrı satır olarak gösteriyoruz.",
     },

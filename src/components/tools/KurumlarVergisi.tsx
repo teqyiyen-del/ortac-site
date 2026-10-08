@@ -474,7 +474,7 @@ function HesapArac({ ulke }: { ulke: HesapUlke }) {
                 nokta, ondalık virgül.
               </>
             ) : profit === null ? (
-              `Bir rakam yazın, dağılım burada oluşsun.`
+              `Bir rakam yazın; dağılım burada oluşur.`
             ) : bae ? (
               <BaeCumle profit={profit} />
             ) : ing ? (

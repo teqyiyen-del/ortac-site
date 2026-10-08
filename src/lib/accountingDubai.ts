@@ -963,7 +963,7 @@ export const ACCOUNTING_DUBAI = {
         line: "Buradaki başlıklar genel çerçeve. Kendi kurgunuzun nasıl vergilendiğini sorabilirsiniz; cevabı bir sayfaya değil, sizin durumunuza yazıyoruz.",
       },
       {
-        title: "Banka onayı ve otorite hızı bizde değil",
+        title: "Banka onayı ve otorite hızı bize bağlı değil",
         line: "Banka dosyanızı bankanın istediği formatta hazırlıyoruz ama hesabı banka açıyor. Beyanların otorite tarafındaki işlem hızı için de kesin süre taahhüdü vermiyoruz.",
       },
     ] as AccLimit[],
@@ -1024,7 +1024,7 @@ export const ACCOUNTING_DUBAI = {
     items: [
       {
         icon: "calendar",
-        title: "Beyan takvimi kaçmıyor",
+        title: "Beyan takvimi aksamıyor",
         line: "Hangi ay hangi kalemin doğduğu baştan belli.",
       },
       {
@@ -1397,10 +1397,10 @@ export const ACCOUNTING_DUBAI = {
                zaman çizgisiyle bağlı: numaralar tek bir dikey hattın üstünde.
                Dayanak satırı ekrana dönmedi. */
     steps: [
-      { title: "Durumu çıkaralım", line: "Son beyanlar ve kayıtların hangi aya kadar tamam olduğu." },
-      { title: "Kayıtları devralalım", line: "Defter ve belgeler önceki muhasebecinizden alınıyor." },
-      { title: "Erişimi güncelleyelim", line: "EmaraTax erişimi yeni ekibe geçiyor." },
-      { title: "Düzene geçelim", line: "Eksik dönem düzeltiliyor, aylık düzen başlıyor." },
+      { title: "Durum tespiti", line: "Son beyanlar ve kayıtların hangi aya kadar tamam olduğu." },
+      { title: "Kayıtların devri", line: "Defter ve belgeler önceki muhasebecinizden alınıyor." },
+      { title: "Erişim güncellemesi", line: "EmaraTax erişimi yeni ekibe geçiyor." },
+      { title: "Düzene geçiş", line: "Eksik dönem düzeltiliyor, aylık düzen başlıyor." },
     ] as AccStep[],
     needsTitle: "Devir için gerekenler",
     /* 18.09.2026 · her kalemin KENDİ ikonu var. Burak: "yine icon kullan da
@@ -1419,7 +1419,8 @@ export const ACCOUNTING_DUBAI = {
        md. 10 (düzeltme beyanı), 14 (vergi ajanı atama ve sona erdirme), 15
        (önceki ajanın kayıt saklama yükümlülüğü). */
     askLabel: "Devir için durumumu sorayım",
-    askHref: "/basla?hizmet=muhasebe&durum=degistir",
+    /* 09.10.2026 · teslim öncesi akış denetimi: /basla?hizmet=muhasebe… kuruluş penceresini açıyordu */
+    askHref: "/iletisim",
   },
 
   /* ----------------------------------------------------------- kapanış bandı

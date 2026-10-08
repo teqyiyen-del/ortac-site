@@ -234,12 +234,18 @@ export default function CountryPricing({ country }: { country: Country }) {
           </span>
         </div>
 
+        {/* 09.10.2026 · teslim öncesi akış denetimi: düğme /basla?ulke=ingiltere'ye
+            gidiyordu ama kurulum akışında İngiltere henüz seçilemiyor ("Yakında
+            bu akışta"): ziyaretçi birinci adımda kilitli kalıyordu. Bu panel
+            artık yalnız İngiltere'de kullanılıyor; akış İngiltere'yi alana
+            kadar düğme iletişime götürüyor. Akış açılınca eski hedef:
+            `/basla?ulke=${country}&paket=${tier}`, etiket "Bu kurulumla başlayın". */}
         <SmartLink
-          href={`/basla?ulke=${country}&paket=${tier}`}
+          href="/iletisim"
           className="btn btn-primary btn-full"
           onClick={() => gtm("country_config_start", { country, tier, total: r.total })}
         >
-          Bu kurulumla başlayın
+          Bu kurulum için iletişime geçin
           <ArrowRight size={15} strokeWidth={2.1} />
         </SmartLink>
 
@@ -250,7 +256,7 @@ export default function CountryPricing({ country }: { country: Country }) {
           </li>
           <li>
             <Check size={13} strokeWidth={3} />
-            Sürpriz kalem çıkmaz
+            Beklenmedik kalem çıkmaz
           </li>
         </ul>
         <p className="ip-note">Tutarlar temsilidir; nihai teklif faaliyet ve belgelere göre netleşir.</p>

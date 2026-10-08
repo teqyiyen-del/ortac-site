@@ -123,7 +123,7 @@ export const ACCOUNTING_INGILTERE: MuhasebeVeri = {
     heading: "Düzenli muhasebenin karşılığı.",
     accent: "karşılığı.",
     items: [
-      { icon: "calendar", title: "Otomatik ceza yemiyorsunuz", line: "Geç verilen hesap ve beyannamede ceza kendiliğinden işliyor." },
+      { icon: "calendar", title: "Otomatik ceza almıyorsunuz", line: "Geç verilen hesap ve beyannamede ceza kendiliğinden işliyor." },
       { icon: "bank", title: "Banka ve Stripe sorduğunda hazır", line: "Hesap ve tahsilat kanalları şirket belgelerini istiyor." },
       { icon: "chart", title: "Kâr payının dayanağı belli", line: "Türkiye'deki beyanınız şirketin hesaplarına dayanıyor." },
       { icon: "files", title: "Sicil temiz kalıyor", line: "Kayıtlar kamuya açık; geciken dosya herkese görünüyor." },
@@ -135,7 +135,7 @@ export const ACCOUNTING_INGILTERE: MuhasebeVeri = {
     heading: "Sık sorulanlar.",
     accent: "sorulanlar.",
     items: [
-      { q: "Şirket hiç gelir elde etmediyse yine de bir şey vermem gerekir mi?", a: "Evet. Yıllık bildirim ve yıllık hesaplar faaliyet olmasa da Companies House'a veriliyor. Vergi tarafında ne gerektiği şirketin HMRC'deki durumuna bağlı; birlikte bakıyoruz." },
+      { q: "Şirket hiç gelir elde etmediyse yine de bir şey vermem gerekir mi?", a: "Evet. Yıllık bildirim ve yıllık hesaplar faaliyet olmasa da Companies House'a veriliyor. Vergi tarafında ne gerektiği şirketin HMRC'deki durumuna bağlı; birlikte değerlendiriyoruz." },
       { q: "Yıllık hesaplar ne zaman veriliyor?", a: "Mali yıl sonundan itibaren dokuz ay içinde. Yeni kurulan şirketin ilk hesapları için süre kuruluştan itibaren 21 ay." },
       { q: "Geç kalırsam ne olur?", a: "Ceza otomatik. Hesaplarda gecikmeye göre £150 ile £1.500 arası, iki yıl üst üste gecikmede iki katı. Beyannamede bir gün gecikme £200, üç ayı geçerse £200 daha." },
       { q: "KDV kaydı yaptırmalı mıyım?", a: "Yıllık ciro £90.000'i aşarsa zorunlu; altında isteğe bağlı. Müşteri profiliniz gerektiriyorsa gönüllü kayıt öneriyoruz." },

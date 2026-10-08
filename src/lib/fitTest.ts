@@ -814,7 +814,7 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
       {
         id: "kurumsal",
         label: "Bankada kurumsal hesap",
-        hint: "Wio Business, Mashreq NeoBiz",
+        hint: "Wio, Mashreq, Emirates NBD, FAB",
         icon: "building",
         weights: { dubai: 3 },
         why: "Wio ve Mashreq NeoBiz yalnızca BAE sütununda çalışıyor (brand.ts · PAY_MATRIX · Banka hesabı) ve Dubai sayfası banka tarafını açık avantaj sayıyor (countryContent · Dubai pros); İngiltere'de geleneksel bankada yerleşik olmayan ortağın onay oranı düşük (countryContent · İngiltere clarify). KKTC'de yerel banka var (brand.ts · PAY_MATRIX) ama açılış yerinde imza istiyor (countryContent · KKTC watchouts) ve o şartı `ziyaret` sorusu zaten ölçüyor; aynı olguyu iki kez saymamak için burada puan verilmiyor.",
@@ -1006,7 +1006,10 @@ export const FIT_QUESTIONS: readonly FitQuestion[] = [
     q: "Kuruluş bütçeniz nasıl?",
     /* Rakam YOK: brand.ts'teki fiyatlar SWAP:PRICES ile temsilî işaretli.
        Sıralama ise countryContent'te düz cümleyle yazılı ve doğrulanmış. */
-    help: "Sıralama sabit: İngiltere en düşük, KKTC ortada, Dubai en yüksek kuruluş maliyetinde.",
+    /* 09.10.2026 · teslim öncesi bilgi denetimi: sıra düzeltildi (KKTC 9.920 € ile en yüksek; Murat Bey,
+         KKTC 46). DİKKAT: aşağıdaki puanlar hâlâ eski rakamlarla (FACTS.from) hesaplanıyor;
+         İngiltere fiyatı gelince üç rakam birlikte güncellenecek (docs/teslim/bilgi-ve-murat.md). */
+      help: "Sıralama sabit: İngiltere en düşük, Dubai ortada, KKTC en yüksek kuruluş maliyetinde.",
     why: "Maliyet sıralaması üç ülkede de yazılı bir olgu, o yüzden puan doğrudan o sıralamayı izliyor. Band 1-3.",
     /* ŞIK İKONU YOK: üç şık aynı şeyin (bütçe) üç DERECESİ. Üç ayrı glif
        bulmak, aralarında olmayan bir tür farkı uydurmak olurdu; anlamı

@@ -11,6 +11,7 @@ import { COUNTRY_NAME } from "@/lib/brand";
 import { OFFICE_ORDER } from "@/lib/offices";
 import { OPEN_APPLICATION, hasCareerInbox, sortedOpenings } from "@/lib/careers";
 
+import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
    KARİYER — /kariyer
 
@@ -85,7 +86,12 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   /* Kanonik mutlak: layout.tsx'te metadataBase yok (aynı gerekçe /iletisim'de). */
   alternates: { canonical: `${SITE}${PATH}` },
+  /* 09.10.2026 · sayfada yalnız "Örnek" kayıt var; gerçek içerik gelene
+     kadar dizin dışı (haritadan da çıktı: app/sitemap.ts · HARITA_DISI).
+     Gerçek kayıt girildiğinde bu satır ve haritadaki satır silinir. */
+  robots: { index: false, follow: true },
   openGraph: {
+    images: [OG_GORSEL],
     type: "website",
     locale: "tr_TR",
     siteName: "Ortac Global",

@@ -186,7 +186,7 @@ export default function CountryDocs({
           />
           <FadeUp delay={0.2}>
             <p className="sec-lead">
-              {lead ?? `${name} için sizde olanı işaretleyin, süreç tarafını biz yürütüyoruz.`}
+              {lead ?? `${name} için sizde olanı işaretleyin; süreci biz yürütüyoruz.`}
             </p>
           </FadeUp>
         </div>

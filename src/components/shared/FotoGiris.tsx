@@ -20,6 +20,7 @@ import { BadgeCheck, ChevronRight } from "lucide-react";
 import SmartLink from "@/components/shared/SmartLink";
 import "@/app/css/dubai-hero.css";
 
+import Tel from "@/components/mobil/Tel";
 export type FotoRozet = { icon: React.ReactNode; ton?: "amber"; metin: React.ReactNode };
 
 export default function FotoGiris({
@@ -72,7 +73,7 @@ export default function FotoGiris({
               baslik
             )}
           </h1>
-          <p className="dhr-lead">{lead}</p>
+          <p className="dhr-lead"><Tel>{lead}</Tel></p>
           {fiyat && <p className="dhr-fiyat">{fiyat}</p>}
           {dugmeler && <div className="dhr-cta">{dugmeler}</div>}
           {guven && guven.length > 0 && (

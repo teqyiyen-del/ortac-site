@@ -73,7 +73,7 @@ const BAE_BEYAN = satir("dubai", "Kurumlar vergisi beyanı");
 const DUBAI: KvSayfa = {
   title: "Dubai Kurumlar Vergisi Hesaplama | Ortac Global",
   /* 155 karakter civarı; sayılar satırın kendisinden. */
-  description: `Dubai kurumlar vergisi hesaplayıcı: ${BAE_KURAL?.value ?? ""}. Vergiye tabi kazancınızı yazın; vergi, efektif oran ve vergi sonrası kalan anında çıksın.`,
+  description: `Dubai kurumlar vergisi hesaplayıcı: ${BAE_KURAL?.value ?? ""}. Vergiye tabi kazancınızı yazın; vergi, efektif oran ve vergi sonrası kalan anında hesaplanır.`,
   crumb: "Araçlar · Kurumlar vergisi · Dubai",
   h1: "Dubai kurumlar vergisi hesaplama.",
   accent: "kurumlar vergisi hesaplama.",

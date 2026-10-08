@@ -9,6 +9,18 @@ import TrustLayer from "@/components/TrustLayer";
 import HomeBlog from "@/components/home/HomeBlog";
 import HomeFaq from "@/components/home/HomeFaq";
 import Footer from "@/components/Footer";
+import type { Metadata } from "next";
+import { sayfaKunye } from "@/lib/seo";
+
+/* 09.10.2026 · ana sayfanın kendi künyesi: kanonik ve paylaşım etiketleri.
+   Başlık ve açıklama app/layout.tsx'teki site varsayılanıyla aynı cümle
+   (03.10.2026 · Murat Bey'in yeni konumu); biri değişirse öbürü de değişmeli. */
+export const metadata: Metadata = sayfaKunye({
+  title: "Ortac Global | Muhasebe, Vergi ve Kurumsal Danışmanlık · Dubai, İngiltere, KKTC",
+  description:
+    "1996'dan beri muhasebe, vergi, şirket kuruluşu ve kurumsal danışmanlık. Dubai, İngiltere ve KKTC'de kendi ofislerimizle.",
+  yol: "/",
+});
 
 /* Brief §7 — the home page is a shop window, not the sale. Every block does one
    job and has one exit; a block that finishes a topic belongs on a country page.

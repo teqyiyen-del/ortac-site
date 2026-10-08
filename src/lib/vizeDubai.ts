@@ -252,7 +252,7 @@ export const VIZE_DUBAI = {
       },
       {
         q: "Ailemi de getirebilir miyim?",
-        a: "Evet. Oturumunuz çıktıktan sonra eşiniz ve çocuklarınız için aile vizesi başvurusu yapılabiliyor. Şartlar kişiye göre değiştiği için görüşmede birlikte bakıyoruz.",
+        a: "Evet. Oturumunuz çıktıktan sonra eşiniz ve çocuklarınız için aile vizesi başvurusu yapılabiliyor. Şartlar kişiye göre değiştiği için görüşmede birlikte değerlendiriyoruz.",
       },
       {
         q: "Şirket kurmak altın vize verir mi?",

@@ -563,7 +563,7 @@ export const POST_DUBAI_MALIYET: BlogPost = {
   },
 
   sourceNote:
-    "Tutarlar Ortac Accounting Services LLC'nin kuruluş sonrası yükümlülük listesinden, vergi çerçevesi Dubai ülke sayfasında yayınlanan tablodan alınmıştır.",
+    "Tutarlar Ortac Accounting Services LLC'nin kuruluş sonrası yükümlülük listesinden, vergi çerçevesi Dubai ülke sayfasında yayımlanan tablodan alınmıştır.",
 
   body: [
     {
@@ -575,7 +575,7 @@ export const POST_DUBAI_MALIYET: BlogPost = {
     { kind: "h2", id: "kumeler", text: "Maliyet üç kümede toplanıyor" },
     {
       kind: "p",
-      text: "Kalemleri birbirinden ayıran şey tutarları değil, ne zaman doğdukları. Aynı listeye bakan iki şirketin ödediği toplam, bu üç kümeden hangilerinin kendilerinde doğduğuna göre değişiyor.",
+      text: "Kalemleri birbirinden ayıran, tutarları değil ne zaman doğdukları. Aynı listeye bakan iki şirketin ödediği toplam, bu üç kümeden hangilerinin kendilerinde doğduğuna göre değişiyor.",
     },
     {
       kind: "list",
@@ -648,7 +648,7 @@ export const POST_DUBAI_MALIYET: BlogPost = {
     },
     {
       kind: "p",
-      text: "Lisans yenileme bu listenin en oynak kalemi: tutar kurulu olduğunuz serbest bölgeye, faaliyet konusuna, ofis tipine ve resmî harçlara göre değişiyor. Yenilenmezse şirket faaliyetine devam edemiyor, o yüzden ikinci yıl bütçesine ilk günden yazılması gereken kalem bu.",
+      text: "Lisans yenileme bu listenin en değişken kalemi: tutar kurulu olduğunuz serbest bölgeye, faaliyet konusuna, ofis tipine ve resmî harçlara göre değişiyor. Yenilenmezse şirket faaliyetine devam edemiyor, o yüzden ikinci yıl bütçesine ilk günden yazılması gereken kalem bu.",
     },
 
     /* --------------------------------------------------------- 4 · ilk yıl */
@@ -680,7 +680,7 @@ export const POST_DUBAI_MALIYET: BlogPost = {
     { kind: "h2", id: "toplamin-disinda", text: "Toplamın dışında kalan kalemler" },
     {
       kind: "p",
-      text: "Aşağıdakiler herkeste doğmuyor. Bir bütçe tablosunda görünmeleri gerekiyor ama toplama katılmamaları da gerekiyor: katılırlarsa herkese olacakmış gibi okunuyorlar.",
+      text: "Aşağıdakiler herkeste doğmuyor. Bir bütçe tablosunda görünmeleri gerekiyor ama toplama katılmamaları da gerekiyor: katılırlarsa herkeste doğacakmış gibi okunuyorlar.",
     },
     {
       kind: "facts",
@@ -703,7 +703,7 @@ export const POST_DUBAI_MALIYET: BlogPost = {
     },
     {
       kind: "facts",
-      caption: "Yayınlanan vergi çerçevesi",
+      caption: "Yayımlanan vergi çerçevesi",
       rows: DUBAI.tax.rows.map((r) => ({
         label: r.label,
         value: r.value,
@@ -738,12 +738,12 @@ export const POST_DUBAI_MALIYET: BlogPost = {
     },
 
     /* ---------------------------------------------------------- 8 · kapanış */
-    { kind: "h2", id: "planlama", text: "Bütçeyi kurarken üç şey" },
+    { kind: "h2", id: "planlama", text: "Bütçeyi kurarken üç başlık" },
     {
       kind: "list",
       items: [
-        "İkinci yıl yenilemesini ilk günden yazın. Lisans ve yenileme kalemleri bu listenin en yükseği ve en oynağı.",
-        "Koşullu kalemleri toplamın dışında ama görünür tutun. Toplama katılan bir ihtimal, bütçeyi olduğundan büyük gösteriyor; listeden çıkarılan bir ihtimal ise sonradan sürpriz oluyor.",
+        "İkinci yıl yenilemesini ilk günden yazın. Lisans ve yenileme kalemleri bu listenin en yükseği ve en değişkeni.",
+        "Koşullu kalemleri toplamın dışında ama görünür tutun. Toplama katılan bir ihtimal, bütçeyi olduğundan büyük gösteriyor; listeden çıkarılan bir ihtimal ise sonradan beklenmedik bir gider oluyor.",
         "Süre için tipik aralık planlayın, kesin tarih planlamayın. Resmî kurum takvimi bütçenin değil, sürecin değişkeni.",
       ],
     },
@@ -776,7 +776,7 @@ export const POST_DUBAI_MALIYET: BlogPost = {
 
   closing: {
     title: "Bu kalemlerin hangisi sizde doğar?",
-    line: "Yazıdaki tutarlar genel çerçeve. Faaliyetinizi, lisans tercihinizi ve işlem hacminizi anlatın; hangi kalemlerin sizin şirketinizde doğacağını birlikte netleştirelim.",
+    line: "Yazıdaki tutarlar genel çerçeve. Faaliyetinizi, lisans tercihinizi ve işlem hacminizi anlatın; hangi kalemlerin sizin şirketinizde doğacağını birlikte netleştiriyoruz.",
     cta: "Durumumu sorayım",
   },
 
@@ -942,7 +942,7 @@ function seedPost(input: {
       { kind: "h2", id: "kaynak", text: "Yazı neye dayanacak?" },
       {
         kind: "p",
-        text: "Bu sitedeki yazıların kuralı tek: içindeki her tutar, oran ve süre depodaki doğrulanmış veriden okunuyor, elle yazılmıyor. Kaynağı gösterilemeyen bir satır yazıya hiç girmiyor. Yayınlanmış yazıda da böyle işliyor: künyenin altındaki tek satır, o yazının hangi belgeden kurulduğunu söylüyor.",
+        text: "Bu sitedeki yazıların kuralı tek: içindeki her tutar, oran ve süre depodaki doğrulanmış veriden okunuyor, elle yazılmıyor. Kaynağı gösterilemeyen bir satır yazıya hiç girmiyor. Yayımlanmış yazıda da böyle işliyor: künyenin altındaki tek satır, o yazının hangi belgeden kurulduğunu söylüyor.",
       },
       {
         kind: "p",
@@ -960,7 +960,7 @@ function seedPost(input: {
 
     closing: {
       title: input.closingTitle,
-      line: "Yazı hazır değil ama sorunuz bekleyebilir bir şey değil. Ne yapmak istediğinizi anlatın; hangi ülkenin ve hangi yapının işinizi gördüğünü birlikte bakalım.",
+      line: "Yazı hazır değil ama sorunuzun beklemesi gerekmiyor. Ne yapmak istediğinizi anlatın; hangi ülkenin ve hangi yapının işinize uyduğunu birlikte değerlendiriyoruz.",
       cta: "Durumumu sorayım",
     },
 

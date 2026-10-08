@@ -28,6 +28,8 @@ import { COUNTRY_SLUGS } from "@/lib/services";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
+import { sayfaKunye } from "@/lib/seo";
+import Tel from "@/components/mobil/Tel";
 type Params = Promise<{ slug: string }>;
 
 const isCountry = (s: string): s is Country => (COUNTRY_SLUGS as string[]).includes(s);
@@ -40,10 +42,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   if (!isCountry(slug)) return {};
   const name = COUNTRY_LABELS[slug];
-  return {
+  /* kanonik ülkenin KENDİ adresi (/dubai); bu klasörün adresi (/ulke/dubai)
+     oraya kalıcı yönleniyor (next.config.ts) */
+  return sayfaKunye({
     title: `${name}'de şirket kuruluşu — maliyet, süreç ve hizmetler | Ortac Global`,
-    description: `${name}'de kuruluş süresi, maliyeti, avantajları ve dikkat edilmesi gerekenler. Kurulumunuzu seçin, fiyat anında çıksın.`,
-  };
+    description: `${name}'de kuruluş süresi, maliyeti, avantajları ve dikkat edilmesi gerekenler. Kurulumunuzu seçin, fiyatı anında görün.`,
+    yol: `/${slug}`,
+  });
 }
 
 export default async function CountryPage({ params }: { params: Params }) {
@@ -253,19 +258,19 @@ export default async function CountryPage({ params }: { params: Params }) {
                   aynı aksan rengi. */}
               <SplitWords
                 as="h2"
-                text={slug === "kktc" ? "KKTC'de kuruluş, kalem kalem." : "Kurulumunuzu seçin, fiyat anında çıksın."}
-                accent={slug === "kktc" ? "kalem kalem." : "fiyat anında çıksın."}
+                text={slug === "kktc" ? "KKTC'de kuruluş, kalem kalem." : "Kurulumunuzu seçin, fiyatı anında görün."}
+                accent={slug === "kktc" ? "kalem kalem." : "fiyatı anında görün."}
                 className="h2"
                 style={{ color: "var(--text-900)" }}
               />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">
+                <p className="sec-lead"><Tel>
                   {slug === "dubai"
                     ? "Serbest bölgeyi ve eklemek istediklerinizi seçin; tutar sağda satır satır oluşur."
                     : slug === "kktc"
-                      ? "Kuruluş ve ilk yılın kalemleri açık yazılı; adres hizmetini ve muhasebe türünü siz seçiyorsunuz."
+                      ? "Kuruluş ve ilk yılın kalemleri açık yazılı; muhasebe türünü siz seçiyorsunuz."
                       : `${name} için paket ve ek hizmetleri seçin; tutar sağda satır satır oluşur.`}
-                </p>
+                </Tel></p>
               </FadeUp>
             </div>
             {/* 06.10.2026 · Dubai'de paket yok: baz fiyat + ekler
@@ -326,7 +331,7 @@ export default async function CountryPage({ params }: { params: Params }) {
                 style={{ color: "var(--text-900)" }}
               />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">Profilinizi seçin, karşılığı aşağıda.</p>
+                <p className="sec-lead"><Tel>Profilinizi seçin, karşılığı aşağıda.</Tel></p>
               </FadeUp>
             </div>
 

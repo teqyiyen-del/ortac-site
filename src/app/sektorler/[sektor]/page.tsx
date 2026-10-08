@@ -63,6 +63,7 @@ import {
 import type { ServiceSlug } from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
+import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
    SEKTÖR İÇ SAYFASI — /sektorler/[sektor]
 
@@ -201,6 +202,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
        sayfada zaten karşılığı olan kelimeleri ikinci kez listelemek hiçbir şey
        kazandırmıyor. Sorguların karşılığı başlıklarda ve metnin kendisinde. */
     openGraph: {
+      images: [OG_GORSEL],
       type: "article",
       locale: "tr_TR",
       siteName: "Ortac Global",

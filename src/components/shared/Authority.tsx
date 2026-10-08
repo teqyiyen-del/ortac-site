@@ -5,6 +5,7 @@ import { Handshake, Stamp, UsersRound } from "lucide-react";
 import { Flag } from "@/components/shared/CountryPicker";
 import type { Country } from "@/lib/store";
 
+import Tel from "@/components/mobil/Tel";
 /* "Neden Ortac Global?" bölümünün GENİŞ KAROSUNUN İÇİ — iki sütun birden.
  *
  * Bileşen bir fragment döndürüyor, kabuk döndürmüyor: dış kutu
@@ -176,10 +177,10 @@ export default function Authority() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={VIEW}
           transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : 0.08, ease: EASE }}
-        >
+        ><Tel>
           1996&apos;dan beri muhasebe, vergi, şirket kuruluşu ve kurumsal danışmanlık:
           hepsi aynı çatı altında yürüyor.
-        </motion.p>
+        </Tel></motion.p>
 
         <ul className="aut-creds">
           {CREDS.map(({ Icon, t }, i) => (

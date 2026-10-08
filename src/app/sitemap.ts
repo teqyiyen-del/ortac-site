@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { LEGACY_GUIDES_HREF, postFor } from "@/lib/blog";
+import { LEGACY_GUIDES_HREF, postFor, publishedOfCategory } from "@/lib/blog";
+import type { BlogCategory } from "@/lib/blogTemel";
 import { LIVE_ROUTES, SITE } from "@/lib/routes";
 import { KV_KOK } from "@/lib/tools/catalog";
 
@@ -54,6 +55,16 @@ const HARITA_DISI = new Map<string, string>([
      adres giriyor (catalog.ts · ownHref = /uygunluk-testi). Kanonik eksiği
      ayrı bir iş (ana oturuma rapor edildi); bu tur o sayfaya dokunmadı. */
   ["/araclar/uygunluk-testi", "kopya adres"],
+  /* 09.10.2026 · teslim öncesi SEO turu. /kvkk noindex (app/kvkk); haritada
+     durması çelişen iki sinyaldi. Aşağıdaki üçü YALNIZ "Örnek" kayıt
+     taşıyor (gelişmelerin 22'si de örnek, e-kitapların dosyası yok, kariyer
+     ilanları örnek): gerçek kayıt gelene kadar sayfaları noindex, haritada
+     da yoklar. Gerçek içerik girildiğinde satırı ve sayfadaki robots'u sil. */
+  ["/kvkk", "noindex"],
+  ["/panel", "yönlendirme"],
+  ["/gelismeler", "yalnız örnek kayıt"],
+  ["/e-kitaplar", "yalnız örnek kayıt"],
+  ["/kariyer", "yalnız örnek kayıt"],
 ]);
 
 /* Blog demo yazıları: `placeholder` taşıyan kayıt noindex basılıyor
@@ -66,9 +77,18 @@ function noindexYazi(path: string): boolean {
   return Boolean(postFor(m[1])?.placeholder);
 }
 
+/* Yayımlanmış yazısı olmayan blog kategorisi (yalnız örnek yazı taşıyor):
+   sayfası noindex (app/blog/kategori/[kategori]), haritada da yok. İlk
+   gerçek yazı yayımlandığında kendiliğinden girer. */
+function bosKategori(path: string): boolean {
+  const m = path.match(/^\/blog\/kategori\/([^/]+)$/);
+  if (!m) return false;
+  return publishedOfCategory(m[1] as BlogCategory).length === 0;
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [...LIVE_ROUTES]
-    .filter((p) => !HARITA_DISI.has(p) && !noindexYazi(p))
+    .filter((p) => !HARITA_DISI.has(p) && !noindexYazi(p) && !bosKategori(p))
     .sort((a, b) => a.localeCompare(b, "tr"))
     .map((p) => ({ url: p === "/" ? `${SITE}/` : `${SITE}${p}` }));
 }

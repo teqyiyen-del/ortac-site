@@ -18,6 +18,7 @@ import {
   sortedPress,
 } from "@/lib/press";
 
+import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
    BASINDA BİZ — /basinda-biz
 
@@ -103,6 +104,7 @@ export const metadata: Metadata = {
      sunucusunun adresine çözülürdü (aynı gerekçe /iletisim'de de yazılı). */
   alternates: { canonical: `${SITE}${PATH}` },
   openGraph: {
+    images: [OG_GORSEL],
     type: "website",
     locale: "tr_TR",
     siteName: "Ortac Global",

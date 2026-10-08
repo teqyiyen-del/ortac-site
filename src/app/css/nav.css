@@ -396,8 +396,14 @@
 
 /* 1180 altında "Panel girişi" ilk kısaltılan öge: dört başlık + CTA aynı
    satıra sığmalı, panel bağlantısı zaten giriş yapmış kullanıcıya ait.
-   Mobil sayfadaki kopya (.onv-ghost-full) bu kuralın dışında kalıyor. */
-@media (max-width: 1023.5px) {
+   Mobil sayfadaki kopya (.onv-ghost-full) bu kuralın dışında kalıyor.
+   09.10.2026 · teslim öncesi tarama: sınır breakpoint birleştirmesinde
+   1180 → 1024'e çekilmiş, kural işlevsiz kalmıştı (1024'ün altında menü
+   zaten çekmece). 1024 px'te ülke sayfalarında ("Hizmetler" yanında bayrak,
+   düğmede "Kurulumu Başlat") sağ blok pencereyi 3 px aşıyor, sağ kenar
+   boşluğu da kalmıyordu. Sınır bilerek ölçek dışı: sığma eşiği ölçülerek
+   bulundu, kademe sınırı değil. */
+@media (max-width: 1179.5px) {
   .onv-ghost:not(.onv-ghost-full) {
     display: none;
   }

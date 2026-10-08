@@ -33,6 +33,7 @@ import { DUBAI_BASLANGIC, money } from "@/lib/dubaiFiyat";
 import { KKTC_TOPLAM, euro } from "@/lib/kktcFiyat";
 
 
+import Tel from "@/components/mobil/Tel";
 /* ============================================================
    The scene — one 560x440 vector per country, drawn not shot.
    Same story everywhere: the licence card up top, the three
@@ -291,7 +292,7 @@ export default function PageHero({
             {head}
             {tail && <span>{tail}</span>}
           </h1>
-          <p className="ph-lead">{lead}</p>
+          <p className="ph-lead"><Tel>{lead}</Tel></p>
         </div>
       </section>
     );

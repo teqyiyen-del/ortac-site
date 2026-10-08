@@ -223,7 +223,7 @@ const FIT_HARF = ["A", "B", "C", "D", "E"] as const;
    farkı çevirebilir mi" sorusunun cevabı (hesabı fitTest.ts · fitSpread). */
 const FIT_LEVELS = [
   "Cevaplarınız üç ülkeyi henüz ayırmadı.",
-  "Ayrım çok dar: kalan sorular sıralamayı rahatça çevirebilir.",
+  "Ayrım çok dar: kalan sorular sıralamayı kolayca çevirebilir.",
   "Ayrım belirginleşti ama kalan sorular hâlâ çevirebilir.",
   "Kalan sorular bu ayrımı artık çeviremiyor.",
 ] as const;

@@ -1,8 +1,9 @@
 "use client";
 
 import { useId, useState } from "react";
-import { Lock, Send } from "lucide-react";
+import { Send } from "lucide-react";
 
+import { formGonder, FORM_SONUC_METNI, type FormSonuc } from "@/lib/formGonder";
 /* ============================================================================
    KISA TEKLİF FORMU — reklam iniş sayfalarının son bölümü (#teklif)
    İlk kullanan: /lp/dubai-sirket-kurulusu
@@ -43,12 +44,36 @@ export default function LandingLeadForm({
   const [tel, setTel] = useState("");
   const [secim, setSecim] = useState("");
   const eksik = [ad.trim(), tel.trim(), secim].filter((v) => !v).length;
+  /* 09.10.2026 · gönderim açıldı (lib/formGonder, app/api/form). Sunucu
+     gönderemezse ziyaretçinin e-posta uygulamasında hazır ileti açılıyor. */
+  const [not, setNot] = useState("");
+  const [sonuc, setSonuc] = useState<FormSonuc | "gidiyor" | null>(null);
 
   return (
-    <form className="lp-form" noValidate onSubmit={(e) => e.preventDefault()}>
+    <form
+      className="lp-form"
+      noValidate
+      onSubmit={async (e) => {
+        e.preventDefault();
+        if (eksik > 0 || sonuc === "gidiyor") return;
+        setSonuc("gidiyor");
+        const r = await formGonder({
+          tur: "reklam",
+          konu: "Dubai şirket kuruluşu · teklif isteği",
+          alanlar: [
+            ["Ad Soyad", ad],
+            ["WhatsApp", tel],
+            [soru, secenekler.find((d) => d.id === secim)?.etiket ?? secim],
+            ["Not", not],
+          ],
+          yedekEposta: "dubai@ortacglobal.com",
+        });
+        setSonuc(r);
+      }}
+    >
       <div className="lp-form-ikili">
         <label className="lp-alan">
-          <span>Ad soyad</span>
+          <span>Ad Soyad</span>
           <input
             type="text"
             name="ad"
@@ -95,19 +120,21 @@ export default function LandingLeadForm({
         <span>
           Not <i>(isteğe bağlı)</i>
         </span>
-        <textarea name="not" rows={3} placeholder={notIpucu} />
+        <textarea name="not" rows={3} placeholder={notIpucu} value={not} onChange={(e) => setNot(e.target.value)} />
       </label>
 
       <div className="lp-form-alt">
-        <button type="submit" className="btn btn-primary" disabled>
-          Teklif isteyin
+        <button type="submit" className="btn btn-primary" disabled={eksik > 0 || sonuc === "gidiyor"}>
+          {sonuc === "gidiyor" ? "Gönderiliyor" : "Teklif isteyin"}
           <Send size={15} strokeWidth={2} aria-hidden="true" />
         </button>
-        <span className="lp-kilit">
-          <Lock size={12} strokeWidth={2.4} aria-hidden="true" />
-          Gönderim henüz bağlı değil
+        <span className="lp-eksik data" role="status">
+          {sonuc === "gonderildi" || sonuc === "eposta"
+            ? FORM_SONUC_METNI[sonuc]
+            : eksik === 0
+              ? "Alanların hepsi dolu"
+              : `${eksik} alan kaldı`}
         </span>
-        <span className="lp-eksik data">{eksik === 0 ? "Alanların hepsi dolu" : `${eksik} alan kaldı`}</span>
       </div>
     </form>
   );

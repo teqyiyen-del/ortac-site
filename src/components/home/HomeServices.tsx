@@ -19,6 +19,7 @@ import {
 import { COUNTRY_SLUGS, serviceHref, servicesFor, type ServiceSlug } from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
+import Tel from "@/components/mobil/Tel";
 /* Verdiğimiz hizmetler.
  *
  * Bu tur iki şikâyet düzeltildi.
@@ -315,10 +316,10 @@ export default function HomeServices() {
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">
+            <p className="sec-lead"><Tel>
               Muhasebe ve vergiden şirket kuruluşuna, bankadan uyuma; hepsi tek ekipte.
               Kapsam ülkeye göre değiştiği için her alanda ülkeyi siz seçiyorsunuz.
-            </p>
+            </Tel></p>
           </FadeUp>
         </div>
 

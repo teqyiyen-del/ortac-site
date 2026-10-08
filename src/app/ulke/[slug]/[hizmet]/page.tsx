@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import SmartLink from "@/components/shared/SmartLink";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ArrowRight, Check, Minus, Percent, ShieldCheck, UserRound, MapPin, Layers, Users, CalendarClock, Armchair, ArrowLeftRight, CircleOff, FileText, Fingerprint, Flag, Landmark, Hourglass, CheckCheck, Search, Scale, type LucideIcon} from "lucide-react";
 import SplitWords from "@/components/shared/SplitWords";
 import CountryFaq from "@/components/CountryFaq";
@@ -19,6 +19,8 @@ import {
 } from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
+import { sayfaKunye } from "@/lib/seo";
+import { isLive } from "@/lib/routes";
 type Params = Promise<{ slug: string; hizmet: string }>;
 
 const isCountry = (s: string): s is Country => (COUNTRY_SLUGS as string[]).includes(s);
@@ -37,10 +39,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!isCountry(slug)) return {};
   const svc = serviceFor(slug, hizmet);
   if (!svc) return {};
-  return {
+  /* 09.10.2026 · kanonik eklendi; henüz yayında olmayan hizmet sayfası
+     (lib/routes · isLive) dizin dışı: adresi açılıyor ama içeriği genel şablon. */
+  return sayfaKunye({
     title: `${COUNTRY_LABELS[slug]} — ${svc.title} | Ortac Global`,
     description: `${svc.line} ${COUNTRY_LABELS[slug]} için kapsam, hariç kalemler ve fiyat kalemleri.`,
-  };
+    yol: `/${slug}/${hizmet}`,
+    dizinDisi: !isLive(`/${slug}/${hizmet}`),
+  });
 }
 
 const HIZMET_IKON: Record<HizmetIkon, LucideIcon> = {
@@ -78,7 +84,7 @@ export default async function ServicePage({ params }: { params: Params }) {
   if (!isCountry(slug)) notFound();
   /* /dubai/sirket-kurulusu → /dubai. Adres dışarıda kalmış olabilir (eski
      bağlantı, arama sonucu); 404 vermek yerine doğru sayfaya taşıyoruz. */
-  if (hizmet === FORMATION_SLUG) redirect(`/${slug}`);
+  if (hizmet === FORMATION_SLUG) permanentRedirect(`/${slug}`);
   const svc = serviceFor(slug, hizmet);
   if (!svc) notFound();
 

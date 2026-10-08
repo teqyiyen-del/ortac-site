@@ -56,7 +56,8 @@ export default function MuhasebeSayfa({ veri: C, ulke, yol }: { veri: MuhasebeVe
       },
       {
         "@type": "Service",
-        name: C.seo.title,
+        /* başlıktaki "| Ortac Global" eki hizmet adına girmesin */
+        name: C.seo.title.replace(/\s*\|\s*Ortac Global$/, ""),
         serviceType: "Muhasebe",
         url: PAGE_URL,
         provider: { "@type": "Organization", name: "Ortac Global", url: SITE },

@@ -180,7 +180,7 @@ export const ACCOUNTING_KKTC: MuhasebeVeri = {
     heading: "Düzenli muhasebenin karşılığı.",
     accent: "karşılığı.",
     items: [
-      { icon: "calendar", title: "Yıllık yükümlülük kaçmıyor", line: "Bilanço ve yıllık raporlar her yıl zamanında veriliyor." },
+      { icon: "calendar", title: "Yıllık yükümlülük aksamıyor", line: "Bilanço ve yıllık raporlar her yıl zamanında veriliyor." },
       { icon: "bank", title: "Banka sorduğunda dosya hazır", line: "Sözleşme, fatura ve paranın kaynağı kayıtlardan çıkıyor." },
       { icon: "chart", title: "Kâr payının dayanağı belli", line: "Türkiye'deki beyanınız şirketin kayıtlarına dayanıyor." },
       { icon: "files", title: "Kapatırken engel çıkmıyor", line: "Tasfiye için bütün bilanço ve raporların verilmiş olması gerekiyor." },

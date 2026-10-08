@@ -25,6 +25,7 @@ import {
   type DayanakKod,
 } from "@/lib/about";
 
+import Tel from "@/components/mobil/Tel";
 /* ============================================================================
    NEYE DAYANARAK ÇALIŞIYORUZ · BENTO                (hakkımızda · 1B)
    Veri: lib/about.ts · DAYANAK · Biçim: css/hakkimizda.css · 1B (.ab-dy-)
@@ -279,7 +280,7 @@ export default function DayanakBento() {
                 <Sahne />
               </div>
               <h3 className="ab-dy-t">{k.t}</h3>
-              <p className="ab-dy-s">{k.s}</p>
+              <p className="ab-dy-s"><Tel>{k.s}</Tel></p>
             </FadeUp>
           </li>
         );

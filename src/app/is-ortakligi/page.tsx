@@ -43,6 +43,8 @@ import {
   type PartnerIcon,
 } from "@/lib/partners";
 
+import { OG_GORSEL } from "@/lib/seo";
+import FormBagla from "@/components/shared/FormBagla";
 /* ============================================================================
    İŞ ORTAKLIĞI — /is-ortakligi
 
@@ -99,6 +101,7 @@ export function generateMetadata(): Metadata {
     description: PARTNER_SEO.description,
     alternates: { canonical: url },
     openGraph: {
+      images: [OG_GORSEL],
       type: "website",
       locale: "tr_TR",
       siteName: "Ortac Global",
@@ -446,10 +449,7 @@ export default function PartnershipPage() {
                 <form className="pt-form" aria-describedby="pt-form-note">
                   <div className="pt-form-top">
                     <h3 className="pt-h3">Başvuru formu</h3>
-                    <span className="pt-form-badge">
-                      <Lock size={12} strokeWidth={2.4} aria-hidden="true" />
-                      {PARTNER_FORM.badge}
-                    </span>
+                    {PARTNER_FORM.badge && <span className="pt-form-badge">{PARTNER_FORM.badge}</span>}
                   </div>
 
                   {/* İKİ <select> ÇİPE ÇEVRİLDİ (docs/tuzaklar.md · değişmez
@@ -471,7 +471,7 @@ export default function PartnershipPage() {
                       ile: bu sayfa sunucu bileşeni, durum tutan bir istemci
                       yok. İşaret native olarak duruyor, uç nokta bağlandığı
                       gün fazladan JS gerekmiyor. */}
-                  <fieldset className="pt-fields" disabled>
+                  <fieldset className="pt-fields">
                     {PARTNER_FORM.fields.map((f) =>
                       f.type === "secenek" ? (
                         <div className="pt-field" key={f.name} data-wide={f.wide || undefined}>
@@ -482,7 +482,7 @@ export default function PartnershipPage() {
                               (tuzak G: adsız radyo ağaçta "on" diye okunur). */}
                           <span className="pt-label" id={`pt-${f.name}-lbl`}>
                             {f.label}
-                            {f.optional && <i>Opsiyonel</i>}
+                            {f.optional && <i>İsteğe bağlı</i>}
                           </span>
                           <div className="pt-chips" role="group" aria-labelledby={`pt-${f.name}-lbl`}>
                             {f.options?.map((o) => (
@@ -500,7 +500,7 @@ export default function PartnershipPage() {
                         <div className="pt-field" key={f.name} data-wide={f.wide || undefined}>
                           <label className="pt-label" htmlFor={`pt-${f.name}`}>
                             {f.label}
-                            {f.optional && <i>Opsiyonel</i>}
+                            {f.optional && <i>İsteğe bağlı</i>}
                           </label>
                           <input
                             className="pt-input"
@@ -523,9 +523,18 @@ export default function PartnershipPage() {
                   </fieldset>
 
                   <div className="pt-form-foot">
-                    <p className="pt-form-note" id="pt-form-note">
+                    <p className="pt-form-note" id="pt-form-note" role="status">
                       {PARTNER_FORM.note}
                     </p>
+                    {/* 09.10.2026 · form gönderime bağlandı (alanlar aynı) */}
+                    <FormBagla
+                      tur="ortaklik"
+                      konu="İş ortaklığı başvurusu"
+                      etiketler={Object.fromEntries(PARTNER_FORM.fields.map((f) => [f.name, f.label]))}
+                      zorunlu={["ad", "eposta"]}
+                      yedekEposta="dubai@ortacglobal.com"
+                      notId="pt-form-note"
+                    />
                     <AskCta label={PARTNER_FORM.askLabel} />
                   </div>
                 </form>

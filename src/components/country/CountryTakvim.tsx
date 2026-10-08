@@ -4,6 +4,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import type { Takvim } from "@/lib/countryContent";
 
+import Tel from "@/components/mobil/Tel";
 /* ============================================================================
    KURULUŞTAN SONRA HER YIL — .ctk- · css/country-bilgi.css
    Veri: countryContent.ts · <ülke>.takvim (şimdilik İngiltere).
@@ -21,7 +22,7 @@ export default function CountryTakvim({ data }: { data: Takvim }) {
         <div className="sec-head">
           <SplitWords as="h2" text={data.title} accent={data.accent} className="h2" />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">{data.lead}</p>
+            <p className="sec-lead"><Tel>{data.lead}</Tel></p>
           </FadeUp>
         </div>
 

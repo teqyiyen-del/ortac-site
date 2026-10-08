@@ -21,6 +21,7 @@ import KanalIsaret, { hasKanalIsaret } from "@/components/shared/KanalIsaret";
 import type { Odeme, OdemeKanal } from "@/lib/countryContent";
 import type { Country } from "@/lib/store";
 
+import Tel from "@/components/mobil/Tel";
 /* ============================================================================
    HANGİ ÖDEME KANALI ÇALIŞIYOR — .cod- · css/country-bilgi.css
    Veri: countryContent.ts · <ülke>.odeme (KKTC ızgara, İngiltere sahne).
@@ -246,7 +247,7 @@ export default function CountryOdeme({ data, country }: { data: Odeme; country: 
           <div className="sec-head">
             <SplitWords as="h2" text={data.title} accent={data.accent} className="h2" />
             <FadeUp delay={0.2}>
-              <p className="sec-lead">{data.lead}</p>
+              <p className="sec-lead"><Tel>{data.lead}</Tel></p>
             </FadeUp>
           </div>
           <Sahne data={data} country={country} acik={acik} />
@@ -265,7 +266,7 @@ export default function CountryOdeme({ data, country }: { data: Odeme; country: 
         <div className="sec-head">
           <SplitWords as="h2" text={data.title} accent={data.accent} className="h2" />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">{data.lead}</p>
+            <p className="sec-lead"><Tel>{data.lead}</Tel></p>
           </FadeUp>
         </div>
 

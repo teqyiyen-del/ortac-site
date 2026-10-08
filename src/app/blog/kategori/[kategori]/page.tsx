@@ -77,6 +77,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
        döndüğü için tek bir kanonik kalıyor; iki adres aynı listeyi
        göstermiyor. */
     alternates: { canonical: `${SITE}${categoryHref(category)}` },
+    /* 09.10.2026 · yayımlanmış yazısı olmayan kategori (yalnız örnek yazı)
+       dizin dışı; ilk gerçek yazıyla kendiliğinden açılır. */
+    ...(publishedOfCategory(category).length === 0 ? { robots: { index: false, follow: true } } : {}),
   };
 }
 

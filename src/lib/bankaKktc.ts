@@ -56,7 +56,7 @@ export const BANKA_KKTC: BankaVeri = {
     ],
     /* [BELGE] "Dikkate Alınması Gereken Hususlar" */
     checks: {
-      heading: "Bankanın baktığı şeyler",
+      heading: "Bankanın baktığı başlıklar",
       items: [
         { icon: "faaliyet", title: "Faaliyet", line: "Şirketin ne iş yaptığı ve gerçek bir ticari faaliyetinin olması." },
         { icon: "ortak", title: "Müşteri ve tedarikçi", line: "Kime satıp kimden aldığınız, aradaki ilişkinin belgesi." },

@@ -422,8 +422,8 @@ const YAZILIM: Sector = {
       },
       {
         icon: "shield",
-        title: "Kod ve marka kimin üstünde",
-        line: "Yazılımın ve markanın hangi tüzel kişide duracağı kuruluş anında belli olsun.",
+        title: "Kod ve marka kime ait",
+        line: "Yazılımın ve markanın hangi tüzel kişide duracağı kuruluş anında belirleniyor.",
         detail:
           "Ürün bir kişide, gelir başka bir şirkette duruyorsa sözleşme ve fatura zinciri kopuyor: satan taraf, sattığı ürünün sahibi olduğunu gösteremiyor. Kuruluşta hangi şirketin lisans veren, hangisinin satan taraf olduğunu baştan yazıyoruz. Sonradan devir ayrı bir işlem, ayrı bir maliyet ve bazen ayrı bir vergi konusu.",
       },
@@ -679,7 +679,8 @@ const CHOOSE_MORE = {
 };
 const OFFER_NOTE =
   "Hizmetin kapsamı, süresi ve bedeli ülkeye göre değişiyor; her birinin ayrıntısı ilgili ülke sayfasında satır satır yazılı.";
-const DUBAI_COST = "Kuruluş ve yıllık yenileme maliyeti üç ülkenin en yükseği. İkinci yıl yenilemesini baştan planlamak gerekiyor.";
+/* 09.10.2026 · teslim öncesi bilgi denetimi: "üç ülkenin en yükseği" çıktı (en pahalısı KKTC; Murat Bey, KKTC 46) */
+const DUBAI_COST = "Kuruluşa ek olarak her yıl lisans yenileme maliyeti var. İkinci yıl yenilemesini baştan planlamak gerekiyor.";
 const UK_BANK = "Geleneksel bankada yerleşik olmayan ortak için onay oranı düşük; pratikte ödeme kuruluşu hesabıyla başlanıyor.";
 const TR_HOME = "Şirket fiilen Türkiye'den yönetiliyorsa Türkiye'de vergilenme riski doğabiliyor; kâr payını da Türkiye'de beyan ediyorsunuz.";
 const KKTC_PAY = "Stripe ve PayPal KKTC şirketiyle çalışmıyor.";
@@ -821,7 +822,7 @@ const ETICARET: Sector = {
       heading: "KKTC'de e-ticaret şirketi kurmak",
       accent: "e-ticaret şirketi kurmak",
       badge: "Pazar yerleri ve global ödeme kuruluşları kapalı",
-      lead: "Malınız Serbest Liman'dan yurt dışına gidiyorsa kazanç vergiden ve gümrükten muaf. Amazon, Etsy ya da Stripe ana kanalınızsa burası doğru adres değil; kartla tahsilat yalnız yerel sanal POS'la.",
+      lead: "Malınız Serbest Liman'dan yurt dışına gidiyorsa kazanç vergiden ve gümrükten muaf. Amazon, Etsy ya da Stripe ana kanalınızsa KKTC uygun seçenek değil; kartla tahsilat yalnız yerel sanal POS'la.",
       fit: [
         { icon: "package", text: "Transit ticaret ve ihracatta Serbest Liman'daki kazanç vergiden ve gümrükten muaf." },
         { icon: "clock", text: "Operasyonunuz Türkiye merkezliyse aynı dil, aynı saat dilimi, bir günlük yol." },
@@ -1298,7 +1299,7 @@ const FINANS: Sector = {
         title: "Faaliyet lisansa tabi mi",
         line: "Müşteri parası yönetmek, yatırım danışmanlığı, ödeme ve finansman hizmetleri çoğu ülkede izin istiyor.",
         detail:
-          "Kendi yatırımlarınızı şirket altında toplamak ile müşterinin parasını yönetmek ya da ona yatırım tavsiyesi vermek hukuken farklı şeyler. İkinci grup düzenlenmiş faaliyet: İngiltere'de finansal hizmet veren firmaların çoğu FCA izni ya da kaydı istiyor, BAE'de faaliyetin türüne ve yerine göre dört kurumdan biri bakıyor. Faaliyetinizin hangi tarafta olduğunu kuruluş dosyasını açmadan önce netleştiriyoruz.",
+          "Kendi yatırımlarınızı şirket altında toplamak ile müşterinin parasını yönetmek ya da ona yatırım tavsiyesi vermek hukuken ayrı konular. İkinci grup düzenlenmiş faaliyet: İngiltere'de finansal hizmet veren firmaların çoğu FCA izni ya da kaydı istiyor, BAE'de faaliyetin türüne ve yerine göre dört kurumdan biri bakıyor. Faaliyetinizin hangi tarafta olduğunu kuruluş dosyasını açmadan önce netleştiriyoruz.",
       },
       {
         icon: "landmark",
@@ -1436,7 +1437,7 @@ const FINANS: Sector = {
   faq: [
     {
       q: "Yatırım şirketi kurmak için lisans gerekiyor mu?",
-      a: "Faaliyete bağlı. Kendi yatırımlarınızı şirket altında toplamak ile müşterinin parasını yönetmek ya da ona yatırım tavsiyesi vermek farklı şeyler; ikincisi üç ülkede de düzenlenmiş faaliyet. Sınırın nerede olduğunu kuruluştan önce netleştiriyoruz.",
+      a: "Faaliyete bağlı. Kendi yatırımlarınızı şirket altında toplamak ile müşterinin parasını yönetmek ya da ona yatırım tavsiyesi vermek ayrı konular; ikincisi üç ülkede de düzenlenmiş faaliyet. Sınırın nerede olduğunu kuruluştan önce netleştiriyoruz.",
     },
     {
       q: "BAE'de finansal faaliyete hangi kurum bakıyor?",

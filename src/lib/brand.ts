@@ -116,7 +116,7 @@ export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
   dubai: [
     { key: "kurulus", label: "Şirket Kuruluşu", href: "/dubai", meta: "$5.120'den · 5-6 gün" },
     { key: "muhasebe", label: "Muhasebe & Vergi", href: "/dubai/muhasebe", meta: "aylık" },
-    { key: "banka-hesabi", label: "Banka & Ödeme", href: "/dubai/banka-hesabi", meta: "Wio · Mashreq" },
+    { key: "banka-hesabi", label: "Banka & Ödeme", href: "/dubai/banka-hesabi", meta: "Wio · Mashreq · ENBD · FAB" },
     { key: "oturum-vize", label: "Oturum & Vize", href: "/dubai/oturum-vize", meta: "kişi başı" },
     /* 22.09.2026 · Uyum çıktı ("dubaide yok"), "Kurumsal Danışmanlık" eski
        sitenin iki hizmetiyle değişti. İkisi kapalı sayfa, sönük bağlantı

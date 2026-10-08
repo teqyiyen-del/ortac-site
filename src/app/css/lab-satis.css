@@ -1533,3 +1533,31 @@ button.sat-adim-b:focus-visible {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* 09.10.2026 · teslim öncesi akış denetimi
+   .sat-ulke-dis · akışta olmayan ülkenin kartı artık iletişime giden bağlantı
+   .sat-ilet     · son ekranda özeti WhatsApp ya da e-postayla iletme düğmeleri
+   .sat-yardim   · düğmeden bağlantıya döndü (gerçek WhatsApp hattı) */
+.sat-ulke-dis {
+  color: inherit;
+  text-decoration: none;
+}
+.sat-ulke-dis > svg {
+  flex: none;
+  margin-left: auto;
+  color: var(--text-600);
+}
+.sat-ilet {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+a.sat-yardim {
+  text-decoration: none;
+}
+.sat-ilet-e {
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text-900);
+}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import BankaSayfa from "@/components/services/BankaSayfa";
 import { BANKA_DUBAI as B } from "@/lib/bankaDubai";
 
+import { sayfaKunye } from "@/lib/seo";
 /* ============================================================================
    DUBAİ · BANKA & ÖDEME — /dubai/banka-hesabi
    Metin: lib/bankaDubai.ts (kaynak düzeni ve teyit bekleyenler orada) ·
@@ -40,10 +41,11 @@ import { BANKA_DUBAI as B } from "@/lib/bankaDubai";
    07.10.2026 · GÖVDE components/services/BankaSayfa.tsx'e taşındı: KKTC'nin
    banka sayfası aynı bölümleri kendi verisiyle basıyor. */
 
-export const metadata: Metadata = {
+export const metadata: Metadata = sayfaKunye({
   title: "Dubai'de Banka Hesabı ve Ödeme Altyapısı | Ortac Global",
   description: B.hero.lead,
-};
+  yol: "/dubai/banka-hesabi",
+});
 
 export default function DubaiBankaPage() {
   return <BankaSayfa veri={B} />;

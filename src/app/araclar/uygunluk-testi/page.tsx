@@ -8,6 +8,7 @@ import { sayiYaziyla } from "@/lib/tools/num";
 import { TOOL_BY_ID } from "@/lib/tools/catalog";
 import { SITE } from "@/lib/routes";
 
+import { OG_GORSEL } from "@/lib/seo";
 /* Başlık ve spot cümle iki turdur değişiyor. Önce "Beş soru, tek öneri." idi
    ve sayfanın kendisiyle çelişiyordu: test tek bir öneri vermiyor, üç ülkeyi
    puanlayıp sıralıyor ve ikinciyle arasındaki farkı da yazıyor. Bir kısa liste
@@ -62,6 +63,7 @@ export const metadata: Metadata = {
   description: ACIKLAMA,
   alternates: { canonical: URL },
   openGraph: {
+    images: [OG_GORSEL],
     type: "website",
     locale: "tr_TR",
     siteName: "Ortac Global",

@@ -7,6 +7,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import type { CountryContent } from "@/lib/countryContent";
 
+import Tel from "@/components/mobil/Tel";
 /* YAPI SEÇİMİ — "serbest bölge mi, mainland mi?" · CANLI SÜRÜM
  * Ad alanı: .ys-        CSS: src/app/css/structures.css
  *
@@ -723,7 +724,7 @@ export default function CountryStructures({
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">{data.lead}</p>
+            <p className="sec-lead"><Tel>{data.lead}</Tel></p>
           </FadeUp>
         </div>
 

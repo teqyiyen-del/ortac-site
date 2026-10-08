@@ -455,7 +455,7 @@ export default function CountryTax({
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Genel kural burada. Sizin durumunuz görüşmede çıkıyor.</p>
+            <p className="sec-lead">Genel kural burada. Sizin durumunuz görüşmede netleşiyor.</p>
           </FadeUp>
         </div>
 
@@ -616,7 +616,7 @@ export default function CountryTax({
                 </div>
                 <p className="txm-eff">
                   {profit === 0
-                    ? "Bir rakam yazın, dağılım burada oluşsun."
+                    ? "Bir rakam yazın; dağılım burada oluşur."
                     : showsRate
                       ? `Bu rakamda temsilî efektif oran %${pf(eff)}.`
                       : "Tutarın tamamına yakını vergiden muaf ilk dilimde kalıyor."}

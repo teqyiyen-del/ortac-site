@@ -1,73 +1,44 @@
 "use client";
 
-/* MOBİL DENEME İŞARETİ (08.10.2026)
-   Telefon elden geçirmesinin tamamı (css/mobil-deneme.css, mobil/Mini,
-   lib/mobilKisa) YALNIZ html[data-mobil="yeni"] altında çalışıyor. Bu
-   bileşen o işareti koyuyor; işaret yokken site bugünkü hâliyle aynı.
+/* TELEFON DÜZENİ ANAHTARI (09.10.2026 · deneme canlıya alındı)
 
-   NASIL AÇILIR
-     · /lab/mobil: iki çerçeve yan yana (biri işaretsiz, biri ?mobil=yeni).
-     · Telefonda gezerek bakmak için: herhangi bir adrese ?mobil=yeni ekle.
-       İşaret o sekmede HATIRLANIYOR (sessionStorage), yani bağlantılara
-       tıklayıp gezdikçe düzen açık kalıyor. Alttaki küçük etiketten ya da
-       ?mobil=eski ile kapanıyor. Çerçeve içinde (lab) hatırlama yok: iki
-       çerçeve aynı sekmeyi paylaşıyor, "önce" tarafı da açılırdı.
+   Telefon elden geçirmesi (css/mobil-deneme.css, mobil/Mini, mobil/Tel,
+   lib/mobilKisa) html[data-mobil="yeni"] altında çalışıyor. 08.10'da altı tur
+   boyunca bu işaret yalnız ?mobil=yeni ile açılıyordu (deneme). 09.10 gecesi,
+   teslim öncesi turda CANLIYA ALINDI: işaret artık sunucuda basılıyor
+   (app/layout.tsx · <html data-mobil="yeni">), yani telefondaki herkes yeni
+   düzeni ilk boyamadan itibaren görüyor; tarayıcıda yazı değiştiren kod da
+   kalktı (kısa cümleler mobil/Tel ile sunucuda basılıyor).
 
-   ?git=<seçici>: sayfanın ilgili bölüme inmesi için (yalnız ilk açılışta).
+   GERİ DÖNÜŞ TEK SATIR: layout.tsx'teki data-mobil özniteliği silinirse site
+   08.10 öncesindeki telefon düzenine döner (kurallar o işarete bağlı).
 
-   ONAYLANAN KISIM canlıya şöyle geçer: css'teki kuralın başındaki
-   html[data-mobil="yeni"] silinir, kısa yazılar bileşenlere taşınır. Hepsi
-   karara bağlanınca bu bileşen, css dosyası ve lab sayfası silinir. */
+   ESKİ DÜZENE BAKMAK: herhangi bir adrese ?mobil=eski eklenir. Seçim o
+   pencerede hatırlanır (window.name; /lab/mobil'in "önce" çerçevesi de böyle
+   çalışıyor, iki çerçeve ayrı pencere olduğu için birbirini etkilemiyor).
+   Alttaki etiketten ya da ?mobil=yeni ile yeni düzene dönülür.
+
+   ?git=<seçici>: sayfanın ilgili bölüme inmesi için (yalnız ilk açılışta). */
 
 import "@/app/css/mobil-deneme.css";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { MOBIL_KISA, MOBIL_KISA_SECICI } from "@/lib/mobilKisa";
 
-const ANAHTAR = "ortac-mobil";
-
-function kisalt() {
-  if (!window.matchMedia("(max-width: 767px)").matches) return;
-  const bos = (x: string) => x.replace(/\s+/g, " ").trim();
-  document.querySelectorAll<HTMLElement>(MOBIL_KISA_SECICI).forEach((el) => {
-    if (el.children.length > 0 || el.dataset.uzun) return;
-    const metin = bos(el.textContent ?? "");
-    const es = MOBIL_KISA.find(([bas]) => metin.startsWith(bas));
-    if (!es || es[1] === metin) return;
-    el.dataset.uzun = metin;
-    el.textContent = es[1];
-  });
-}
+const ESKI = "ortac-mobil-eski";
 
 export default function MobilDeneme() {
-  const yol = usePathname();
-  const [acik, setAcik] = useState(false);
+  const [eski, setEski] = useState(false);
 
   useEffect(() => {
-    const q = new URLSearchParams(window.location.search);
-    const p = q.get("mobil");
-    const ust = window.top === window;
-    let yeni = p === "yeni";
-    try {
-      if (ust) {
-        if (p === "yeni") window.sessionStorage.setItem(ANAHTAR, "yeni");
-        if (p === "eski") window.sessionStorage.removeItem(ANAHTAR);
-        if (!p) yeni = window.sessionStorage.getItem(ANAHTAR) === "yeni";
-      }
-    } catch {
-      /* saklama kapalı: yalnız adresteki işaret geçerli */
-    }
-    if (yeni) document.documentElement.dataset.mobil = "yeni";
-    else delete document.documentElement.dataset.mobil;
-    // etiket yalnız en üst pencerede (lab çerçevelerinde değil); işaret adresten okunuyor
+    const p = new URLSearchParams(window.location.search).get("mobil");
+    if (p === "eski") window.name = ESKI;
+    if (p === "yeni" && window.name === ESKI) window.name = "";
+    const e = window.name === ESKI;
+    if (e) delete document.documentElement.dataset.mobil;
+    else document.documentElement.dataset.mobil = "yeni";
+    // etiket yalnız en üst pencerede (lab çerçevelerinde değil)
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setAcik(yeni && ust);
-    if (!yeni) return;
-    /* telefon yazıları: sayfa değişince yeniden; geç beliren kutular için bir kez daha */
-    kisalt();
-    const t1 = window.setTimeout(kisalt, 600);
-    return () => window.clearTimeout(t1);
-  }, [yol]);
+    setEski(e && window.top === window);
+  }, []);
 
   useEffect(() => {
     const git = new URLSearchParams(window.location.search).get("git");
@@ -83,23 +54,19 @@ export default function MobilDeneme() {
     return () => window.clearTimeout(t);
   }, []);
 
-  if (!acik) return null;
+  if (!eski) return null;
   return (
     <button
       type="button"
       className="md-rozet"
       onClick={() => {
-        try {
-          window.sessionStorage.removeItem(ANAHTAR);
-        } catch {
-          /* saklama kapalı */
-        }
+        window.name = "";
         const u = new URL(window.location.href);
         u.searchParams.delete("mobil");
         window.location.replace(u.toString());
       }}
     >
-      Telefon denemesi açık · kapat
+      Eski telefon düzeni · yeniye dön
     </button>
   );
 }

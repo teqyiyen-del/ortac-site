@@ -149,8 +149,10 @@ const META: Record<string, { Icon: LucideIcon; href: string; rhythm: Rhythm }> =
     href: "/dubai/muhasebe",
     rhythm: { kind: "repeat", months: 1, unit: "kez" },
   },
-  /* 25.09.2026 · geri geldi (brand.ts · CHAIN). Sayfası yok, satır sessiz. */
-  uyum: { Icon: ShieldCheck, href: "/dubai/uyum", rhythm: { kind: "nonstop" } },
+  /* 25.09.2026 · geri geldi (brand.ts · CHAIN). 09.10.2026 · teslim öncesi akış denetimi: hedef
+     kaldırılmış /dubai/uyum'du (satır sönük duruyordu); sayfanın yeni adresi
+     /dubai/aml-uyum ve yayında. */
+  uyum: { Icon: ShieldCheck, href: "/dubai/aml-uyum", rhythm: { kind: "nonstop" } },
   oturum: {
     Icon: IdCard,
     href: "/dubai/oturum-vize",

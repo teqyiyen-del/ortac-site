@@ -19,6 +19,7 @@ import { TOOL_PHOTO } from "@/lib/media";
 import { sayiYaziyla } from "@/lib/tools/num";
 import { SITE } from "@/lib/routes";
 
+import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
    /araclar — ARAÇLARIN DİZİNİ
    ============================================================================
@@ -75,6 +76,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: `${SITE}/araclar` },
   openGraph: {
+    images: [OG_GORSEL],
     type: "website",
     locale: "tr_TR",
     siteName: "Ortac Global",

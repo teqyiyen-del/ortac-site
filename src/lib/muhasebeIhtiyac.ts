@@ -109,7 +109,7 @@ export const SORULAR: {
     ikon: "ciro",
     secenekler: [
       { id: "alt", etiket: "375 bin AED altı", ikon: "ciroAlt" },
-      { id: "orta", etiket: "375 bin – 50 milyon AED", ikon: "ciroOrta" },
+      { id: "orta", etiket: "375 bin - 50 milyon AED", ikon: "ciroOrta" },
       { id: "cokbuyuk", etiket: "50 milyon AED üstü", ikon: "ciroUst" },
     ],
   },

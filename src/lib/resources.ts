@@ -149,8 +149,8 @@ export const RESOURCE_KINDS: Record<ResourceKind, KindMeta> = {
     label: "Blog",
     href: "/blog",
     job: "Bir konuyu baştan sona açan yazılar; her yazıda rakamın nereden geldiği yazılı.",
-    isNot: "Haber akışı değil. Bir yazı ancak kaynağı gösterilebiliyorsa yayınlanıyor.",
-    emptyTitle: "Henüz yayınlanmış yazı yok.",
+    isNot: "Haber akışı değil. Bir yazı ancak kaynağı gösterilebiliyorsa yayımlanıyor.",
+    emptyTitle: "Henüz yayımlanmış yazı yok.",
     emptyLine:
       "İlk yazılar iç kontrolden geçtikçe burada tarih sırasıyla listelenecek. O zamana kadar buraya doldurulmuş bir liste koymuyoruz.",
   },
@@ -163,7 +163,7 @@ export const RESOURCE_KINDS: Record<ResourceKind, KindMeta> = {
     href: GUIDES_HREF,
     job: "Bir ülkede ne yapılabileceğinin ve nasıl yapıldığının adım adım yolu.",
     isNot: "Ülke reklamı değil. Her rehber o ülkenin dürüst kısıtını da yazıyor.",
-    emptyTitle: "Henüz yayınlanmış rehber yok.",
+    emptyTitle: "Henüz yayımlanmış rehber yok.",
     emptyLine:
       "Rehberler blogun bir kategorisi ve kendi adresinde listeleniyor. Bir rehber, her satırının kaynağı gösterilebildiğinde yayına giriyor.",
   },
@@ -174,7 +174,7 @@ export const RESOURCE_KINDS: Record<ResourceKind, KindMeta> = {
     job: "Neyin ne zaman değiştiği; tarih, ülke ve resmî kaynak bağlantısıyla.",
     isNot:
       "Hukuki görüş değil ve tam liste iddiası taşımıyor. Kaydın kaynağı resmî otoritenin kendi duyurusudur.",
-    emptyTitle: "Henüz yayınlanmış bir gelişme yok.",
+    emptyTitle: "Henüz yayımlanmış bir gelişme yok.",
     emptyLine:
       "Buraya bir kayıt ancak resmî kaynağına bağlanabildiğinde giriyor: tarih, hangi ülke, kimi ilgilendiriyor ve duyurunun kendisi.",
   },
@@ -182,7 +182,7 @@ export const RESOURCE_KINDS: Record<ResourceKind, KindMeta> = {
     id: "ekitap",
     label: "E-kitaplar",
     href: "/e-kitaplar",
-    job: "İndirip yanınızda götürdüğünüz uzun içerik.",
+    job: "İndirip çevrim dışı okuyabileceğiniz uzun içerik.",
     isNot: "Form karşılığı değil: indirmek için bilgi istemiyoruz.",
     emptyTitle: "Henüz indirilebilir bir dosya yok.",
     emptyLine: "Bir e-kitap ancak dosyası hazır olduğunda indirilebilir oluyor.",
@@ -491,7 +491,7 @@ export const DRAFT_UPDATES: DraftUpdate[] = [
     channel: "uygulama",
     topic: "Ofis tipi ile lisans arasındaki ilişki",
     line: "Ofis seçiminin lisansı ve vize tarafını hangi noktalarda etkilediği.",
-    who: "Serbest bölge ile anakara arasında seçim yapanlar",
+    who: "Serbest bölge ile mainland arasında seçim yapanlar",
     covers: [
       "Ofis tipi lisansı nasıl etkiliyor?",
       "Vize sayısıyla ilişkisi ne?",
@@ -1066,7 +1066,12 @@ function buildGuide(country: CountrySlug): Guide {
   chapters.push(
     {
       q: "Kuruluş ne kadar tutuyor?",
-      line: `${f.fromLabel}'den başlıyor; yapı, faaliyet ve ofis tipi tutarı değiştiriyor.`,
+      /* 09.10.2026 · teslim öncesi bilgi denetimi: KKTC'de tutar sabit (teklif belgesi: kuruluş ve
+         ilk yıl 9.920 €, her şey dahil); "…'den başlıyor" yalnız öbür ikisi için doğru */
+      line:
+        country === "kktc"
+          ? `${f.fromLabel}: kuruluş ve ilk yıl, her şey dahil.`
+          : `${f.fromLabel}'den başlıyor; yapı, faaliyet ve ofis tipi tutarı değiştiriyor.`,
       href: `${base}#fiyat`,
     },
     {
@@ -1083,7 +1088,7 @@ function buildGuide(country: CountrySlug): Guide {
     },
     {
       q: "Vergi tarafı ne durumda?",
-      line: `Yayınlanan çerçeve ${c.tax.rows.length} kalem; oranı konuşmadan önce kayıt yükümlülüğü var.`,
+      line: `Yayımlanan çerçeve ${c.tax.rows.length} kalem; oranı konuşmadan önce kayıt yükümlülüğü var.`,
       href: `${base}#vergi`,
     },
     {
@@ -1108,7 +1113,7 @@ function buildGuide(country: CountrySlug): Guide {
     tagline: c.tagline,
     lead: c.intro,
     facts: [
-      { k: "Kuruluş", v: `${f.fromLabel}'den` },
+      { k: "Kuruluş", v: country === "kktc" ? `${f.fromLabel} · ilk yıl dahil` : `${f.fromLabel}'den` },
       { k: "Tipik süre", v: f.days },
       { k: "Yapı", v: f.structure },
     ],

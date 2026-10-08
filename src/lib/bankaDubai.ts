@@ -147,12 +147,12 @@ export const BANKA_DUBAI = {
        aynı konuları anlatıyor ama NEDEN'ini söylüyor. Bir bankaya özgü
        kural ya da eşik YOK. SWAP:BANKA_TEYIT */
     checks: {
-      heading: "Bankanın başvuruda baktığı şeyler",
+      heading: "Bankanın başvuruda baktığı başlıklar",
       items: [
         { icon: "faaliyet" as BankaIkon, title: "Faaliyet", line: "Ne sattığınız, kime sattığınız ve bunun lisanstaki faaliyetle örtüşmesi." },
         { icon: "ortak" as BankaIkon, title: "Ortaklık yapısı", line: "Ortakların ve yöneticinin kimliği, şirketteki payları." },
         { icon: "kaynak" as BankaIkon, title: "Paranın kaynağı", line: "Hesaba girecek paranın nereden geldiği." },
-        { icon: "hacim" as BankaIkon, title: "Beklenen hacim", line: "Aylık işlem sayısının ve tutarının kabaca tahmini." },
+        { icon: "hacim" as BankaIkon, title: "Beklenen hacim", line: "Aylık işlem sayısının ve tutarının yaklaşık tahmini." },
       ],
     },
   },
@@ -170,14 +170,14 @@ export const BANKA_DUBAI = {
     id: "odeme",
     heading: "Ödeme ve tahsilat kanalları.",
     accent: "tahsilat kanalları.",
-    lead: "Banka değil; farklı lisans ve koruma rejimi. Kartla, pazaryerinden ve yurt dışından gelen tahsilatı toplayıp banka hesabınıza aktarıyor. Hangisinin gerektiği satış biçiminize bağlı.",
+    lead: "Banka değil; farklı lisans ve koruma rejimi. Kartla, pazar yerinden ve yurt dışından gelen tahsilatı toplayıp banka hesabınıza aktarıyor. Hangisinin gerektiği satış biçiminize bağlı.",
     /* 07.10.2026 · müşteri revizesi: Stripe, PayPal, Binance, Amazon Payment
        Services, Network International. Payoneer listeden çıktı. Sahnede dört
        karo: üç markanın işareti ve kart (son iki kanal kartla tahsilat). */
     sahne: [{ brand: "stripe" }, { brand: "paypal" }, { brand: "binance" }, { icon: "kart" }],
     items: [
       { brand: "stripe" as BrandKey, name: "Stripe", line: "Sitenizde ve uygulamanızda kartla tahsilat.", tag: "Kartla satış", icon: "kart" as BankaIkon },
-      { brand: "paypal" as BrandKey, name: "PayPal", line: "Platform ve pazaryeri üzerinden tahsilat.", tag: "Pazaryeri", icon: "pazar" as BankaIkon },
+      { brand: "paypal" as BrandKey, name: "PayPal", line: "Platform ve pazar yeri üzerinden tahsilat.", tag: "Pazar yeri", icon: "pazar" as BankaIkon },
       { brand: "binance" as BrandKey, name: "Binance", line: "Binance Pay ile müşteriden kripto ödeme alma.", tag: "Kripto ödeme", icon: "kripto" as BankaIkon },
       { brand: "aps" as BrandKey, name: "Amazon Payment Services", line: "Bölgedeki müşteriden çevrim içi kartla tahsilat.", tag: "Kartla satış", icon: "kart" as BankaIkon },
       { brand: "network" as BrandKey, name: "Network International", line: "Kartla tahsilat ve POS altyapısı.", tag: "POS ve kart", icon: "kart" as BankaIkon },

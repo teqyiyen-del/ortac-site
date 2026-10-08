@@ -223,7 +223,7 @@ export function sortedOpenings(): Opening[] {
    aynı kalıp lib/about.ts ve lib/press.ts'te. */
 export const CAREERS_EMPTY = {
   title: "Şu an açık pozisyonumuz yok.",
-  line: "İlan yayımlamadığımız dönemde bu sayfa boş duruyor; doldurmak için olmayan bir pozisyon yazmıyoruz. Yine de başvurunuzu bırakabilirsiniz: bir pozisyon açıldığında elimizdeki başvurulara ilk biz bakıyoruz.",
+  line: "İlan yayımlamadığımız dönemde bu sayfa boş duruyor; doldurmak için olmayan bir pozisyon yazmıyoruz. Yine de başvurunuzu bırakabilirsiniz: bir pozisyon açıldığında önce elimizdeki başvurulara bakıyoruz.",
 };
 
 /* ------------------------------------------------------------ BAŞVURU FORMU
@@ -253,13 +253,15 @@ export const APPLICATION_FORM = {
 
   /** Dosya alanının kapalı olma nedeni — alanın hemen altında. */
   fileNote:
-    "Dosya yükleme henüz bağlı değil: yüklenen dosyayı alacak bir uç nokta yok, o yüzden alan devre dışı.",
+    "Özgeçmişinizi başvurudan sonra career@ortacglobal.com adresine e-postayla gönderebilirsiniz.",
 
   /** Butonun yanındaki tek kelimelik durum. */
   lockLabel: "gönderim kapalı",
 
   /** Formun altındaki tek satır. Sahte onay ekranının yerine geçen şey bu. */
-  note: "Form henüz bir yere bağlı değil: gönderim uç noktası eklenene kadar bu buton çalışmıyor ve yazdıklarınız hiçbir yere kaydedilmiyor. Başvurunuzun bugün bize ulaştığı tek yol iletişim sayfasındaki kanallar.",
+  /* 09.10.2026 · form açıldı (lib/formGonder). Eski cümle "Form henüz bir
+     yere bağlı değil…" idi. */
+  note: "Başvurunuz insan kaynaklarına iletilir. Özgeçmişinizi career@ortacglobal.com adresine e-postayla gönderebilirsiniz. Diğer kanallar:",
 };
 
 /* ------------------------------------------------------------- AÇIK BAŞVURU

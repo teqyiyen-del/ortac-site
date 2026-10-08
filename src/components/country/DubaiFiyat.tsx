@@ -334,10 +334,12 @@ export default function DubaiFiyat() {
           </li>
           <li>
             <Check size={13} strokeWidth={3} />
-            Sürpriz kalem çıkmaz
+            Beklenmedik kalem çıkmaz
           </li>
         </ul>
-        <p className="ip-note">Tutarlar temsilidir; nihai teklif faaliyet ve belgelere göre netleşir.</p>
+        {/* 09.10.2026 · teslim öncesi bilgi denetimi: "Tutarlar temsilidir" çıktı; Dubai tutarları
+            teklif belgesinden, temsilî değil */}
+        <p className="ip-note">Nihai teklif faaliyet ve belgelere göre netleşir.</p>
       </aside>
     </div>
   );

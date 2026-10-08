@@ -1009,8 +1009,8 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
             <span className="onv-ct-tx">
               <b>İletişim</b>
               <em>
-                Üç ülkede ofis, tek muhatap. Ne sorduğunuzu anlatın, hangi ülkede olduğunuz fark
-                etmeden aynı ekip cevaplasın.
+                Üç ülkede ofis, tek muhatap. Sorunuzu yazın; hangi ülkede olursanız olun aynı
+                ekip yanıtlar.
               </em>
             </span>
           </span>

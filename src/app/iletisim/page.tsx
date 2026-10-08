@@ -6,6 +6,7 @@ import PageHero from "@/components/shared/PageHero";
 import ContactSections from "@/app/iletisim/ContactSections";
 import { CHANNELS, OFFICES, isLiveChannel, linksOf } from "@/lib/offices";
 
+import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
    İLETİŞİM — /iletisim
 
@@ -66,6 +67,7 @@ export const metadata: Metadata = {
      göreli bir kanonik geliştirme sunucusunun adresine çözülürdü. */
   alternates: { canonical: `${SITE}${PATH}` },
   openGraph: {
+    images: [OG_GORSEL],
     type: "website",
     locale: "tr_TR",
     siteName: "Ortac Global",

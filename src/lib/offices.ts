@@ -263,7 +263,9 @@ const BY_COUNTRY: Record<Country, Office> = {
     country: "kktc",
     label: COUNTRY_LABELS.kktc,
     city: "",
-    address: "Şht. Murat İlhan Sokak No:5, 039",
+    /* 09.10.2026 · teslim öncesi bilgi denetimi: sondaki "039" adres parçası değildi; KKTC teklif
+         belgesinin antetinde "Sht. Murat İlhan Sokak No:5 Kumsal" */
+      address: "Şht. Murat İlhan Sokak No:5, Kumsal",
     legal: "",
     /* KUZEY LEFKOŞA, güney Lefkoşa DEĞİL. Eski değer [33.3823, 35.1856]
        kamuya açık "Nicosia" koordinatıydı ve Yeşil Hat'ın hemen üstüne,

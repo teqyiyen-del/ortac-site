@@ -4955,6 +4955,49 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 09.10.2026 · TESLİM ÖNCESİ GECE TURU · telefon düzeni CANLI, formlar açık, yedi denetim
+
+Burak (yatmadan önce): "yarın siteyi teslim etmemiz gerekiyor olabilir; her şeyi teslime
+hazır hâle getirene kadar incele, tara, üstünden geç, bir şeyler yap." On üç başlık verdi
+(telefon, doğru bilgi, fazla not, mahalle ağzı, her şey çalışıyor mu, boyut hiyerarşisi,
+akış, yer tutucular, Murat Bey listesi, bölüm bölüm algı, SEO, yayın öncesi liste, eski
+siteden taşınacaklar).
+
+**YENİ OTURUM ÖNCE ŞUNU OKUSUN: `docs/teslim/README.md`.** Ne düzeltildi, yayından önce ne
+yapılacak, yer tutucular, Murat Bey'e 23 soru, eski siteden taşınacaklar, Burak'ın
+kararını bekleyenler orada. Yanında yedi ayrıntı raporu var (yedi ayrı denetim ajanı
+yazdı; raporlar denetim BAŞLARKENKİ hâli anlatıyor, geçerli olan README).
+
+KARARLAR VE NEDENLERİ (kodda yorumu var, burada özet)
+- TELEFON DÜZENİ CANLIYA ALINDI. `<html data-mobil="yeni">` artık sunucuda basılıyor
+  (app/layout.tsx). Burak "tam oldu" demedi; teslim ihtimali ve altı turda kalan
+  itirazların kapanmış olması üzerine ben açtım. Geri alma tek satır (o öznitelik);
+  eski düzen `?mobil=eski` ile görülüyor (window.name ile hatırlanıyor).
+  Kısa cümleler artık tarayıcıda değiştirilmiyor: `mobil/Tel` iki sürümü sunucuda basıyor.
+  Yeni kısa cümle eklerken basıldığı yer `<Tel>` ile sarılı olmalı.
+- FORMLAR: `app/api/form` + `lib/formGonder`. Anahtar (RESEND_API_KEY + FORM_ALICI ya da
+  FORM_WEBHOOK_URL) Vercel'de TANIMLI DEĞİL; o zamana kadar form ziyaretçinin e-posta
+  uygulamasını açıyor. `/basla` son ekranı da aynı yoldan özeti yolluyor.
+- AKIŞ DEĞİŞİKLİKLERİ (Burak'a söylendi, geri alınması birer satır): soru düğmelerinin
+  varsayılan hedefi /basla → /iletisim (AskCta, SssAkordeon); İngiltere fiyat panelinin
+  düğmesi ve /basla'daki İngiltere kartı → /iletisim; muhasebe "teklif isteyin" →
+  /iletisim; ana sayfa "şirketi taşıyın" → /iletisim; `/panel` → eski sitedeki müşteri
+  paneli adresi (next.config.ts, geçici yönlendirme).
+- SEO: geçici adres X-Robots-Tag ile kapalı (yalnız vercel.app host'unda); `/ulke/...`
+  308; `lib/seo · sayfaKunye` ve `OG_GORSEL`; yalnız örnek içerikli sayfalar noindex ve
+  harita dışı. Sekme simgesi ve paylaşım görseli logodan üretildi (firmanın kendi simgesi
+  gelirse değişir).
+- DOKUNULMAYAN BİLİNEN YANLIŞ: uygunluk testi eski rakamlarla hesaplıyor (FACTS.from +
+  PRICING.annual). İngiltere fiyatı gelmeden üç rakam birlikte güncellenemiyor; yalnız
+  yardım cümlesindeki sıra düzeltildi. Sektör sayfasındaki kıyas tablosu telefonda hâlâ
+  yana kayıyor.
+
+DOĞRULAMA: tsc ve eslint temiz, css-check tabanda (6). 54 + 2 sayfa 320, 360, 390, 430,
+768, 820, 1024, 1280, 1440 ve 1920 genişlikte tarandı (taşma, konsol hatası, kırık
+görsel, h1 sayısı, 12 px altı yazı). /basla ve iletişim formu baştan sona yürütüldü.
+Safari ve gerçek telefon DENENMEDİ (bu makinede Xcode yok); CSS özellikleri elle tarandı,
+önek eksiği yok.
+
 ## 08.10.2026 (6) · Telefon düzeni altıncı tur: süreç kartı, boşluklar, fiyatta yapışık tutar, footer
 
 Burak'ın beşinci tura cevabı (hizmet kartının ekran görüntüsüyle). Hepsi DENEME düzeninde

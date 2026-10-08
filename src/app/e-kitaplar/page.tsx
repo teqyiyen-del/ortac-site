@@ -55,6 +55,10 @@ export const metadata: Metadata = {
   description:
     "Kuruluş ve kuruluş sonrası için indirilebilir uzun içerik. İndirmek için bilgi istemiyoruz; dosyası hazır olmayan kayıt indirme vaadi taşımıyor.",
   alternates: { canonical: `${SITE}/e-kitaplar` },
+  /* 09.10.2026 · sayfada yalnız "Örnek" kayıt var; gerçek içerik gelene
+     kadar dizin dışı (haritadan da çıktı: app/sitemap.ts · HARITA_DISI).
+     Gerçek kayıt girildiğinde bu satır ve haritadaki satır silinir. */
+  robots: { index: false, follow: true },
 };
 
 const nf = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 1 });
@@ -114,8 +118,8 @@ export default function EbooksPage() {
 
         <PageHero
           crumb="E-kitaplar"
-          title="E-kitapları indirin, çevrimdışı okuyun."
-          accent="çevrimdışı okuyun."
+          title="E-kitapları indirin, çevrim dışı okuyun."
+          accent="çevrim dışı okuyun."
           lead="Uzun içerik tek dosyada. İndirmek için form doldurmuyorsunuz, e-posta bırakmıyorsunuz."
         />
 

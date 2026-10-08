@@ -32,6 +32,58 @@ html:has(.ip-yapisik[data-acik]) .md-rozet {
   transform: translateY(-62px);
 }
 
+/* ---- EN KÜÇÜK YAZI 12 PX · HER GENİŞLİKTE (09.10.2026 · teslim öncesi tarama)
+   54 sayfa 768, 1024, 1280, 1440 ve 1920'de ölçüldü: etiket ve künye
+   yazılarının bir kısmı 10-11 px'ti ("Örnek" etiketi, tarih, biçim, köşe
+   yazıları). Telefonda taban zaten 12'ydi (aşağıda); tablet ve masaüstünde de
+   12'ye çıktı. Okunacak cümle tabanı 14, etiket tabanı 12 (hafıza:
+   metin-uzunlugu-ve-okunurluk). html[lang] yalnız özgüllük için. */
+html[lang]
+  :is(.kyn-seed-tag, .ys-pin, .txm-unit, .kyn-up-mm, .bh-kind, .bh-seed, .bh-flag, .krm-seed, .kyn-book-fmt, .uyg-sum-h, .uyg-sum-note, .uk3-tbl-corner, .sxk-corner, .uk3-blabel, .uk3-mgt, .ta-isim-bicim-r, .kyn-up-kv dt, .ab-dy-blg-imza i, .ctry-grouph span) {
+  font-size: 12px;
+}
+
+/* okunacak CÜMLE tabanı 14 px, her genişlikte (iki görsel denetimin ortak
+   bulgusu): test panelinin dört satırlık notu 10,5 px, İngiltere ceza
+   tutarları ve süreç notu 12 px'ti */
+html[lang] :is(.uyg-sum-note, .ctk-ceza, .srp-note, .krm-note, .sxk-note, .sxk-more, .kyn-door-not, .kyn-dl-note) {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---- FOOTER: yayında olmayan sayfaların SOLUK, TIKLANMAYAN girdileri
+   (Sponsor Licence, Şirket Adresi, Serbest Bölge …) dizinde basılmıyor.
+   İki görsel denetim de aynı şeyi yazdı: "site kendi ağzıyla yarımım diyor."
+   Girdiler lib/brand ve lib/routes'ta duruyor; sayfa yayına alındığı gün
+   (isLive) kendiliğinden görünür. Üst menüdeki "yakında" işaretli girdilere
+   dokunulmadı (orada "yakında" etiketi var; karar Burak'ın listesinde:
+   docs/teslim/README.md). */
+.ft2-col > [data-soon] {
+  display: none;
+}
+
+/* ---- TABLET (720-1023) · masaüstü denetiminin 820 px bulguları
+   · Ana sayfa "Neden Ortac": altı sütunlu bento bu genişlikte sıkışıyor,
+     sohbet kartındaki "Çevrimiçi" panelden 13 px taşıyordu. İki sütun, uzun
+     karo tam genişlik.
+   · Sayfa başlığı (36-41 px) bölüm başlığından (40 px) küçük kalıyordu: 48. */
+@media (min-width: 720px) and (max-width: 1023.5px) {
+  html[lang] .bn {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  html[lang] .bn > .bn-tile {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  html[lang] .bn > :is(.bn-tile-tall, .bn-tile-wide) {
+    grid-column: 1 / -1;
+  }
+  html[lang] :is(.dhr-h1, .hak-h1, .ph-title, .ph-h1) {
+    font-size: 48px;
+    line-height: 1.06;
+  }
+}
+
 /* ---- İKİ SÜRÜMLÜ ÇİZİMLER (components/mobil/Mini · Ikili) · HER ZAMAN AÇIK
    Masaüstü çizimi .m-buyuk, telefon çizimi .m-mini içinde. İşaret yokken
    telefon sürümü gizli, büyük sürüm sarmalayıcısı görünmez (display:
@@ -133,7 +185,7 @@ html:has(.ip-yapisik[data-acik]) .md-rozet {
     :is(.kyn-seed-tag, .ys-pin, .txm-unit, .kyn-up-mm, .bh-kind, .bh-seed, .bh-flag, .krm-seed, .kyn-book-fmt, .uyg-sum-h, .uyg-sum-note, .uk3-tbl-corner, .sxk-corner, .uk3-blabel, .uk3-mgt) {
     font-size: 12px;
   }
-  html[data-mobil="yeni"] :is(.kyn-up-kv dt, .ab-dy-blg-imza i, .ctry-grouph span, .kyn-pick-b i) {
+  html[data-mobil="yeni"] :is(.kyn-up-kv dt, .ab-dy-blg-imza i, .ctry-grouph span, .kyn-pick-b i, .ys-chip, .ta-isim-bicim-r) {
     font-size: 12px;
   }
   /* 12 px yazılmış CÜMLELER 14'e çıkıyor (etiket değil, okunacak yazı) */
@@ -237,24 +289,25 @@ html:has(.ip-yapisik[data-acik]) .md-rozet {
     border-color: var(--blue-700);
   }
   /* sağdaki ok: kart açılır, işareti bu */
+  /* ok bir maske (çizgi ikon): eskiden iki kenarlıkla çiziliyordu ve şerit
+     denetimi (scripts/serit-check) onu kutu kenarı şeridi sayıyordu */
   html[data-mobil="yeni"] .hx-card::after {
     content: "";
     position: absolute;
     top: 50%;
-    right: 18px;
-    width: 9px;
-    height: 9px;
-    margin-top: -7px;
-    border-right: 2px solid #8a8a8a;
-    border-bottom: 2px solid #8a8a8a;
-    transform: rotate(45deg);
+    right: 14px;
+    width: 18px;
+    height: 18px;
+    margin-top: -9px;
+    background: #8a8a8a;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
     transition: transform 200ms var(--ease-out-soft);
     pointer-events: none;
   }
   html[data-mobil="yeni"] .hx-card:has(.hxq-btn[aria-expanded="true"])::after {
-    margin-top: -2px;
-    border-color: var(--blue-700);
-    transform: rotate(225deg);
+    background: var(--blue-700);
+    transform: rotate(180deg);
   }
   html[data-mobil="yeni"] .hx-card > .hx-stage {
     height: auto;
@@ -935,18 +988,16 @@ html:has(.ip-yapisik[data-acik]) .md-rozet {
   }
   html[data-mobil="yeni"] .ft2-h::after {
     content: "";
-    width: 8px;
-    height: 8px;
-    margin: -4px 4px 0 0;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
+    width: 18px;
+    height: 18px;
+    background: currentColor;
     opacity: 0.6;
-    transform: rotate(45deg);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
     transition: transform 200ms var(--ease-out-soft);
   }
   html[data-mobil="yeni"] .ft2-col[data-acik] .ft2-h::after {
-    margin-top: 4px;
-    transform: rotate(225deg);
+    transform: rotate(180deg);
   }
   html[data-mobil="yeni"] .ft2-col[data-acik] .ft2-h {
     margin-bottom: -6px;
@@ -976,6 +1027,149 @@ html:has(.ip-yapisik[data-acik]) .md-rozet {
   /* ---- 11 · ANA SAYFA YAZILAR: öne çıkan kart + beş satırdı (~1.250 px);
      telefonda öne çıkan + ilk üç satır. Gerisi "Tüm yayınlar" bağlantısında. */
   html[data-mobil="yeni"] .blg-rail > li:nth-child(n + 4) {
+    display: none;
+  }
+
+  /* ---- 12 · DOKUNMA ALANI (09.10.2026 · teslim öncesi tarama)
+     54 sayfa 390 px'te ölçüldü: metin bağlantıları 19-24 px yüksekliğinde,
+     parmakla isabet zor. Düzen değişmiyor: dikey iç boşluk kadar eksi dış
+     boşluk veriliyor, yalnız dokunulan alan ~40 px'e çıkıyor. Bu sınıfların
+     hiçbirinin zemini ya da çerçevesi yok (olsaydı kutu büyürdü). */
+  html[data-mobil="yeni"] :is(.link-arrow, .svz-cik, .svz-kaynak, .ccx-cmp, .sxk-out, .kyn-rel, .dhr-iz a, .ph-crumb a, .ft2-meta a) {
+    padding-block: 9px;
+    margin-block: -9px;
+  }
+  /* İngiltere fiyat formundaki anahtar satırları 23 px'ti */
+  html[data-mobil="yeni"] .ip-toggle {
+    padding-block: 10px;
+    margin-block: -6px;
+  }
+  /* evrak listesinin onay kutusu 23 px: kutu aynı, dokunma alanı 43 px */
+  html[data-mobil="yeni"] .ndx-tick {
+    position: relative;
+  }
+  html[data-mobil="yeni"] .ndx-tick::before {
+    content: "";
+    position: absolute;
+    inset: -10px;
+  }
+
+  /* iPhone'da 16 px'ten küçük yazılı giriş alanına dokununca Safari sayfayı
+     yakınlaştırıyor. Öbür formlar zaten 16; iş ortaklığı formu 14'tü. */
+  html[data-mobil="yeni"] .pt-input {
+    font-size: 16px;
+  }
+
+  /* ---- 13 · TELEFON GÖRSEL DENETİMİ (09.10.2026) · hızlı düzeltmeler
+     · /basla adım şeridi: "03 Bilg" kenarda kesik, "04 Özet" görünmüyordu.
+       Etkin olmayan adımda yalnız ikon ve numara; yana kaydırma yok. */
+  html[data-mobil="yeni"] .sat-adimlar {
+    overflow: visible;
+  }
+  html[data-mobil="yeni"] .sat-adimlar li {
+    flex: 0 0 auto;
+  }
+  html[data-mobil="yeni"] .sat-adimlar li[data-durum="simdi"] {
+    flex: 1 1 auto;
+  }
+  html[data-mobil="yeni"] .sat-adimlar li:not([data-durum="simdi"]) .sat-adim-b {
+    padding-right: 10px;
+    font-size: 0; /* adın yazısı gizli; numara aşağıda geri açılıyor */
+  }
+  html[data-mobil="yeni"] .sat-adimlar li:not([data-durum="simdi"]) .sat-adim-no {
+    margin-right: 0;
+    font-size: 14px;
+  }
+  /* · KKTC ödeme kanalı: altı "Açılmıyor" kutusu farklı genişlikte ve
+       hizasızdı; eşit ikili ızgara */
+  html[data-mobil="yeni"] .cod > li:has(.cod-k[data-durum="yok"]) {
+    flex: 1 1 calc(50% - 4px);
+  }
+  html[data-mobil="yeni"] .cod-k[data-durum="yok"] {
+    justify-content: space-between;
+  }
+  /* · hakkımızda: sayfa başlığı 32, fotoğraf kartının başlığı 30'du; ikisi
+       yarışıyordu. Merdiven: 32 > 26 > 24 > 18 */
+  html[data-mobil="yeni"] .ab-kim-t {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+  html[data-mobil="yeni"] .ab-close-t h2 {
+    font-size: 26px;
+    line-height: 1.15;
+  }
+  html[data-mobil="yeni"] .ab-pcard h3 {
+    font-size: 18px;
+  }
+  /* · bölüm başlığı her yerde 26: kaynaklarda 22, araçlarda grup başlığı
+       kart başlığından (17) ancak 1 px büyüktü */
+  html[data-mobil="yeni"] .kyn-switch-h {
+    font-size: 26px;
+    line-height: 1.12;
+  }
+  html[data-mobil="yeni"] .tl-group-h b {
+    font-size: 22px;
+  }
+  html[data-mobil="yeni"] :is(.uk3-rowh-h, .pt-link > i) {
+    font-size: 14px;
+  }
+  /* · dokunma alanı: süreç çubukları 32, "i" düğmeleri ve bayrak çipleri 30 */
+  html[data-mobil="yeni"] :is(.srp-bar, .dfy-i-b, .mh-flag) {
+    position: relative;
+  }
+  html[data-mobil="yeni"] :is(.srp-bar, .dfy-i-b, .mh-flag)::before {
+    content: "";
+    position: absolute;
+    inset: -7px -2px;
+  }
+
+  /* ---- 14 · KIYAS TABLOSU · TELEFONDA SEKME (09.10.2026)
+     /ulkeler ve ana sayfanın "yan yana kıyas" görünümü. Telefonda tablo 720 px
+     genişlikteydi: ekranda tek ülke görünüyor, öteki ikisi işaretsiz yana
+     kaydırmanın arkasında kalıyordu (kural: yana kaydırma yok). Tablonun
+     başlığındaki üç ülke düğmesi zaten seçim tutuyor (Countries · country,
+     hücrede data-on): telefonda üç düğme yan yana sekme oluyor, altında
+     ölçüt + YALNIZ seçili ülkenin sütunu. Serbest bölge sekmesiyle aynı
+     kalıp (BolgeSekme). Tablo öğeleri blok/ızgara basılıyor; içerik aynı. */
+  html[data-mobil="yeni"] .uk3-tblwrap {
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+  html[data-mobil="yeni"] .uk3-tbl,
+  html[data-mobil="yeni"] .uk3-tbl :is(thead, tbody, tfoot) {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+  html[data-mobil="yeni"] .uk3-tbl thead tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  html[data-mobil="yeni"] .uk3-tbl thead .uk3-tbl-corner {
+    display: none;
+  }
+  html[data-mobil="yeni"] .uk3-tbl thead th.ctry-th {
+    display: block;
+    position: static;
+    width: auto;
+    padding: 0;
+  }
+  html[data-mobil="yeni"] .uk3-tbl :is(tbody, tfoot) tr {
+    display: grid;
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+  }
+  html[data-mobil="yeni"] .uk3-tbl tbody tr:has(> .ctry-grouph) {
+    display: block;
+  }
+  html[data-mobil="yeni"] .uk3-tbl :is(tbody, tfoot) :is(.ctry-grouph, th.uk3-rowh, td.uk3-td) {
+    display: block;
+    position: static;
+    width: auto;
+    min-width: 0;
+  }
+  html[data-mobil="yeni"] .uk3-tbl :is(tbody, tfoot) td.uk3-td:not([data-on="true"]):not(.uk3-tbl-corner) {
     display: none;
   }
 

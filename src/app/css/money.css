@@ -70,7 +70,8 @@
 
 .mh-flag[data-on="true"] {
   background: var(--night-3);
-  border-color: var(--mh-ink);
+  /* 09.10.2026 · var(--mh-ink) idi (Türkiye'de kırmızı, hata gibi okunuyordu) */
+  border-color: var(--blue-500);
   color: #ffffff;
 }
 

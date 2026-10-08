@@ -135,8 +135,6 @@ export default function AccountingNeeds({ id = "ihtiyac" }: { id?: string } = {}
     if (anahtar === k && adim < SIRA.length - 1) setAdim(adim + 1);
   };
 
-  const sorgu = new URLSearchParams({ hizmet: "muhasebe", ...(c as Record<string, string>) }).toString();
-
   return (
     <section id={id} className="sec-pad svm-sec" aria-labelledby={`${kok}-t`}>
       <div className="container-o">
@@ -261,7 +259,7 @@ export default function AccountingNeeds({ id = "ihtiyac" }: { id?: string } = {}
                     )}
                   </>
                 ) : (
-                  "Dört soruyu cevaplayın, liste burada çıksın"
+                  "Dört soruyu cevaplayın; liste burada oluşur"
                 )}
               </p>
               <ul className="svm-ih-liste">
@@ -301,7 +299,9 @@ export default function AccountingNeeds({ id = "ihtiyac" }: { id?: string } = {}
                   );
                 })}
               </ul>
-              {tamam && <AskCta label="Bu listeyle teklif isteyin" href={`/basla?${sorgu}`} />}
+              {/* 09.10.2026 · teslim öncesi akış denetimi: hedef /basla?… idi; şirket KURULUŞ penceresi açılıyor
+                  (IFZA $5.120) ve liste kayboluyordu. Muhasebe ayrı satılmıyor: iletişim. */}
+              {tamam && <AskCta label="Bu listeyle teklif isteyin" href="/iletisim" />}
             </div>
           </div>
         </FadeUp>

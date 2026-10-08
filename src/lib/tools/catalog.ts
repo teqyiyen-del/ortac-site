@@ -364,7 +364,7 @@ const SEEDS = [
     accent: "ismi üreteci",
     meta: "Üç ülke için · üç alternatif üretir",
     is: "Bir anahtar kelime ve bir üslup seçiyorsunuz; araç kelime birleştirerek aday isimler çıkarıyor ve ilk üçünü tercih sırasıyla kopyalanacak biçimde veriyor.",
-    isNot: "Müsaitlik sorgusu DEĞİL. Bir ismin tescil edilebilir olup olmadığını yalnızca ilgili otorite söyler; benzerlik kontrolü ve kısıtlı kelime listesi ayrı bir aşamadır. Araç yapay zekâ da kullanmıyor, sabit kelime listelerini birleştiriyor.",
+    isNot: "Müsaitlik sorgusu değil. Bir ismin tescil edilebilir olup olmadığını yalnızca ilgili otorite söyler; benzerlik kontrolü ve kısıtlı kelime listesi ayrı bir aşamadır. Araç yapay zekâ da kullanmıyor, sabit kelime listelerini birleştiriyor.",
     source: "lib/tools/names.ts · kelime listeleri (sayı üretmiyor)",
   },
   {
@@ -377,7 +377,7 @@ const SEEDS = [
     accent: "ismi sorgulama",
     meta: "Companies House kaydında benzer isimler",
     is: "Düşündüğünüz ismi yazıyorsunuz; araç Companies House'un resmî kaydında aynı ya da çok benzer isimle kayıtlı şirket olup olmadığına bakıyor.",
-    isNot: "İsmin tescil edilebileceğini garanti etmiyor. Kısıtlı ve hassas kelimeler, marka hakları ve Companies House'un kendi değerlendirmesi ayrı bir aşama; son sözü başvuru sırasında Companies House söyler.",
+    isNot: "İsmin tescil edilebileceğini garanti etmiyor. Kısıtlı ve hassas kelimeler, marka hakları ve Companies House'un kendi değerlendirmesi ayrı bir aşama; kararı başvuru sırasında Companies House verir.",
     source: "Companies House Public Data API · search/companies (sunucu rotası üzerinden; anahtar ortam değişkeninde, istemciye inmiyor)",
     sunucu: {
       cumle:

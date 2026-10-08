@@ -388,7 +388,7 @@ export default function UaeVat() {
                 nokta, ondalık virgül.
               </>
             ) : !hesap ? (
-              "Bir tutar yazın, dağılım burada oluşsun."
+              "Bir tutar yazın; dağılım burada oluşur."
             ) : (
               <>
                 Toplamın içindeki KDV payı {formatPercent(PAY_KDV, 2)}, toplamın {label} kadarı

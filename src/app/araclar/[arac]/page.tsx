@@ -8,6 +8,7 @@ import { TOOL_VIEW } from "@/components/tools/registry";
 import { PAGED_TOOLS, type PagedToolId } from "@/lib/tools/catalog";
 import { SITE } from "@/lib/routes";
 
+import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
    ARAÇ SAYFASI — /araclar/<araç>
    ============================================================================
@@ -109,6 +110,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     description: t.is,
     alternates: { canonical: url },
     openGraph: {
+      images: [OG_GORSEL],
       /* "website", "article" DEĞİL (bütünlük denetimi turu). Bu dört sayfa
          `article` basıyordu, kurumlar vergisinin üç ülke sayfası `website`;
          aynı ailenin sekiz sayfası paylaşımda iki ayrı tür bildiriyordu.

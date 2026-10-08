@@ -151,8 +151,9 @@ export default function SssAkordeon({
             <b>Sorunuz listede yok mu?</b>
             <span>Kendi durumunuzu görüşmede sorabilirsiniz.</span>
           </div>
+          {/* 09.10.2026 · teslim öncesi akış denetimi: hedef /basla idi (kuruluş penceresi); soru iletişime gider */}
           <SmartLink
-            href="/basla"
+            href="/iletisim"
             className="btn btn-solid sssa-ask-btn"
             onClick={() => gtm("cta_meeting_click", { placement })}
           >

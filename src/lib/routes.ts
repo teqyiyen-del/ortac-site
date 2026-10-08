@@ -281,6 +281,11 @@ const STATIC_LIVE = [
   "/ingiltere/muhasebe",
   "/ingiltere/banka-hesabi",
   "/ingiltere/vergi",
+  /* 09.10.2026 · /panel bir sayfa değil yönlendirme (next.config.ts): eski
+     sitedeki müşteri paneli adresine gidiyor. Defterde durması menüdeki ve
+     footer'daki "Panel girişi"ni tıklanır yapıyor; haritaya girmiyor
+     (app/sitemap.ts · HARITA_DISI). */
+  "/panel",
   "/kktc/vergi",
   "/dubai/vergi",
   "/dubai/kurumsal-danismanlik",

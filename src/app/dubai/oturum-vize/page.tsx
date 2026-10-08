@@ -33,6 +33,8 @@ import FinalCta from "@/components/FinalCta";
 import VizeHeroCard from "@/components/services/VizeHeroCard";
 import { VIZE_DUBAI as V, type VizeIkon } from "@/lib/vizeDubai";
 
+import { sayfaKunye } from "@/lib/seo";
+import Tel from "@/components/mobil/Tel";
 /* ============================================================================
    DUBAİ · VİZE & OTURUM — /dubai/oturum-vize
    Metin: lib/vizeDubai.ts (kaynak düzeni ve teyit bekleyenler orada) ·
@@ -58,10 +60,11 @@ import { VIZE_DUBAI as V, type VizeIkon } from "@/lib/vizeDubai";
    STATİK KLASÖR, DİNAMİK ŞABLONU EZİYOR (app/dubai/[hizmet]; muhasebe ve
    banka da böyle). */
 
-export const metadata: Metadata = {
+export const metadata: Metadata = sayfaKunye({
   title: "Dubai'de Oturum Vizesi ve Emirates ID | Ortac Global",
   description: V.hero.lead,
-};
+  yol: "/dubai/oturum-vize",
+});
 
 /* PageHero istemci bileşeni, bu sayfa sunucu bileşeni: lucide bileşeninin
    kendisi sınırı geçemez, çizilmiş düğüm geçer. */
@@ -147,7 +150,7 @@ export default function DubaiVizePage() {
             <div className="sec-head">
               <SplitWords as="h2" text={T.heading} accent={T.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{T.lead}</p>
+                <p className="sec-lead"><Tel>{T.lead}</Tel></p>
               </FadeUp>
             </div>
             <ul className="svz-tur">
@@ -163,7 +166,7 @@ export default function DubaiVizePage() {
                         <span className="svz-tur-sp">{t.kim}</span>
                       </span>
                       <h3 className="svz-tur-t">{t.title}</h3>
-                      <p className="svz-tur-s">{t.line}</p>
+                      <p className="svz-tur-s"><Tel>{t.line}</Tel></p>
                     </FadeUp>
                   </li>
                 );
@@ -179,7 +182,7 @@ export default function DubaiVizePage() {
             <div className="sec-head">
               <SplitWords as="h2" text={Q.heading} accent={Q.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{Q.lead}</p>
+                <p className="sec-lead"><Tel>{Q.lead}</Tel></p>
               </FadeUp>
             </div>
             <div className="svz-bol">
@@ -218,7 +221,7 @@ export default function DubaiVizePage() {
             <div className="sec-head">
               <SplitWords as="h2" text={S.heading} accent={S.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{S.lead}</p>
+                <p className="sec-lead"><Tel>{S.lead}</Tel></p>
               </FadeUp>
             </div>
             <ol className="svz-adim">
@@ -254,7 +257,7 @@ export default function DubaiVizePage() {
             <div className="sec-head">
               <SplitWords as="h2" text={K.heading} accent={K.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{K.lead}</p>
+                <p className="sec-lead"><Tel>{K.lead}</Tel></p>
               </FadeUp>
             </div>
             <ul className="svz-kor">

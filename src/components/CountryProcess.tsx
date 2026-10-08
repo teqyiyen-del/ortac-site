@@ -15,6 +15,7 @@ import { COUNTRY_SLUGS } from "@/lib/services";
    SurecP3 · KIM'de. */
 import type { Step } from "@/lib/countryContent";
 
+import Tel from "@/components/mobil/Tel";
 /* 25.09.2026 · BÖLÜM P3'E GEÇTİ (components/shared/SurecP3; /lab/surec'te
    seçildi). Solda alt alta yedi satırlık ray ve sağdaki kartın başlığı
    ("Kuruluş dosyası", adım adı, "3/7") kalktı; solda yalnız o anki adım +
@@ -143,7 +144,9 @@ export default function CountryProcess({
     if (detailOverride) return detailOverride;
     const slug = pathname.split("/").find((seg) => (COUNTRY_SLUGS as string[]).includes(seg));
     if (!slug) return FALLBACK_DETAIL;
-    return { href: `/${slug}`, label: "Kuruluş hizmeti: kapsam, hariç kalemler ve tutar" };
+    /* 09.10.2026 · teslim öncesi akış denetimi: hedef sayfanın kendisiydi (/dubai), tıklayınca en
+       başa atıyordu. Etiketin söz verdiği şey fiyat bölümünde. */
+    return { href: `/${slug}#fiyat`, label: "Kuruluş hizmeti: kapsam, hariç kalemler ve tutar" };
   }, [pathname, detailOverride]);
 
   /* Kartın boyu adıma göre oynamasın: bu ülkenin çözdüğü bütün çizimler aynı
@@ -178,7 +181,7 @@ export default function CountryProcess({
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Her adımda sorumluluğun kimde olduğu yazıyor; tıklandığında akış durur.</p>
+            <p className="sec-lead"><Tel>Her adımda sorumluluğun kimde olduğu yazıyor; tıklandığında akış durur.</Tel></p>
           </FadeUp>
         </div>
       }

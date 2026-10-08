@@ -455,7 +455,9 @@
   color: var(--text-900);
   height: 44px;
   padding: 0 40px 0 48px;
-  border: 1.5px solid var(--txm-pc, var(--border));
+  /* 09.10.2026 · çerçeve seçili ülkenin rengini alıyordu (Türkiye'de kırmızı);
+     iki görsel denetim de "form hatası gibi okunuyor" dedi. Seçim rengi mavi. */
+  border: 1.5px solid var(--blue-700);
   border-radius: var(--r-pill);
   background: var(--white);
   box-shadow: var(--shadow-card);

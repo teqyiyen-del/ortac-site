@@ -60,7 +60,7 @@ export default function Error({
           <p className="hta-kod">Beklenmeyen hata</p>
           <h1 className="ph-title">Bu sayfa şu an açılamadı.</h1>
           <p className="ph-lead">
-            Sorun sizde değil. Yeniden denemek çoğu zaman yeterli oluyor; sürerse
+            Sorun sizden kaynaklanmıyor. Yeniden denemek çoğu zaman yeterli oluyor; sürerse
             ana sayfadan devam edebilir ya da bize yazabilirsiniz.
           </p>
 

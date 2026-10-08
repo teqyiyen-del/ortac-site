@@ -53,7 +53,7 @@ export type PartnerIcon =
 export const PARTNER_SEO = {
   title: "İş Ortaklığı — Danışman ve Acente Kanalı | Ortac Global",
   description:
-    "Müvekkilinizi, danışanınızı ya da öğrencinizi Dubai, İngiltere veya KKTC'ye yönlendirin; kuruluş, banka başvurusu ve muhasebe tarafını kendi ekibimiz yürütsün. Referans ve white-label modeli.",
+    "Müvekkilinizi, danışanınızı ya da öğrencinizi Dubai, İngiltere veya KKTC'ye yönlendirin; kuruluş, banka başvurusu ve muhasebeyi kendi ekibimiz yürütür. Referans ve white-label modeli.",
   /** kanonik adres mutlak yazılıyor — layout.tsx'te metadataBase tanımlı değil */
   path: "/is-ortakligi",
 };
@@ -157,7 +157,7 @@ export const PARTNER_VALUE: PartnerValue[] = [
     title: "Üç ülke, tek muhatap",
     line: "Dubai, İngiltere ve KKTC aynı ekipte yürüyor.",
     detail:
-      "Müşterinizin işine hangisi oturuyorsa oraya gidebiliyorsunuz; üç ülke için üç ayrı tedarikçiyle anlaşmanız gerekmiyor. Hangisinin uygun olduğu faaliyete, tahsilat kanalına ve oturum ihtiyacına göre değişiyor.",
+      "Müşterinizin işine hangi ülke uygunsa ona yönlendirebiliyorsunuz; üç ülke için üç ayrı tedarikçiyle anlaşmanız gerekmiyor. Hangisinin uygun olduğu faaliyete, tahsilat kanalına ve oturum ihtiyacına göre değişiyor.",
   },
   {
     icon: "stamp",
@@ -169,7 +169,7 @@ export const PARTNER_VALUE: PartnerValue[] = [
   {
     icon: "badge",
     title: "Resmî iş ortaklıkları",
-    line: "IFZA resmî iş ortağıyız.",
+    line: "IFZA, Meydan ve DWTC iş ortağıyız.",
     detail:
       "Serbest bölge başvurusu bir aracı üzerinden değil, doğrudan yürüyor. Banka ve tahsilat tarafında Wio Business, Mashreq NeoBiz, PayPal ve wamo ile çalışıyoruz.",
   },
@@ -181,7 +181,7 @@ export const PARTNER_VALUE: PartnerValue[] = [
     title: "Üç ülkede kendi ofisimiz",
     line: "Evrak ve otorite trafiği yerinden yürüyor.",
     detail:
-      "Hiçbir ülkede işin yereli uzaktan bir aracıya devredilmiyor; başvuru, imza ve banka görüşmeleri kendi ofislerimizden yürütülüyor. Müşteriniz için bu, sürecin kimin elinde olduğunu bilmek demek.",
+      "Hiçbir ülkede yerel işlemler uzaktaki bir aracıya devredilmiyor; başvuru, imza ve banka görüşmeleri kendi ofislerimizden yürütülüyor. Müşteriniz için bu, sürecin kimin elinde olduğunu bilmek demek.",
   },
   {
     icon: "panel",
@@ -210,7 +210,7 @@ export const PARTNER_VALUE: PartnerValue[] = [
 export const PARTNER_LIMITS_HEAD = {
   title: "Ortağımız olarak da veremeyeceğiniz sözler",
   lead:
-    "Bunlar pazarlama tercihi değil, firmanın politikası. Müşteriye bu üç konuda söz veren bir kanal, ilk olumsuz sonuçta hem bizi hem sizi yakar.",
+    "Bunlar pazarlama tercihi değil, firmanın politikası. Müşteriye bu üç konuda söz veren bir kanal, ilk olumsuz sonuçta hem bizi hem sizi zor durumda bırakır.",
 };
 
 /* --------------------------------------------------------- hizmet zinciri */
@@ -312,7 +312,7 @@ export const PARTNER_FORM = {
   /* Kısa tutuldu. Referans sitede dört alan var; bizde beş, çünkü faaliyet
      alanı ve model tercihi ilk görüşmenin konusunu baştan belirliyor. */
   fields: [
-    { name: "ad", label: "Ad soyad", type: "text", placeholder: "Adınız ve soyadınız" },
+    { name: "ad", label: "Ad Soyad", type: "text", placeholder: "Adınız ve soyadınız" },
     { name: "eposta", label: "E-posta", type: "email", placeholder: "ornek@firma.com" },
     { name: "telefon", label: "Telefon", type: "tel", placeholder: "+90 5xx xxx xx xx" },
     {
@@ -344,8 +344,11 @@ export const PARTNER_FORM = {
   ] as PartnerField[],
   submitLabel: "Başvuruyu gönder",
   /** formun kapalı olduğunu söyleyen rozet ve açıklama — gizlenmiyor */
-  badge: "Form henüz açılmadı",
-  note: "Bu formun gönderim ucu henüz bağlanmadı, o yüzden alanlar kapalı duruyor. Ortaklık başvurusu için şimdilik doğrudan bize yazın.",
+  /* 09.10.2026 · form açıldı (shared/FormBagla, lib/formGonder). Eski hâl:
+     rozet "Form henüz açılmadı", not "Bu formun gönderim ucu henüz
+     bağlanmadı…". Rozet artık basılmıyor. */
+  badge: "",
+  note: "Başvurunuz ekibimize iletilir; ilk görüşme için size dönüş yapıyoruz.",
   askLabel: "Ortaklık için bize yazın",
 };
 
@@ -371,7 +374,7 @@ export const PARTNER_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Müşterimi hangi ülkelere yönlendirebilirim?",
-    a: "Dubai, İngiltere ve KKTC. Üçü de aynı ekipte yürüyor. Hangisinin işe oturduğu müşterinin faaliyetine, tahsilat kanalına ve oturum ihtiyacına göre değişiyor; kartla tahsilat ana kanalsa ülke seçimi buradan değişebiliyor.",
+    a: "Dubai, İngiltere ve KKTC. Üçü de aynı ekipte yürüyor. Hangisinin uygun olduğu müşterinin faaliyetine, tahsilat kanalına ve oturum ihtiyacına göre değişiyor; kartla tahsilat ana kanalsa ülke seçimi buradan değişebiliyor.",
   },
   {
     q: "Kuruluştan sonra müşteriye kim bakıyor?",

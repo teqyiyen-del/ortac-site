@@ -133,6 +133,8 @@ import { DUBAI_VARSAYILAN, dubaiSatirlar, dubaiToplam, type DubaiSecim } from "@
 import { KktcSecimFormu } from "@/components/country/KktcFiyat";
 import { KKTC_VARSAYILAN, euro, kktcSatirlar, kktcToplam, type KktcSecim } from "@/lib/kktcFiyat";
 import type { BaslaOnceden } from "@/lib/baslaSecim";
+import { officeFor, type Office } from "@/lib/offices";
+import { epostaBaglantisi, formGonder, type FormAlan } from "@/lib/formGonder";
 import "@/app/css/lab-satis.css";
 import "@/app/css/dubai-ek.css";
 
@@ -220,6 +222,7 @@ export function SatisPenceresi({
   const [secim, setSecim] = useState<DubaiSecim>(onceden?.ulke === "dubai" ? onceden.dubai : DUBAI_VARSAYILAN);
   const [kktc, setKktc] = useState<KktcSecim>(onceden?.ulke === "kktc" ? onceden.kktc : KKTC_VARSAYILAN);
   const [tier, setTier] = useState<Tier | null>(null);
+  const [gonderim, setGonderim] = useState<"gidiyor" | "gonderildi" | "yok" | null>(null);
   const [kisi, setKisi] = useState<Kisi>({ ad: "", soyad: "", eposta: "", telefon: "" });
   const [dokundu, setDokundu] = useState(false);
   const [yontem, setYontem] = useState<"kart" | "havale" | null>(null);
@@ -297,10 +300,37 @@ export function SatisPenceresi({
     }
   }
 
+  /* 09.10.2026 · teslim öncesi akış denetimi. Son ekran "bir kopyası …
+     adresine gönderildi" diyordu ama hiçbir şey gönderilmiyordu. Akış artık
+     biterken özeti gerçekten yolluyor (lib/formGonder → app/api/form). Sunucu
+     gönderemezse (anahtar tanımlı değilse) son ekran bunu SÖYLÜYOR ve özeti
+     WhatsApp ya da e-postayla iletecek iki hazır düğme veriyor. */
+  const ozetAlanlar = (): FormAlan[] => [
+    ["Özet no", teklifNo],
+    ["Ad Soyad", `${kisi.ad} ${kisi.soyad}`.trim()],
+    ["E-posta", kisi.eposta],
+    ["Telefon", kisi.telefon],
+    ["Ülke", ulke === "kktc" ? "KKTC" : "Dubai"],
+    ...(ulke === "kktc" ? kktcSatirlar() : dubaiSatirlar(secim)).map(
+      (l): FormAlan => [l.ad, ulke === "kktc" ? euro(l.tutar) : money(l.tutar)],
+    ),
+    ["Toplam", ulke === "kktc" ? euro(kktcToplam()) : money(dubaiToplam(secim))],
+  ];
+
   function ileri() {
     /* ödemesiz akış: teklif adımındaki düğme teklifi KABUL ediyor */
     if (akis !== "odeme" && adim === 3) {
       setBitti(true);
+      if (!sunum && ulke) {
+        setGonderim("gidiyor");
+        void formGonder({
+          tur: "kurulum",
+          konu: `Kurulum özeti · ${teklifNo}`,
+          alanlar: ozetAlanlar(),
+          yedekEposta: officeFor(ulke).contact.email.value,
+          epostaAc: false,
+        }).then((r) => setGonderim(r === "gonderildi" ? "gonderildi" : "yok"));
+      }
       return;
     }
     if (sunum) {
@@ -377,7 +407,15 @@ export function SatisPenceresi({
         {/* ------------------------------------------------------------ GÖVDE */}
         <div className="sat-govde" data-lenis-prevent="">
           {bitti ? (
-            <Tamam akis={akis} yontem={yontem} teklifNo={teklifNo} eposta={kisi.eposta} />
+            <Tamam
+              akis={akis}
+              yontem={yontem}
+              teklifNo={teklifNo}
+              eposta={kisi.eposta}
+              gonderim={gonderim}
+              ofis={ulke ? officeFor(ulke) : null}
+              alanlar={ulke ? ozetAlanlar() : []}
+            />
           ) : (
             <div className="sat-adim" key={adim}>
               {/* ================================================= 1 · ÜLKE */}
@@ -387,6 +425,25 @@ export function SatisPenceresi({
                   <div className="sat-ulkeler" role="radiogroup" aria-labelledby="sat-a0">
                     {ULKELER.map((c) => {
                       const acikMi = ozetM ? OZET_ACIK.includes(c) : c === ACIK;
+                      /* 09.10.2026 · teslim öncesi akış denetimi: akışta olmayan
+                         ülke (İngiltere) soluk ve tıklanmaz "Yakında bu akışta"
+                         kartıydı; /ingiltere'deki bütün "başlat" düğmeleri de bu
+                         pencereye indiği için ziyaretçi kilitli kalıyordu. Kart
+                         artık iletişime giden bir bağlantı. Yalnız canlı akışta
+                         (ozet); lab demosundaki kapalı kartlar eskisi gibi. */
+                      if (!acikMi && ozetM)
+                        return (
+                          <a key={c} className="sat-ulke sat-ulke-dis" href="/iletisim">
+                            <span className="sat-bayrak" aria-hidden="true">
+                              <Flag country={c} />
+                            </span>
+                            <span className="sat-ulke-t">
+                              <b>{COUNTRY_LABELS[c]}</b>
+                              <span>Teklif için iletişime geçin</span>
+                            </span>
+                            <ArrowRight size={16} strokeWidth={2.1} aria-hidden="true" />
+                          </a>
+                        );
                       return (
                         <label key={c} className="sat-ulke" data-kapali={!acikMi || undefined}>
                           <input
@@ -543,9 +600,8 @@ export function SatisPenceresi({
                         <p>
                           <span>Tarih</span> <b>{bugun}</b>
                         </p>
-                        <p>
-                          <span>Geçerlilik</span> <b className="sat-swap-i">SWAP · teyit edilecek</b>
-                        </p>
+                        {/* "Geçerlilik: SWAP · teyit edilecek" satırı kalktı
+                            (09.10.2026): süre Murat Bey'den gelince geri konur. */}
                       </div>
                     </header>
 
@@ -750,7 +806,7 @@ export function SatisPenceresi({
             )}
 
             <div className="sat-alt-sag">
-            <Yardim />
+            <Yardim ofis={ulke ? officeFor(ulke) : null} />
 
             {adim < 3 && (
               <button
@@ -900,14 +956,18 @@ function Alan({
    ulaşabilmeleri için bir numara vereceğiz. Şimdilik butonunu koyman yeterli."
    SWAP:WHATSAPP — numara gelince `https://wa.me/<numara>` bağlantısı olacak;
    demoda düğme hiçbir yere gitmiyor. Yeşil WhatsApp'ın kendi marka rengi. */
-function Yardim() {
+function Yardim({ ofis }: { ofis?: Office | null }) {
+  /* 09.10.2026 · düğme hiçbir yere gitmiyordu ("Demo: numara eklenecek").
+     Ofislerin WhatsApp hattı lib/offices'te zaten kayıtlı ve iletişim
+     sayfasında yayında; ülke belliyse o ofise, değilse Dubai ofisine yazılır. */
+  const hat = (ofis ?? officeFor("dubai")).contact.whatsapp.href;
   return (
-    <button type="button" className="sat-yardim" title="Demo: numara eklenecek">
+    <a className="sat-yardim" href={hat} target="_blank" rel="noopener noreferrer">
       <MessageCircle size={16} strokeWidth={2} aria-hidden="true" />
       <span>
         Takıldınız mı? <b>WhatsApp&apos;tan yazın</b>
       </span>
-    </button>
+    </a>
   );
 }
 
@@ -921,11 +981,17 @@ function Tamam({
   yontem,
   teklifNo,
   eposta,
+  gonderim,
+  ofis,
+  alanlar,
 }: {
   akis: Akis;
   yontem: "kart" | "havale" | null;
   teklifNo: string;
   eposta: string;
+  gonderim: "gidiyor" | "gonderildi" | "yok" | null;
+  ofis: Office | null;
+  alanlar: FormAlan[];
 }) {
   const kabul = akis === "kabul";
   if (akis === "ozet")
@@ -935,11 +1001,35 @@ function Tamam({
           <Check size={26} strokeWidth={2.4} />
         </span>
         <h2 id="sat-tamam-t" className="sat-soru">
-          Süreç başladı, müşteri paneline geçiyorsunuz
+          {gonderim === "yok" ? "Özetiniz hazır" : "Özetiniz bize ulaştı"}
         </h2>
-        <p>
-          Özet <b>{teklifNo}</b>. Bir kopyası <b>{eposta}</b> adresine gönderildi. Devamı müşteri panelinde.
-        </p>
+        {gonderim === "yok" ? (
+          <p>
+            Özet <b>{teklifNo}</b>. Süreci başlatmak için özeti aşağıdaki düğmelerden biriyle ofisimize iletin;
+            dönüşü <b>{eposta}</b> adresinize yapıyoruz.
+          </p>
+        ) : (
+          <p>
+            Özet <b>{teklifNo}</b> ekibimize iletildi. Dönüşü <b>{eposta}</b> adresinize yapıyoruz; devamı müşteri
+            panelinde.
+          </p>
+        )}
+        {gonderim === "yok" && ofis && (
+          <div className="sat-ilet">
+            <a
+              className="btn btn-sm sat-ana"
+              href={`${ofis.contact.whatsapp.href}?text=${encodeURIComponent(alanlar.map(([k, v]) => `${k}: ${v}`).join("\n"))}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Özeti WhatsApp&apos;tan gönder
+              <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+            </a>
+            <a className="btn btn-sm sat-ilet-e" href={epostaBaglantisi(ofis.contact.email.value, `Kurulum özeti · ${teklifNo}`, alanlar)}>
+              E-postayla gönder
+            </a>
+          </div>
+        )}
         <ol className="sat-sonra">
           <li>
             <span>01</span>Panelde hesabınızı açarsınız.
@@ -956,13 +1046,14 @@ function Tamam({
         </ol>
         {/* SWAP · panelin adresi gelince bu düğme oraya giden bir bağlantı
             olacak (gerçek akışta "Süreci başlatalım" doğrudan oraya götürür). */}
-        <button type="button" className="btn btn-sm sat-ana">
-          Müşteri paneline geç
-          <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-          <span className="sat-demo">demo</span>
-        </button>
-        <Yardim />
-        <p className="sat-demo-not">Demo: hiçbir bilgi bir yere gönderilmedi, panel bağlantısı henüz bağlı değil.</p>
+        {/* /panel: eski sitedeki müşteri paneli adresine yönleniyor (next.config.ts) */}
+        {gonderim !== "yok" && (
+          <a className="btn btn-sm sat-ana" href="/panel">
+            Müşteri paneline geç
+            <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+          </a>
+        )}
+        <Yardim ofis={ofis} />
       </section>
     );
   return (
@@ -1013,7 +1104,7 @@ function Tamam({
           </li>
         </ol>
       )}
-      <Yardim />
+      <Yardim ofis={ofis} />
       <p className="sat-demo-not">
         {kabul
           ? "Demo: hiçbir bilgi bir yere gönderilmedi."

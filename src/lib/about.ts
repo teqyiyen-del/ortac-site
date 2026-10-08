@@ -199,7 +199,7 @@ export const OPENING = {
        ülkelerde kendi ofisimiz var hepsini biz yönetiyoruz... taktın sadece
        dubaiye yazma şu olayı." Üç ülkenin üçünde de firmanın kendi ofisi var
        ve üçünü de kendisi yürütüyor. */
-    "Bunun arkasında üç somut dayanak var: kendi muhasebe lisansımız, Dubai serbest bölgesiyle resmî iş ortaklığımız ve üç ülkenin üçünde de kendi ofisimiz.",
+    "Bunun arkasında üç somut dayanak var: kendi muhasebe lisansımız, Dubai'nin üç serbest bölgesiyle iş ortaklığımız ve üç ülkenin üçünde de kendi ofisimiz.",
   ],
 
   /* `photoNote` BU TURDA BURADAN ÇIKTI, HERO'YA TAŞINDI. Ekip fotoğrafı da
@@ -306,7 +306,7 @@ export const IDENTITY = {
        kuruluş ayı elimizde yok. Yanlış bir kuruluş yılı, yuvarlanmış bir
        süreden çok daha büyük bir hata — künyeye tarih olarak yazılıyor,
        yani doğrulanabilir bir iddiaya dönüşüyor. Boş kalan satır basılmıyor. */
-    { label: "Kuruluş yılı", value: "" },
+    { label: "Kuruluş yılı", value: "1996" },
     /* SWAP:LICENCE_NO — muhasebe lisansının numarası ve veren otorite.
        Lisansın VARLIĞI doğrulanmış ve sayfada yazıyor; numarası yazılmıyor. */
     { label: "Lisans numarası", value: "" },
@@ -345,7 +345,7 @@ export const WHERE = {
     },
     {
       slug: "kktc" as CountrySlug,
-      line: "Yerel tescil ve Türkiye'ye yakın operasyon. Firmanın en eski çalıştığı ülke.",
+      line: "Serbest Liman tescili ve Türkiye'ye yakın operasyon. Firmanın en eski çalıştığı ülke.",
       href: "/kktc",
     },
     {
@@ -355,7 +355,9 @@ export const WHERE = {
          üç ülkede de kendi ofisimiz var. Ofis artık lead'de, üçü için birden.
          Geriye Dubai'nin GERÇEKTEN tek olduğu şey kaldı: serbest bölgeyle
          resmî iş ortaklığı (bkz. BASIS · IFZA). */
-      line: "Serbest bölge başvurusu IFZA ile doğrudan yürüyor; otorite ve banka trafiği de buradan geçiyor.",
+      /* 09.10.2026 · teslim öncesi bilgi denetimi: yalnız IFZA yazıyordu; teklif belgesine göre IFZA,
+           Meydan ve DWTC'nin üçü de sözleşmeli iş ortağı */
+        line: "Serbest bölge başvurusu IFZA, Meydan ve DWTC ile doğrudan yürüyor; otorite ve banka trafiği de buradan geçiyor.",
       href: "/dubai",
     },
   ],
@@ -443,7 +445,7 @@ export const BASIS = {
     },
     {
       icon: "handshake" as AboutIcon,
-      t: "IFZA resmî iş ortağıyız",
+      t: "IFZA, Meydan ve DWTC iş ortağıyız",
       /* 21.09.2026 · CÜMLE UZADI. Burak: "IFZA karosunun cümlesini de uzat."
          Bentoda bu kart iki satırda bitiyor, yanındakiler üç ve dört, ve
          satır üçünü aynı boya çektiği için fark karonun dibinde boşluk olarak

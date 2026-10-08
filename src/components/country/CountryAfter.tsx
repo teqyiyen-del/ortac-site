@@ -24,6 +24,7 @@ import {
 } from "@/lib/afterSetup";
 import type { Country } from "@/lib/store";
 
+import Tel from "@/components/mobil/Tel";
 /* Kuruluş sonrası yükümlülükler.
  *
  * Bölümün derdi tek bir soru: "şirketi kurdum, bundan sonra bana ne çıkıyor?"
@@ -212,7 +213,7 @@ function After({ d }: { d: AfterSetup }) {
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">{d.lead}</p>
+            <p className="sec-lead"><Tel>{d.lead}</Tel></p>
           </FadeUp>
         </div>
 
@@ -253,7 +254,7 @@ function After({ d }: { d: AfterSetup }) {
               </li>
             </ul>
 
-            <p className="aft-anchor-note">{d.firstYear.anchorNote}</p>
+            <p className="aft-anchor-note"><Tel>{d.firstYear.anchorNote}</Tel></p>
 
             <MoreBtn
               id={`${uid}-calc-b`}
@@ -314,11 +315,11 @@ function After({ d }: { d: AfterSetup }) {
                 </li>
               </ol>
 
-              <p className="aft-total-n">
+              <p className="aft-total-n"><Tel>
                 Yeni kurulmuş, standart faaliyet gösteren bir şirket için örnek
                 hesap. Kendi rakamınız faaliyetinize, lisansınıza ve işlem
                 hacminize göre değişir.
-              </p>
+              </Tel></p>
 
               {/* Koşullu kalemler toplamın DIŞINDA, ve burada bilerek bir ara
                   toplam yazmıyor: hepsini toplamak, hepsi doğacakmış gibi bir
@@ -347,7 +348,7 @@ function After({ d }: { d: AfterSetup }) {
                     </li>
                   ))}
                 </ul>
-                <p className="aft-out-note">{d.firstYear.outNote}</p>
+                <p className="aft-out-note"><Tel>{d.firstYear.outNote}</Tel></p>
               </div>
             </Fold>
           </div>
@@ -645,7 +646,7 @@ function After({ d }: { d: AfterSetup }) {
         </FadeUp>
 
         <FadeUp delay={0.2}>
-          <p className="aft-foot">{d.footnote}</p>
+          <p className="aft-foot"><Tel>{d.footnote}</Tel></p>
           <div className="aft-foot-cta">
             <AskCta />
           </div>

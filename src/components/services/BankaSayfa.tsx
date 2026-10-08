@@ -38,6 +38,7 @@ import CountryFaq from "@/components/CountryFaq";
 import FinalCta from "@/components/FinalCta";
 import type { BankaIkon, BankaVeri, BankaSahneKaro } from "@/lib/bankaDubai";
 
+import Tel from "@/components/mobil/Tel";
 /* ============================================================================
    BANKA & ÖDEME SAYFASI · ortak gövde (07.10.2026)
    /dubai/banka-hesabi ve /kktc/banka-hesabi aynı bölümleri basıyor: giriş,
@@ -290,7 +291,7 @@ export default function BankaSayfa({ veri: B }: { veri: BankaVeri }) {
             <div className="sec-head">
               <SplitWords as="h2" text={K.heading} accent={K.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{K.lead}</p>
+                <p className="sec-lead"><Tel>{K.lead}</Tel></p>
               </FadeUp>
             </div>
 
@@ -347,7 +348,7 @@ export default function BankaSayfa({ veri: B }: { veri: BankaVeri }) {
             <div className="sec-head">
               <SplitWords as="h2" text={O.heading} accent={O.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{O.lead}</p>
+                <p className="sec-lead"><Tel>{O.lead}</Tel></p>
               </FadeUp>
             </div>
 
@@ -389,7 +390,7 @@ export default function BankaSayfa({ veri: B }: { veri: BankaVeri }) {
             <div className="sec-head">
               <SplitWords as="h2" text={B.steps.heading} accent={B.steps.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{B.steps.lead}</p>
+                <p className="sec-lead"><Tel>{B.steps.lead}</Tel></p>
               </FadeUp>
             </div>
             <ol className="svb-adim">

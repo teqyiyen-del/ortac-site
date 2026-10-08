@@ -12,7 +12,6 @@ import {
   ExternalLink,
   IdCard,
   Landmark,
-  Lock,
   MapPin,
   MessageCircle,
   Minus,
@@ -44,6 +43,8 @@ import {
 } from "@/lib/services";
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
+import Tel from "@/components/mobil/Tel";
+import { formGonder, FORM_SONUC_METNI, type FormSonuc } from "@/lib/formGonder";
 /* ============================================================================
    /iletisim — SAYFANIN ETKİLEŞİMLİ GÖVDESİ
    CSS: src/app/css/iletisim.css · ad alanı .ct-
@@ -745,12 +746,20 @@ function errorOf(k: FieldKey, v: Values): string | null {
   }
 }
 
+/* form sunucudan gönderilemezse iletinin adresleneceği ofis (lib/offices) */
+const FORM_EPOSTA: Record<string, string> = Object.fromEntries(
+  COUNTRY_SLUGS.map((c) => [c, officeFor(c).contact.email.value]),
+);
+
 function ContactForm() {
   const [values, setValues] = useState<Values>(EMPTY);
   const [touched, setTouched] = useState<Partial<Record<FieldKey, boolean>>>({});
   /* Ülke değişince düşen konu seçimini sessizce yutmuyoruz: ne olduğunu
      yazıyoruz, yoksa ziyaretçi seçimini kendi sildi sanır. */
   const [dropped, setDropped] = useState<string | null>(null);
+  /* 09.10.2026 · gönderim açıldı (lib/formGonder, app/api/form) */
+  const [sonuc, setSonuc] = useState<FormSonuc | "gidiyor" | null>(null);
+  const [tuzak, setTuzak] = useState("");
 
   const options = useMemo(() => serviceOptionsFor(values.ulke as UlkeValue), [values.ulke]);
 
@@ -842,7 +851,38 @@ function ContactForm() {
       className="ct-form"
       noValidate
       aria-describedby="ct-form-note"
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={async (e) => {
+        e.preventDefault();
+        if (sonuc === "gidiyor") return;
+        /* eksik alan varsa hepsini göster, gönderme */
+        if (REQUIRED.some((k) => errorOf(k, values) !== null)) {
+          setTouched(Object.fromEntries(REQUIRED.map((k) => [k, true])));
+          return;
+        }
+        const ulkeAd =
+          values.ulke === "belirsiz" ? "Henüz karar vermedim" : COUNTRY_LABELS[values.ulke as Country];
+        const konuAd =
+          values.hizmet === "belirsiz"
+            ? "Birden fazla konu"
+            : (options.find((o) => o.slug === values.hizmet)?.title ?? values.hizmet);
+        setSonuc("gidiyor");
+        const r = await formGonder({
+          tur: "iletisim",
+          konu: `Site iletişim formu · ${ulkeAd} · ${konuAd}`,
+          alanlar: [
+            ["Ülke", ulkeAd],
+            ["Konu", konuAd],
+            ["Ad Soyad", values.ad],
+            ["E-posta", values.eposta],
+            ["Telefon", values.telefon],
+            ["Web sitesi", values.website],
+            ["Mesaj", values.mesaj],
+          ],
+          yedekEposta: FORM_EPOSTA[values.ulke] ?? FORM_EPOSTA.dubai,
+          tuzak,
+        });
+        setSonuc(r);
+      }}
     >
       {/* aria-live="polite": çipler değiştiğinde ekranda değişen tek şey bu
           cümle. Görmeyen kullanıcı aksi hâlde seçiminin karşılığını duymuyor. */}
@@ -1092,7 +1132,7 @@ function ContactForm() {
               dördüyle aynı davranıyor (yalnız hata varken yer kaplıyor). */}
           <div className="ct-field" data-bad={shown("website") ? "" : undefined}>
             <label className="ct-label" htmlFor="ct-website">
-              Website
+              Web sitesi
               <i className="ct-optional">İsteğe bağlı</i>
             </label>
             <input
@@ -1129,7 +1169,7 @@ function ContactForm() {
               id="ct-mesaj"
               name="mesaj"
               rows={5}
-              placeholder="Faaliyetiniz, hedef pazarınız, tahsilat kanalınız: aklınızda ne varsa."
+              placeholder="Faaliyetiniz, hedef pazarınız, tahsilat kanalınız ve sormak istedikleriniz."
               value={values.mesaj}
               aria-required="true"
               aria-invalid={shown("mesaj") ? true : undefined}
@@ -1153,14 +1193,21 @@ function ContactForm() {
       {/* --- gönderim: kapalı ve kapalı olduğunu söylüyor --- */}
       <div className="ct-foot">
         <div className="ct-foot-l">
-          <button type="submit" className="ct-send" disabled>
-            Gönder
+          <button type="submit" className="ct-send" disabled={sonuc === "gidiyor"}>
+            {sonuc === "gidiyor" ? "Gönderiliyor" : "Gönder"}
             <Send size={16} strokeWidth={2} aria-hidden="true" />
           </button>
-          <span className="ct-lock">
-            <Lock size={12} strokeWidth={2.4} aria-hidden="true" />
-            Gönderim kapalı
-          </span>
+          {/* botların doldurduğu, insanın görmediği kutu (app/api/form · tuzak) */}
+          <input
+            type="text"
+            name="sirket_unvani_2"
+            value={tuzak}
+            onChange={(e) => setTuzak(e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+          />
           {/* Sayaçta aria-live YOK ve bu bilinçli: değer yazarken değiştiği
               için canlı bölge her karakterde ekran okuyucuyu keserdi. Eksik
               alanın kendisi zaten role="alert" ile duyuruluyor. */}
@@ -1192,10 +1239,10 @@ function ContactForm() {
           dokuz çalışan kanal duruyordu. Sayfa kendi çalışan kanallarını inkâr
           ediyordu. Kapalı formu gizlemiyoruz; yalnızca "tek yol" iddiası
           düştü, yerine gerçekten en hızlı yol yazıldı. */}
-      <p className="ct-note" id="ct-form-note">
-        Form henüz bir yere bağlı değil: gönderim uç noktası eklenene kadar bu
-        buton çalışmıyor ve yazdıklarınız hiçbir yere kaydedilmiyor. En hızlı yol aşağıdaki
-        ofis bölümü: üç ofisin de telefonu, WhatsApp hattı ve e-postası açık.
+      <p className="ct-note" id="ct-form-note" role="status">
+        {sonuc === "gonderildi" || sonuc === "eposta"
+          ? FORM_SONUC_METNI[sonuc]
+          : "Talebiniz seçtiğiniz ülkenin ofisine iletilir. Dilerseniz aşağıdaki ofis bölümünden telefon, WhatsApp ya da e-postayla da ulaşabilirsiniz."}
       </p>
     </form>
   );
@@ -1323,10 +1370,10 @@ export default function ContactSections() {
                   işareti değil çerçeveyi taşıyor: üç işaret de yerinde
                   duruyor, harita seçilene yaklaşıyor. Eski cümle bu turdan
                   sonra ekranda olan bitenle çelişiyordu. */}
-              <p className="sec-lead">
+              <p className="sec-lead"><Tel>
                 Seçtiğiniz ofis haritanın çerçevesini, adres kartını ve altındaki
                 üç kanalı birlikte değiştiriyor.
-              </p>
+              </Tel></p>
             </FadeUp>
           </div>
 

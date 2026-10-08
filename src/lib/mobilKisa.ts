@@ -7,12 +7,13 @@
    aynı, ikinci yan cümle atılmış. Hedef giriş cümlesinde en çok üç, bölüm
    cümlesinde en çok iki satır.
 
-   NASIL ÇALIŞIYOR (şimdilik deneme). Anahtar, cümlenin başı (ilk kelimeler
-   yeter, tam metni yazmak gerekmiyor); components/shared/MobilDeneme deneme
-   işareti açıkken ve telefonda, eşleşen yazıyı kısasıyla değiştiriyor.
-   ONAYLANIRSA bu sözlük bileşenlere taşınır (cümlenin yanına telefon sürümü
-   yazılır, seçimi CSS yapar); çalışma anında yazı değiştirmek canlıya
-   alınacak bir yöntem değil, yalnız karar vermek için.
+   NASIL ÇALIŞIYOR (09.10.2026'dan beri canlıda). Anahtar, cümlenin başı (ilk
+   kelimeler yeter). components/mobil/Tel bir cümleyi basarken bu sözlüğe
+   bakıyor; karşılığı varsa uzun ve kısa sürümü birlikte basıyor, hangisinin
+   görüneceğini CSS seçiyor (.m-uzun / .m-kisa). Deneme aşamasında yazı
+   tarayıcıda değiştiriliyordu (zıplama yapıyordu); o yöntem kalktı.
+   YENİ CÜMLE EKLERKEN: cümlenin basıldığı yer <Tel> ile sarılı olmalı.
+   Bir cümlenin başı değişirse buradaki anahtar da değişmeli.
 
    Dokunulmayanlar: SSS cevapları (isteyen açıp okuyor), misyon ve vizyon
    (firmanın kendi cümlesi), rakam ve şart taşıyan cümlelerin rakamı. */
@@ -27,7 +28,7 @@ export const MOBIL_KISA: [bas: string, kisa: string][] = [
   ["Mevcut kaydınızı, beyanlarınızı ve banka hareketlerinizi", "Kayıtlarınızı inceleyip geçiş planı çıkarıyoruz; eksik varsa önce tamamlıyoruz."],
 
   /* ---- Dubai */
-  ["Dubai, vergi avantajı ile banka ve vize erişimini", "Vergi avantajı, banka ve vize erişimi tek yapıda. Maliyeti üç ülkenin en yükseği; bir kez Dubai'ye gelmeniz gerekiyor."],
+  ["Dubai, vergi avantajı ile banka ve vize erişimini", "Vergi avantajı, banka ve vize erişimi tek yapıda. Bir kez Dubai'ye gelmeniz gerekiyor."],
   ["Fiyat, vize kotası ve kime satabileceğiniz bu seçime", "Fiyat, vize kotası ve kime satacağınız bu seçime bağlı."],
   ["Üçünün de sözleşmeli iş ortağıyız", "Üçünün de iş ortağıyız; hangisi uygun, birlikte karar veriyoruz."],
   ["Her maddenin altında nasıl işlediğini gösteren", "Her maddenin kendi çizimi var."],
@@ -91,5 +92,4 @@ export const MOBIL_KISA: [bas: string, kisa: string][] = [
 ];
 
 /** telefon sürümü aranacak yazı kutuları (yalnız çocuk öğesi olmayanlar) */
-export const MOBIL_KISA_SECICI =
-  ".sec-lead, .dhr-lead, .ph-lead, .aut-line, .bn-line, .pf2-move p, .advx-p, .aft-foot, .aft-anchor-note, .aft-total-n, .aft-out-note, .ndx-note, .svz-tur-s, .ab-kim-p, .ab-dy-s";
+

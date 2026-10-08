@@ -21,6 +21,7 @@ import {
 } from "@/components/services/AccountingSections";
 import { ACCOUNTING_DUBAI as C, accountingFaq, accountingMonthlyPrice } from "@/lib/accountingDubai";
 
+import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
    DUBAİ MUHASEBE HİZMETİ — /dubai/muhasebe
 
@@ -144,6 +145,7 @@ export const generateMetadata = (): Metadata => ({
   description: C.seo.description,
   alternates: { canonical: PAGE_URL },
   openGraph: {
+    images: [OG_GORSEL],
     type: "article",
     locale: "tr_TR",
     siteName: "Ortac Global",

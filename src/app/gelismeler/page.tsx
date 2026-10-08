@@ -74,8 +74,12 @@ const META = RESOURCE_KINDS.gelisme;
 export const metadata: Metadata = {
   title: "Gelişmeler ve mevzuat — tarih sırasıyla | Ortac Global",
   description:
-    "Dubai, İngiltere ve KKTC tarafında neyin ne zaman değiştiği; ülkeye göre süzülebilen zaman çizelgesi. Yayınlanan her kayıt resmî kaynağına bağlanır.",
+    "Dubai, İngiltere ve KKTC tarafında neyin ne zaman değiştiği; ülkeye göre süzülebilen zaman çizelgesi. Yayımlanan her kayıt resmî kaynağına bağlanır.",
   alternates: { canonical: `${SITE}/gelismeler` },
+  /* 09.10.2026 · sayfada yalnız "Örnek" kayıt var; gerçek içerik gelene
+     kadar dizin dışı (haritadan da çıktı: app/sitemap.ts · HARITA_DISI).
+     Gerçek kayıt girildiğinde bu satır ve haritadaki satır silinir. */
+  robots: { index: false, follow: true },
 };
 
 /* Seçenekler sunucuda hazırlanıp prop olarak geçiyor: istemci bileşeni

@@ -44,6 +44,8 @@ import {
   type ContactKind,
 } from "@/lib/about";
 
+import Tel from "@/components/mobil/Tel";
+import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
    HAKKIMIZDA — /hakkimizda
 
@@ -296,6 +298,7 @@ export function generateMetadata(): Metadata {
     description: SEO.description,
     alternates: { canonical: `${SITE}${PATH}` },
     openGraph: {
+      images: [OG_GORSEL],
       type: "profile",
       locale: "tr_TR",
       siteName: "Ortac Global",
@@ -737,7 +740,7 @@ export default function AboutPage() {
                 <span className="ab-kim-perde" aria-hidden="true" />
                 <div className="ab-kim-m">
                   <h2 className="ab-kim-t">{OPENING.lead}</h2>
-                  <p className="ab-kim-p">{OPENING.body[0]}</p>
+                  <p className="ab-kim-p"><Tel>{OPENING.body[0]}</Tel></p>
                 </div>
               </div>
             </FadeUp>
@@ -921,7 +924,7 @@ export default function AboutPage() {
                 style={{ color: "var(--text-900)" }}
               />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{BASIS.partners.s}</p>
+                <p className="sec-lead"><Tel>{BASIS.partners.s}</Tel></p>
               </FadeUp>
             </div>
 
@@ -989,7 +992,7 @@ export default function AboutPage() {
             <div className="sec-head">
               <SplitWords as="h2" text={HOW.heading} accent={HOW.accent} className="h2" />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{HOW.lead}</p>
+                <p className="sec-lead"><Tel>{HOW.lead}</Tel></p>
               </FadeUp>
             </div>
 
@@ -1044,7 +1047,7 @@ export default function AboutPage() {
                 style={{ color: "var(--text-900)" }}
               />
               <FadeUp delay={0.2}>
-                <p className="sec-lead">{FOR_WHOM.lead}</p>
+                <p className="sec-lead"><Tel>{FOR_WHOM.lead}</Tel></p>
               </FadeUp>
             </div>
 

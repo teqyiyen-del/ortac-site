@@ -4,6 +4,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import type { Sermaye } from "@/lib/countryContent";
 
+import Tel from "@/components/mobil/Tel";
 /* ============================================================================
    SERMAYE BLOKE KALIYOR MU — .cse- · css/country-bilgi.css
    Veri: countryContent.ts · <ülke>.sermaye (şimdilik yalnız KKTC).
@@ -23,7 +24,7 @@ export default function CountrySermaye({ data }: { data: Sermaye }) {
         <div className="sec-head">
           <SplitWords as="h2" text={data.title} accent={data.accent} className="h2" />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">{data.lead}</p>
+            <p className="sec-lead"><Tel>{data.lead}</Tel></p>
           </FadeUp>
         </div>
 

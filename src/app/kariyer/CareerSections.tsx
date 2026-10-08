@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Inbox, Lock, Paperclip, Send } from "lucide-react";
+import { Check, Inbox, Paperclip, Send } from "lucide-react";
 
 import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
@@ -15,6 +15,7 @@ import {
   sortedOpenings,
 } from "@/lib/careers";
 
+import { formGonder, FORM_SONUC_METNI, type FormSonuc } from "@/lib/formGonder";
 /* ============================================================================
    /kariyer — SAYFANIN ETKİLEŞİMLİ GÖVDESİ
    CSS: src/app/css/kurumsal.css · ad alanı .krm-
@@ -215,6 +216,7 @@ function ApplicationForm({
   setValues: React.Dispatch<React.SetStateAction<Values>>;
 }) {
   const [touched, setTouched] = useState<Partial<Record<FieldKey, boolean>>>({});
+  const [sonuc, setSonuc] = useState<FormSonuc | "gidiyor" | null>(null);
 
   const set = (k: FieldKey, val: string) => setValues((p) => ({ ...p, [k]: val }));
   const blur = (k: FieldKey) => setTouched((p) => ({ ...p, [k]: true }));
@@ -258,7 +260,32 @@ function ApplicationForm({
       className="krm-form"
       noValidate
       aria-describedby="krm-form-note"
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={async (e) => {
+        /* 09.10.2026 · gönderim açıldı (lib/formGonder, app/api/form).
+           Özgeçmiş dosyası bu yoldan gitmiyor; aşağıdaki not e-postayla
+           gönderilmesini söylüyor (dosya yükleme ayrı bir depolama ister). */
+        e.preventDefault();
+        if (sonuc === "gidiyor") return;
+        if (REQUIRED.some((k) => errorOf(k, values) !== null)) {
+          setTouched(Object.fromEntries(REQUIRED.map((k) => [k, true])));
+          return;
+        }
+        setSonuc("gidiyor");
+        const r = await formGonder({
+          tur: "kariyer",
+          konu: `Kariyer başvurusu · ${values.pozisyon}`,
+          alanlar: [
+            ["Pozisyon", values.pozisyon],
+            ["Ad Soyad", values.ad],
+            ["E-posta", values.eposta],
+            ["Telefon", values.telefon],
+            ["Bağlantı", values.baglanti],
+            ["Not", values.not],
+          ],
+          yedekEposta: "career@ortacglobal.com",
+        });
+        setSonuc(r);
+      }}
     >
       {/* aria-live="polite": bir ilanın "başvurun" düğmesinden gelindiğinde
           ekranda değişen tek şey bu cümle. Görmeyen kullanıcı aksi hâlde
@@ -475,9 +502,12 @@ function ApplicationForm({
           <div className="krm-field" data-wide="">
             <label className="krm-label" htmlFor="krm-cv">
               Özgeçmiş (CV)
-              <i className="krm-optional">Yükleme kapalı</i>
+              <i className="krm-optional">E-postayla</i>
             </label>
-            <div className="krm-file">
+            {/* 09.10.2026 · kapalı dosya kutusu gizlendi: form artık gönderiyor,
+                yanında duran kilitli bir kutu "bozuk" gibi okunuyordu. Dosya
+                yükleme ucu gelince `hidden` kalkar. */}
+            <div className="krm-file" hidden>
               <span className="krm-file-ic" aria-hidden="true">
                 <Paperclip size={16} strokeWidth={2} />
               </span>
@@ -500,14 +530,10 @@ function ApplicationForm({
 
       {/* --- gönderim: kapalı ve kapalı olduğunu söylüyor --- */}
       <div className="krm-foot">
-        <button type="submit" className="krm-send" disabled>
-          Başvuruyu gönder
+        <button type="submit" className="krm-send" disabled={sonuc === "gidiyor"}>
+          {sonuc === "gidiyor" ? "Gönderiliyor" : "Başvuruyu gönder"}
           <Send size={16} strokeWidth={2} aria-hidden="true" />
         </button>
-        <span className="krm-lock">
-          <Lock size={12} strokeWidth={2.4} aria-hidden="true" />
-          {APPLICATION_FORM.lockLabel}
-        </span>
         {/* Sayaçta aria-live YOK ve bu bilinçli: değer yazarken değiştiği için
             canlı bölge her karakterde ekran okuyucuyu keserdi. Eksik alanın
             kendisi zaten role="alert" ile duyuruluyor. */}
@@ -516,8 +542,8 @@ function ApplicationForm({
         </span>
       </div>
 
-      <p className="krm-note" id="krm-form-note">
-        {APPLICATION_FORM.note}{" "}
+      <p className="krm-note" id="krm-form-note" role="status">
+        {sonuc === "gonderildi" || sonuc === "eposta" ? FORM_SONUC_METNI[sonuc] : APPLICATION_FORM.note}{" "}
         <SmartLink href="/iletisim">İletişim sayfası</SmartLink>
       </p>
     </form>

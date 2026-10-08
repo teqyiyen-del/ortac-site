@@ -10,6 +10,7 @@ import FadeUp from "@/components/shared/FadeUp";
 import SurecP3, { ADIM_IKON, type SurecAdim } from "@/components/shared/SurecP3";
 import { COUNTRY_NAME, COUNTRY_ORDER } from "@/lib/brand";
 
+import Tel from "@/components/mobil/Tel";
 /* 25.09.2026 · BÖLÜM P3'E GEÇTİ (components/shared/SurecP3, ülke
    sayfalarıyla aynı kalıp). Solda alt alta beş satırlık ray ve sağdaki kartın
    başlığı ("Kuruluş dosyası · Sizden bir kez evrak, gerisi bizde · 3/5")
@@ -119,10 +120,10 @@ export default function ProcessScroll() {
           <FadeUp delay={0.2}>
             {/* 23.09.2026: "üç ülkede de aynı beş adım" kalktı (Burak
                 beğenmedi), yerine çalışma biçimi. */}
-            <p className="sec-lead">
+            <p className="sec-lead"><Tel>
               Kurum ve süre ülkeye göre değişiyor, çalışma biçimimiz değişmiyor: evrakı bir kez
               veriyorsunuz, gerisini biz yürütüyoruz.
-            </p>
+            </Tel></p>
           </FadeUp>
         </div>
       }

@@ -139,13 +139,13 @@ export default function OnceSonra() {
       <div className="lmb-ikili">
         <figure>
           <figcaption>
-            Önce <span>· bugünkü hâl{boy ? ` · ${ekran(boy[0])} ekran` : ""}</span>
+            Önce <span>· eski düzen{boy ? ` · ${ekran(boy[0])} ekran` : ""}</span>
           </figcaption>
           <iframe key={`o${i}`} ref={sol} title={`${o.ad} önce`} src={`${o.yol}?mobil=eski`} />
         </figure>
         <figure>
           <figcaption data-yeni="">
-            Sonra <span>· telefon düzeni{boy ? ` · ${ekran(boy[1])} ekran` : ""}</span>
+            Sonra <span>· canlıdaki düzen{boy ? ` · ${ekran(boy[1])} ekran` : ""}</span>
           </figcaption>
           <iframe key={`s${i}`} ref={sag} title={`${o.ad} sonra`} src={`${o.yol}?mobil=yeni`} />
         </figure>

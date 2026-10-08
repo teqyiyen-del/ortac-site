@@ -7,6 +7,8 @@ import BaslaKatmani from "@/components/basla/BaslaKatmani";
 import Izleyici from "@/components/shared/Izleyici";
 import EkranDisiDurdur from "@/components/shared/EkranDisiDurdur";
 
+import { SITE } from "@/lib/routes";
+import { OG_GORSEL } from "@/lib/seo";
 /* Single font across the whole site (client call). Poppins carries every role —
    DISPLAY/SUBHEAD/BODY/UI by weight, DATA/TAG by weight + tracking. */
 const poppins = Poppins({
@@ -24,6 +26,21 @@ export const metadata: Metadata = {
   title: "Ortac Global | Muhasebe, Vergi ve Kurumsal Danışmanlık · Dubai, İngiltere, KKTC",
   description:
     "1996'dan beri muhasebe, vergi, şirket kuruluşu ve kurumsal danışmanlık. Dubai, İngiltere ve KKTC'de kendi ofislerimizle.",
+  /* 09.10.2026 · teslim öncesi SEO turu. metadataBase yoktu: paylaşım görseli
+     gibi göreli adresler dağıtımın geçici adresine çözülüyordu. Kalıcı adres
+     ortacglobal.com (lib/routes · SITE). Varsayılan paylaşım etiketleri
+     künyesini kendi yazmayan sayfalar için; görsel lib/seo · OG_GORSEL. */
+  metadataBase: new URL(SITE),
+  openGraph: {
+    type: "website",
+    locale: "tr_TR",
+    siteName: "Ortac Global",
+    title: "Ortac Global | Muhasebe, Vergi ve Kurumsal Danışmanlık",
+    description:
+      "1996'dan beri muhasebe, vergi, şirket kuruluşu ve kurumsal danışmanlık. Dubai, İngiltere ve KKTC'de kendi ofislerimizle.",
+    images: [OG_GORSEL],
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 /* JSON-LD: Organization + Service (3 areaServed). No AggregateRating — no verified reviews. */
@@ -55,7 +72,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="tr" className={poppins.variable}>
+    <html
+      lang="tr"
+      className={poppins.variable}
+      /* telefon düzeni (css/mobil-deneme.css) bu işarete bağlı; 09.10.2026'da
+         canlıya alındı. Silinirse telefon eski düzene döner (shared/MobilDeneme). */
+      data-mobil="yeni"
+    >
       {/* DESIGN SYSTEM KATMANLARI · 24.09.2026. İngiltere'de denenen dört
           katman (css/ds-deneme.css tipografi, ds-renk.css renk, ds-bosluk.css
           boşluk, ds-bilesen.css şekil/bileşen/etkileşim) sitenin geneline

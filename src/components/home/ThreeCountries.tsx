@@ -46,6 +46,7 @@ import {
 import { COUNTRY_PHOTO, photoThumb } from "@/lib/media";
 import { useOrtacStore } from "@/lib/store";
 
+import Tel from "@/components/mobil/Tel";
 /* ============================================================================
    §3 — ÜLKE KARARI · "yay + yerinde açılan panel" + "yan yana kıyas"
 
@@ -530,10 +531,10 @@ export default function ThreeCountries() {
               style={{ color: "var(--text-900)" }}
             />
             <FadeUp delay={0.2}>
-              <p className="sec-lead">
+              <p className="sec-lead"><Tel>
                 Dubai, İngiltere ve KKTC&apos;de kendi ofislerimizle çalışıyoruz. Ülkeleri tek tek
                 inceleyebilir ya da temel ölçütlerde karşılaştırabilirsiniz.
-              </p>
+              </Tel></p>
             </FadeUp>
           </div>
 

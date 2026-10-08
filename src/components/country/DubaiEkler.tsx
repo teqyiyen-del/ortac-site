@@ -40,6 +40,7 @@ import { BOLGELER, VIP, money, type Bolge } from "@/lib/dubaiFiyat";
 import BolgeSekme from "@/components/country/BolgeSekme";
 import "@/app/css/dubai-ek.css";
 
+import Tel from "@/components/mobil/Tel";
 /* 06.10.2026 (ikinci tur) · Burak: "orası biraz kalabalık … tasarımı güzel
    değil. Her birinde tik atmışsın, onlara ikon gelebilir. Burada fiyat
    yazmaya gerek yok. Bir SVG görsel bir şeyler ekleyebilirsin."
@@ -113,9 +114,9 @@ export function DubaiBolgeler() {
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">
+            <p className="sec-lead"><Tel>
               Üçünün de sözleşmeli iş ortağıyız. Hangisinin uygun olduğuna işinize bakarak birlikte karar veriyoruz.
-            </p>
+            </Tel></p>
           </FadeUp>
         </div>
 
@@ -212,10 +213,10 @@ export function DubaiVip() {
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">
+            <p className="sec-lead"><Tel>
               Vize ve Emirates ID için Dubai&apos;de bulunmanız gerekiyor. VIP&apos;te randevular önceden kurulur, kalış
               süreniz kısalır.
-            </p>
+            </Tel></p>
           </FadeUp>
         </div>
 

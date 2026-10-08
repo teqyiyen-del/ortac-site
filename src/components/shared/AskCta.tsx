@@ -16,7 +16,10 @@ import SmartLink from "@/components/shared/SmartLink";
 
 export default function AskCta({
   label = "Sorularınız mı var?",
-  href = "/basla",
+  /* 09.10.2026 · teslim öncesi akış denetimi: varsayılan hedef /basla idi; soru ve görüşme
+     etiketli 62 düğme (41 sayfa) şirket KURULUŞ penceresini açıyordu. Soru
+     soran kişi satın alma akışına değil iletişime gider (form artık çalışıyor). */
+  href = "/iletisim",
   tone = "line",
 }: {
   label?: string;

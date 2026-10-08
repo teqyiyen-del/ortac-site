@@ -223,7 +223,9 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
        çalışıyoruz." */
     tagline: "Serbest bölge · IFZA, Meydan, DWTC",
     intro:
-      "Dubai, vergi avantajı ile banka ve vize erişimini aynı anda veren tek seçenek. Karşılığında kuruluş maliyeti üçünün en yükseği ve süreç için bir kez yerinde bulunmanız gerekiyor.",
+      /* 09.10.2026 · teslim öncesi bilgi denetimi: "kuruluş maliyeti üçünün en yükseği" çıktı.
+         Murat Bey (KKTC 46): en pahalısı KKTC (9.920 € sabit); Dubai ikinci. */
+      "Dubai, vergi avantajı ile banka ve vize erişimini aynı anda veren tek seçenek. Karşılığında süreç için bir kez yerinde bulunmanız gerekiyor.",
     pros: [
       {
         /* 27.09.2026 · teyit (Dubai kuruluş 3): "%0 neredeyse imkânsız …
@@ -318,7 +320,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     ],
     clarify: {
       title: "Dubai'de sık karıştırılan üç başlık.",
-      lead: "Bunları baştan yazıyoruz ki süreç ortasında sürpriz olmasın.",
+      lead: "Süreç ortasında beklenmedik bir durumla karşılaşmamanız için baştan yazıyoruz.",
       items: [
         {
           title: "Vize için BAE'ye gelmeniz gerekiyor",
@@ -438,7 +440,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       { profile: "Körfez ve Orta Doğu'ya satış", you: "Körfez'e satıyorsanız", ok: true, why: "Yerel şirket, yerel müşteride güven ve ödeme kolaylığı.", ikon: "kure", },
       { profile: "Oturum vizesi isteyen", you: "Oturum vizesi istiyorsanız", ok: true, why: "Ortak vizesi ve Emirates ID süreç içinde alınır.", ikon: "kimlik", },
       { profile: "SaaS ve ajanslar", you: "SaaS veya ajans işletiyorsanız", ok: true, why: "Stripe ve PayPal bağlantısı kurulabiliyor.", ikon: "kod", },
-      { profile: "Kuruluş bütçesi dar olan", you: "Bütçeniz darsa", ok: false, why: "Üç ülkenin en yüksek kuruluş ve yenileme maliyeti burada.", ikon: "cuzdan", alt: "ingiltere" },
+      { profile: "Kuruluş bütçesi dar olan", you: "Bütçeniz darsa", ok: false, why: "Kuruluşa ek olarak her yıl lisans yenileme maliyeti var.", ikon: "cuzdan", alt: "ingiltere" },
       { profile: "Hiç seyahat edemeyecek olan", you: "Hiç seyahat edemeyecekseniz", ok: false, why: "Banka imzası ve vize için bir kez gelmek şart.", ikon: "ucak", alt: "ingiltere" },
       { profile: "Yalnızca AB'ye fatura kesen", you: "Yalnızca AB'ye fatura kesiyorsanız", ok: false, why: "İngiltere Ltd bu profilde daha az sürtünme yaratır.", ikon: "fis", alt: "ingiltere" },
     ],
@@ -529,7 +531,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       {
         title: "Kâr payı ile",
         line: "Dubai şirketi dönem kârını ortağına dağıtır.",
-        note: "{hedef}–BAE çifte vergilendirme anlaşması kapsamında değerlendirilir.",
+        note: "{hedef}-BAE çifte vergilendirme anlaşması kapsamında değerlendirilir.",
       },
       {
         title: "Maaş ile",
@@ -548,11 +550,11 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
       {
         q: "İkinci yıl ne ödeyeceğim?",
-        a: "Lisans yenilemesi ve varsa vize yenilemesi. Rakamı kuruluş teklifinde ayrı satır olarak yazıyoruz ki sürpriz olmasın.",
+        a: "Lisans yenilemesi ve varsa vize yenilemesi. Rakamı kuruluş teklifinde ayrı satır olarak baştan yazıyoruz.",
       },
       {
         q: "Muhasebe zorunlu mu?",
-        a: "Defter tutma ve beyan yükümlülüğü var. Muhasebeyi bizden almasanız da bir yerden almanız gerekiyor.",
+        a: "Defter tutma ve beyan yükümlülüğü var. Bu hizmeti bizden almasanız da bir muhasebe firmasından almanız gerekiyor.",
       },
       {
         q: "Türkiye'de mukimsem ne olur?",
@@ -626,7 +628,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
           line: "Ltd sahibi veya direktörü olmak vize ya da oturum hakkı doğurmuyor. Resmî yol ayrı bir vize başvurusu (Innovator Founder).",
         },
         {
-          title: "Vergi avantajı için gelen yanlış adreste",
+          title: "Vergi avantajı için uygun ülke değil",
           line: "Ltd'nin kârı İngiltere'de %19-25 kurumlar vergisine tabi. Burası ödeme altyapısı ve tanınırlık için seçilir, vergi için değil.",
         },
         {
@@ -672,7 +674,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         baslik: "Kurumlar vergisi kâra göre değişiyor",
         dilimler: [
           { aralik: "£50.000'e kadar", oran: "%19", not: "Küçük kâr oranı", ton: "dusuk" },
-          { aralik: "£50.000 – £250.000", oran: "%19 → %25", not: "Kademeli geçiş (marjinal indirim)", ton: "gecis" },
+          { aralik: "£50.000 - £250.000", oran: "%19 → %25", not: "Kademeli geçiş (marjinal indirim)", ton: "gecis" },
           { aralik: "£250.000 üstü", oran: "%25", not: "Ana oran", ton: "ust" },
         ],
       },
@@ -767,9 +769,9 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       accent: "vergi nerede çıkıyor?",
       lead: "Kâr önce İngiltere'de vergileniyor. Türkiye'de vergi, kâr payı olarak size geçtiğinde çıkıyor.",
       duraklar: [
-        { kim: "Şirketiniz", baslik: "İngiltere'de", vergi: "%19–25", not: "Kâr önce burada vergileniyor. Kâr £50.000'e kadarsa %19.", ton: "beyan", ikon: "sirket" },
+        { kim: "Şirketiniz", baslik: "İngiltere'de", vergi: "%19-25", not: "Kâr önce burada vergileniyor. Kâr £50.000'e kadarsa %19.", ton: "beyan", ikon: "sirket" },
         { ikon: "kasa", kim: "Kâr şirkette kalırsa", baslik: "Türkiye'de", vergi: "Ek vergi yok", not: "Dağıtılmayan kâr Türkiye'de vergilenmiyor.", ton: "sifir" },
-        { ikon: "kisi", kim: "Kâr payı alırsanız", baslik: "Türkiye'de", vergi: "Beyan", not: "Yıllık beyannamede; şartlar tutarsa yarısı istisna.", ton: "notr" },
+        { ikon: "kisi", kim: "Kâr payı alırsanız", baslik: "Türkiye'de", vergi: "Beyan", not: "Yıllık beyannamede; şartlar sağlanırsa yarısı istisna.", ton: "notr" },
       ],
       ayrim: 1,
       ornek: {
@@ -802,7 +804,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
          kadarsa." */
       gorunum: "sahne",
       sirket: "İngiltere şirketiniz",
-      lead: "İngiltere'nin asıl gücü bu. Kartla tahsilat, pazaryeri, hesap ve kripto: global ödeme altyapısının hepsi İngiltere şirketiyle açılıyor.",
+      lead: "İngiltere'nin asıl gücü bu. Kartla tahsilat, pazar yeri, hesap ve kripto: global ödeme altyapısının hepsi İngiltere şirketiyle açılıyor.",
       /* Açıklamalar Dubai banka sayfasındaki kanal satırları kadar: ne işe
          yaradığı, tek cümle. Şartlar (Stripe için İngiliz banka hesabı,
          Shopify için GBP hesabı vb.) docs/ingiltere-mevzuat.md · 7'de. */
@@ -810,15 +812,15 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         { ad: "Stripe", brand: "stripe" as BrandKey, grup: "tahsilat", etiket: "Kartla satış", durum: "var", not: "Sitenizde ve uygulamanızda kartla tahsilat." },
         { ad: "PayPal", brand: "paypal" as BrandKey, grup: "tahsilat", etiket: "Online ödeme", durum: "var", not: "PayPal hesabıyla ödeyen müşteriden tahsilat." },
         { ad: "Shopify Payments", ikon: "sepet", grup: "tahsilat", etiket: "E-ticaret", durum: "var", not: "Shopify mağazanızda kartla ödeme." },
-        { ad: "Amazon UK", ikon: "kutu", grup: "pazaryeri", etiket: "Pazaryeri", durum: "var", not: "Amazon'un İngiltere pazaryerinde satıcı hesabı." },
-        { ad: "Etsy", ikon: "magaza", grup: "pazaryeri", etiket: "Pazaryeri", durum: "var", not: "Etsy mağazası ve Etsy Payments ile tahsilat." },
+        { ad: "Amazon UK", ikon: "kutu", grup: "pazaryeri", etiket: "Pazar yeri", durum: "var", not: "Amazon'un İngiltere pazar yerinde satıcı hesabı." },
+        { ad: "Etsy", ikon: "magaza", grup: "pazaryeri", etiket: "Pazar yeri", durum: "var", not: "Etsy mağazası ve Etsy Payments ile tahsilat." },
         /* [MÜŞTERİ] 23.09.2026 · Burak: "Payoneer'i falan da ekleyebilirsin
            … bunların hepsi çalışıyor de, Binance'i falan da koy, oldu
            bitti." Üçü resmî kaynakla teyitli değil (teyit listesi · 4 · 11):
            Payoneer koşul yayımlamıyor, Revolut Business arama özetinde
            İngiltere/AEA ikameti istiyor, Binance 2023'ten beri İngiltere'de
            yeni kullanıcı kaydını kısıtlamıştı. */
-        { ad: "Payoneer", brand: "payoneer" as BrandKey, grup: "hesap", etiket: "Yurt dışı müşteri", durum: "var", not: "Pazaryerlerinden ve yurt dışındaki müşteriden ödeme alma." },
+        { ad: "Payoneer", brand: "payoneer" as BrandKey, grup: "hesap", etiket: "Yurt dışı müşteri", durum: "var", not: "Pazar yerlerinden ve yurt dışındaki müşteriden ödeme alma." },
         { ad: "Revolut Business", brand: "revolut" as BrandKey, grup: "hesap", etiket: "Hesap", durum: "var", not: "Dijital işletme hesabı ve şirket kartları." },
         { ad: "Binance", brand: "binance" as BrandKey, grup: "kripto", etiket: "Kripto ödeme", durum: "var", not: "Binance Pay ile müşteriden kripto ödeme alma." },
       ],
@@ -832,7 +834,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
     takvim: {
       title: "Kuruluştan sonra her yıl ne var?",
       accent: "her yıl ne var?",
-      lead: "İngiltere'de takvim sıkı ve cezalar otomatik. Dört dosyanın dördünü de biz takip ediyoruz; siz yalnız tarihleri bilin.",
+      lead: "İngiltere'de takvim sıkı ve cezalar otomatik. Dört dosyanın dördünü de biz takip ediyoruz; tarihleri bilmeniz yeterli.",
       kalemler: [
         /* ceza boş: bildirim için resmî ceza tutarı bu turda okunmadı. */
         { ne: "Yıllık bildirim", sure: "Her yıl", kural: "Şirket bilgilerinin Companies House'a teyidi; harcı £50.", ceza: "" },
@@ -934,7 +936,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
            istiyoruz artık buraya, özellikle bankanın ön hesap onayı için."
            Eski başlık "KKTC'ye gelmeden kuruluş" idi. "Uzaktan yönetim"
            cümlesinin teyidi tekrar sorulanlarda. */
-        title: "Tek ziyaret, gerisi bizde",
+        title: "Tek ziyaret yeterli",
         icon: "remote",
         fig: "tek-ziyaret",
         line: "İmza ve banka hesabı için bir kez KKTC'ye geliyorsunuz; başvuru, onay ve tescil sizin yerinize yürüyor.",

@@ -646,12 +646,12 @@ export default function UkIsimSorgu() {
     ) : tamam && tamam.bakilan > 0 ? (
       <>
         Aramanın ilk {tamam.bakilan} sonucunda <b>{tamam.bicim}</b> biçimine inen kayıt yok. Bu, ismin
-        alınabileceği anlamına gelmiyor; son söz Companies House&apos;un.
+        alınabileceği anlamına gelmiyor; kararı Companies House veriyor.
       </>
     ) : (
       <>
         Companies House araması bu isimle hiç sonuç döndürmedi. Bu da ismin alınabileceği anlamına gelmiyor;
-        son söz Companies House&apos;un.
+        kararı Companies House veriyor.
       </>
     );
 
@@ -874,7 +874,7 @@ export default function UkIsimSorgu() {
           sicil her gün değişiyor, belgenin anlamı "şu tarihte şu kadar kayda
           bakıldı, şu çıktı" kaydı olmak. Eşleşme bulunmadığında da basılıyor —
           "bulunamadı" da bir sonuç ve tarihiyle birlikte anlamlı. */}
-      <Dip not="Bu sorgu bir ön kontrol, uygunluk onayı değil; son sözü başvuruda Companies House söylüyor.">
+      <Dip not="Bu sorgu bir ön kontrol, uygunluk onayı değil; kararı başvuruda Companies House veriyor.">
         {tamam && sorulan && (
           <RaporIndir
             arac="ingiltere-isim-sorgulama"

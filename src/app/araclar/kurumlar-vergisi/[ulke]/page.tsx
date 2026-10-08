@@ -10,6 +10,7 @@ import { KV_ULKELER, TOOL_BY_ID, kvHref, type ToolId } from "@/lib/tools/catalog
 import { SITE } from "@/lib/routes";
 import { KV_SAYFA } from "../icerik";
 
+import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
    /araclar/kurumlar-vergisi/<ülke> — ülke başına kurumlar vergisi sayfası
    ============================================================================
@@ -73,6 +74,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     description: m.description,
     alternates: { canonical: url },
     openGraph: {
+      images: [OG_GORSEL],
       /* "article" DEĞİL: sayfa bir yazı değil bir araç. [arac] rotası
          "article" basıyor; o bir önceki turun kararı ve bu turun dosyası
          olmadığı için değiştirilmedi. */
