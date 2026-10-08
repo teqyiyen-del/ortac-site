@@ -12,8 +12,12 @@
    duraklar; 200 px kala geri başlar, kaldığı yerden. Keyframe'lere, sürelere,
    bileşenlere dokunulmadı.
 
-   KAPSAMADIĞI: Motion'ın JS ile sürdürdüğü döngüler (repeat: Infinity) ve SMIL.
-   Onlar bileşenin kendi useInView kapısını ister (HeroAkis'teki gibi). */
+   SVG'nin kendi animasyonları (SMIL: <animate>, <animateMotion>) CSS'i
+   dinlemiyor; onlar için bölümdeki svg'lere pauseAnimations() çağrılıyor
+   (para yolu ve ödeme sahneleri).
+
+   KAPSAMADIĞI: Motion'ın JS ile sürdürdüğü döngüler (repeat: Infinity). Onlar
+   bileşenin kendi useInView kapısını ister (HeroAkis, OfficeMap, LiveChat). */
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
@@ -23,7 +27,13 @@ export default function EkranDisiDurdur() {
   useEffect(() => {
     const gozcu = new IntersectionObserver(
       (kayitlar) => {
-        for (const k of kayitlar) k.target.toggleAttribute("data-ekran-disi", !k.isIntersecting);
+        for (const k of kayitlar) {
+          k.target.toggleAttribute("data-ekran-disi", !k.isIntersecting);
+          for (const svg of k.target.querySelectorAll("svg")) {
+            if (k.isIntersecting) svg.unpauseAnimations();
+            else svg.pauseAnimations();
+          }
+        }
       },
       { rootMargin: "200px 0px" },
     );

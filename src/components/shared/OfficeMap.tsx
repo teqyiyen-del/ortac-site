@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useRef } from "react";
+import { motion, useInView } from "motion/react";
 import { MapPin, Minus, Plus } from "lucide-react";
 import { officeFor } from "@/lib/offices";
 import type { Country } from "@/lib/store";
@@ -31,9 +32,14 @@ const EASE = [0.22, 1, 0.36, 1] as const;
    lib/offices.ts'ten. KKTC'nin şehri kaynakta yazmıyor, etiket yalnız adresi
    basıyor. */
 export default function OfficeMap({ country = "dubai" }: { country?: Country }) {
+  /* 08.10.2026 · telefon hızı: nabız halkası her sayfanın alt bilgisinde ve
+     Motion onu JS ile sürdürüyor; harita ekranda değilken de her karede
+     çalışıyordu. Döngü yalnız harita görünürken. */
+  const kok = useRef<HTMLDivElement>(null);
+  const gorunur = useInView(kok);
   const OFFICE = officeFor(country);
   return (
-    <div className="omap">
+    <div className="omap" ref={kok}>
       {/* `slice`: kutu artık kendi oranından uzun olabiliyor (globals.css ·
           .omap'in min-height'ı, iki sütunu eşitlemek için). Varsayılan `meet`
           o durumda çizimi ortalayıp altına ve üstüne boş zemin bırakırdı, yani
@@ -87,8 +93,8 @@ export default function OfficeMap({ country = "dubai" }: { country?: Country }) 
         className="omap-ring"
         aria-hidden="true"
         initial={{ scale: 0.35, opacity: 0.55 }}
-        animate={{ scale: 1.7, opacity: 0 }}
-        transition={{ duration: 2.1, repeat: Infinity, ease: "easeOut" }}
+        animate={gorunur ? { scale: 1.7, opacity: 0 } : { scale: 0.35, opacity: 0.55 }}
+        transition={gorunur ? { duration: 2.1, repeat: Infinity, ease: "easeOut" } : { duration: 0 }}
       />
       <motion.span
         className="omap-pin"

@@ -87,8 +87,9 @@ export default function LiveChat() {
           {[0, 1, 2].map((d) => (
             <motion.span
               key={d}
-              animate={{ y: [0, -3, 0], opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 1, repeat: Infinity, delay: d * 0.16 }}
+              /* 08.10.2026 · telefon hızı: "yazıyor" noktaları yalnız kart ekrandayken dönüyor */
+              animate={inView ? { y: [0, -3, 0], opacity: [0.4, 1, 0.4] } : { y: 0, opacity: 0.4 }}
+              transition={inView ? { duration: 1, repeat: Infinity, delay: d * 0.16 } : { duration: 0 }}
             />
           ))}
         </motion.span>

@@ -71,7 +71,11 @@ function Pulse({
       className="svx-dot"
       initial={{ cx: x1, opacity: 0 }}
       whileInView={reduce ? { cx: x1, opacity: 0 } : { cx: [x1, x2], opacity: [0, 1, 1, 0] }}
-      viewport={VIEW}
+      /* 08.10.2026 · telefon hızı: VIEW `once: true` olduğu için darbe bir kez
+         görününce sayfanın geri kalanında da sonsuza dek dönüyordu (dört
+         darbe, her karede SVG özniteliği). `once` yok: kart ekrandan çıkınca
+         Motion `initial`e döner ve döngü durur, girince yeniden başlar. */
+      viewport={{ margin: VIEW.margin }}
       transition={
         reduce
           ? { duration: 0 }
