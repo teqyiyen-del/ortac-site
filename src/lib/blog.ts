@@ -603,7 +603,7 @@ export const POST_DUBAI_MALIYET: BlogPost = {
       rows: [
         {
           label: "Kuruluş bedeli",
-          value: `${FACTS.dubai.fromLabel}'dan başlıyor`,
+          value: `${FACTS.dubai.fromLabel}'den başlıyor`,
           note: "Seçilen serbest bölge, faaliyet konusu ve ofis tipi tutarı değiştiriyor.",
         },
         {

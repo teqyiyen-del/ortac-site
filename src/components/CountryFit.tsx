@@ -176,9 +176,10 @@ export default function CountryFit({
                     </span>
                     {/* KKTC'nin fiyatı ve süresi henüz netleşmedi (FACTS.kktc
                         temsilî, fiyat üç pakete geçecek): o ülkede basılmıyor. */}
+                    {/* 08.10.2026 · "'dan" → "'den" (yüz yirmi'den, iki yüz'den) */}
                     {dest !== "kktc" && (
                       <span className="cfit-dest-m">
-                        {FACTS[dest].fromLabel}&apos;dan · {FACTS[dest].days}
+                        {FACTS[dest].fromLabel}&apos;den · {FACTS[dest].days}
                       </span>
                     )}
                     <SmartLink href={row.ok ? "/basla" : `/${dest}`} className="btn btn-solid">

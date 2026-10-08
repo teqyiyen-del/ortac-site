@@ -1066,7 +1066,7 @@ function buildGuide(country: CountrySlug): Guide {
   chapters.push(
     {
       q: "Kuruluş ne kadar tutuyor?",
-      line: `${f.fromLabel}'dan başlıyor; yapı, faaliyet ve ofis tipi tutarı değiştiriyor.`,
+      line: `${f.fromLabel}'den başlıyor; yapı, faaliyet ve ofis tipi tutarı değiştiriyor.`,
       href: `${base}#fiyat`,
     },
     {
@@ -1108,7 +1108,7 @@ function buildGuide(country: CountrySlug): Guide {
     tagline: c.tagline,
     lead: c.intro,
     facts: [
-      { k: "Kuruluş", v: `${f.fromLabel}'dan` },
+      { k: "Kuruluş", v: `${f.fromLabel}'den` },
       { k: "Tipik süre", v: f.days },
       { k: "Yapı", v: f.structure },
     ],

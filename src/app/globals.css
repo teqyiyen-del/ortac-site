@@ -2738,6 +2738,14 @@ body {
 .ph-crumb a:hover {
   color: #ffffff;
 }
+/* 08.10.2026 · telefonda uzun kırıntı ("Araçlar · Kurumlar vergisi · Dubai")
+   satıra sığmayınca "Ana sayfa" ikiye bölünüyordu. İlk bağlantı ve ok
+   daralmıyor; yalnız son parça alt satıra iniyor. */
+.ph-crumb > a,
+.ph-crumb > svg {
+  flex: none;
+  white-space: nowrap;
+}
 /* 19.09.2026 · KIRINTIYA BAYRAK. Araç sayfalarında bayrak gövdedeki künye
    satırındaydı ve orada ikinci bir başlıkla birlikte duruyordu; künye
    kalkınca bayrağın yeri sayfanın "burası neresi" satırı oldu.

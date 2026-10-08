@@ -314,7 +314,10 @@ export function Ft2Cta({ placement = "footer", kapanis }: { placement?: string; 
                     (sitenin hero'larında canlı): #080808 üstünde yazısı
                     14,60:1. /iletisim yayında (lib/routes.ts), yani SmartLink
                     onu sönük <span> değil gerçek bağlantı basıyor. */}
-                {!buradayiz("/iletisim") && (
+                {/* 08.10.2026 · sayfa kendi kapanışında zaten "İletişime geçin"
+                    diyorsa (hizmet sayfaları) ikinci düğme aynı yere giden
+                    aynı söz oluyordu; o durumda basılmıyor. */}
+                {!buradayiz("/iletisim") && metin.cta.href !== "/iletisim" && (
                   <SmartLink
                     href="/iletisim"
                     className="btn btn-ghost"

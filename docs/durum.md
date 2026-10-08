@@ -4955,6 +4955,24 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 08.10.2026 · mobil tarama (390 px, 30 sayfa)
+
+Burak: "tüm mobili gez, sıkıntılı şeyleri fixle; çok uzun kısımlara alternatif çözüm
+öner ama bana söylemeden uygulama." Yatay taşma hiçbir sayfada yok (scripts/ekran.mjs).
+
+DÜZELTİLDİ: Dubai "kimin işine yarar" kartında eski "$3.900'dan" (şimdi "$5.120'den";
+brand.ts · fromLabel, KKTC "€9.920") · alt menüde iptal edilen Hukuki Danışmanlık ve Pazar
+Araştırması · hizmet sayfalarının kapanışında yan yana iki "İletişime geçin" düğmesi ·
+araç sayfalarında ikiye bölünen "Ana sayfa" kırıntısı · "'dan" eki "'den" oldu.
+DOKUNULMADI: brand.ts · FACTS.dubai.from (3.900) uygunluk testinin hesabında duruyor.
+
+ÖNERİLDİ, ONAY BEKLİYOR (telefonda uzun bölümler, ölçülen yükseklik):
+ana sayfa hizmetler 2.558 px, neden Ortac 2.295, sektörler 2.112, yazılar 1.645 · Dubai
+fiyat 2.073, kuruluş sonrası 1.944, avantajlar 1.843, serbest bölgeler 1.664 · KKTC ve
+İngiltere ödeme kanalları 1.735 / 1.868 · blog listesi 4.815 · hakkımızda "neye
+dayanarak" 2.374. Ayrıca: ana sayfadaki "Şirketimi taşı" düğmesi kapalı sayfaya gidiyor
+(sönük); hedefi /iletisim yapılabilir.
+
 ## 07.10.2026 (17) · KKTC muhasebe ve banka sayfaları Dubai'yle aynı bölümlerde
 
 Burak: "Kıbrıs'ın muhasebe sayfası kısa … Dubai'deki section'ları bir bak, aynıları

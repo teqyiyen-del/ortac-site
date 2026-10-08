@@ -314,7 +314,8 @@ const R_COST: CmpRow = {
   cell: (c) => (
     <span className="uk3-td-v">
       {FACTS[c].fromLabel}
-      <em>&apos;dan başlar</em>
+      {/* KKTC'de tutar sabit (her şey dahil); "başlar" yalnız öteki ikisinde */}
+      <em>{c === "kktc" ? " · her şey dahil" : "\u2019den başlar"}</em>
     </span>
   ),
 };

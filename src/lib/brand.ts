@@ -57,7 +57,9 @@ export type CountryFacts = {
 export const FACTS: Record<CountrySlug, CountryFacts> = {
   dubai: {
     from: 3900,
-    fromLabel: "$3.900",
+    /* 08.10.2026 · teklif belgesi: en düşük baz IFZA 5.120 (lib/dubaiFiyat.ts).
+       `from` (3.900) uygunluk testinin hesabında kullanılıyor, o ayrı tur. */
+    fromLabel: "$5.120",
     /* 27.09.2026 · teyit (Dubai kuruluş 1): "kurmaya başladığımızda 5-6
        günde kuruluyor; en fazla 14 günde vize çıkmış oluyor." Eskisi 7-14. */
     days: "5-6 gün",
@@ -77,7 +79,8 @@ export const FACTS: Record<CountrySlug, CountryFacts> = {
   },
   kktc: {
     from: 2400,
-    fromLabel: "$2.400",
+    /* 08.10.2026 · KKTC teklif belgesi: kuruluş ve ilk yıl 9.920 € (lib/kktcFiyat.ts) */
+    fromLabel: "€9.920",
     /* 27.09.2026 · teyit (KKTC 32): "en azından 30 iş günü sürüyor".
        forWhom: teyit (KKTC 12) "TL hesaba ihtiyacı olana öneriyoruz",
        (KKTC 46) "düşük demek yanlış, en pahalısıdır". */
@@ -111,15 +114,15 @@ export type NavService = { key: ServiceKey; label: string; href: string; meta?: 
 
 export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
   dubai: [
-    { key: "kurulus", label: "Şirket Kuruluşu", href: "/dubai", meta: "$3.900 · 5-6 gün" },
+    { key: "kurulus", label: "Şirket Kuruluşu", href: "/dubai", meta: "$5.120'den · 5-6 gün" },
     { key: "muhasebe", label: "Muhasebe & Vergi", href: "/dubai/muhasebe", meta: "aylık" },
     { key: "banka-hesabi", label: "Banka & Ödeme", href: "/dubai/banka-hesabi", meta: "Wio · Mashreq" },
     { key: "oturum-vize", label: "Oturum & Vize", href: "/dubai/oturum-vize", meta: "kişi başı" },
     /* 22.09.2026 · Uyum çıktı ("dubaide yok"), "Kurumsal Danışmanlık" eski
        sitenin iki hizmetiyle değişti. İkisi kapalı sayfa, sönük bağlantı
        (services.ts · legal · research). */
-    { key: "hukuki-danismanlik", label: "Hukuki Danışmanlık", href: "/dubai/hukuki-danismanlik" },
-    { key: "pazar-arastirmasi", label: "Pazar Araştırması", href: "/dubai/pazar-arastirmasi" },
+    /* 08.10.2026 · "Hukuki Danışmanlık" ve "Pazar Araştırması" satırları
+       kalktı: iki hizmet iptal (Burak, 07.10) ama alt menüde sönük duruyordu. */
   ],
   ingiltere: [
     { key: "kurulus", label: "Şirket Kuruluşu", href: "/ingiltere", meta: "$1.200 · 3-7 gün" },
@@ -129,7 +132,7 @@ export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
     { key: "adres", label: "Şirket Adresi", href: "/ingiltere/adres", meta: "yıllık" },
   ],
   kktc: [
-    { key: "kurulus", label: "Şirket Kuruluşu", href: "/kktc", meta: "$2.400 · 30+ iş günü" },
+    { key: "kurulus", label: "Şirket Kuruluşu", href: "/kktc", meta: "€9.920 · 30-40 iş günü" },
     { key: "muhasebe", label: "Muhasebe & Vergi", href: "/kktc/muhasebe", meta: "aylık" },
     { key: "banka-hesabi", label: "Banka & Ödeme", href: "/kktc/banka-hesabi", meta: "yerel banka" },
     { key: "serbest-bolge", label: "Serbest Bölge", href: "/kktc/serbest-bolge" },
