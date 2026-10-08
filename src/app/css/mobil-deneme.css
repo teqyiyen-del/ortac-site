@@ -1,0 +1,331 @@
+/* ============================================================================
+   MOBİL DENEME · dokuz önerinin "sonra" hâli (08.10.2026)
+   Yalnız html[data-mobil="yeni"] altında ve yalnız telefonda. İşareti
+   components/shared/MobilDeneme koyuyor (?mobil=yeni). Yan yana görmek için
+   /lab/mobil. Ölçüler 375 px'te: bugünkü yükseklik → hedef yükseklik her
+   kuralın başında.
+   ========================================================================== */
+.md-daha {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  /* STRATEJİ (Burak, 08.10 ikinci tur): "sağa kaydırmalı istemiyorum; hepsi
+     ekranda dursun alt alta ama daha kısa. Yüksekliği fazla olan kartların
+     yazılarını, görsellerini ya da birleştirerek azalt." Yana kaydırma hâli
+     silindi. Araçlar: görseli küçültmek (zoom: sahne aynı kalıyor, ölçeği
+     iniyor), tekrar eden satırı gizlemek, iki sütuna geçmek. */
+
+  /* ---- 1 · ANA SAYFA HİZMETLER (2.219 → ~1.050): sahne solda küçük, başlık
+     ve cümle sağda, ülke seçici altta tam genişlik */
+  html[data-mobil="yeni"] .hx-grid {
+    gap: 10px;
+  }
+  html[data-mobil="yeni"] .hx-card {
+    display: grid;
+    grid-template-columns: 124px minmax(0, 1fr);
+    grid-template-areas: "sahne govde" "secici secici";
+    align-items: center;
+  }
+  html[data-mobil="yeni"] .hx-stage {
+    grid-area: sahne;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: auto;
+    margin: 8px 0 8px 8px;
+    padding: 8px;
+  }
+  html[data-mobil="yeni"] .hx-stage > svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  html[data-mobil="yeni"] .hx-body {
+    grid-area: govde;
+    padding: 12px 14px;
+  }
+  html[data-mobil="yeni"] .hxq {
+    grid-area: secici;
+    padding: 0 8px 8px;
+  }
+
+  /* ---- 2 · ANA SAYFA SEKTÖRLER (1.452 → ~470): iki sütun, cümle gizli */
+  html[data-mobil="yeni"] .skf-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  html[data-mobil="yeni"] .skf {
+    height: 148px;
+    min-height: 0;
+    padding: 12px;
+    column-gap: 6px;
+  }
+  html[data-mobil="yeni"] .skf-l {
+    display: none;
+  }
+  /* dar kartta ad hecelenmesin: yazı alanı kenara yaklaşıyor, punto bir kademe iniyor */
+  html[data-mobil="yeni"] .skf-t {
+    font-size: 15px;
+    line-height: 1.25;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+  }
+
+  /* ---- 3 · NEDEN ORTAC (2.008 → ~1.350): kartların içindeki süs sahneleri
+     kısalıyor (küre ve onarım akışı gizli, sohbet iki balon, süreç iki satır) */
+  html[data-mobil="yeni"] .bn {
+    gap: 10px;
+  }
+  html[data-mobil="yeni"] .aut-stage,
+  html[data-mobil="yeni"] .bn-repair,
+  html[data-mobil="yeni"] .bn-foot,
+  html[data-mobil="yeni"] .bn-stream > :nth-child(n + 3),
+  html[data-mobil="yeni"] .lt-row:nth-child(n + 3) {
+    display: none;
+  }
+  html[data-mobil="yeni"] .bn-tile {
+    min-height: 0;
+  }
+
+  /* ---- 4 · DUBAİ ÜÇ SERBEST BÖLGE (1.350 → ~760): logo kutusu ince şerit,
+     ad (logoda zaten yazıyor) gizli, üç madde yan yana sarıyor */
+  html[data-mobil="yeni"] .dbe-bolgeler {
+    gap: 10px;
+  }
+  html[data-mobil="yeni"] .dbe-bolge-fig {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    height: auto;
+    min-height: 0;
+    padding: 14px 16px;
+  }
+  /* logolar kendi oranını koruyarak küçülüyor (IFZA ve Meydan'ın çizim
+     kutuları farklı; sabit yükseklik Meydan'ı ufaltıyordu) */
+  html[data-mobil="yeni"] .dbe-bolge-fig .bm-chip {
+    zoom: 0.62;
+  }
+  html[data-mobil="yeni"] .dbe-bolge-fig .dbe-logo-yazi {
+    zoom: 0.8;
+  }
+  html[data-mobil="yeni"] .dbe-bolge-fig .dbe-rozet {
+    position: static;
+  }
+  html[data-mobil="yeni"] .dbe-bolge-ad {
+    display: none;
+  }
+  html[data-mobil="yeni"] .dbe-bolge-ic {
+    padding-top: 14px;
+    padding-bottom: 16px;
+  }
+  html[data-mobil="yeni"] .dbe-liste {
+    margin-top: 12px;
+    gap: 8px;
+  }
+
+  /* ---- 5 · ÜLKE AVANTAJLARI (1.520 → ~1.050): çizim duruyor ama %60
+     ölçekte ve kısa bir şeritte */
+  html[data-mobil="yeni"] .advx {
+    gap: 10px;
+  }
+  html[data-mobil="yeni"] .advx-fig {
+    zoom: 0.6;
+  }
+  html[data-mobil="yeni"] .advx-body {
+    padding-bottom: 12px;
+  }
+
+  /* ---- 6 · FİYAT FORMU (Dubai 1.784 → ~1.250): serbest bölgeler tek satırlık
+     üç şerit (ikon, ad, fiyat); yıl kutularında ikon yok; ek hizmette onay
+     kutusu başta, ikon yok, yazıya yer açılıyor; iç boşluklar dar */
+  html[data-mobil="yeni"] .sec-night.gece-alan .ip-form,
+  html[data-mobil="yeni"] .ip-out {
+    padding: 20px 16px;
+  }
+  html[data-mobil="yeni"] .sec-night.gece-alan .ip-form,
+  html[data-mobil="yeni"] .sec-night.gece-alan .ip-form .dfy-iki {
+    gap: 20px;
+  }
+  html[data-mobil="yeni"] .dfy-bolge {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 52px 10px 10px;
+  }
+  html[data-mobil="yeni"] .dfy-bolge .dfy-alt {
+    display: none;
+  }
+  html[data-mobil="yeni"] .dfy-yil .dfy-ic,
+  html[data-mobil="yeni"] .dfy-ek .dfy-ic {
+    display: none;
+  }
+  html[data-mobil="yeni"] .dfy-yil {
+    justify-items: center;
+    padding: 14px 8px;
+  }
+  html[data-mobil="yeni"] .dfy-yil .dfy-ad {
+    justify-self: center;
+  }
+  html[data-mobil="yeni"] .dfy-ek {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 4px 12px;
+    padding: 14px 48px 14px 14px;
+  }
+  html[data-mobil="yeni"] .dfy-ek .dfy-tik {
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: 2px;
+  }
+  html[data-mobil="yeni"] .dfy-ek .dfy-ek-m {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  html[data-mobil="yeni"] .dfy-ek .dfy-tutar {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  /* ---- 7a · KKTC ÖDEME KANALLARI (1.312 → ~520): çalışan ikisi kart,
+     çalışmayan altısı küçük etiket (yana kaydırma değil; satıra sarıyor) */
+  html[data-mobil="yeni"] .cod {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  html[data-mobil="yeni"] .cod > li {
+    flex: 1 1 100%;
+  }
+  html[data-mobil="yeni"] .cod > li:has(.cod-k[data-durum="yok"]) {
+    flex: 0 1 auto;
+  }
+  html[data-mobil="yeni"] .cod-k[data-durum="yok"] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    min-height: 0;
+  }
+  html[data-mobil="yeni"] .cod-k[data-durum="yok"] .cod-not {
+    display: none;
+  }
+  html[data-mobil="yeni"] .cod-k[data-durum="yok"] .cod-durum {
+    margin: 0;
+  }
+
+  /* ---- 7b · İNGİLTERE ÖDEME KANALLARI (~1.130 → ~560): logo ve etiket tek
+     satır; açıklama cümlesi etiketin tekrarıydı, gizli */
+  html[data-mobil="yeni"] .cos-kutular {
+    gap: 8px;
+  }
+  html[data-mobil="yeni"] .cos-k {
+    padding: 12px 16px;
+    min-height: 0;
+  }
+  html[data-mobil="yeni"] .cos-not {
+    display: none;
+  }
+
+  /* ---- 8 · BLOG LİSTESİ (4.300 → ~1.750): ilk altı yazı, sonra düğme */
+  html[data-mobil="yeni"]:not([data-blog-tum]) .bh-list > li:nth-child(n + 7) {
+    display: none;
+  }
+  html[data-mobil="yeni"]:not([data-blog-tum]) .md-daha {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 48px;
+    margin-top: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: var(--white);
+    color: var(--text-900);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* ---- 9 · HAKKIMIZDA DAYANAK (2.147 → ~1.600): sahneler %62 ölçekte */
+  html[data-mobil="yeni"] .ab-dy {
+    gap: 10px;
+  }
+  html[data-mobil="yeni"] .ab-dy-sahne {
+    zoom: 0.62;
+  }
+}
+
+/* ---------------------------------------------------- /lab/mobil sayfası
+   Ekran ikiye bölünüyor: solda bugünkü hâl, sağda yeni hâl; biri kaydırılınca
+   öteki de kayıyor. Üstte öneri seçici (aynı anda tek öneri yükleniyor). */
+.lmb {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: var(--paper);
+}
+.lmb-ust {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  background: var(--white);
+}
+.lmb-ust button {
+  flex: none;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--text-900);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.lmb-ust button[data-on] {
+  border-color: var(--blue-700);
+  background: var(--blue-700);
+  color: #fff;
+}
+.lmb-ikili {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  min-height: 0;
+  padding: 12px;
+}
+.lmb-ikili figure {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  flex: 0 1 390px;
+  min-width: 0;
+  margin: 0;
+}
+.lmb-ikili figcaption {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.lmb-ikili figcaption[data-yeni] {
+  color: var(--blue-700);
+}
+.lmb-ikili figcaption span {
+  font-weight: 400;
+}
+.lmb-ikili iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--white);
+}

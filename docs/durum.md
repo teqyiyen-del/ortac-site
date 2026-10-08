@@ -4955,6 +4955,32 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 08.10.2026 (2) · telefon önce / sonra, dört yeni sayfa, şıklı soru sayfası
+
+TELEFON · ÖNCE / SONRA (karar bekliyor, canlıyı değiştirmiyor)
+- /lab/mobil: ekran ikiye bölünüyor, solda bugünkü hâl, sağda öneri; biri kayınca öteki de
+  kayıyor. Üstte on öneri arasında geçiş.
+- "Sonra" hâli `css/mobil-deneme.css`, yalnız `html[data-mobil="yeni"]` altında; işareti
+  `components/shared/MobilDeneme` adreste `?mobil=yeni` görünce koyuyor.
+- STRATEJİ (Burak): yana kaydırma YOK. Hepsi alt alta ama kısa: görsel küçülür (zoom),
+  tekrar eden yazı gizlenir, iki sütuna geçilir. Avantajlarda çizim kalır ama küçük.
+  Fiyat formu sıkışmayacak, tek ekranda, geri dönülebilir.
+- Onaylanan öneri canlıya şöyle geçer: css kuralının başındaki `html[data-mobil="yeni"]`
+  silinir. Hepsi karara bağlanınca bileşen, css ve lab sayfası silinir.
+
+YENİ SAYFALAR (açık): /ingiltere/muhasebe, /ingiltere/banka-hesabi, /ingiltere/vergi,
+/kktc/vergi. İngiltere için müşteri belgesi yok: fiyat yazılmadı, rakamlar
+docs/ingiltere-mevzuat.md'den (resmî) ve yayındaki ülke sayfasından. Ortak gövdeler:
+`services/MuhasebeSayfa` (KKTC + İngiltere), `services/BankaSayfa` (üç ülke).
+YAZILMADI, kaynak yok: İngiltere şirket adresi, Sponsor Licence, KKTC Serbest Bölge,
+İngiltere ve KKTC için kurumsal danışmanlık ve AML, şirket taşıma.
+
+MURAT BEY'E SORULAR: /teyit/sorular (27 soru, çoğu şıklı, her birinde yazı alanı,
+"Cevapları kopyala"). /teyit/kktc oraya yönleniyor.
+
+DOĞRULAMA: tsc, lint ve geliştirme sunucusunda ekran kontrolü. Yerel üretim derlemesi bu
+turda ÇALIŞTIRILMADI (Burak komutu durdurdu); Vercel derlemesine bakıldı.
+
 ## 08.10.2026 · mobil tarama (390 px, 30 sayfa)
 
 Burak: "tüm mobili gez, sıkıntılı şeyleri fixle; çok uzun kısımlara alternatif çözüm

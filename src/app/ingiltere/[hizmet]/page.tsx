@@ -10,8 +10,15 @@ const withSlug = async (params: Params) => {
   return { slug: "ingiltere", hizmet };
 };
 
+/* 08.10.2026 · /ingiltere/muhasebe ve /ingiltere/banka-hesabi'nin kendi
+   klasörü var; aynı adresi bu şablon da üretirse üretimde şablon kazanıyor
+   (app/dubai/[hizmet]'teki not). */
+const KENDI_SAYFASI = new Set(["muhasebe", "banka-hesabi"]);
+
 export function generateStaticParams() {
-  return pagedServicesFor("ingiltere").map((s) => ({ hizmet: s.slug }));
+  return pagedServicesFor("ingiltere")
+    .filter((s) => !KENDI_SAYFASI.has(s.slug))
+    .map((s) => ({ hizmet: s.slug }));
 }
 
 export const generateMetadata = ({ params }: { params: Params }) =>

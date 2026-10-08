@@ -43,7 +43,21 @@ export type KktcKapsam = {
   sinir: { t: string; l: string }[];
 };
 
-export const ACCOUNTING_KKTC = {
+/* Ortak gövdenin (services/MuhasebeSayfa) beklediği biçim; İngiltere'nin
+   verisi de bu biçimde (lib/accountingIngiltere.ts). */
+export type MuhasebeVeri = {
+  seo: { title: string; description: string };
+  hero: { crumb: string; title: string; accent: string; lead: string; cta: { label: string; href: string }; price?: { amount: string; label: string; href: string }; rozetler: string[] };
+  strengths: { id: string; heading: string; accent: string; items: AccStrength[] };
+  scope: { id: string; heading: string; accent: string; excludesLead: string; youTitle: string; feeLabel: string; kalemler: KktcKapsam[] };
+  takvim: Takvim;
+  gains: { id: string; heading: string; accent: string; items: AccGain[] };
+  fiyat?: { id: string; heading: string; accent: string; lead: string; items: { ad: string; tutar: string; line: string }[] };
+  faq: { id: string; heading: string; accent: string; items: Faq[] };
+  closing: { title: string; accent: string; cta: { label: string; href: string } };
+};
+
+export const ACCOUNTING_KKTC: MuhasebeVeri = {
   seo: {
     title: "KKTC'de Muhasebe Hizmeti: Serbest Bölge Şirketi | Ortac Global",
     description:

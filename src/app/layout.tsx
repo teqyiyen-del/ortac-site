@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import MobilDeneme from "@/components/shared/MobilDeneme";
 import BaslaKatmani from "@/components/basla/BaslaKatmani";
 
 /* Single font across the whole site (client call). Poppins carries every role —
@@ -70,6 +71,8 @@ export default function RootLayout({
           {/* /basla'ya giden her bağlantıyı sayfanın üstünde açılan pencereye
               çeviren dinleyici (07.10.2026 · gerekçe bileşenin başında) */}
           <BaslaKatmani />
+          {/* telefon önerilerinin önce / sonra denemesi (08.10.2026 · /lab/mobil) */}
+          <MobilDeneme />
         </Providers>
       </body>
     </html>

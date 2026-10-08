@@ -177,11 +177,111 @@ const DUBAI: Partial<Record<ServiceSlug, HizmetIcerik>> = {
   },
 };
 
-/* KKTC'nin muhasebe ve banka içeriği 07.10.2026'da buradan çıktı: iki sayfa
-   Dubai'ninkilerle aynı bölümleri basan kendi dosyalarına taşındı
-   (app/kktc/muhasebe, app/kktc/banka-hesabi · lib/accountingKktc.ts,
-   lib/bankaKktc.ts). */
+/* ============================================================ İNGİLTERE
+   08.10.2026 · VERGİ. Müşteri belgesi yok; oran, eşik, süre ve cezaların
+   hepsi resmî kaynaktan (docs/ingiltere-mevzuat.md · 4, 5: gov.uk, HMRC,
+   legislation.gov.uk; kontrol 23.09.2026) ve aynı rakamlar ülke sayfasında
+   yayında. Fiyat yok. */
+const INGILTERE: Partial<Record<ServiceSlug, HizmetIcerik>> = {
+  vergi: {
+    kartlar: {
+      baslik: "Vergide neye bakıyoruz?",
+      vurgu: "neye bakıyoruz?",
+      lead: "Kayıt ve beyan muhasebenin işi. Burada hangi kuralın size işlediğini netleştiriyoruz.",
+      items: [
+        { icon: "yuzde", kim: "Her şirket", title: "Kurumlar vergisi", line: "Kârınıza göre hangi oranın işlediğini ve beyan takvimini çıkarıyoruz." },
+        { icon: "terazi", kim: "Satış yapan şirket", title: "KDV durumu", line: "Kayıt zorunlu mu, gönüllü kayıt size uyar mı; birlikte değerlendiriyoruz." },
+        { icon: "kisi", kim: "Türkiye'de yaşayan ortak", title: "Kâr payı ve Türkiye", line: "Şirketin ve sizin vergi tarafınızı birlikte ele alıyoruz." },
+      ],
+    },
+    kurallar: {
+      baslik: "Bilmeniz gereken dört kural.",
+      vurgu: "dört kural.",
+      lead: "İngiltere vergi için değil, ödeme altyapısı ve tanınırlık için seçiliyor. Çerçeve şöyle:",
+      items: [
+        { icon: "yuzde", title: "Kurumlar vergisi %19 ile %25 arası", line: "Kâr £50.000'e kadar %19, £250.000'in üstünde %25; arada kademeli." },
+        { icon: "terazi", title: "KDV eşiği £90.000", line: "Yıllık ciro eşiği aşarsa kayıt zorunlu; altında isteğe bağlı." },
+        { icon: "takvim", title: "Geciken beyannamede ceza otomatik", line: "Bir gün gecikme £200, üç ayı geçerse £200 daha." },
+        { icon: "kisi", title: "Kâr payı Türkiye'de beyan ediliyor", line: "Kâr şirkette kaldıkça Türkiye'de ek vergi yok; size geçtiğinde beyan ediyorsunuz." },
+      ],
+    },
+    adimlar: {
+      baslik: "Nasıl ilerliyor?",
+      vurgu: "ilerliyor?",
+      lead: "Dört adım; ilki bir görüşme.",
+      items: [
+        { icon: "ara", title: "Faaliyetinize bakıyoruz", line: "Ne sattığınızı, müşterilerinizin nerede olduğunu ve şirketi nereden yönettiğinizi dinliyoruz." },
+        { icon: "terazi", title: "Çerçeveyi netleştiriyoruz", line: "Kurumlar vergisi, KDV ve kâr payı tarafında size işleyen kuralları yazıyla bildiriyoruz." },
+        { icon: "dosya", title: "Kayıtları planlıyoruz", line: "Kurumlar vergisi kaydı ve gerekiyorsa KDV kaydı muhasebe ekibimizle kuruluyor." },
+        { icon: "takvim", title: "Yıl içinde takip ediyoruz", line: "Ciro eşiğe yaklaşır ya da yapı değişirse durumunuza yeniden bakıyoruz." },
+      ],
+      cikis: { label: "Muhasebe hizmetine bakın", href: "/ingiltere/muhasebe" },
+    },
+    sss: [
+      { q: "İngiltere'de şirket kurarsam daha az vergi öder miyim?", a: "Bu beklentiyle gelmeyin. Ltd'nin kârı İngiltere'de %19 ile %25 arasında kurumlar vergisine tabi. İngiltere ödeme altyapısı ve tanınırlık için seçiliyor." },
+      { q: "Şirketi Türkiye'den yönetirsem ne olur?", a: "İşlerin fiilen Türkiye'de yönetildiği bir şirket Türkiye'de de mükellef sayılabiliyor; iki ülke çatışmada karşılıklı anlaşmayla karar veriyor. Durumunuzu görüşmede konuşuyoruz." },
+      { q: "Kâr payı alırsam Türkiye'de vergi öder miyim?", a: "Türkiye'de yaşıyorsanız kâr payını yıllık beyannamenizle beyan ediyorsunuz; şartlar tutarsa yarısı istisna. Kişiye özel vergi görüşü vermiyoruz." },
+      { q: "Maaş mı, kâr payı mı?", a: "İkisi de mümkün. Maaş için İngiltere'de bordro (PAYE) kaydı gerekiyor. Hangisinin size uyduğu Türkiye'deki durumunuza bağlı." },
+      { q: "Ücreti ne kadar?", a: "Kapsam şirketten şirkete değiştiği için sabit fiyat yazmıyoruz; görüşmeden sonra yazılı olarak bildiriyoruz." },
+    ],
+  },
+};
+
+/* ================================================================= KKTC
+   08.10.2026 · VERGİ. Kaynak: KKTC teklif belgesi, teyit cevapları ve
+   docs/kktc-mevzuat.md · 3, 9 (Serbest Liman vergi sayfası, GVK, Türkiye-KKTC
+   anlaşması). Cümlelerin çoğu ülke sayfasının "vergi nerede çıkıyor"
+   bölümünde yayında. Fiyat yok. */
+const KKTC: Partial<Record<ServiceSlug, HizmetIcerik>> = {
+  vergi: {
+    kartlar: {
+      baslik: "Vergide neye bakıyoruz?",
+      vurgu: "neye bakıyoruz?",
+      lead: "Muafiyet şarta bağlı. Burada o şartın sizin işinizde tutup tutmadığına bakıyoruz.",
+      items: [
+        { icon: "kalkan", kim: "Serbest Liman şirketi", title: "Muafiyetin şartı", line: "İşinizin KKTC dışına ya da Serbest Liman içine yönelik olup olmadığını değerlendiriyoruz." },
+        { icon: "harita", kim: "KKTC içine satış", title: "Yerel satış", line: "KKTC içindeki yerel şirkete satışta normal vergi kuralları işliyor; hangi işlem nereye giriyor, ayırıyoruz." },
+        { icon: "kisi", kim: "Türkiye'de yaşayan ortak", title: "Kâr payı ve Türkiye", line: "Kazancın Türkiye tarafındaki beyanını birlikte ele alıyoruz." },
+      ],
+    },
+    kurallar: {
+      baslik: "Bilmeniz gereken dört kural.",
+      vurgu: "dört kural.",
+      lead: "Şirket tarafında vergi çıkmaması, hiçbir yerde vergi çıkmayacağı anlamına gelmiyor.",
+      items: [
+        { icon: "yuzde", title: "KKTC dışı işte kurumlar vergisi yok", line: "KKTC dışındaki ve Serbest Liman içindeki şirketlere yapılan işte kurumlar ve gelir vergisi yok." },
+        { icon: "terazi", title: "İç piyasaya satış muafiyet dışında", line: "KKTC içindeki yerel şirkete satışta gümrük, KDV ve kurumlar vergisi kuralları uygulanıyor." },
+        { icon: "kisi", title: "Kâr payı Türkiye'de beyan ediliyor", line: "Kâr şirkette kaldıkça vergi doğmuyor; size geçtiğinde Türkiye'de beyan ediyorsunuz." },
+        { icon: "harita", title: "Şirket Türkiye'den yönetilirse", line: "İşlerin fiilen Türkiye'de yönetildiği şirket Türkiye'de kurumlar vergisi mükellefi sayılabiliyor." },
+      ],
+    },
+    adimlar: {
+      baslik: "Nasıl ilerliyor?",
+      vurgu: "ilerliyor?",
+      lead: "Dört adım; ilki kuruluştan önce.",
+      items: [
+        { icon: "ara", title: "Faaliyetinize bakıyoruz", line: "Kime sattığınızı, malın ya da hizmetin nereye gittiğini dinliyoruz." },
+        { icon: "kalkan", title: "Muafiyeti değerlendiriyoruz", line: "Hangi gelirinizin muafiyete girdiğini, hangisinin girmediğini yazıyla bildiriyoruz." },
+        { icon: "dosya", title: "Kayıtları buna göre kuruyoruz", line: "Muafiyetin dayanağı düzgün tutulan kayıtlar; muhasebe ekibimizle birlikte yürüyor." },
+        { icon: "takvim", title: "Yıl içinde takip ediyoruz", line: "Müşteri yapınız ya da gelir türünüz değişirse yeniden bakıyoruz." },
+      ],
+      cikis: { label: "KKTC muhasebe hizmetine bakın", href: "/kktc/muhasebe" },
+    },
+    sss: [
+      { q: "Gerçekten hiç vergi ödemiyor muyum?", a: "KKTC dışındaki ve Serbest Liman içindeki şirketlere yaptığınız işte kurumlar ve gelir vergisi yok, şirket KDV mükellefi değil. KKTC içindeki yerel şirkete satışta normal vergi kuralları uygulanıyor. Yıllık faaliyet harcı ise vergi değil, sabit bir bedel." },
+      { q: "Bu yasal mı?", a: "Muafiyet Serbest Liman ve Bölge Yasası'ndan geliyor, yasal. Şartı KKTC dışına yönelik gerçek faaliyet ve düzgün tutulan kayıtlar." },
+      { q: "Kâr payı alırsam Türkiye'de vergi öder miyim?", a: "Türkiye'de yaşıyorsanız kâr payını yıllık beyannamenizle beyan ediyorsunuz. Şirketin en az yarısı sizinse ve parayı beyanname tarihine kadar Türkiye'ye getirirseniz kâr payının yarısı istisna. Kişiye özel vergi görüşü vermiyoruz." },
+      { q: "Gelirim faiz, kira ya da lisans geliriyse?", a: "Gelirin ağırlığı bu tür pasif gelirse, dağıtılmayan kâr da ortağın geliri sayılabiliyor. Hizmet ve ticaret gelirinde bu kural işlemiyor; durumunuzu görüşmede konuşuyoruz." },
+      { q: "Ücreti ne kadar?", a: "Kapsam şirketten şirkete değiştiği için sabit fiyat yazmıyoruz; görüşmeden sonra yazılı olarak bildiriyoruz." },
+    ],
+  },
+};
+
+/* KKTC'nin muhasebe ve banka sayfaları, İngiltere'nin muhasebe ve banka
+   sayfaları kendi klasörlerinde (ortak gövdeler: services/MuhasebeSayfa,
+   services/BankaSayfa). */
 
 export function hizmetIcerik(c: Country, slug: string): HizmetIcerik | undefined {
-  return c === "dubai" ? DUBAI[slug as ServiceSlug] : undefined;
+  const s = slug as ServiceSlug;
+  return c === "dubai" ? DUBAI[s] : c === "ingiltere" ? INGILTERE[s] : KKTC[s];
 }

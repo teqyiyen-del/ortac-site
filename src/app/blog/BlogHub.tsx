@@ -9,6 +9,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
+import { BlogDahaFazla } from "@/components/shared/MobilDeneme";
 import SmartLink from "@/components/shared/SmartLink";
 import BlogFilter, { type FilterTab } from "@/app/blog/BlogFilter";
 import {
@@ -593,6 +594,8 @@ export default function BlogHub({
               ))}
             </ol>
           )}
+          {/* telefon denemesi (öneri 8): yalnız ?mobil=yeni ile görünür */}
+          {rows.length > 6 && <BlogDahaFazla />}
 
           {/* Tek kayıt varken listenin bittiğini söylemek gerekiyor: boşluk
               kendi başına bir açıklama değil. Bugün yalnızca "Sektör notları"

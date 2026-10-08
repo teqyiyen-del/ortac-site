@@ -274,6 +274,14 @@ const STATIC_LIVE = [
   "/kvkk",
   "/kktc/muhasebe",
   "/kktc/banka-hesabi",
+  /* 08.10.2026 · Burak: "eksik olan sayfaları araştırıp oluştur, içlerini
+     doldur." Dördü de resmî kaynaktan ve yayındaki ülke sayfalarından yazıldı;
+     fiyat yok. Kaynaklar lib/accountingIngiltere.ts, lib/bankaIngiltere.ts,
+     lib/hizmetIcerik.ts. */
+  "/ingiltere/muhasebe",
+  "/ingiltere/banka-hesabi",
+  "/ingiltere/vergi",
+  "/kktc/vergi",
   "/dubai/vergi",
   "/dubai/kurumsal-danismanlik",
   "/dubai/aml-uyum",
