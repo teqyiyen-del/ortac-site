@@ -27,7 +27,7 @@ import { useLenis } from "@/components/Providers";
 import { FACTS, type CountrySlug } from "@/lib/brand";
 import { gtm } from "@/lib/gtm";
 import FotoGiris, { type FotoRozet } from "@/components/shared/FotoGiris";
-import { BASLIK_FOTO, BASLIK_FOTO_VARSAYILAN, COUNTRY_PHOTO, HIZMET_FOTO } from "@/lib/media";
+import { BASLIK_FOTO, BASLIK_FOTO_VARSAYILAN, COUNTRY_PHOTO, HIZMET_FOTO, photoThumb } from "@/lib/media";
 import { usePathname } from "next/navigation";
 import { DUBAI_BASLANGIC, money } from "@/lib/dubaiFiyat";
 import { KKTC_TOPLAM, euro } from "@/lib/kktcFiyat";
@@ -278,7 +278,13 @@ export default function PageHero({
        BASLIK_FOTO). Karar yolu orada. */
     const foto = BASLIK_FOTO.find((b) => b.on.some((o) => yol === o || yol.startsWith(`${o}/`)))?.foto ?? BASLIK_FOTO_VARSAYILAN;
     return (
-      <section className="ph ph-foto" style={{ "--ph-foto": `url(${foto})` } as React.CSSProperties}>
+      /* --ph-foto-k (08.10.2026 · telefon hızı): telefonda fotoğraf 0,82 perdenin
+         arkasında, 390 px genişlikte duruyor; masaüstü boyu yerine 640'lık
+         kopyası isteniyor (globals.css · .ph-foto telefon kuralı). */
+      <section
+        className="ph ph-foto"
+        style={{ "--ph-foto": `url(${foto})`, "--ph-foto-k": `url(${photoThumb(foto, 640)})` } as React.CSSProperties}
+      >
         <div className="container-o">
           {crumbNav}
           <h1 className="ph-title">

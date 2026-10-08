@@ -1,3 +1,5 @@
+import { izle } from "./izleme";
+
 type GtmPayload = Record<string, string | number | boolean>;
 
 declare global {
@@ -10,4 +12,6 @@ declare global {
 export function gtm(event: string, payload: GtmPayload = {}) {
   if (typeof window === "undefined") return;
   window.dataLayer?.push({ event, ...payload });
+  /* aynı olay kendi izleyicimize de (lib/izleme.ts); izleyici kapalıyken hiçbir şey yapmıyor */
+  izle("o", { ad: event, ...payload });
 }

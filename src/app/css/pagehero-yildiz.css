@@ -183,9 +183,18 @@
   position: absolute;
   inset: 0;
   opacity: 0.8;
+  overflow: hidden;
+}
+/* 08.10.2026 · TELEFON HIZI (gerekçe kapanis-cta.css · .kcta-yildiz::before):
+   döşeme ::before'da, kayma background-position yerine transform. Görünen
+   kare aynı; -b katmanı burada zaten kaymıyor, yalnız taşıyıcısı değişti. */
+.phg-bg[data-zemin="yildiz"] .phy-yildiz::before {
+  content: "";
+  position: absolute;
+  inset: 0 -420px 0 0;
 }
 
-.phg-bg[data-zemin="yildiz"] .phy-yildiz-a {
+.phg-bg[data-zemin="yildiz"] .phy-yildiz-a::before {
   background-image: radial-gradient(circle 1.5px at 12% 24%, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0) 100%),
     radial-gradient(circle 1.1px at 47% 9%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 100%),
     radial-gradient(circle 1.3px at 71% 38%, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0) 100%),
@@ -194,7 +203,7 @@
   background-size: 420px 260px;
 }
 
-.phg-bg[data-zemin="yildiz"] .phy-yildiz-b {
+.phg-bg[data-zemin="yildiz"] .phy-yildiz-b::before {
   background-image: radial-gradient(circle 1px at 22% 46%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%),
     radial-gradient(circle 1.2px at 64% 20%, rgba(160, 197, 245, 0.34) 0%, rgba(160, 197, 245, 0) 100%),
     radial-gradient(circle 0.9px at 84% 58%, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 100%);
@@ -330,7 +339,7 @@
    yıldızların opaklığı zaten sıfırdır. `useReducedMotion` gibi bir JS okuması
    yok, yani sunucu ile ilk istemci render'ı aynı işaretlemeyi basıyor. */
 @media (prefers-reduced-motion: no-preference) {
-  .phg-bg[data-zemin="yildiz"] .phy-yildiz-a {
+  .phg-bg[data-zemin="yildiz"] .phy-yildiz-a::before {
     animation: phyKay 44017ms linear infinite;
   }
   .phg-bg[data-zemin="yildiz"] .phy-kayan-1 {
@@ -346,10 +355,10 @@
    yavaşlarsa döngü fark ediliyor. */
 @keyframes phyKay {
   from {
-    background-position: 0 0;
+    transform: translate3d(0, 0, 0);
   }
   to {
-    background-position: -420px 0;
+    transform: translate3d(-420px, 0, 0);
   }
 }
 

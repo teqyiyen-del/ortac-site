@@ -4,6 +4,8 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import MobilDeneme from "@/components/shared/MobilDeneme";
 import BaslaKatmani from "@/components/basla/BaslaKatmani";
+import Izleyici from "@/components/shared/Izleyici";
+import EkranDisiDurdur from "@/components/shared/EkranDisiDurdur";
 
 /* Single font across the whole site (client call). Poppins carries every role —
    DISPLAY/SUBHEAD/BODY/UI by weight, DATA/TAG by weight + tracking. */
@@ -73,6 +75,11 @@ export default function RootLayout({
           <BaslaKatmani />
           {/* telefon önerilerinin önce / sonra denemesi (08.10.2026 · /lab/mobil) */}
           <MobilDeneme />
+          {/* ekranda olmayan bölümün CSS animasyonları durur (08.10.2026) */}
+          <EkranDisiDurdur />
+          {/* kendi izleyicimiz (08.10.2026 · lib/izleme.ts). Yalnız IZLEME_ACIK=1
+              iken basılıyor: Vercel'de kapalı, kendi sunucumuzda açık. */}
+          {process.env.IZLEME_ACIK === "1" && <Izleyici />}
         </Providers>
       </body>
     </html>

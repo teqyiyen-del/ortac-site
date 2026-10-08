@@ -854,6 +854,10 @@
    etiketi amber (şart/risk rengi). */
 .svb-s-logo-ik {
   width: 52px;
+  /* 08.10.2026 · telefon denetimi: telefon bloğundaki `center start` logolar
+     için (zeminsiz kuyu, sola yaslı). İkon karosunun zemini var; ikon karonun
+     sol kenarına yapışıyordu (İngiltere ve KKTC banka sayfaları). Karoda orta. */
+  place-items: center;
   background: var(--blue-100);
   color: var(--blue-700);
 }

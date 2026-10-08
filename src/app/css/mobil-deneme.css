@@ -694,6 +694,13 @@
   html[data-mobil="yeni"] .svb-s-logo :is(svg, img) {
     max-width: 84px;
   }
+  /* 08.10.2026 · telefon denetimi: markasız satırda (İngiltere, KKTC) logo
+     yerinde ikon karosu var; 84 px'lik kuyu kuralı onu da geniş, boş mavi bir
+     bloğa çeviriyor, ikon solda kalıyordu. Karo kare ve ikon ortada. */
+  html[data-mobil="yeni"] .svb-s-logo-ik {
+    width: 44px;
+    place-items: center;
+  }
   html[data-mobil="yeni"] .svb-s-etiket {
     grid-column: 2;
     justify-self: start;

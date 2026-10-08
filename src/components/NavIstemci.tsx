@@ -1107,7 +1107,16 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
 
   /* mobil çarşaf açıkken arka plan kaymasın */
   useEffect(() => {
-    if (!lenis) return;
+    if (!lenis) {
+      /* Lenis'siz cihaz (telefon · Providers): kilidi belgenin kendisi tutuyor */
+      if (!sheet) return;
+      const kok = document.documentElement;
+      const onceki = kok.style.overflow;
+      kok.style.overflow = "hidden";
+      return () => {
+        kok.style.overflow = onceki;
+      };
+    }
     if (sheet) lenis.stop();
     else lenis.start();
   }, [sheet, lenis]);

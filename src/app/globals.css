@@ -26,7 +26,12 @@
 @import "./css/chain.css";
 @import "./css/araclar.css";
 /* Araç başına dosyalar (11.09.2026 · araç dili turu). Ortak dil araclar.css'te
-   ve ÖNCE okunuyor; bunlar yalnız kendi aracının parçalarını taşıyor. */
+   ve ÖNCE okunuyor; bunlar yalnız kendi aracının parçalarını taşıyor.
+   08.10.2026 · telefon hızı turunda bu beş dosyayı src/app/araclar/layout.tsx'e
+   taşımak DENENDİ ve GERİ ALINDI: sayfa düzeyinde içe aktarılan CSS globalden
+   SONRA yükleniyor, sıra değişince tezgâhın üstündeki 40 px boşluk kayboldu
+   (390 px, sekiz araç sayfasının hepsi; önce/sonra kare karşılaştırması).
+   Taşınacaksa önce sıraya bağlı kurallar ayıklanmalı. */
 @import "./css/araclar-kdv.css";
 @import "./css/araclar-sic.css";
 @import "./css/araclar-isim.css";
@@ -261,7 +266,11 @@
    hero-scene.css'ten SONRA gelmek zorunda: hero'nun ızgara/glow zemini ve
    .hero4-top'un yığın sırası orada yazılı, bu dosya ikisini de bu sahneye
    göre ayarlıyor. */
-@import "./css/hero-portal.css";
+/* 08.10.2026 · telefon hızı: bu import buradan KALKTI. hero-portal.css (54 KB)
+   yalnız HeroPortal.tsx'in sınıflarını (.hgt-) taşıyor; o bileşeni yalnız
+   Hero.tsx basıyor ve Hero.tsx'i hiçbir sayfa basmıyor (ana sayfa HeroAkis).
+   Dosya silinmedi; import HeroPortal.tsx'in başında, bileşen geri dönerse
+   stili de onunla gelir. */
 
 /* KALDIRILDI · /lab/hakkimizda-akis (.hkx- .hk1- .hk2- .hk3-)
    Hakkımızda sayfasını "kimiz" + bento diye ikiye ayırma turuydu; üç aday
@@ -2583,7 +2592,12 @@ body {
   gap: 8px;
   margin-top: 18px;
 }
-.sp-sib a {
+/* 08.10.2026 · telefon denetimi: yayında olmayan kardeş hizmet <a> değil
+   <span data-soon> basılıyor (SmartLink); kural yalnız <a>'yı tuttuğu için o
+   girdi çerçevesiz düz yazı kalıyor, oku da alt satıra düşüyordu (İngiltere ve
+   KKTC hizmet sayfalarında altı adres). Hap biçimi ikisine de; sönüklük
+   [data-soon]'un kendi kuralından geliyor. */
+.sp-sib :is(a, [data-soon]) {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -2720,7 +2734,7 @@ body {
 }
 @media (max-width: 767.5px) {
   .ph-foto {
-    background-image: linear-gradient(rgba(8, 8, 8, 0.82), rgba(8, 8, 8, 0.82)), var(--ph-foto);
+    background-image: linear-gradient(rgba(8, 8, 8, 0.82), rgba(8, 8, 8, 0.82)), var(--ph-foto-k, var(--ph-foto));
   }
 }
 .ph-crumb {
@@ -8153,4 +8167,17 @@ li {
   gap: 8px;
   margin: 0;
   padding-left: 20px;
+}
+
+/* 08.10.2026 · EKRAN DIŞINDA ANİMASYON DURUR (components/shared/EkranDisiDurdur).
+   Öznitelik bölüm ekrandan çıkınca konuyor. !important bilerek: duraklatma
+   tek tek animasyon kurallarının özgüllüğüyle yarışmamalı; yalnız play-state'i
+   ezer, animasyonun kendisine dokunmaz. */
+[data-ekran-disi],
+[data-ekran-disi]::before,
+[data-ekran-disi]::after,
+[data-ekran-disi] *,
+[data-ekran-disi] *::before,
+[data-ekran-disi] *::after {
+  animation-play-state: paused !important;
 }

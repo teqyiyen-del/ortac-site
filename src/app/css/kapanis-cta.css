@@ -213,6 +213,8 @@
 .kcta-yildiz {
   position: absolute;
   inset: 0;
+  /* döşeme ::before'da ve sağa bir döşeme boyu taşıyor (aşağıda) */
+  overflow: hidden;
   /* 0,74 denendi ve düşük kaldı: 1 px'lik yıldızlar gece zeminde iki katlı
      ekranda tamamen kayboluyordu. 0,8 hâlâ "fark ettirmeden var" sınırında. */
   opacity: 0.8;
@@ -220,7 +222,22 @@
   -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 84%, rgba(0, 0, 0, 0.3) 100%);
   mask-image: linear-gradient(180deg, #000 0%, #000 84%, rgba(0, 0, 0, 0.3) 100%);
 }
-.kcta-yildiz-a {
+/* 08.10.2026 · TELEFON HIZI. Döşeme öğenin kendisinde duruyor ve kayma
+   `background-position` ile yapılıyordu: o özellik ekran kartına devredilemiyor,
+   tarayıcı maskeli kutunun TAMAMINI her karede yeniden boyuyordu (her sayfanın
+   altında, sürekli). Ölçüm: alt bilgiye girerken 37-38 ms'lik kareler.
+   Şimdi döşeme ::before'da; ::before kutudan bir döşeme boyu geniş ve yalnız
+   `transform` ile kayıyor. Bir döşeme boyu kayınca görüntü kendini birebir
+   tekrar ettiği için görünen kare aynı; süreler, eğri, gradyanlar aynen. */
+.kcta-yildiz::before {
+  content: "";
+  position: absolute;
+  inset: 0 -420px 0 0;
+}
+.kcta-yildiz-b::before {
+  right: -300px;
+}
+.kcta-yildiz-a::before {
   background-image: radial-gradient(circle 1.5px at 12% 24%, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0) 100%),
     radial-gradient(circle 1.1px at 47% 9%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 100%),
     radial-gradient(circle 1.3px at 71% 38%, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0) 100%),
@@ -228,7 +245,7 @@
     radial-gradient(circle 1.2px at 31% 63%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
   background-size: 420px 260px;
 }
-.kcta-yildiz-b {
+.kcta-yildiz-b::before {
   background-image: radial-gradient(circle 1px at 22% 46%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%),
     radial-gradient(circle 1.2px at 64% 20%, rgba(160, 197, 245, 0.34) 0%, rgba(160, 197, 245, 0) 100%),
     radial-gradient(circle 0.9px at 84% 58%, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 100%);
@@ -693,10 +710,10 @@
   /* Bir döşeme boyu kayma; iki katman iki farklı hızda, aradaki fark
      paralaks veriyor. 420px/40,361s ≈ 10,4 px/sn ve 300px/74,959s ≈ 4,0
      px/sn: ikisi de "kayıyor mu acaba" sınırında, bilerek. */
-  .kcta-yildiz-a {
+  .kcta-yildiz-a::before {
     animation: kcta-kay-a 40361ms linear infinite;
   }
-  .kcta-yildiz-b {
+  .kcta-yildiz-b::before {
     animation: kcta-kay-b 74959ms linear infinite;
   }
 
@@ -774,18 +791,18 @@
 
 @keyframes kcta-kay-a {
   from {
-    background-position: 0 0;
+    transform: translate3d(0, 0, 0);
   }
   to {
-    background-position: -420px 0;
+    transform: translate3d(-420px, 0, 0);
   }
 }
 @keyframes kcta-kay-b {
   from {
-    background-position: 0 0;
+    transform: translate3d(0, 0, 0);
   }
   to {
-    background-position: -300px 0;
+    transform: translate3d(-300px, 0, 0);
   }
 }
 

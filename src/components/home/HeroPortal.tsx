@@ -1,5 +1,6 @@
 "use client";
 
+import "@/app/css/hero-portal.css";
 import { useCallback, useId } from "react";
 import SmartLink from "@/components/shared/SmartLink";
 import { Flag, COUNTRY_NAMES } from "@/components/shared/CountryPicker";
