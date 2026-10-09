@@ -67,6 +67,8 @@ const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
     ad: "Dubai",
     sorular: [
       { id: "d-mainland", s: "Dubai'de mainland şirket kuruluşu da yapıyor muyuz?", sik: ["Evet", "Hayır, yalnız serbest bölge"], ipucu: "Yeni \"serbest bölge mi, mainland mi\" yazısı için." },
+      { id: "d-icpazar", s: "Serbest bölge şirketi BAE iç pazarına nasıl satış yapıyor? İlk teyitte \"sorunsuz satabiliyor\" demiştiniz; resmî portal dağıtıcı, şube ya da izin gerektiğini yazıyor.", sik: ["Hizmet faturası serbest, mal için izin gerekir", "İzin ya da şube şart", "Başka, aşağıya yazıyorum"], ipucu: "Yeni yazıda resmî kuralı yazdık; sizin uygulamanız farklıysa düzeltelim." },
+      { id: "d-fiyat", s: "Meydan 5.300 $ ve DWTC 5.820 $ rakamlarını teklifteki toplamdan geri hesapladık. Doğru mu?", sik: ["Doğru", "Düzeltme var, aşağıya yazıyorum"] },
       { id: "d-ceza", s: "Geç beyan cezası rakamını (ayda 500, sonra 1.000 AED) siteden çıkardık. Güncel rakamı yazmak ister misiniz?", sik: ["Yazmayalım", "Yazalım, aşağıya yazıyorum"] },
     ],
   },

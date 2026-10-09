@@ -121,6 +121,8 @@ export const SLUG = {
   gelirVergisiOlmayan: "gelir-vergisi-olmayan-ulkeler-2025",
   /* 10.10.2026 · yeni yazılar (rakip araştırmasından; docs/teslim/rakip-ve-sayfa-fikirleri.md) */
   kktcSerbestLiman: "kktc-serbest-liman-sirketi",
+  dubaiKurulusRehberi: "dubai-sirket-kurulusu-rehberi",
+  dubaiSerbestMainland: "dubai-serbest-bolge-mi-mainland-mi",
 
   /* yer tutucu · ülke rehberi DIŞINDAKİ dört kategori */
   bolgeSecimi: "serbest-bolge-mi-mainland-mi",
@@ -192,7 +194,7 @@ export const blogHref = (slug: string) => `/blog/${slug}`;
 /** Eski siteden taşınıp YAYIMLANAN yazıların slugları. lib/routes bu listeyi
  *  yayındaki adreslere ekliyor (bağlantılar sönük çıkmasın, haritaya girsin).
  *  Yeni yazı taşındığında slug'ı buraya da yazılır. */
-export const TASINAN_SLUGLAR: BlogSlug[] = [SLUG.ukAsgariUcret, SLUG.ukYasam, SLUG.eori, SLUG.gelirVergisiOlmayan, SLUG.kktcYasam, SLUG.kktcVergi, SLUG.dubaiIsFikirleri, SLUG.dubaiYasam, SLUG.kktcSerbestLiman];
+export const TASINAN_SLUGLAR: BlogSlug[] = [SLUG.ukAsgariUcret, SLUG.ukYasam, SLUG.eori, SLUG.gelirVergisiOlmayan, SLUG.kktcYasam, SLUG.kktcVergi, SLUG.dubaiIsFikirleri, SLUG.dubaiYasam, SLUG.kktcSerbestLiman, SLUG.dubaiKurulusRehberi, SLUG.dubaiSerbestMainland];
 
 export const DEMO_POST: Record<BlogCategory, BlogSlug> = {
   "ulke-rehberi": SLUG.dubaiRehber,
