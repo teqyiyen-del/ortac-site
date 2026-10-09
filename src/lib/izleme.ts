@@ -11,7 +11,7 @@
    KİMLİK             oturum = bu sekmenin rastgele kimliği (sessionStorage; sekme
                       kapanınca biter). Günlük tekil ziyaretçi sunucuda, IP saklanmadan
                       hesaplanıyor (api/olay/route.ts).
-   AĞIRLIK            bağımlılık yok. Olaylar kuyrukta bekliyor; 10 saniyede bir ya da
+   AĞIRLIK            bağımlılık yok. Görüntüleme 1 sn içinde, diğer olaylar 10 saniyede bir ya da
                       sekme gizlenince tek istekle gidiyor (sendBeacon). Dinleyiciler
                       pasif; kaydırmada yalnız bir sayı güncelleniyor.
    AÇIK MI            layout.tsx yalnız IZLEME_ACIK=1 iken <Izleyici/> basıyor. Vercel'de
@@ -58,6 +58,14 @@ export function izGonder() {
 export function izle(t: IzOlay["t"], veri: Record<string, Deger> = {}) {
   if (!acik) return;
   kuyruk.push({ ...veri, t, z: Date.now(), y: izYol() });
-  if (kuyruk.length >= 20) izGonder();
-  else zamanlayici ??= setTimeout(izGonder, 10_000);
+  if (kuyruk.length >= 20) return izGonder();
+  /* GÖRÜNTÜLEME BEKLEMEZ (09.10.2026). İlk hâlinde her olay 10 sn kuyrukta
+     duruyor, erken çıkan ziyaretçinin görüntülemesi yalnız sekme kapanırken
+     giden isteğe kalıyordu. 62 sayfalık deneme gezisinde (sayfa başına 3 sn,
+     başsız tarayıcı) o son istek hiç gitmedi ve 62 görüntülemenin 0'ı yazıldı.
+     Görüntüleme 1 sn içinde gidiyor; tıklama ve olaylar 10 sn'de toplu. */
+  if (t === "g") {
+    clearTimeout(zamanlayici);
+    zamanlayici = setTimeout(izGonder, 1000);
+  } else zamanlayici ??= setTimeout(izGonder, 10_000);
 }
