@@ -160,10 +160,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
    bağlantıya çevriliyor: site içi adres SmartLink (yayında olmayan adres
    kendiliğinden sönük basılır), dış adres yeni sekmede. Başka biçimlendirme
    yok; kalın, italik, başlık bu yoldan gelmez. */
-/* YAZAR FOTOĞRAFI. Elimizde Murat Ortaç'ın gerçek bir portresi yok (eski
-   sitedeki kareler stok/üretim). Dosya public/murat-ortac.jpg olarak
-   gelince buraya "/murat-ortac.jpg" yazılır; o zamana kadar baş harfler. */
-const YAZAR_FOTO: string | null = null;
+/* YAZAR FOTOĞRAFI. Burak'ın 09.10.2026'da gönderdiği kareden (Murat Ortaç,
+   Dubai ofisinde masada) yüz kesiti; 256 px kare. Daha yüksek çözünürlüklü
+   bir portre gelirse aynı dosyanın üstüne yazılır. */
+const YAZAR_FOTO: string | null = "/murat-ortac.jpg";
 
 function Zengin({ text }: { text: string }) {
   const parcalar = text.split(/(\[[^\]]+\]\([^)\s]+\))/g);
