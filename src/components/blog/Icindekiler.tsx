@@ -4,9 +4,11 @@
    Burak: "içindekiler çok karışık, kalabalık, okunmuyor; daha küçük
    yazabilirsin." Bir tur Piktram'ın blogundaki numaralı daireli, kesik
    çizgili kalıp kopyalandı; Burak: "aynısını niye çaldın, Ortac'ın öyle bir
-   tarzı yok." Geri alındı. Şimdi sitenin kendi dili: kutusuz düz liste, mavi
-   iki haneli numara (01, 02 …; sitede adım numaraları hep böyle), 14 px
-   yazı, okunan bölüm koyu. Kopyala düğmesi de kalktı.
+   tarzı yok." Bir tur düz listeye (01, 02) döndü; sonra Burak içindekiler
+   için ayrıca izin verdi: "onu yuvarlak yapabilirsin, onda sıkıntı yok, onu
+   direkt çal; yuvarlak içinde sayılar iyiydi; 01, 02 olmasına gerek yok,
+   1, 2, 3 yap." Son hâl: numaralı daireler ve kesik bağ çizgisi, 14 px yazı,
+   okunan bölümün dairesi dolu. Kopyala düğmesi yok.
 
    Etkin bölüm IntersectionObserver ile; betik çalışmazsa liste yine tam. */
 import { useEffect, useState } from "react";
@@ -37,7 +39,7 @@ export default function Icindekiler({ maddeler }: { maddeler: { id: string; text
           <li key={m.id} data-etkin={etkin === m.id ? "" : undefined}>
             <a href={`#${m.id}`} aria-current={etkin === m.id ? "location" : undefined}>
               <span className="bp-toc-n" aria-hidden="true">
-                {String(i + 1).padStart(2, "0")}
+                {i + 1}
               </span>
               {m.text}
             </a>

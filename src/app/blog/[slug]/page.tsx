@@ -659,6 +659,26 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                       Metin sitede doğrulanmış bilgiden (lib/about: yönetici
                       ortak, Certified Accountant; firma 1996'dan beri). Fotoğraf yok: elimizde
                       gerçek bir portre yok, stok yüz konmuyor. */}
+                  {/* İLGİLİ HİZMET ŞERİDİ. Bir tur Piktram kopyası olarak gelip
+                      kalkmıştı; Burak: "o da iyi duruyordu, tasarımını düzeltsen
+                      durabilir; ilgili hizmeti gösteriyordu direkt." Geri geldi,
+                      Ortac diliyle: açık mavi kart, düz (döndürülmemiş) kare
+                      fotoğraf, hizmetin adı, tek satır ve sitenin oklu bağlantısı. */}
+                  {hizmet && (
+                    <SmartLink href={hizmet.href} className="bp-serit">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={gorsel} alt="" loading="lazy" width={96} height={96} />
+                      <span className="bp-serit-m">
+                        <i>İlgili hizmet</i>
+                        <b>{hizmet.label}</b>
+                        <span>{hizmet.line}</span>
+                      </span>
+                      <span className="bp-serit-a">
+                        Sayfaya gidin
+                        <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+                      </span>
+                    </SmartLink>
+                  )}
                   {post.author !== "Ortac Global" && (
                     <aside className="bp-yazar" aria-label="Yazar">
                       {YAZAR_FOTO ? (
@@ -677,7 +697,8 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                           {post.author} <span>· Yönetici ortak</span>
                         </p>
                         <p className="bp-yazar-s">
-                          Certified Accountant, Ortac Global
+                          Ortac Global&apos;in yönetici ortağı ve Certified Accountant. Muhasebe, vergi ve şirket kuruluşu
+                          üzerine yazıyor.
                         </p>
                         <SmartLink href="/blog" className="bp-yazar-l">
                           Bütün yazıları
@@ -720,6 +741,8 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           <div className="container-o">
             <div className="bp-exit">
               <div className="bp-exit-l">
+                {/* mavi künye: "siyah üstüne kalsın, sadece mavi atabilirsin bir yerine" */}
+                {hizmet && <p className="bp-exit-k">{hizmet.label}</p>}
                 <h2 className="bp-exit-h">{post.closing.title}</h2>
                 <p className="bp-exit-p">{post.closing.line}</p>
                 <div className="bp-exit-d">
@@ -727,12 +750,6 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                     {post.closing.cta}
                     <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
                   </SmartLink>
-                  {hizmet && (
-                    <SmartLink href={hizmet.href} className="bp-exit-a">
-                      {hizmet.label}
-                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                    </SmartLink>
-                  )}
                 </div>
               </div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
