@@ -3,10 +3,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowRight, ArrowUpRight, Info, Quote, TriangleAlert } from "lucide-react";
 import Nav from "@/components/Nav";
-import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
-import AskCta from "@/components/shared/AskCta";
 import FinalCta from "@/components/FinalCta";
 import {
   blogHref,
@@ -94,6 +92,18 @@ type Params = Promise<{ slug: string }>;
 
 /* Şu an tek slug üretiyor. blog.ts'e ikinci kayıt girdiği anda burası
    kendiliğinden iki sayfa üretmeye başlıyor. */
+/* Eski siteden gelen bir adreste Türkçe "ı" var (…-en-karlı-is-imkanlari;
+   en çok trafik alan ikinci yazı, adresi korunuyor). Tarayıcı onu %C4%B1 diye
+   yolluyor ve parametre kodlanmış gelebiliyor; kayıtla karşılaştırmadan önce
+   çözülüyor. */
+function coz(s: string): string {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return s;
+  }
+}
+
 export function generateStaticParams() {
   return BLOG_SLUGS.map((slug) => ({ slug }));
 }
@@ -104,7 +114,8 @@ export function generateStaticParams() {
 const SITE = "https://ortacglobal.com";
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug: hamSlug } = await params;
+  const slug = coz(hamSlug);
   const post = postFor(slug);
   if (!post) return {};
 
@@ -336,6 +347,15 @@ function Block({ block }: { block: BlogBlock }) {
         </figure>
       );
 
+    case "gorsel":
+      return (
+        <figure className="bp-gorsel">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={block.src} alt={block.alt} loading="lazy" width={900} height={506} />
+          {block.caption && <figcaption>{block.caption}</figcaption>}
+        </figure>
+      );
+
     /* Soru-cevap: native <details>, cevap HTML'de duruyor (kapalıyken de
        dizine girer). Sayfadaki bütün sorular tek FAQPage yapılı verisinde. */
     case "sss":
@@ -363,7 +383,8 @@ const duzMetin = (t: string) => t.replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1");
 /* -------------------------------------------------------------------- sayfa */
 
 export default async function BlogPostPage({ params }: { params: Params }) {
-  const { slug } = await params;
+  const { slug: hamSlug } = await params;
+  const slug = coz(hamSlug);
   const post = postFor(slug);
   if (!post) notFound();
 
@@ -434,7 +455,11 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               inLanguage: "tr-TR",
               datePublished: post.publishedAt,
               ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
-              author: { "@type": "Organization", name: post.author, url: SITE },
+              /* yazar kişi adıysa Person, kurum adıysa Organization */
+              author:
+                post.author === "Ortac Global"
+                  ? { "@type": "Organization", name: post.author, url: SITE }
+                  : { "@type": "Person", name: post.author, worksFor: { "@type": "Organization", name: "Ortac Global", url: SITE } },
               publisher: { "@type": "Organization", name: "Ortac Global", url: SITE },
               image: post.cover,
               /* Kategorinin ekrandaki ADI, slug'ı değil: articleSection
@@ -487,14 +512,24 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               ziyaretçiye bir üst basamağı göstermek ve beş kategorinin de
               gerçek bir sayfası var; "Maliyet ve bütçe" ise gidilecek bir yer
               değil, künyede duran bir ayrıntı. */}
-          <PageHero
-            crumb={meta.label}
-            title={post.title}
-            accent={post.heroAccent}
-            lead={post.summary}
-          />
+          {/* 09.10.2026 · Burak: "hero kısmında arkada görsel ya da siyahlık
+              olmasına gerek yok, direkt beyaz zeminde başlayabiliriz."
+              PageHero (fotoğraflı, koyu giriş) yerine düz beyaz başlık:
+              kırıntı, h1, özet cümlesi. Yazı sayfasında öne çıkması gereken
+              metnin kendisi; kapak fotoğrafı künyenin altında duruyor. */}
+          <header className="bp-bas">
+            <div className="container-o">
+              <nav className="bp-bas-iz" aria-label="Konum">
+                <SmartLink href="/blog">Blog</SmartLink>
+                <span aria-hidden="true">/</span>
+                <SmartLink href={categoryHref(post.category)}>{meta.label}</SmartLink>
+              </nav>
+              <h1 className="bp-bas-h">{post.title}</h1>
+              <p className="bp-bas-l">{post.summary}</p>
+            </div>
+          </header>
 
-          <div className="sec-pad" style={{ background: "var(--white)" }}>
+          <div className="sec-pad bp-govde" style={{ background: "var(--white)" }}>
             <div className="container-o">
               {/* KÜNYE — tarih, okuma süresi, kategori, yazar. Okuma süresi
                   blog.ts'te gövdeden hesaplanıyor; elle girilse gövde
@@ -638,13 +673,19 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             Yazının sonu bir duvar değil, üç kapı. Kişiye özel vergi görüşü
             siteden verilmediği için sorusu olan için tek çıkış AskCta;
             "mali müşavire danışın" kalıbı emekli. Koyu zeminde alfa yok. */}
-        <section className="sec-pad sec-night">
+        {/* 09.10.2026 · Burak: "bloglara daha güzel CTA yapabilirsin; siyah
+            üstüne olmasın." Koyu bölüm kalktı: kırık beyaz zeminde beyaz
+            çerçeveli panel, solda başlık ve mavi düğme, sağda üç çıkış kartı. */}
+        <section className="sec-pad bp-exit-sec">
           <div className="container-o">
             <div className="bp-exit">
               <FadeUp className="bp-exit-l">
                 <h2 className="bp-exit-h">{post.closing.title}</h2>
                 <p className="bp-exit-p">{post.closing.line}</p>
-                <AskCta label={post.closing.cta} tone="solid" />
+                <SmartLink href="/iletisim" className="btn btn-solid bp-exit-btn">
+                  {post.closing.cta}
+                  <ArrowRight size={16} strokeWidth={2.1} aria-hidden="true" />
+                </SmartLink>
               </FadeUp>
 
               <FadeUp delay={0.14} className="bp-exit-r">

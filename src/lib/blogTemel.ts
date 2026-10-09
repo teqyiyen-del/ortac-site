@@ -112,6 +112,13 @@ export const SLUG = {
      ücret: adreste yıl vardı ("…-2025"), yıl başlığa taşındı ve eski adres
      buraya yönleniyor (next.config.ts); yazı her yıl aynı adreste güncellenir. */
   ukAsgariUcret: "ingiltere-asgari-ucret",
+  dubaiIsFikirleri: "dubai-is-fikirleri-en-karlı-is-imkanlari",
+  dubaiYasam: "dubai-yasam-rehberi-maliyetler-is-imkanlari",
+  kktcYasam: "kktc-yasam-rehberi-kibris-is-firsatlari-maliyetler",
+  kktcVergi: "kktc-vergi-avantajlari",
+  ukYasam: "ingiltere-yasam-rehberi-is-imkanlari-vize-maliyetler",
+  eori: "eori-numarasi-nedir-nasil-alinir",
+  gelirVergisiOlmayan: "gelir-vergisi-olmayan-ulkeler-2025",
 
   /* yer tutucu · ülke rehberi DIŞINDAKİ dört kategori */
   bolgeSecimi: "serbest-bolge-mi-mainland-mi",
@@ -183,7 +190,7 @@ export const blogHref = (slug: string) => `/blog/${slug}`;
 /** Eski siteden taşınıp YAYIMLANAN yazıların slugları. lib/routes bu listeyi
  *  yayındaki adreslere ekliyor (bağlantılar sönük çıkmasın, haritaya girsin).
  *  Yeni yazı taşındığında slug'ı buraya da yazılır. */
-export const TASINAN_SLUGLAR: BlogSlug[] = [SLUG.ukAsgariUcret];
+export const TASINAN_SLUGLAR: BlogSlug[] = [SLUG.ukAsgariUcret, SLUG.ukYasam, SLUG.eori, SLUG.gelirVergisiOlmayan, SLUG.kktcYasam, SLUG.kktcVergi, SLUG.dubaiIsFikirleri, SLUG.dubaiYasam];
 
 export const DEMO_POST: Record<BlogCategory, BlogSlug> = {
   "ulke-rehberi": SLUG.dubaiRehber,

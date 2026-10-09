@@ -405,7 +405,11 @@ export type BlogBlock =
      bağlantı kuralı bunun için. */
   | { kind: "ozet"; items: string[] }
   | { kind: "tablo"; caption: string; head: string[]; rows: string[][]; foot?: string }
-  | { kind: "sss"; items: { q: string; a: string }[] };
+  | { kind: "sss"; items: { q: string; a: string }[] }
+  /* yazı içi fotoğraf (09.10.2026 · Burak: "blogun içinde de görsel
+     kullanabilirsin"). src: lib/media içindeki bir kare (POST_PHOTO,
+     COUNTRY_PHOTO …); alt zorunlu, caption görselin altındaki tek satır. */
+  | { kind: "gorsel"; src: string; alt: string; caption?: string };
 
 export type BlogPost = {
   /** SLUG kaydından; ayrılmış adreslerle çakışması tip düzeyinde engelli */
@@ -1625,6 +1629,9 @@ export function readingMinutes(post: BlogPost): number {
         break;
       case "sss":
         for (const x of b.items) chunks.push(x.q, x.a);
+        break;
+      case "gorsel":
+        chunks.push(b.caption ?? "");
         break;
     }
   }

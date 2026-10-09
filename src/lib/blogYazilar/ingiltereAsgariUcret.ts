@@ -30,12 +30,12 @@ export const POST_UK_ASGARI_UCRET: BlogPost = {
   heroAccent: "saatlik ve aylık ne kadar?",
   summary:
     "İngiltere'de asgari ücret 1 Nisan 2026'dan beri 21 yaş ve üstü için saatte 12,71 sterlin. Aylık karşılığı, yaşa göre oranlar ve Londra farkı.",
-  publishedAt: "2025-06-05",
-  updatedAt: "2026-10-09",
+  /* Burak: "tarihini güncellendi olarak verme, yeni gibi ver" */
+  publishedAt: "2026-10-09",
   topic: "Çalışma hayatı",
   country: "ingiltere",
   tags: ["İngiltere", "Asgari ücret", "Bordro"],
-  author: "Ortac Global",
+  author: "Murat Ortaç",
   cover: POST_PHOTO.ukTax,
 
   seo: {
@@ -140,6 +140,17 @@ export const POST_UK_ASGARI_UCRET: BlogPost = {
       title: "İngiltere'de şirket kurmak çalışma izni vermez",
       text: "Türkiye'den İngiltere'de limited şirket kurabilirsiniz ama bu size İngiltere'de yaşama ya da çalışma hakkı kazandırmaz. Asgari ücret, İngiltere'de çalışma hakkı olan kişiler için geçerli bir kuraldır.",
     },
+
+    { kind: "h2", id: "yasam", text: "Asgari ücret İngiltere'de yaşam maliyetini karşılıyor mu?" },
+    {
+      kind: "p",
+      text: "Bu sorunun tek cevabı yok, çünkü İngiltere'de en büyük gider olan kira şehirden şehire çok değişiyor. Yasal asgari ücret ülkenin her yerinde aynı olduğu için aynı maaş Londra'da ve kuzeydeki bir şehirde çok farklı bir yaşam demek. Gönüllü Real Living Wage oranının Londra için ayrı ve daha yüksek hesaplanmasının sebebi de bu.",
+    },
+    {
+      kind: "p",
+      text: "Kira, vize ve çalışma izni tarafını [İngiltere'de yaşam rehberinde](/blog/ingiltere-yasam-rehberi-is-imkanlari-vize-maliyetler) resmî rakamlarla anlattık. Çalışmak için değil iş kurmak için ülke arıyorsanız [Dubai'de ne iş yapılır](/blog/dubai-is-fikirleri-en-karlı-is-imkanlari) ve [Kıbrıs'ta yaşam](/blog/kktc-yasam-rehberi-kibris-is-firsatlari-maliyetler) yazıları da aynı soruya öteki iki ülkeden bakıyor. Vergi tarafını merak ediyorsanız [gelir vergisi olmayan ülkeler](/blog/gelir-vergisi-olmayan-ulkeler-2025) yazısı, kişisel gelir vergisinin nerede ve neden doğduğunu açıklıyor.",
+    },
+    { kind: "gorsel", src: POST_PHOTO.ukTax, alt: "Londra'da Tower Bridge ve arkasında City of London", caption: "Yasal asgari ücret Londra'da da ülkenin geri kalanıyla aynı." },
 
     { kind: "h2", id: "isveren", text: "İngiltere'de şirket kurup çalışan alacaklar neye dikkat etmeli?" },
     {

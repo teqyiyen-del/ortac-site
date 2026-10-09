@@ -1387,7 +1387,11 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
     segs.current[n]?.focus();
   };
 
-  const solid = scrolled || open !== null || sheet;
+  /* 09.10.2026 · blog yazısı sayfası beyaz zeminde başlıyor (koyu giriş kalktı):
+     saydam menünün beyaz logosu ve soluk bağlantıları orada görünmüyordu.
+     Yazı sayfasında menü baştan dolu. */
+  const acikGiris = /^\/blog\/(?!kategori(\/|$))[^/]+/.test(pathname ?? "");
+  const solid = scrolled || open !== null || sheet || acikGiris;
   const sheetOwn = new Map(servicesFor(sheetCountry).map((s) => [s.slug, s]));
 
   return (

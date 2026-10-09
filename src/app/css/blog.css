@@ -863,3 +863,128 @@
   line-height: 1.65;
   color: var(--text-900);
 }
+
+.bp-gorsel {
+  margin-top: 28px;
+}
+.bp-gorsel img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--r-lg);
+}
+.bp-gorsel figcaption {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ============================================================================
+   09.10.2026 · YAZI SAYFASI İKİNCİ TUR (Burak'ın notları)
+   · giriş beyaz zeminde, fotoğrafsız ve koyu zeminsiz (.bp-bas)
+   · içindekiler: çerçeve ve kenar çizgisi yok, kırık beyaz kutu (.bp-toc)
+   · kapanış siyah bölüm değil; kırık beyaz zeminde beyaz panel (.bp-exit)
+   ========================================================================== */
+.bp-bas {
+  padding: calc(var(--nav-h, 72px) + 40px) 0 0;
+  background: var(--white);
+}
+.bp-bas-iz {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-600);
+}
+.bp-bas-iz a {
+  color: var(--blue-900);
+  text-decoration: none;
+}
+.bp-bas-h {
+  max-width: 22ch;
+  margin-top: 16px;
+  font-size: clamp(32px, 4.2vw, 54px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--text-900);
+  text-wrap: balance;
+}
+.bp-bas-l {
+  max-width: 60ch;
+  margin-top: 16px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.bp-govde.sec-pad {
+  padding-top: 28px;
+}
+.bp-toc {
+  border: 0;
+  border-left: 0;
+  border-radius: var(--r-lg);
+  padding: 20px;
+  background: var(--paper);
+}
+.bp-toc-h {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.bp-toc ol {
+  gap: 10px;
+}
+.bp-toc a {
+  color: var(--text-900);
+}
+.bp-toc a:hover {
+  color: var(--blue-900);
+}
+.bp-exit-sec {
+  background: var(--paper);
+}
+.bp-exit {
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.bp-exit-h {
+  color: var(--text-900);
+}
+.bp-exit-p,
+.bp-exit-k {
+  color: var(--text-600);
+}
+.bp-exit-btn {
+  margin-top: 20px;
+  background: var(--blue-700);
+  border-color: var(--blue-700);
+  color: #ffffff;
+}
+.bp-link {
+  border-color: var(--border);
+  background: var(--white);
+  color: var(--text-900);
+}
+.bp-link:hover {
+  background: var(--paper);
+  border-color: var(--blue-600);
+}
+.bp-link i {
+  color: var(--text-600);
+}
+.bp-link svg {
+  color: var(--blue-700);
+}
+@media (max-width: 719.5px) {
+  .bp-exit {
+    padding: 24px;
+  }
+  .bp-bas-l {
+    font-size: 16px;
+  }
+}
