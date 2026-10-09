@@ -8,7 +8,7 @@ import Izleyici from "@/components/shared/Izleyici";
 import EkranDisiDurdur from "@/components/shared/EkranDisiDurdur";
 
 import { SITE } from "@/lib/routes";
-import { OG_GORSEL } from "@/lib/seo";
+import { KURUM_ID, OG_GORSEL } from "@/lib/seo";
 /* Single font across the whole site (client call). Poppins carries every role —
    DISPLAY/SUBHEAD/BODY/UI by weight, DATA/TAG by weight + tracking. */
 const poppins = Poppins({
@@ -47,16 +47,38 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
+    /* 09.10.2026 · SEO rehberi denetimi: kurum düğümünün kimliği (@id),
+       logosu ve sosyal hesapları yoktu; site düğümü (WebSite) hiç yoktu.
+       Öteki sayfalar kurumu bu @id ile gösteriyor (lib/seo · KURUM_ID).
+       Sosyal hesaplar Footer.tsx · SOSYAL ile aynı liste. */
     {
       "@type": "Organization",
+      "@id": KURUM_ID,
       name: "Ortac Global",
-      url: "https://ortacglobal.com",
+      url: SITE,
+      logo: { "@type": "ImageObject", url: `${SITE}/ortac-logo.png` },
       foundingDate: "1996",
+      founder: { "@type": "Person", name: "Murat Ortaç" },
+      sameAs: [
+        "https://www.instagram.com/ortacglobal/",
+        "https://www.linkedin.com/company/ortacglobal",
+        "https://www.youtube.com/@OrtacGlobal",
+        "https://www.facebook.com/ortacglobal/",
+        "https://www.tiktok.com/@ortacglobal",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE}/#site`,
+      url: SITE,
+      name: "Ortac Global",
+      inLanguage: "tr-TR",
+      publisher: { "@id": KURUM_ID },
     },
     {
       "@type": "Service",
       name: "Muhasebe, vergi, şirket kuruluşu ve kurumsal danışmanlık",
-      provider: { "@type": "Organization", name: "Ortac Global" },
+      provider: { "@id": KURUM_ID },
       areaServed: [
         { "@type": "Place", name: "Dubai" },
         { "@type": "Place", name: "Birleşik Krallık" },
@@ -86,11 +108,18 @@ export default function RootLayout({
           özniteliği silmek o katmanı bütün sitede eski hâline döndürür
           (Burak: "eski hâlini de aklında tut, belki bazı yerler garip gelir,
           direkt eskisini geri isterim"). Karar kaydı: docs/design-system. */}
+      {/* 09.10.2026 · denetim: 36 sayfa Unsplash'ten önden görsel yüklüyor
+          ama sunucuya ön bağlantı yoktu (React 19 <link>'i <head>'e taşıyor) */}
+      <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
       <body data-ds="v2" data-ds-renk="" data-ds-bosluk="" data-ds-bilesen="">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* klavyeyle gelen menüyü atlayıp içeriğe insin (globals · .icerige-gec) */}
+        <a href="#icerik" className="icerige-gec">
+          İçeriğe geç
+        </a>
         <Providers>
           {children}
           {/* /basla'ya giden her bağlantıyı sayfanın üstünde açılan pencereye

@@ -86,6 +86,9 @@ export default function SplitWords({
   return (
     <Tag className={className} style={style} id={id}>
       <span className="sr-only">{text}</span>
+      {/* 09.10.2026 · denetim: ham metinde başlık iki kez ve bitişik okunuyordu
+          ("…ülkeler.Hizmet…"); araya boşluk */}
+      {" "}
       {/* İLK EKRAN KİPİ (25.09.2026): hero başlığı JavaScript yüklenene kadar
           görünmez bekliyordu. `ilk` verilince aynı kelime animasyonu (y 110% →
           0, 0.6 s, aynı eğri, kelime başı 0.045 s) CSS'le ilk boyamada

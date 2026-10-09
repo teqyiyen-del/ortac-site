@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { sssDugumu } from "@/lib/seo";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -241,7 +242,7 @@ function SatirLogo({ brand, logo }: { brand?: BrandKey; logo?: BankaIkon }) {
     return (
       <span className="svb-s-logo">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="svb-s-dosya" src={dosya.src} alt={BRANDS[brand].title} />
+        <img className="svb-s-dosya" src={dosya.src} alt={BRANDS[brand].title} loading="lazy" decoding="async" />
       </span>
     );
   if (brand)
@@ -265,7 +266,7 @@ export default function BankaSayfa({ veri: B }: { veri: BankaVeri }) {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <PageHero
           crumb={H.crumb}
           title={H.title}
@@ -434,6 +435,8 @@ export default function BankaSayfa({ veri: B }: { veri: BankaVeri }) {
             <div className="sec-head">
               <SplitWords as="h2" text={B.faq.heading} accent={B.faq.accent} className="h2" />
             </div>
+            {/* SSS veri olarak da basılıyor (09.10.2026 · SEO rehberi denetimi) */}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...sssDugumu(B.faq.items) }) }} />
             <CountryFaq items={B.faq.items} />
           </div>
         </section>

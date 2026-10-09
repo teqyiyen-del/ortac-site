@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { sssDugumu } from "@/lib/seo";
 import {
   ArrowLeftRight,
   ArrowRight,
@@ -287,7 +288,7 @@ export default function KurumsalSayfa({ veri: V }: { veri: KurumsalVeri }) {
   return (
     <>
       <Nav />
-      <main className="skr">
+      <main id="icerik" className="skr">
         <PageHero
           crumb={H.crumb}
           title={H.title}
@@ -504,6 +505,8 @@ export default function KurumsalSayfa({ veri: V }: { veri: KurumsalVeri }) {
         <section id={V.faq.id} className="sec-pad">
           <div className="container-o">
             <Bas b={V.faq} />
+            {/* SSS veri olarak da basılıyor (09.10.2026 · SEO rehberi denetimi) */}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...sssDugumu(V.faq.items) }) }} />
             <CountryFaq items={V.faq.items} />
           </div>
         </section>

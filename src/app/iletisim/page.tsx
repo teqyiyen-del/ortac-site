@@ -169,7 +169,7 @@ export default function IletisimPage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

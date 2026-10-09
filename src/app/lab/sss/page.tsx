@@ -20,7 +20,7 @@ function Baslik() {
 
 export default function LabSss() {
   return (
-    <main>
+    <main id="icerik">
       <Aday bolum ad="S1 · Canlıda" kunye="tam genişlik açılır kutular; ana sayfa, ülke, hizmet ve sektör sayfaları">
         <HomeFaq />
       </Aday>

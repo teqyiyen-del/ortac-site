@@ -119,7 +119,7 @@ export default function OnceSonra() {
   const ekran = (px: number) => (px / 812).toFixed(1).replace(".", ",");
 
   return (
-    <main className="lmb">
+    <main id="icerik" className="lmb">
       <div className="lmb-ust" role="group" aria-label="Sayfa seç">
         {SAYFA.map((x, k) => (
           <button

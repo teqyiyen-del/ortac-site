@@ -135,7 +135,7 @@ export default async function AltHizmetSayfasi({ params }: { params: Params }) {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
         {/* HERO · muhasebe sayfasının split hero'su. Sağdaki kart bir SAHNE

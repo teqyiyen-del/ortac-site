@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Ana sayfa girişi · adaylar | Ortac
 
 export default function LabHeroKurumsal() {
   return (
-    <main>
+    <main id="icerik">
       <Aday bolum ad="E1 · Üç şehir" kunye="üç ofisin fotoğrafı sırayla açılıyor · tam ekran: /lab/hero-kurumsal/e1">
         <HeroE1 />
       </Aday>

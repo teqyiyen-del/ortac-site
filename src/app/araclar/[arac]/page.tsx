@@ -141,7 +141,7 @@ export default async function ToolPage({ params }: { params: Params }) {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         {/* Kırıntı noktasız: orada başlık bir cümle değil, yolun son halkası
             ("Araçlar · BAE KDV hesaplayıcı"). Nokta yalnız <h1>'de. */}
         {/* 19.09.2026 · BAYRAK KIRINTIYA GELDİ. Gövdedeki künye satırında

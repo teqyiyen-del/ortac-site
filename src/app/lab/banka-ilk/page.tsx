@@ -124,7 +124,7 @@ export default function BankaIlkLab() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <PageHero
           crumb={H.crumb}
           title={H.title}

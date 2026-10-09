@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function UlkeIngKktcLab() {
   return (
-    <main>
+    <main id="icerik">
       <div className="luk-kunye">
         <span>Aday YÖN</span>
         <h2>Dubai&apos;de olup burada olmayan bölümler</h2>

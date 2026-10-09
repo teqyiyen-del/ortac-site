@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { sssDugumu } from "@/lib/seo";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -129,7 +130,7 @@ export default function DubaiVizePage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <PageHero
           crumb={H.crumb}
           title={H.title}
@@ -299,6 +300,8 @@ export default function DubaiVizePage() {
             <div className="sec-head">
               <SplitWords as="h2" text={V.faq.heading} accent={V.faq.accent} className="h2" />
             </div>
+            {/* SSS veri olarak da basılıyor (09.10.2026 · SEO rehberi denetimi) */}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...sssDugumu(V.faq.items) }) }} />
             <CountryFaq items={V.faq.items} />
           </div>
         </section>

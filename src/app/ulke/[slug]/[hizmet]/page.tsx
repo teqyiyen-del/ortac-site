@@ -111,7 +111,7 @@ export default async function ServicePage({ params }: { params: Params }) {
     return (
       <>
         <Nav />
-        <main>
+        <main id="icerik">
           <PageHero
             crumb={`${name} · ${svc.title}`}
             title={`${name}'de ${kucult(svc.title)}.`}
@@ -255,7 +255,7 @@ export default async function ServicePage({ params }: { params: Params }) {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <PageHero
           crumb={`${name} · ${svc.title}`}
           title={`${name}'de ${kucult(svc.title)}.`}

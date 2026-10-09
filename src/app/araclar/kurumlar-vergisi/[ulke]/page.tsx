@@ -112,7 +112,7 @@ export default async function KurumlarVergisiUlkePage({ params }: { params: Para
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         {m.sss.length > 0 && (
           <script
             type="application/ld+json"

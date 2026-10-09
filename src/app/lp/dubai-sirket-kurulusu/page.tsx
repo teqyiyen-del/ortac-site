@@ -79,7 +79,7 @@ export default function DubaiKurulusLanding() {
         </div>
       </header>
 
-      <main>
+      <main id="icerik">
         <PageHero country="dubai" crumb="Dubai · Şirket kuruluşu" title="Dubai'de şirket kurmak." accent="şirket kurmak." lead={c.intro} />
 
         <CountryOrtac country="dubai" />

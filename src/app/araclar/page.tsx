@@ -90,7 +90,7 @@ export default function AraclarPage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         {/* 18.09.2026 · BAŞLIK VE GİRİŞ. Burak: "araçlar çıktısı sizde kalır,
             bu bir kere güzel başlık değil, karşı tarafa konuşuyormuşuz gibi …
             SEO açısından hiç hoş değil, başlıkta konu neyse onu yaz. bir de

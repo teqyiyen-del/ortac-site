@@ -39,7 +39,7 @@ export default function Home() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         {/* 03.10.2026 · GİRİŞ DEĞİŞTİ: eski <Hero /> ("Şirketinizi kuruyor,
             süreçlerinizi yönetiyoruz" + Kurulumu Başlat + ülke bayrakları)
             yerine lab'da seçilen E3 (home/HeroAkis.tsx; gerekçe orada).

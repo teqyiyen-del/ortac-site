@@ -26,7 +26,7 @@ export default async function Page({ params }: { params: Params }) {
   return (
     <div className="lhe-sayfa">
       <Nav />
-      <main>
+      <main id="icerik">
         <Hero />
         <ThreeCountries />
       </main>

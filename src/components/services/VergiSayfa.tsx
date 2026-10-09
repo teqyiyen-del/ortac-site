@@ -255,7 +255,7 @@ export default function VergiSayfa({ veri: V }: { veri: VergiVeri }) {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
         <PageHero

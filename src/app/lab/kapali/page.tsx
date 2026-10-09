@@ -9,7 +9,7 @@ import { CLOSED_ROUTES, LIVE_ROUTES } from "@/lib/routes";
 
 export default function LabClosedPage() {
   return (
-    <main style={{ background: "var(--paper)", minHeight: "100dvh", padding: "48px 0 96px" }}>
+    <main id="icerik" style={{ background: "var(--paper)", minHeight: "100dvh", padding: "48px 0 96px" }}>
       <div className="container-o">
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
           Dolaşıma kapalı sayfalar

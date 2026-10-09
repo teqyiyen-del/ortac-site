@@ -397,7 +397,7 @@ export default function AmlSayfa({ veri: A }: { veri: AmlVeri }) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Nav />
-      <main>
+      <main id="icerik">
         <PageHero
           crumb={H.crumb}
           title={H.title}

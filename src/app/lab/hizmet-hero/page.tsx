@@ -17,7 +17,7 @@ const ADAY = [
 
 export default function LabHizmetHero() {
   return (
-    <main>
+    <main id="icerik">
       {ADAY.map(({ k, ad, kunye, C }) => (
         <div key={k}>
           <div className="lhz-lab-ad">

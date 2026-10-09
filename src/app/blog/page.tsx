@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OG_GORSEL } from "@/lib/seo";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
 import FinalCta from "@/components/FinalCta";
@@ -67,6 +68,9 @@ export const metadata: Metadata = {
   description:
     "Dubai, İngiltere ve KKTC'de şirket kurma, vergi, banka ve kuruluş sonrası yükümlülükler üzerine yazılar ve ülke rehberleri. Her yazıda rakamın hangi belgeden geldiği yazılı. Beş kategori, tek liste.",
   alternates: { canonical: `${SITE}/blog` },
+  /* 09.10.2026 · denetim: paylaşım etiketleri ana sayfanınkine düşüyordu */
+  openGraph: { type: "website", locale: "tr_TR", siteName: "Ortac Global", url: `${SITE}/blog`, title: "Blog: şirket kurma, vergi ve ülke rehberleri | Ortac Global", description: "Dubai, İngiltere ve KKTC'de şirket kurma, vergi, banka ve kuruluş sonrası yükümlülükler üzerine yazılar ve ülke rehberleri. Her yazıda rakamın hangi belgeden geldiği yazılı. Beş kategori, tek liste.", images: [OG_GORSEL] },
+  twitter: { card: "summary_large_image", title: "Blog: şirket kurma, vergi ve ülke rehberleri | Ortac Global", description: "Dubai, İngiltere ve KKTC'de şirket kurma, vergi, banka ve kuruluş sonrası yükümlülükler üzerine yazılar ve ülke rehberleri. Her yazıda rakamın hangi belgeden geldiği yazılı. Beş kategori, tek liste." },
 };
 
 export default function BlogIndexPage() {
@@ -110,7 +114,7 @@ export default function BlogIndexPage() {
                 url: `${SITE}${blogHref(p.slug)}`,
                 datePublished: p.publishedAt,
                 ...(p.updatedAt ? { dateModified: p.updatedAt } : {}),
-                author: { "@type": "Organization", name: p.author, url: SITE },
+                author: p.author === "Ortac Global" ? { "@type": "Organization", name: p.author, url: SITE } : { "@type": "Person", name: p.author },
               })),
             },
           ]
@@ -121,7 +125,7 @@ export default function BlogIndexPage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

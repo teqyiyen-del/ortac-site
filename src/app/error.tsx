@@ -46,7 +46,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <main>
+    <main id="icerik">
       <section className="ph phg hta">
         <div className="phg-bg" data-zemin="yildiz" aria-hidden="true" data-yaricap="serbest">
           <span className="phy-yildiz phy-yildiz-b" />

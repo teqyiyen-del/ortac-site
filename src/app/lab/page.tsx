@@ -8,7 +8,7 @@ import { LAB_DURUM_AD, LAB_TURLARI, labAd } from "./turlar";
 
 export default function LabIndex() {
   return (
-    <main style={{ background: "var(--paper)", minHeight: "100dvh", padding: "64px 0" }}>
+    <main id="icerik" style={{ background: "var(--paper)", minHeight: "100dvh", padding: "64px 0" }}>
       <div className="container-o">
         <h1 className="h2" style={{ color: "var(--text-900)" }}>
           Aday tasarımlar

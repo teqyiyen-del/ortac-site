@@ -20,7 +20,7 @@ export default function UlkelerPage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <PageHero
           crumb="Ülkeler"
           title="Kuruluş ülkesine karar vermeden önce."

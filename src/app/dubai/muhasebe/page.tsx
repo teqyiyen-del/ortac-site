@@ -202,7 +202,7 @@ export default function DubaiAccountingPage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

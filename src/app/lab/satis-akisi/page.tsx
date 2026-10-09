@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function SatisAkisiLab() {
   return (
-    <main className="sat-lab">
+    <main id="icerik" className="sat-lab">
       <div className="sat-kunye">
         <span>Demo · Dubai</span>
         <h1>Kurulumu başlat</h1>

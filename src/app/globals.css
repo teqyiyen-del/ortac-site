@@ -8292,3 +8292,24 @@ li {
       svxSol 2.7s var(--gecik, 0s) infinite backwards;
   }
 }
+
+/* İÇERİĞE GEÇ · klavye kullanıcısı için (09.10.2026 · SEO rehberi denetimi).
+   Ekranda yok; Tab ile odak alınca sol üstte beliriyor ve <main id="icerik">'e
+   iniyor. Menü 30'dan fazla bağlantı taşıyor, her sayfada baştan geçmek
+   gerekmesin. */
+.icerige-gec {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--blue-700);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+.icerige-gec:focus-visible {
+  transform: none;
+}

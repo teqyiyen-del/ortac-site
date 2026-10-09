@@ -671,7 +671,7 @@ export default async function SectorPage({ params }: { params: Params }) {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

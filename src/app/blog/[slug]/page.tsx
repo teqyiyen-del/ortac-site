@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { KURUM_ID } from "@/lib/seo";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowRight, Info, Quote, TriangleAlert } from "lucide-react";
@@ -466,13 +467,15 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               mainEntityOfPage: url,
               inLanguage: "tr-TR",
               datePublished: post.publishedAt,
-              ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
+              /* 09.10.2026 · denetim: güncelleme tarihi yoksa yayın tarihi
+                 (alan boş kalmasın), yayıncı kök düğümün kimliğiyle ve logolu */
+              dateModified: post.updatedAt ?? post.publishedAt,
               /* yazar kişi adıysa Person, kurum adıysa Organization */
               author:
                 post.author === "Ortac Global"
                   ? { "@type": "Organization", name: post.author, url: SITE }
                   : { "@type": "Person", name: post.author, worksFor: { "@type": "Organization", name: "Ortac Global", url: SITE } },
-              publisher: { "@type": "Organization", name: "Ortac Global", url: SITE },
+              publisher: { "@type": "Organization", "@id": KURUM_ID, name: "Ortac Global", url: SITE, logo: { "@type": "ImageObject", url: `${SITE}/ortac-logo.png` } },
               image: post.cover,
               /* Kategorinin ekrandaki ADI, slug'ı değil: articleSection
                  insan okunur bir bölüm adı bekliyor ve sayfada da bu kelime
@@ -504,7 +507,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -683,7 +686,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                     <aside className="bp-yazar" aria-label="Yazar">
                       {YAZAR_FOTO ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
-                        <img className="bp-yazar-h" src={YAZAR_FOTO} alt={post.author} width={88} height={88} />
+                        <img className="bp-yazar-h" src={YAZAR_FOTO} alt={post.author} width={88} height={88} loading="lazy" decoding="async" />
                       ) : (
                         <span className="bp-yazar-h" aria-hidden="true">
                           {post.author

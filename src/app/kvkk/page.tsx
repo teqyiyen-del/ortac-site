@@ -108,7 +108,7 @@ export default function KvkkPage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <PageHero
           crumb="Kişisel veriler"
           title="Kişisel verilerin korunması."

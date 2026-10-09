@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OG_GORSEL } from "@/lib/seo";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
 import KynDoors from "@/components/kaynaklar/KynDoors";
@@ -28,6 +29,9 @@ export const metadata: Metadata = {
   description:
     "Dört ayrı kaynak: konuyu açan yazılar, üç ülkenin adım adım yolu, tarih sırasıyla gelişmeler ve indirilebilir e-kitaplar.",
   alternates: { canonical: `${SITE}/kaynaklar` },
+  /* 09.10.2026 · denetim: paylaşım etiketleri ana sayfanınkine düşüyordu */
+  openGraph: { type: "website", locale: "tr_TR", siteName: "Ortac Global", url: `${SITE}/kaynaklar`, title: "Kaynaklar — blog, ülke rehberleri, gelişmeler ve e-kitaplar | Ortac Global", description: "Dört ayrı kaynak: konuyu açan yazılar, üç ülkenin adım adım yolu, tarih sırasıyla gelişmeler ve indirilebilir e-kitaplar.", images: [OG_GORSEL] },
+  twitter: { card: "summary_large_image", title: "Kaynaklar — blog, ülke rehberleri, gelişmeler ve e-kitaplar | Ortac Global", description: "Dört ayrı kaynak: konuyu açan yazılar, üç ülkenin adım adım yolu, tarih sırasıyla gelişmeler ve indirilebilir e-kitaplar." },
 };
 
 export default function KaynaklarPage() {
@@ -64,7 +68,7 @@ export default function KaynaklarPage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

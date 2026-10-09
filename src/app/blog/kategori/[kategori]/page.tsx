@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OG_GORSEL } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import Nav from "@/components/Nav";
@@ -77,6 +78,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
        döndüğü için tek bir kanonik kalıyor; iki adres aynı listeyi
        göstermiyor. */
     alternates: { canonical: `${SITE}${categoryHref(category)}` },
+    /* 09.10.2026 · denetim: paylaşım etiketleri ana sayfanınkine düşüyordu */
+    openGraph: { type: "website", locale: "tr_TR", siteName: "Ortac Global", url: `${SITE}${categoryHref(category)}`, title: meta.seo.title, description: meta.seo.description, images: [OG_GORSEL] },
+    twitter: { card: "summary_large_image", title: meta.seo.title, description: meta.seo.description },
     /* 09.10.2026 · yayımlanmış yazısı olmayan kategori (yalnız örnek yazı)
        dizin dışı; ilk gerçek yazıyla kendiliğinden açılır. */
     ...(publishedOfCategory(category).length === 0 ? { robots: { index: false, follow: true } } : {}),
@@ -144,7 +148,7 @@ export default async function BlogCategoryPage({ params }: { params: Params }) {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { sssDugumu } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
@@ -71,7 +72,7 @@ export default async function CountryPage({ params }: { params: Params }) {
       <Nav />
       {/* design system katmanları 24.09.2026'dan beri body'de (layout.tsx),
           bütün sitede. */}
-      <main>
+      <main id="icerik">
         {/* country geçince PageHero iki sütunlu hero'ya dönüyor: solda başlık,
             butonlar ve güven satırları, sağda ülkeye özgü vektör sahne.
             Verilmezse eski kompakt başlık bloğu aynen çıkıyor, o yüzden
@@ -351,6 +352,8 @@ export default async function CountryPage({ params }: { params: Params }) {
                 style={{ color: "var(--text-900)" }}
               />
             </div>
+            {/* SSS veri olarak da basılıyor (09.10.2026 · SEO rehberi denetimi) */}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...sssDugumu(c.faq) }) }} />
             <CountryFaq items={c.faq} />
           </div>
         </section>

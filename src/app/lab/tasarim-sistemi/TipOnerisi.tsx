@@ -13,7 +13,7 @@ export default function TipOnerisi() {
   const [tel, setTel] = useState(false);
   const fmt = (n: number) => String(n).replace(".", ",");
   return (
-    <main className="lds">
+    <main id="icerik" className="lds">
       <div className="lds-wrap">
         <p className="lds-kicker">
           Tasarım sistemi · 1 / 6 · canlı deneme: /ingiltere

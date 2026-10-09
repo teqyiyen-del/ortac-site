@@ -144,7 +144,7 @@ export default function TeyitSorular() {
   };
 
   return (
-    <main className="tsr">
+    <main id="icerik" className="tsr">
       <div className="tsr-in">
         <header className="tsr-bas">
           <Logo />

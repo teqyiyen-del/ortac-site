@@ -1,6 +1,7 @@
 "use client";
 
 import SplitWords from "@/components/shared/SplitWords";
+import { sssDugumu } from "@/lib/seo";
 import FadeUp from "@/components/shared/FadeUp";
 import SssAkordeon, { type SssItem } from "@/components/shared/SssAkordeon";
 
@@ -70,6 +71,8 @@ const FAQ: SssItem[] = [
 export default function HomeFaq() {
   return (
     <section id="sss" className="sec-pad" style={{ background: "var(--white)" }}>
+      {/* SSS veri olarak da basılıyor (09.10.2026 · SEO rehberi denetimi) */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...sssDugumu(FAQ) }) }} />
       <div className="container-o">
         <div className="sec-head">
           <SplitWords

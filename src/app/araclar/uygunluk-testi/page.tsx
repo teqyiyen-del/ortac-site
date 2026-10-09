@@ -77,7 +77,7 @@ export default function UygunlukTestiPage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         {/* BAŞLIK SAYFANIN ADI, SLOGAN DEĞİL. Önce "Dokuz soru, kısa bir liste."
             yazıyordu ve altında beş satırlık bir paragraf vardı; müşteri ikisini
             birden kesti: "sayfalara neden bu kadar jenerik başlık yazmaya

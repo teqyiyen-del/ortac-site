@@ -190,7 +190,7 @@ export default function BasindaBizPage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -330,7 +330,7 @@ export default function BasindaBizPage() {
                     engeli kaldırdı: "telif sorunumuz yok neyse koyalım,
                     haberden ss fln olur yani np."
 
-                    TEŞHİS ÖLÇÜLMÜŞTÜ. 1440'ta bu sayfanın <main>'i
+                    TEŞHİS ÖLÇÜLMÜŞTÜ. 1440'ta bu sayfanın <main id="icerik">'i
                     1136 × 4252 = 6.059.300 piksel kare ve içindeki bütün grafik
                     ögelerin (svg/img) toplam alanı 5.118 piksel kare: sayfanın
                     binde 0,84'ü. Sayfa gerçekten donuk.

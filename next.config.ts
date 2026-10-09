@@ -78,6 +78,18 @@ const nextConfig: NextConfig = {
      silmeyi hatırlamak gerekmiyor. */
   async headers() {
     return [
+      /* 09.10.2026 · denetim: yalnız HSTS vardı. Dördü de davranış
+         değiştirmeyen başlıklar; çerçeve kuralı siteyi başka sitenin
+         içine gömülmekten koruyor. */
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+        ],
+      },
       {
         source: "/:path*",
         has: [{ type: "host", value: "ortac-global-site.vercel.app" }],

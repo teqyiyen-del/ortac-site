@@ -28,7 +28,7 @@ export default async function BaslaPage({ searchParams }: { searchParams: Search
   return (
     <>
       <Nav />
-      <main>
+      <main id="icerik">
         <BaslaAkis onceden={onceden} />
       </main>
     </>

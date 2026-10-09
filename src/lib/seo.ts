@@ -17,6 +17,22 @@
 import type { Metadata } from "next";
 import { SITE } from "@/lib/routes";
 
+/** kurum düğümünün kimliği; kökteki JSON-LD'de tanımlı (app/layout.tsx).
+ *  Sayfalar yayıncıyı ve sağlayıcıyı `{ "@id": KURUM_ID }` ile gösterir. */
+export const KURUM_ID = `${SITE}/#kurum`;
+
+/** SSS düğümü: ekranda soru-cevap basan her sayfa aynısını veri olarak da basar */
+export const sssDugumu = (items: { q: string; a: string }[]) => ({
+  "@type": "FAQPage",
+  mainEntity: items.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+});
+
+/** kırıntı düğümü: [ad, yol] çiftleri, ilki ana sayfa */
+export const kirintiDugumu = (adimlar: [string, string][]) => ({
+  "@type": "BreadcrumbList",
+  itemListElement: adimlar.map(([name, yol], i) => ({ "@type": "ListItem", position: i + 1, name, item: `${SITE}${yol === "/" ? "/" : yol}` })),
+});
+
 export const OG_GORSEL = {
   url: `${SITE}/og.png`,
   width: 1200,
