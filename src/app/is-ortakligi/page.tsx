@@ -532,7 +532,7 @@ export default function PartnershipPage() {
                       konu="İş ortaklığı başvurusu"
                       etiketler={Object.fromEntries(PARTNER_FORM.fields.map((f) => [f.name, f.label]))}
                       zorunlu={["ad", "eposta"]}
-                      yedekEposta="dubai@ortacglobal.com"
+                      yedekEposta="web@ortacglobal.com"
                       notId="pt-form-note"
                     />
                     <AskCta label={PARTNER_FORM.askLabel} />

@@ -30,28 +30,21 @@ const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
       { id: "f-uk", s: "İngiltere için teklif belgesi gelecek mi? Sitede Basic 900, Gold 1.500, Platinium 2.600 dolar yazıyor.", sik: ["Rakamlar doğru, kalsın", "Belge göndereceğim", "Paket yok, tek fiyat", "Fiyat yazmayalım"], ipucu: "Dolar mı sterlin mi, onu da yazın." },
       { id: "f-ukmuh", s: "İngiltere muhasebe ücretini sitede nasıl yazalım?", sik: ["Yıllık sabit tutar", "Aylık tutar", "Fiyat yazmayalım"], ipucu: "Tutarı biliyorsanız yazın." },
       { id: "f-kharc", s: "KKTC'de başvuru harcı (2.000 USD) ve tescil harcı (2.500 USD) 9.920 €'nun içinde mi?", sik: ["İçinde", "Ayrıca ödeniyor", "Bu harçlar yok"] },
-      { id: "f-kadres", s: "KKTC'de adres hizmeti herkese zorunlu mu?", sik: ["Zorunlu", "Müşteri isterse"] },
       { id: "f-kdenetci", s: "KKTC'de denetçi raporu 270 € / 900 € ücrete dahil mi?", sik: ["Dahil", "Ayrı ücret", "Denetçi raporu gerekmiyor"] },
-      { id: "f-gecerli", s: "Sitedeki kurulum özeti kaç gün geçerli sayılsın?", sik: ["7 gün", "15 gün", "30 gün", "Süre yazmayalım"] },
     ],
   },
   {
     ad: "İletişim ve firma bilgisi",
     sorular: [
-      { id: "i-form", s: "Sitedeki formlardan gelen iletiler hangi e-posta adresine düşsün?", ipucu: "Tek adres ya da ülkeye göre üç adres." },
       { id: "i-wa", s: "Kurulum akışından gelenler WhatsApp'ta hangi numaraya yazsın?", sik: ["Dubai numarası", "Ülkesine göre ilgili ofis", "Başka, aşağıya yazıyorum"] },
-      { id: "i-kktc", s: "KKTC ofisi: adres \"Şht. Murat İlhan Sokak No:5, Kumsal, Lefkoşa\" doğru mu? E-posta hangisi?", sik: ["Adres doğru", "cyprus@ortacglobal.com", "info@ortacglobal.com"], cok: true, ipucu: "Cep numarası +90 548 841 66 66 mı 844 66 66 mı?" },
-      { id: "i-uk", s: "İngiltere ofisi: Great Portland Street gerçek ofis mi, kayıtlı adres mi? Telefon ve e-posta doğru mu?", sik: ["Gerçek ofis", "Kayıtlı adres", "uk@ortacaudit.com doğru"], cok: true },
-      { id: "i-unvan", s: "KKTC ve İngiltere şirketlerinin tescilli tam adı nedir?", ipucu: "Sitenin künyesine ve KVKK metnine yazılacak." },
+      { id: "i-unvan", s: "Üç ülkedeki şirketlerimizin tescilli tam adı nedir? (Dubai, KKTC, İngiltere)", ipucu: "Sitenin künyesine ve KVKK metnine yazılacak." },
       { id: "i-lisans", s: "Hakkımızda sayfasına muhasebe lisans numarasını yazalım mı?", sik: ["Yazalım, numarayı aşağıya yazıyorum", "Yazmayalım"] },
-      { id: "i-kvkk", s: "KVKK metni için veri sorumlusu hangi şirket? Türkiye'de şirketimiz var mı?", ipucu: "Unvan, adres ve başvuru e-postası." },
       { id: "i-panel", s: "Müşteri paneli adresi eski sitedekiyle aynı mı kalacak?", sik: ["Aynı", "Değişecek, aşağıya yazıyorum"] },
     ],
   },
   {
     ad: "Doğru bilgi",
     sorular: [
-      { id: "b-ortak", s: "Hangileriyle yazılı iş ortaklığımız var? (Sitede \"iş ortağı\" diye geçiyorlar.)", cok: true, sik: ["IFZA", "Meydan", "DWTC", "Wio", "Mashreq", "PayPal", "wamo", "Xero", "QuickBooks", "Sage"] },
       { id: "b-dodeme", s: "Dubai'de hangi ödeme kanalları listede kalsın?", cok: true, sik: ["Stripe", "PayPal", "Binance", "Amazon Payment Services", "Network International", "Payoneer", "wamo"] },
       { id: "b-ukhesap", s: "İngiltere'de fiilen hangi hesapları açtırıyoruz?", cok: true, sik: ["Tide", "Revolut", "Wise", "Payoneer", "Yerel banka"] },
       { id: "b-oturum", s: "Dubai oturumu kaç ay ülke dışında kalınca düşüyor?", sik: ["6 ay", "12 ay", "Vize türüne göre değişiyor"] },
@@ -68,15 +61,13 @@ const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
     sorular: [
       { id: "s-kariyer", s: "Kariyer sayfasına koyacağımız açık bir ilan var mı?", sik: ["Var, aşağıya yazıyorum", "Yok, yalnız açık başvuru kalsın", "Kariyer sayfasını kapatalım"], ipucu: "Eski sitede \"Muhasebeci, KKTC\" ilanı vardı; hâlâ geçerli mi?" },
       { id: "s-ortaklik", s: "İş ortaklığı sayfasını kullanacak mıyız?", sik: ["Evet", "Şimdilik hayır, kapalı dursun"], ipucu: "Evetse komisyon ve şartları yazın; sayfada dört satır boş duruyor." },
+      { id: "s-rakam", s: "Sitede gerçek bir rakam vermek istesek ne yazabiliriz?", ipucu: "Örnek: bugüne kadar kurulan şirket sayısı, hizmet verilen müşteri sayısı, muhasebesi tutulan şirket sayısı. Bildiğiniz kadarını yazın." },
       { id: "s-gelisme", s: "\"Gelişmeler\" sayfasına yazmamızı istediğiniz son dönem değişiklikleri var mı?", ipucu: "Dubai, KKTC ya da İngiltere'de müşteriyi etkileyen 3-5 değişiklik: ne, hangi tarihte." },
-      { id: "s-sayfa", s: "Henüz yazılmamış sayfalardan hangilerini açalım?", cok: true, sik: ["İngiltere şirket adresi", "İngiltere Sponsor Licence", "KKTC Serbest Bölge", "İngiltere kurumsal danışmanlık ve AML", "KKTC kurumsal danışmanlık ve AML", "Şirket taşıma"] },
-      { id: "s-tasinma", s: "Site ortacglobal.com'a hangi gün taşınsın? Alan adını kim yönetiyor?" },
-      { id: "s-musteri", s: "Eski sitede \"1.200+ mutlu müşteri\" yazıyordu. Yeni sitede kullanalım mı?", sik: ["Kullanalım, rakam doğru", "Rakam farklı, aşağıya yazıyorum", "Kullanmayalım"] },
     ],
   },
 ];
 
-const ANAHTAR = "ortac-teyit-sorular-v3";
+const ANAHTAR = "ortac-teyit-sorular-v4";
 type Cevap = { sec: string[]; yazi: string };
 const BOS: Cevap = { sec: [], yazi: "" };
 

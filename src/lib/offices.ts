@@ -262,7 +262,7 @@ const BY_COUNTRY: Record<Country, Office> = {
   kktc: {
     country: "kktc",
     label: COUNTRY_LABELS.kktc,
-    city: "",
+    city: "Lefkoşa", /* 09.10.2026 · Burak: "KKTC ofisinin şehri Lefkoşa" */
     /* 09.10.2026 · teslim öncesi bilgi denetimi: sondaki "039" adres parçası değildi; KKTC teklif
          belgesinin antetinde "Sht. Murat İlhan Sokak No:5 Kumsal" */
       address: "Şht. Murat İlhan Sokak No:5, Kumsal",

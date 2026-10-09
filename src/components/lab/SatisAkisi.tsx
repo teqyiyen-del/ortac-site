@@ -327,7 +327,7 @@ export function SatisPenceresi({
           tur: "kurulum",
           konu: `Kurulum özeti · ${teklifNo}`,
           alanlar: ozetAlanlar(),
-          yedekEposta: officeFor(ulke).contact.email.value,
+          yedekEposta: "web@ortacglobal.com",
           epostaAc: false,
         }).then((r) => setGonderim(r === "gonderildi" ? "gonderildi" : "yok"));
       }
@@ -1025,7 +1025,7 @@ function Tamam({
               Özeti WhatsApp&apos;tan gönder
               <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
             </a>
-            <a className="btn btn-sm sat-ilet-e" href={epostaBaglantisi(ofis.contact.email.value, `Kurulum özeti · ${teklifNo}`, alanlar)}>
+            <a className="btn btn-sm sat-ilet-e" href={epostaBaglantisi("web@ortacglobal.com", `Kurulum özeti · ${teklifNo}`, alanlar)}>
               E-postayla gönder
             </a>
           </div>

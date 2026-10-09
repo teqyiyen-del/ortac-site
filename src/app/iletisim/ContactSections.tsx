@@ -746,11 +746,6 @@ function errorOf(k: FieldKey, v: Values): string | null {
   }
 }
 
-/* form sunucudan gönderilemezse iletinin adresleneceği ofis (lib/offices) */
-const FORM_EPOSTA: Record<string, string> = Object.fromEntries(
-  COUNTRY_SLUGS.map((c) => [c, officeFor(c).contact.email.value]),
-);
-
 function ContactForm() {
   const [values, setValues] = useState<Values>(EMPTY);
   const [touched, setTouched] = useState<Partial<Record<FieldKey, boolean>>>({});
@@ -878,7 +873,8 @@ function ContactForm() {
             ["Web sitesi", values.website],
             ["Mesaj", values.mesaj],
           ],
-          yedekEposta: FORM_EPOSTA[values.ulke] ?? FORM_EPOSTA.dubai,
+          /* 09.10.2026 · Burak: "formlardan gelen talepler web@ortacglobal.com'a düşecek" */
+          yedekEposta: "web@ortacglobal.com",
           tuzak,
         });
         setSonuc(r);

@@ -7,7 +7,7 @@ Formlar şu an gönder'e basınca ziyaretçinin e-posta uygulamasını açıyor.
 düşmesi için Vercel > Project > Settings > Environment Variables:
 
 - `RESEND_API_KEY` : resend.com hesabından alınan anahtar
-- `FORM_ALICI` : iletilerin düşeceği adres (virgülle birden fazla yazılabilir)
+- `FORM_ALICI` : `web@ortacglobal.com` (Burak'ın kararı; virgülle birden fazla yazılabilir)
 - `FORM_GONDEREN` : isteğe bağlı, örn. `Ortac Global <form@ortacglobal.com>`. Bunun için
   Resend'de ortacglobal.com alan adı doğrulanmalı (DNS'e iki üç kayıt). Doğrulanmazsa
   iletiler Resend'in deneme adresinden gider.

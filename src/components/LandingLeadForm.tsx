@@ -66,7 +66,7 @@ export default function LandingLeadForm({
             [soru, secenekler.find((d) => d.id === secim)?.etiket ?? secim],
             ["Not", not],
           ],
-          yedekEposta: "dubai@ortacglobal.com",
+          yedekEposta: "web@ortacglobal.com",
         });
         setSonuc(r);
       }}
