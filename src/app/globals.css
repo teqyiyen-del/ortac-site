@@ -5319,12 +5319,16 @@ h4,
 .bn-title {
   text-wrap: balance;
 }
+/* 09.10.2026 · `pretty` idi (yalnız son satırdaki tek kelimeyi önlüyor).
+   Burak: "tüm tekstlere text balance at; ikinci satırda dört kelime var,
+   üsttekinde bir sürü." Paragraf ve liste de dengeli. Tarayıcı dengelemeyi
+   kısa bloklarda yapıyor (Chrome 6 satıra kadar); uzun paragraf etkilenmez. */
 p,
 .sec-lead,
 .hero4-sub,
 .bn-line,
 li {
-  text-wrap: pretty;
+  text-wrap: balance;
 }
 
 /* ==================== REVİZYON 3 · bileşen CSS'leri ====================

@@ -43,6 +43,17 @@ html[lang]
   font-size: 12px;
 }
 
+/* SATIR DENGESİ · HER YAZIDA (09.10.2026). Burak: "tüm tekstlere text balance
+   at; ikinci satırda dört kelime var, üsttekinde bir sürü. Her şeye at."
+   text-wrap kalıtımla iniyor: gövdeye yazmak bütün başlık, cümle, kart ve
+   düğme yazılarına ulaşıyor. Tarayıcı dengelemeyi kısa bloklarda yapıyor
+   (Chrome 6, Firefox 10 satıra kadar); uzun paragraflar eskisi gibi akıyor.
+   Kendi text-wrap değeri olan yerler (ör. tek satıra kilitli etiketler)
+   kendi kuralında kalıyor. */
+html[lang] body {
+  text-wrap: balance;
+}
+
 /* okunacak CÜMLE tabanı 14 px, her genişlikte (iki görsel denetimin ortak
    bulgusu): test panelinin dört satırlık notu 10,5 px, İngiltere ceza
    tutarları ve süreç notu 12 px'ti */

@@ -1702,3 +1702,9 @@
   font-weight: 600;
   color: var(--blue-500);
 }
+
+/* 09.10.2026 · soru-cevap: açık kartta cevabın üstü 0, altı 16 px'ti (Burak:
+   "altına olan uzaklığı üstüne olandan farklı"). Üst ve alt eşit. */
+.bp-sss-a {
+  padding: 16px;
+}
