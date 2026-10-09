@@ -52,6 +52,43 @@ const nextConfig: NextConfig = {
          sitede yazılmıyor ("müşteri paneli"); adres yalnız burada. Geçici
          yönlendirme: panel adresi değişirse tek satır. */
       { source: "/panel", destination: "https://ortacaccountingservicesllc.taxdome.com/", permanent: false },
+      /* ESKİ SİTENİN ADRESLERİ (09.10.2026 · Burak'la eşleştirildi; tam döküm
+         docs/teslim/eski-site-tasima.md). Eski site ortacglobal.com'da Framer
+         üzerinde; alan adı buraya bağlandığı gün eski bağlantılar ve Google'daki
+         sonuçlar boşa düşmesin. Yeni adres düzeni KALIYOR ("/dubai/banka-hesabi",
+         "/hizmetler/" katmanı yok): Burak "bana da daha mantıklı geldi".
+         BLOG YAZILARI BURADA YOK ve bilerek: yazılar eski adresleriyle
+         taşınacak; taşınmayanların yönlendirmesi o zaman yazılır.
+         /en/... DE YOK: İngilizce sürüm yeni İngilizce adreslerle kurulacak,
+         eşleştirme o turda. */
+      { source: "/kibris", destination: "/kktc", permanent: true },
+      { source: "/:ulke(dubai|ingiltere)/hizmetler/sirket-kurma", destination: "/:ulke", permanent: true },
+      { source: "/kibris/hizmetler/sirket-kurma", destination: "/kktc", permanent: true },
+      { source: "/:ulke(dubai|ingiltere)/hizmetler/muhasebe", destination: "/:ulke/muhasebe", permanent: true },
+      { source: "/kibris/hizmetler/muhasebe", destination: "/kktc/muhasebe", permanent: true },
+      { source: "/:ulke(dubai|ingiltere)/hizmetler/bankacilik-ve-odeme-sistemleri", destination: "/:ulke/banka-hesabi", permanent: true },
+      { source: "/kibris/hizmetler/bankacilik-ve-odeme-sistemleri", destination: "/kktc/banka-hesabi", permanent: true },
+      { source: "/dubai/hizmetler/dubai-vize-oturum-izni-ve-yatirimci-kimligi", destination: "/dubai/oturum-vize", permanent: true },
+      /* iptal edilen iki Dubai hizmeti: en yakın sayfa */
+      { source: "/dubai/hizmetler/:eski(pazar-arastirmasi|hukuki-danismanlik)", destination: "/dubai/kurumsal-danismanlik", permanent: true },
+      /* kalıba uymayan her eski hizmet adresi ülke sayfasına */
+      { source: "/:ulke(dubai|ingiltere)/hizmetler/:rest*", destination: "/:ulke", permanent: true },
+      { source: "/kibris/:rest*", destination: "/kktc", permanent: true },
+      { source: "/sektorler/finansal-hizmetler", destination: "/sektorler/finans-ve-yatirim", permanent: true },
+      { source: "/sektorler/bilisim-teknoloji-ve-medya", destination: "/sektorler/yazilim-ve-teknoloji", permanent: true },
+      { source: "/sektorler/gayrimenkul-ve-insaat", destination: "/sektorler/gayrimenkul", permanent: true },
+      { source: "/sektorler/saglik-hizmetleri", destination: "/sektorler/saglik-ve-medikal", permanent: true },
+      { source: "/sektorler/tuketici-urunleri-ve-perakende", destination: "/sektorler/e-ticaret", permanent: true },
+      { source: "/sektorler", destination: "/sektorler/e-ticaret", permanent: false },
+      { source: "/fiyat-teklifi", destination: "/basla", permanent: true },
+      /* eski "müşteriler" sayfasının (logo duvarı) karşılığı yok */
+      { source: "/musteriler", destination: "/hakkimizda", permanent: true },
+      { source: "/kurumsal", destination: "/hakkimizda", permanent: true },
+      { source: "/sss", destination: "/#sss", permanent: true },
+      /* dönüşüm artık form olayından ölçülüyor; sayfa yok */
+      { source: "/tesekkurler", destination: "/", permanent: false },
+      { source: "/privacy-policy", destination: "/kvkk", permanent: true },
+      { source: "/legal/:rest*", destination: "/kvkk", permanent: true },
       { source: "/ulke/:slug", destination: "/:slug", permanent: true },
       { source: "/ulke/:slug/:hizmet", destination: "/:slug/:hizmet", permanent: true },
     ];
