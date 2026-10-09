@@ -5326,9 +5326,17 @@ h4,
 p,
 .sec-lead,
 .hero4-sub,
-.bn-line,
-li {
+.bn-line {
   text-wrap: balance;
+}
+/* MADDE LİSTELERİ HARİÇ (aynı gün, ikinci not). Burak: "alt alta dört madde
+   var; bir ve dört sıkışıyor, iki ve üç sonuna kadar gidiyor, saçma duruyor.
+   Madde madde yazan yerleri hariç bırak, kalan her yerde uygula." Dengeleme
+   her maddeyi ayrı ayrı daralttığı için maddelerin sağ kenarı birbirini
+   tutmuyordu. Liste maddesinin kendi metni düz akıyor; maddenin içindeki
+   başlık ve paragraf (kart olarak kullanılan <li>) kendi kuralıyla dengeli. */
+li {
+  text-wrap: wrap;
 }
 
 /* ==================== REVİZYON 3 · bileşen CSS'leri ====================

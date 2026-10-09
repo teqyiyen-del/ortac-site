@@ -1708,3 +1708,9 @@
 .bp-sss-a {
   padding: 16px;
 }
+
+/* içindekiler bir liste ama maddeleri kısa başlık: dengeli kalıyor
+   (genel kural liste maddelerini dengeleme dışında tutuyor · globals.css) */
+.bp-toc a {
+  text-wrap: balance;
+}
