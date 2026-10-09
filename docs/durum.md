@@ -5588,3 +5588,8 @@ AÇIK KALANLAR (Murat Bey "aşağıya yazıyorum" dedi, yazmadı ya da boş bır
 - Telefonda ana sayfa girişi sadeleşti. Dubai geç beyan cezası kalktı. KKTC harç kaynağı zaten hiçbir sayfada basılmıyor.
 
 MURAT BEY'E YENİ SORULAR: 5.120'nin tamamı lisans bedeli mi (çok yıllı indirim hesabı); iş ortaklığında white-label var mı; ortak panelinde ortak neyi görecek; süreç adımları bugün ortakla hangi kanaldan paylaşılıyor; AML sayfasında neyi sevmedi.
+
+## 10.10.2026 · Murat Bey'den iki cevap (Burak iletti)
+- Dubai'de mainland kuruluşu YAPIYORUZ. ("Serbest bölge mi, mainland mi" yazısı hâlâ "birlikte değerlendiriyoruz" diyor; istenirse "mainland kuruluşunu da yürütüyoruz" diye güçlendirilir.)
+- Meydan 5.300 $ ve DWTC 5.820 $ doğru (lib/dubaiFiyat.ts'teki "türetildi" notu kapanır).
+- /teyit/sorular-2: beş soru çıktı, 14 soru kaldı.

@@ -28,12 +28,12 @@ type Soru = { id: string; s: string; sik?: string[]; cok?: boolean; ipucu?: stri
    işlendi (docs/durum.md · 09.10 (3)); o sorular buradan çıktı. Kalanlar:
    cevapların açık bıraktıkları, yeni iş ortaklığı sayfası ve üç yeni blog
    yazısının yazarken doğrulanamayan noktaları. */
+/* 10.10.2026 · Burak beş soruyu çıkardı (1, 2, 10, 15, 17). İkisinin cevabı
+   geldi: mainland kuruluşu YAPIYORUZ; Meydan 5.300 $ ve DWTC 5.820 $ DOĞRU. */
 const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
   {
     ad: "Fiyat",
     sorular: [
-      { id: "f-lisans", s: "IFZA'daki 5.120 doların tamamı lisans bedeli mi? Çok yıllı indirimi (2 yıl %15, 3 yıl %20, 5 yıl %30) bu tutarın tamamına uyguladık.", sik: ["Evet, tamamı lisans", "Hayır, içinde indirime girmeyen bir pay var"], ipucu: "Pay varsa tutarını yazın. Sitede örnek: IFZA 2 yıl = 2 × 5.120 × 0,85 = 8.704 $." },
-      { id: "f-uk", s: "İngiltere'nin tek kuruluş fiyatı sterlin olarak ne kadar?", ipucu: "Sitede şu an rakam yok, \"tek fiyat, teklifte bildiriyoruz\" yazıyor." },
       { id: "f-kyil", s: "KKTC'de ikinci yıldan itibaren adres ve temsilcilik (2.000 € + KDV) ile 2.700 € harç aynı tutarla mı yenileniyor?", sik: ["Evet, aynı", "Hayır, aşağıya yazıyorum"] },
     ],
   },
@@ -51,7 +51,6 @@ const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
       { id: "o-panel", s: "Ortak panelinde ortak neyi görecek?", cok: true, sik: ["Dosyanın hangi adımda olduğu", "Yüklenen belgeler", "Ödeme durumu", "Müşteriyle yazışmalar"], ipucu: "Sayfa şu an \"tanımlanan yetkiyle\" diyor, ayrıntı vermiyor." },
       { id: "o-bugun", s: "Panel hazır olana kadar süreç adımları ortakla nasıl paylaşılıyor?", sik: ["E-posta", "WhatsApp", "Müşteri panelinden", "Bugün paylaşmıyoruz"] },
       { id: "o-adim", s: "Sayfadaki örnek dosya adımları doğru mu: evrak, kuruluş başvurusu, şirket tescili, banka başvurusu, muhasebe?", sik: ["Doğru", "Düzeltme var, aşağıya yazıyorum"] },
-      { id: "o-rakam", s: "İş ortaklığı sayfasında \"700'den fazla şirket\" ve \"300 civarı aktif muhasebe müşterisi\" yazsın mı?", sik: ["Yazsın", "Yalnız 700 yazsın", "Yazmasın"] },
     ],
   },
   {
@@ -66,9 +65,7 @@ const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
   {
     ad: "Dubai",
     sorular: [
-      { id: "d-mainland", s: "Dubai'de mainland şirket kuruluşu da yapıyor muyuz?", sik: ["Evet", "Hayır, yalnız serbest bölge"], ipucu: "Yeni \"serbest bölge mi, mainland mi\" yazısı için." },
       { id: "d-icpazar", s: "Serbest bölge şirketi BAE iç pazarına nasıl satış yapıyor? İlk teyitte \"sorunsuz satabiliyor\" demiştiniz; resmî portal dağıtıcı, şube ya da izin gerektiğini yazıyor.", sik: ["Hizmet faturası serbest, mal için izin gerekir", "İzin ya da şube şart", "Başka, aşağıya yazıyorum"], ipucu: "Yeni yazıda resmî kuralı yazdık; sizin uygulamanız farklıysa düzeltelim." },
-      { id: "d-fiyat", s: "Meydan 5.300 $ ve DWTC 5.820 $ rakamlarını teklifteki toplamdan geri hesapladık. Doğru mu?", sik: ["Doğru", "Düzeltme var, aşağıya yazıyorum"] },
       { id: "d-ceza", s: "Geç beyan cezası rakamını (ayda 500, sonra 1.000 AED) siteden çıkardık. Güncel rakamı yazmak ister misiniz?", sik: ["Yazmayalım", "Yazalım, aşağıya yazıyorum"] },
     ],
   },
@@ -80,7 +77,7 @@ const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
   },
 ];
 
-const ANAHTAR = "ortac-teyit-sorular-2-v1";
+const ANAHTAR = "ortac-teyit-sorular-2-v2";
 type Cevap = { sec: string[]; yazi: string };
 const BOS: Cevap = { sec: [], yazi: "" };
 
