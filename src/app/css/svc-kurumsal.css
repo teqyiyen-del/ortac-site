@@ -144,15 +144,23 @@
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   }
 }
+/* 09.10.2026 · PANO GECE KARTA DÖNDÜ. Burak: "Şu an çok beyaz akıyor sayfa.
+   Arka planı siyah yapmıyoruz artık ama bazı yerlerini, kartları siyah
+   yapıyoruz ya ... 'Şirketin bir yılı' kısmını siyah yapmışsın, o güzel,
+   dinamizm katıyor. Daha fazla yerde kullan. İki beyaz bir siyah gibi düşün."
+   Sayfanın ritmi: yapı (2) · takvim (5) · ilgili (7) koyu; aralarında ikişer
+   ve birer açık bölüm, art arda iki koyu kart yok. Bölüm ZEMİNİ yerinde
+   (kırık beyaz); koyu olan yalnız pano. Sağdaki üç satır beyaz kaldı: koyu
+   pano + beyaz satır sitenin .hx-card / .hx-stage dengesi. Elenen: değişiklik
+   akışı panosu (4), takvimle (5) art arda geliyordu. */
 .skr-sahne {
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-width: 0;
   padding: 28px 24px;
-  border: 1px solid var(--border);
   border-radius: var(--r-panel);
-  background: var(--white);
+  background: var(--night);
 }
 .skr-sat {
   display: grid;
@@ -177,7 +185,13 @@
 /* ------------------------------------------------ ÇİZİM 1 · yapı ağacı
    Üst kutu (ortaklar), 56 px'lik bağ SVG'si, üç şirket kutusu, altta iki
    işaretli açıklama. Şirket kutusu: bayrak diski 28, ad 15 / 600, tür 12.
-   Sayfanın ülkesi mavi çerçeveli ve mavi zeminli; ötekiler kesik çerçeveli. */
+   Sayfanın ülkesi mavi çerçeveli ve mavi zeminli; ötekiler kesik çerçeveli.
+   GECE ZEMİNİNE UYARLAMA (zemin #080808, kutu #111): üst kutu beyaz + siyah
+   yazı (eskiden siyah kutuydu; koyu panoda kayboluyordu). Marka mavisi
+   küçük yazıda ve ince çizgide koyu zeminde zayıf, o yüzden açık mavi
+   (--blue-500 #5c9eeb, 7:1). Sönük kol ve kesik çerçeve #6b6b6b (grafik
+   eşiği 3'ün üstünde, 3,7:1). Ad beyaz, tür --night-text (10:1 üstü);
+   aktif kutunun türü #b9d6f8 (#10294a üstünde 9:1). */
 .skr-agac {
   display: grid;
   width: 100%;
@@ -191,8 +205,8 @@
   justify-self: center;
   padding: 8px 16px 8px 8px;
   border-radius: 12px;
-  background: #111;
-  color: var(--white);
+  background: var(--white);
+  color: var(--night);
   font-size: 14px;
 }
 .skr-agac-ust b {
@@ -204,7 +218,7 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.08);
 }
 .skr-agac-bag {
   display: block;
@@ -219,19 +233,20 @@
   stroke-linejoin: round;
 }
 .skr-agac-yol {
-  stroke: #cfcfcf;
+  stroke: #6b6b6b;
   stroke-width: 1.5;
   stroke-dasharray: 4 5;
 }
 .skr-agac-yol[data-aktif] {
-  stroke: var(--blue-700);
+  stroke: var(--blue-500);
   stroke-width: 2;
   stroke-dasharray: none;
 }
-/* akan kesikler: dolu kolun üstünde, koyu mavi; reduce altında hiç yok */
+/* akan kesikler: dolu kolun üstünde, beyaz (gece zemininde koyu mavi
+   görünmüyor); reduce altında hiç yok */
 .skr-agac-akan {
   display: none;
-  stroke: var(--blue-900);
+  stroke: var(--white);
   stroke-width: 2;
   stroke-linecap: round;
   stroke-dasharray: 2 22;
@@ -251,14 +266,14 @@
   gap: 4px;
   min-width: 0;
   padding: 14px 6px 12px;
-  border: 1px dashed #cfcfcf;
+  border: 1px dashed #6b6b6b;
   border-radius: 12px;
-  background: var(--white);
+  background: var(--night-2);
   text-align: center;
 }
 .skr-agac-k[data-aktif] {
-  border: 1px solid var(--blue-700);
-  background: var(--blue-100);
+  border: 1px solid var(--blue-500);
+  background: #10294a;
 }
 .skr-agac-bayrak {
   display: block;
@@ -268,7 +283,7 @@
   margin-bottom: 4px;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 .skr-agac-bayrak svg {
   display: block;
@@ -279,15 +294,15 @@
   font-size: 15px;
   font-weight: 600;
   line-height: 1.25;
-  color: var(--text-900);
+  color: var(--white);
 }
 .skr-agac-k small {
   font-size: 12px;
   line-height: 1.35;
-  color: var(--text-600);
+  color: var(--night-text);
 }
 .skr-agac-k[data-aktif] small {
-  color: var(--blue-900);
+  color: #b9d6f8;
 }
 .skr-agac-not {
   display: flex;
@@ -296,7 +311,7 @@
   gap: 8px 20px;
   margin: 20px 0 0;
   font-size: 12px;
-  color: var(--text-600);
+  color: var(--night-text);
 }
 .skr-agac-not span {
   display: inline-flex;
@@ -307,10 +322,10 @@
   display: block;
   width: 22px;
   height: 0;
-  border-top: 2px solid var(--blue-700);
+  border-top: 2px solid var(--blue-500);
 }
 .skr-agac-not i[data-cizgi="kesik"] {
-  border-top: 2px dashed #bdbdbd;
+  border-top: 2px dashed #6b6b6b;
 }
 
 /* ------------------------------------------------- 3 · kapsam grupları
@@ -559,7 +574,9 @@
 }
 
 /* ---------------------------------------------- ÇİZİM 3 · yıl halkası
-   SAYFANIN TEK GECE KARTI (hafıza: siyah yalnız büyük gece kartta). Solda
+   GECE KART (hafıza: siyah yalnız büyük gece kartta). İlk yazımda sayfanın
+   tek gece kartıydı; 09.10.2026'da yapı panosu ve ilgili hizmetler de geceye
+   döndü (gerekçe .skr-sahne'nin başında). Solda
    halka, sağda kalem kutuları. Gece zemininde marka mavisi küçük yazıda
    okunmuyor (tuzaklar · kontrast): işaret ve numara AÇIK mavi (#5c9eeb)
    zemin + koyu rakam; amber için açık amber (#f0b44c) + koyu rakam. */
@@ -767,18 +784,26 @@
 
 /* --------------------------------------------------- 6 · ilgili hizmetler
    Dört bağlantı kartı: 1 → 2 (720). Dört sütunda (1200) kart 270 px kalıyor,
-   cümle üç satıra çıkıyordu; 2 x 2 kaldı. Kartın tamamı bağlantı. */
+   cümle üç satıra çıkıyordu; 2 x 2 kaldı. Kartın tamamı bağlantı.
+   09.10.2026 · GECE PANO: liste artık 28 köşeli gece kartın içinde, kartlar
+   --night-2 (sayfanın üçüncü koyu yüzeyi; "iki beyaz bir siyah" ritmi,
+   gerekçe .skr-sahne'nin başında). Bölüm zemini beyaz kaldı. İç boşluk
+   telefonda 20, 720'den sonra 28. Koyu zeminde: ad beyaz (18,9:1), cümle
+   --night-text (10:1 üstü), kuyu #10294a + #9cc6f8 ikon, ok #9cc6f8. */
 .skr-ilgili {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   margin: var(--space-head) 0 0;
-  padding: 0;
+  padding: 20px;
+  border-radius: var(--r-panel);
+  background: var(--night);
   list-style: none;
 }
 @media (min-width: 720px) {
   .skr-ilgili {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 28px;
   }
 }
 .skr-ilgili-f {
@@ -794,12 +819,24 @@
   gap: 14px;
   min-width: 0;
   padding: 20px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--night-line);
   border-radius: var(--r-lg);
-  background: var(--white);
-  color: var(--text-900);
+  background: var(--night-2);
+  color: var(--white);
   text-decoration: none;
   transition: border-color 200ms var(--ease-out-soft);
+}
+.skr-ilgili .skr-ic {
+  background: #10294a;
+  color: #9cc6f8;
+}
+.skr-ilgili .skr-ic[data-ton="yesil"] {
+  background: #0f2e1f;
+  color: #63d69d;
+}
+.skr-ilgili .skr-ic[data-ton="amber"] {
+  background: #33260d;
+  color: #f0b44c;
 }
 .skr-ilgili-m {
   display: grid;
@@ -814,15 +851,15 @@
 .skr-ilgili-m small {
   font-size: 14px;
   line-height: 1.45;
-  color: var(--text-600);
+  color: var(--night-text);
 }
 .skr-ilgili-ok {
-  color: var(--blue-700);
+  color: #9cc6f8;
   transition: transform 200ms var(--ease-out-soft);
 }
 @media (hover: hover) {
   a.skr-ilgili-k:hover {
-    border-color: var(--blue-700);
+    border-color: var(--blue-500);
   }
   a.skr-ilgili-k:hover .skr-ilgili-ok {
     transform: translateX(3px);

@@ -62,15 +62,21 @@ import "@/app/css/svc-kurumsal.css";
    satırlar, adım kartları, CountryFaq, FinalCta).
 
    DOKUZ DURAK, zemin beyaz ve kırık beyaz sırayla (hafıza: tam siyah bölüm
-   yok; siyah yalnız takvimin büyük gece kartında):
+   yok; siyah yalnız bölümün içindeki büyük gece kartta):
      giriş       foto giriş (PageHero · art dalı)
      ne zaman    altı durum kartı                              beyaz
-     yapı        ÇİZİM 1 yapı ağacı + üç satır                 kırık beyaz
+     yapı        ÇİZİM 1 yapı ağacı (GECE pano) + üç satır     kırık beyaz
      kapsam      üç kapsam grubu + kapsam dışı (amber not)     beyaz
      değişiklik  ÇİZİM 2 değişiklik akışı + altı tür           kırık beyaz
-     takvim      ÇİZİM 3 yıl halkası, gece kartında            beyaz
+     takvim      ÇİZİM 3 yıl halkası, GECE kartında            beyaz
      adımlar     beş adım                                      kırık beyaz
-     ilgili      dört hizmet bağlantısı                        beyaz
+     ilgili      dört hizmet bağlantısı, GECE panoda           beyaz
+
+   09.10.2026 · ÜÇ GECE KART. İlk yazımda yalnız takvim koyuydu. Burak: "Şu
+   an çok beyaz akıyor sayfa ... 'Şirketin bir yılı' kısmını siyah yapmışsın,
+   o güzel, dinamizm katıyor. Daha fazla yerde kullan. İki beyaz bir siyah
+   gibi düşün." Yapı panosu ve ilgili hizmetler listesi geceye döndü; zeminler
+   aynı, art arda iki koyu kart yok. İşin tamamı svc-kurumsal.css'te.
      SSS         CountryFaq                                    beyaz
      kapanış     FinalCta ("İletişime geçin")
 
@@ -417,7 +423,7 @@ export default function KurumsalSayfa({ veri: V }: { veri: KurumsalVeri }) {
         </section>
 
         {/* ----------------------------------------------------------- TAKVİM
-            Sayfanın tek gece kartı: solda yıl halkası, sağda kalem listesi.
+            Gece kart: solda yıl halkası, sağda kalem listesi.
             Listedeki numara halkadaki işaretin numarası. */}
         <section id={V.takvim.id} className="sec-pad">
           <div className="container-o">

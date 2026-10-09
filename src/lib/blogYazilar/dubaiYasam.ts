@@ -51,7 +51,7 @@
    Ortac'a dair cümleler sitenin Dubai, vize ve banka sayfalarından. */
 import type { BlogPost } from "@/lib/blog";
 import { SLUG } from "@/lib/blogTemel";
-import { COUNTRY_PHOTO, POST_PHOTO } from "@/lib/media";
+import { POST_PHOTO } from "@/lib/media";
 
 export const POST_DUBAI_YASAM: BlogPost = {
   slug: SLUG.dubaiYasam,
@@ -65,7 +65,7 @@ export const POST_DUBAI_YASAM: BlogPost = {
   country: "dubai",
   tags: ["Dubai", "Yaşam maliyeti", "Oturum"],
   author: "Murat Ortaç",
-  cover: COUNTRY_PHOTO.dubai,
+  cover: POST_PHOTO.dubaiMarina,
 
   seo: {
     title: "Dubai'de Yaşam 2026: Maliyet, Yaşam Şartları, Oturum",

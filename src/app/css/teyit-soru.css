@@ -158,3 +158,18 @@
   outline: 2px solid var(--blue-700);
   outline-offset: 2px;
 }
+
+/* sorunun sitedeki karşılığı (09.10.2026); dokununca tam boy açılır */
+.tsr-gorsel {
+  display: block;
+  margin: 10px 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  max-height: 320px;
+}
+.tsr-gorsel img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

@@ -33,7 +33,7 @@
    kktcFiyat.ts, bankaKktc.ts). KKTC'de banka adı yazılmıyor (teyit KKTC 20). */
 import type { BlogPost } from "@/lib/blog";
 import { SLUG } from "@/lib/blogTemel";
-import { COUNTRY_PHOTO, POST_PHOTO } from "@/lib/media";
+import { POST_PHOTO } from "@/lib/media";
 
 export const POST_KKTC_YASAM: BlogPost = {
   slug: SLUG.kktcYasam,
@@ -47,7 +47,7 @@ export const POST_KKTC_YASAM: BlogPost = {
   country: "kktc",
   tags: ["KKTC", "Yaşam maliyeti", "Çalışma izni"],
   author: "Murat Ortaç",
-  cover: COUNTRY_PHOTO.kktc,
+  cover: POST_PHOTO.girneLiman,
 
   seo: {
     title: "Kıbrıs'ta Yaşam 2026: KKTC Yaşam Maliyeti ve İş İmkanları",

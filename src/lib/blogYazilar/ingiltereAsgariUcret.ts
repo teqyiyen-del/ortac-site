@@ -36,7 +36,7 @@ export const POST_UK_ASGARI_UCRET: BlogPost = {
   country: "ingiltere",
   tags: ["İngiltere", "Asgari ücret", "Bordro"],
   author: "Murat Ortaç",
-  cover: POST_PHOTO.ukTax,
+  cover: POST_PHOTO.kafe,
 
   seo: {
     title: "İngiltere Asgari Ücret 2026: Saatlik ve Aylık Ne Kadar?",

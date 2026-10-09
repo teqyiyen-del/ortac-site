@@ -57,18 +57,23 @@ import type { AmlIkon, AmlVeri } from "@/lib/amlDubai";
    + ülke başına veri dosyası), ad alanı ayrı: bir sayfanın turu ötekini
    bozmasın (svc-vize.css başındaki gerekçe).
 
-   BÖLÜMLER (zemin beyaz ve kırık beyaz sırayla; tek koyu şey "uyulmazsa"
-   bölümündeki büyük gece kart):
+   BÖLÜMLER (zemin beyaz ve kırık beyaz sırayla; tam siyah bölüm yok, koyu
+   olan bölümün İÇİNDEKİ gece kart). 09.10.2026 · ÜÇ GECE KART: kapsam,
+   uyum döngüsü, ilgili. Burak: "Şu an çok beyaz akıyor sayfa ... Bir tane
+   yer yapmışsın, o da çok göze çarpmıyor, yeterli değil ... İki beyaz bir
+   siyah gibi düşün. Mesela AML'de 'uyum yıl içinde nasıl dönüyor' kısmını
+   siyah yapabilirsin." İlk yazımdaki tek gece kart ("uyulmazsa") açığa
+   döndü, çünkü döngüyle art arda geliyordu:
      giriş        PageHero · foto giriş (kırıntıdaki "AML" fotoğrafı seçiyor)
      kimler       KARAR ŞEMASI: kök → "her şirket" kolu ve "yalnız belirli
                   faaliyetler" kolu. Sayfanın en değerli bilgisi bu ayrım.
-     kapsam       üstlendiklerimiz · kapsam dışında
+     kapsam       üstlendiklerimiz · kapsam dışında (GECE pano)
      yükümlülük   açılır kartlar (<details>, JS yok): ne · ne zaman · biz
      zincir       GERÇEK FAYDALANICI ZİNCİRİ çizimi + üç madde
      tarama       TARAMA AKIŞI: beş durak, her birinde küçük çizim
-     takvim       UYUM DÖNGÜSÜ halkası + maddeler
-     sonuç        büyük gece kart, dört sonuç (tutar yok)
-     ilgili       banka · muhasebe · kurumsal danışmanlık · kuruluş
+     takvim       UYUM DÖNGÜSÜ halkası + maddeler (GECE kart)
+     sonuç        dört açık kart, amber kuyu (tutar yok)
+     ilgili       banka · muhasebe · kurumsal danışmanlık · kuruluş (GECE pano)
      SSS · kapanış
 
    HAREKET tamamen CSS'te ve prefers-reduced-motion: no-preference kapısında
@@ -412,7 +417,8 @@ export default function AmlSayfa({ veri: A }: { veri: AmlVeri }) {
 
         {/* ------------------------------------------------- NE YAPIYORUZ
             İki kart: üstlendiklerimiz (mavi onay) · kapsam dışında (amber
-            eksi; "şart ve önemli not" amber). */}
+            eksi; "şart ve önemli not" amber). İkisi tek GECE panoda
+            (09.10.2026, "iki beyaz bir siyah"; svc-aml.css · GECE KARTLAR). */}
         <section id={A.kapsam.id} className="sec-pad sam-sec sam-kirik">
           <div className="container-o">
             <Bas B={A.kapsam} />
@@ -572,7 +578,10 @@ export default function AmlSayfa({ veri: A }: { veri: AmlVeri }) {
         <section id={A.takvim.id} className="sec-pad sam-sec sam-kirik">
           <div className="container-o">
             <Bas B={A.takvim} />
-            <div className="sam-bol" data-yon="ayna">
+            {/* sam-don-kart: halka ve satırlar tek GECE kartta (Burak:
+                "AML'de 'uyum yıl içinde nasıl dönüyor' kısmını siyah
+                yapabilirsin"); renkler svc-aml.css · GECE KARTLAR */}
+            <div className="sam-bol sam-don-kart" data-yon="ayna">
               <FadeUp className="sam-sahne" delay={0.1}>
                 <Dongu T={A.takvim} />
               </FadeUp>
@@ -597,29 +606,28 @@ export default function AmlSayfa({ veri: A }: { veri: AmlVeri }) {
         </section>
 
         {/* ------------------------------------------------ UYULMAZSA NE OLUR
-            Sayfanın tek koyu yüzeyi: büyük gece kart (tam siyah bölüm yok;
-            başlık kartın dışında, açık zeminde). Risk: ikonlar amber. */}
+            Dört açık kart; risk: ikon kuyusu amber. İlk yazımda gece karttı;
+            09.10.2026'da koyu yüzey bir üstteki uyum döngüsüne geçti (art
+            arda iki gece kart olmasın), bu bölüm açığa döndü. */}
         <section id={A.sonuc.id} className="sec-pad sam-sec">
           <div className="container-o">
             <Bas B={A.sonuc} />
-            <div className="sam-gece">
-              <ul className="sam-gece-l">
-                {A.sonuc.items.map((s, i) => {
-                  const I = IKON[s.icon];
-                  return (
-                    <li key={s.title}>
-                      <FadeUp className="sam-gece-k" delay={0.08 + i * 0.05}>
-                        <span className="sam-gece-ic" aria-hidden="true">
-                          <I size={18} strokeWidth={1.9} />
-                        </span>
-                        <b>{s.title}</b>
-                        <p>{s.line}</p>
-                      </FadeUp>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
+            <ul className="sam-son">
+              {A.sonuc.items.map((s, i) => {
+                const I = IKON[s.icon];
+                return (
+                  <li key={s.title}>
+                    <FadeUp className="sam-son-k" delay={0.08 + i * 0.05}>
+                      <span className="sam-ic" data-ton="amber" aria-hidden="true">
+                        <I size={18} strokeWidth={1.9} />
+                      </span>
+                      <b>{s.title}</b>
+                      <p>{s.line}</p>
+                    </FadeUp>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </section>
 

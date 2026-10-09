@@ -38,10 +38,10 @@ import { servicesFor, serviceHref, type Service, type ServiceSlug } from "@/lib/
 import { LIVE_TOOLS, NAV_TOOLS, type ToolId } from "@/lib/tools/catalog";
 import { TOOL_ICON } from "@/lib/tools/ikonlar";
 import { OFFICE_ORDER } from "@/lib/offices";
-import { COUNTRY_PHOTO } from "@/lib/media";
+import { COUNTRY_PHOTO, PHOTO } from "@/lib/media";
 /* Kaynaklar panelindeki "son yazı" kartı için: künye elle yazılmıyor,
    yazının kendi kaydından okunuyor (bkz. RESOURCES bloğunun altı). */
-import { GUIDE_CATEGORY, blogHref, categoryHashHref, formatDate } from "@/lib/blogTemel";
+import { GUIDE_CATEGORY, blogHref, categoryHashHref } from "@/lib/blogTemel";
 
 /* ============================================================================
    CANLI NAVBAR — "KOYU ÜLKE KARTI, AÇIK ŞERİT"        (stil: app/css/nav.css)
@@ -339,26 +339,18 @@ export const RESOURCES: Tile[] = [
    (components/Nav.tsx kabuğu sortedPosts()'u sunucuda çağırıp `sonYazi`
    veriyor). Burada çağrılınca blog.ts yazı gövdeleriyle birlikte tarayıcı
    paketine giriyordu. */
-export type SonYazi = { title: string; publishedAt: string; slug: string };
+/* 09.10.2026 · İKİ KÜÇÜK KART TEK BÜYÜK KARTA İNDİ. Burak: "Oraya sadece son
+   blog yazısını büyük bir şekilde koy, yine aynı mantıkta; başlık yazsın,
+   kategori yazsın." "Aynı mantık" dediği Hizmetler panelindeki ülke kartı:
+   zeminde fotoğraf, üstünde az yazı, altta tek düğme.
 
-const featuredFor = (sonYazi: SonYazi | null) => [
-  ...(sonYazi
-    ? [
-        {
-          tag: "Son yazı",
-          title: sonYazi.title,
-          meta: formatDate(sonYazi.publishedAt),
-          href: blogHref(sonYazi.slug),
-        },
-      ]
-    : []),
-  {
-    tag: "Yeni bölüm",
-    title: "Ülke rehberleri",
-    meta: "Dubai · İngiltere · KKTC",
-    href: categoryHashHref(GUIDE_CATEGORY),
-  },
-];
+   GİDEN: "Yeni bölüm · Ülke rehberleri" kartı. Kaybolan bir çıkış yok, aynı
+   adres sol sütunun ikinci şeridinde duruyor (RESOURCES). Tarih satırı da
+   gitti; kartta yalnız kategori ve başlık var.
+
+   Alanlar sunucuda çözülüp geliyor (components/Nav.tsx): kategori ADI ve
+   kapak adresi. Kart FotoKart ile basılıyor (aşağıda). */
+export type SonYazi = { title: string; category: string; cover: string; slug: string };
 
 /* ========================================================== KURUMSAL PANELİ
    İLETİŞİM BU LİSTEDEN ÇIKTI — küçüldüğü için değil, büyüdüğü için.
@@ -368,7 +360,8 @@ const featuredFor = (sonYazi: SonYazi | null) => [
    kalabalık olur, o yüzden kurumsalın içinde iletişime özel büyük alan ayır."
 
    Yani çubuğa beşinci bir başlık eklenmiyor; İletişim panelin İÇİNDE büyüyor.
-   Aşağıdaki CorporatePanel bunu kendi kartında basıyor (.onv-ct).
+   Aşağıdaki TailPanel bunu kendi kartında basıyor (09.10.2026'dan beri
+   FotoKart; eski .onv-ct kalıbı kalktı).
 
    Bunun işlevsel tarafı da var: bu listede kalan adreslerin HEPSİ hâlâ
    dolaşıma kapalı ve sönük çıkıyor (lib/routes.ts) — bu turda eklenen ikisi
@@ -788,12 +781,83 @@ function ServicesPanel({
   );
 }
 
+/* ------------------------------------------------ FOTOĞRAFLI KART (ortak) */
+/* 09.10.2026 · ÜLKE KARTININ KALIBI İKİ PANELE DAHA TAŞINDI.
+   Burak, Kurumsal'daki iletişim kartı için: "Hizmetlerdeki gibi yapalım,
+   butonunu da onun gibi, tasarımını da onun gibi. Ona benzesin. Daha dikkat
+   çekiyor." Kaynaklar'daki son yazı için: "yine aynı mantıkta."
+
+   YENİ BİR KALIP YAZILMADI. Sınıflar ülke kartının kendi sınıfları
+   (.onv-brief · -foto · -perde · -uzeri · -ad · -go); köşe, karartma ve düğme
+   tek kuraldan geliyor, yani üç kart ayrışamıyor. Bu bileşen yalnız o
+   iskeleti iki kez elle yazmamak için var.
+
+   ÜLKE KARTINDAN TEK FARK: burada kartın TAMAMI tek bağlantı, düğme bir
+   <span>. Ülke kartında dış kutu <div> çünkü orası bir sekme panelinin
+   içinde ve kartın kendisi bir yere gitmiyor, yalnız düğmesi gidiyor. Bu iki
+   kartın ise tek işi tek adrese götürmek; fotoğrafa tıklayan da gitmeli.
+   Düğmenin hover'ı o yüzden kartın hover'ına bağlı (nav.css · a.onv-brief).
+
+   `ust` fotoğrafın sol üst köşesine oturan opak etiket (son yazıda kategori);
+   `on` başlığın solundaki küçük işaret (iletişimde üç ofisin bayrağı). */
+function FotoKart({
+  href,
+  foto,
+  baslik,
+  satir,
+  dugme,
+  ust,
+  on,
+  label,
+  uzun,
+  onGo,
+}: {
+  href: string;
+  foto: string;
+  baslik: string;
+  satir?: string;
+  dugme: string;
+  ust?: string;
+  on?: React.ReactNode;
+  label: string;
+  /* Başlık bir yazı başlığıysa (uzun, üç satıra kadar) punto bir kademe iner. */
+  uzun?: boolean;
+  onGo: () => void;
+}) {
+  return (
+    <SmartLink
+      href={href}
+      className="onv-brief"
+      data-uzun={uzun ? "" : undefined}
+      aria-label={label}
+      onClick={onGo}
+    >
+      <span className="onv-brief-foto" aria-hidden="true">
+        <Image src={foto} alt="" fill sizes="360px" />
+      </span>
+      <span className="onv-brief-perde" aria-hidden="true" />
+      {ust && <span className="onv-brief-ust">{ust}</span>}
+
+      <span className="onv-brief-uzeri">
+        <span className="onv-brief-ad">
+          {on}
+          <b>{baslik}</b>
+        </span>
+        {satir && <em>{satir}</em>}
+        <span className="onv-brief-go">
+          {dugme}
+          <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
+        </span>
+      </span>
+    </SmartLink>
+  );
+}
+
 /* ------------------------------------------- ARAÇLAR / KAYNAKLAR / KURUMSAL */
 /* Üçü de N4'ten olduğu gibi: tek koyu yüzey yok, ağırlığı çerçeve ve boşluk
    taşıyor. Koyu künye kartı bu panellerde YOK — koyu, seçili ülkenin işareti;
    ülkesi olmayan panelde bulunması rengi anlamsızlaştırırdı. */
 function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi: SonYazi | null }) {
-  const FEATURED = featuredFor(sonYazi);
   /* ARAÇLAR — eski navbar'ın en beğenilen düzeni: tek sırada dört kart, panel
      genişliğinde. Bölünmüş kolon ve öne çıkan koyu kart yok; dört araç eşit
      ağırlıkta ve hangisinin yayında olduğunu sönüklük söylüyor. */
@@ -869,10 +933,9 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
     );
   }
 
-  /* KAYNAKLAR — eski navbar'daki gibi: solda liste, sağda öne çıkan kartlar.
-     Öne çıkanlar orada da açık zeminliydi (paper + çerçeve, hover'da mavi);
-     aday turunda bir ara koyulaştırılmıştı, geri alındı, öyle kalıyor. Koyu
-     bu bileşende tek bir işe ayrılmış durumda: seçili ülkenin künyesi. */
+  /* KAYNAKLAR — solda liste, sağda TEK fotoğraflı kart (son yazı).
+     09.10.2026'ya kadar sağda iki küçük açık zeminli kart vardı; Burak'ın
+     isteğiyle ülke kartının kalıbında tek büyük karta indi (FotoKart). */
   if (k === "kaynaklar") {
     return (
       <div className="onv-tail onv-split">
@@ -896,43 +959,34 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
               dokunulmadı.
 
               ÖLÇÜ: sol sütun 1fr, yani 1440px'te 716px; dört şerit de o
-              genişliğin tamamını kaplıyor. Sağdaki 360px'lik "Öne çıkanlar"
-              sütunu yerinde. */}
+              genişliğin tamamını kaplıyor. Sağdaki 360px'lik sütun yerinde
+              (09.10.2026'dan beri içinde tek kart: son yazı). */}
           <div className="onv-grid" data-cols={1}>
             {RESOURCES.map((t) => (
               <CardLink key={t.label} t={t} onGo={onGo} />
             ))}
           </div>
         </div>
-        {/* "ÖNE ÇIKANLAR" DA SİLİNDİ — müşterinin listesinde yoktu, karar bu
-            turda verildi ve gerekçesi iki tane.
-            (1) HİZA: sol sütunun etiketi müşterinin isteğiyle kalktı; sağdaki
-                kalsaydı iki sütun 24px kaymış başlardı ve komşu Kurumsal
-                paneli (iki etiketi de kalkan panel) ile aynı iskelet
-                olmaktan çıkardı.
-            (2) TEKRAR: üç kartın her biri zaten kendi rozetini taşıyor
-                (.onv-feat-tag) ve kartlar sol sütundaki şeritlerden apayrı
-                bir kalıpta; "öne çıkan" oldukları biçimden okunuyor.
-            Ad yine ağaçta duruyor. */}
-        <div role="group" aria-label="Öne çıkanlar">
-          <div className="onv-feat">
-            {FEATURED.map((f) => (
-              /* Sol sütundaki şeritlerle aynı gerekçe: üç ayrı <span>'a
-                 bölünmüş ad ağaçta görünmüyordu, aria-label yazıya bağlıyor.
-                 Duyulan cümle ekrandakiyle aynı sırada: rozet, başlık, künye. */
-              <SmartLink
-                key={f.title}
-                href={f.href}
-                className="onv-feat-c"
-                aria-label={`${f.tag}: ${f.title}, ${f.meta}`}
-                onClick={onGo}
-              >
-                <span className="onv-feat-tag">{f.tag}</span>
-                <span className="onv-feat-t">{f.title}</span>
-                <span className="onv-feat-m">{f.meta}</span>
-              </SmartLink>
-            ))}
-          </div>
+        {/* 09.10.2026 · SAĞ SÜTUN TEK KART: en son yayımlanan yazı.
+            Eskiden burada iki küçük açık kart vardı ("Son yazı" ve "Yeni
+            bölüm"). Burak: "Oraya sadece son blog yazısını büyük bir şekilde
+            koy … başlık yazsın, kategori yazsın." Kalıp ülke kartının aynısı
+            (FotoKart). Sütuna grup adı konmadı: içindeki tek düğüm zaten adı
+            olan bir bağlantı. Yazı yoksa sütun boş kalır; bugün öyle bir
+            durum yok, ölü kart basmamak için koşul duruyor. */}
+        <div>
+          {sonYazi && (
+            <FotoKart
+              href={blogHref(sonYazi.slug)}
+              foto={sonYazi.cover}
+              ust={sonYazi.category}
+              baslik={sonYazi.title}
+              dugme="Yazıyı okuyun"
+              label={`Son yazı, ${sonYazi.category}: ${sonYazi.title}`}
+              uzun
+              onGo={onGo}
+            />
+          )}
         </div>
       </div>
     );
@@ -957,7 +1011,11 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
      Yani solda Kurumsal kartları (eskiden neredeyse), sağda 360px'lik dikey
      kart (eskiden duruş bloğunun tam yeri). Panelin iskeletine dokunulmuyor.
 
-     KART ARTIK KOYU ZEMİNLİ, ve bu bilinçli bir kural değişikliği.
+     09.10.2026 · KART FOTOĞRAFLI OLDU; aşağıdaki "koyu zemin" notu bir önceki
+     hâli anlatıyor ve gerekçe zinciri kaybolmasın diye duruyor. Bugünkü kart
+     ülke kartının kalıbında (FotoKart): zeminde fotoğraf, üstünde karartma.
+
+     (ÖNCEKİ HÂL) KART KOYU ZEMİNLİ, ve bu bilinçli bir kural değişikliği.
      Önceki turlarda kart açık zeminliydi ve gerekçesi şuydu: "koyu bu menüde
      tek bir işe ayrılmış durumda, o iş SEÇİLİ ÜLKE". Müşteri bu turda kuralı
      kendisi esnetti ("kurumsalın içindeki iletişim kartınında arkasını siyah
@@ -983,68 +1041,51 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
         </div>
       </div>
 
-      {/* "BİZE ULAŞIN" ETİKETİ SİLİNDİ (müşteri tek tek saydı). Kartın kendi
-          başlığı "İletişim", gövdesi "Ne sorduğunuzu anlatın…" ve altında üç
-          ofis şeridi var; etiket dördüncü kez aynı şeyi söylüyordu. Sütuna
-          ayrıca `aria-label` KONMADI: içindeki tek düğüm zaten adı olan bir
-          bağlantı (aşağıdaki aria-label), boş bir grup adı eklemek ekran
-          okuyucuda aynı cümleyi iki kez okuturdu. */}
+      {/* 09.10.2026 · İLETİŞİM KARTI ÜLKE KARTININ KALIBINA GEÇTİ.
+          Burak: "Kurumsalın içindeki iletişim kartını da öyle bir şey yapalım,
+          görselli olsun. Bu kadar yazı yazmak yerine; başlık altında bir sürü
+          yazı yazıyor, ona gerek yok. Hizmetlerdeki gibi yapalım, butonunu da
+          onun gibi, tasarımını da onun gibi. Ona benzesin. Daha dikkat
+          çekiyor."
+
+          GİDEN: ikon kutusu, iki satırlık paragraf ("Sorunuzu yazın; hangi
+          ülkede olursanız olun aynı ekip yanıtlar") ve adlarıyla üç ofis
+          yongası. KALAN: başlık, tek satır ("Üç ülkede ofis, tek muhatap";
+          eski paragrafın ilk cümlesi, yeni metin yazılmadı) ve düğme.
+
+          ÜÇ BAYRAK DURUYOR ama yazısız: ülke kartında adın solunda tek bayrak
+          var, burada aynı yerde üst üste binen üç bayrak. "Üç ülkede ofis"
+          satırını resimle söylüyor, kartı da ülke kartına bağlıyor. Ülke
+          adları aria-label'da.
+
+          FOTOĞRAF lib/media.ts · PHOTO.formation: insansız, markasız modern
+          ofis katı (gözle doğrulanmış, sitede zaten kullanılan kare). Ekip
+          fotoğrafı (TEAM_PHOTO) bilerek seçilmedi: o kare sayfada "temsilî"
+          künyesiyle birlikte durmak zorunda ve menüye not düşülmüyor.
+          SWAP:STOCK_PHOTOS kapsamında, müşterinin ofis çekimi gelince tek
+          yerden değişir.
+
+          Adres ve telefon yine basılmıyor: bu kart iletişim SAYFASINA giden
+          kapı, ayrıntı bir tık ötede (app/iletisim). */}
       <div>
-        {/* aria-label burada yalnızca "adsız kalmasın" diye değil, KISALTMAK
-            için de var. İçerikten türeyen ad kartın tamamını okuyordu: başlık,
-            üç satırlık paragraf, üç ofis adı ve buton metni tek bir bağlantı
-            adı olarak arka arkaya duyuluyordu. Kartın işi tek bir şey söylemek;
-            duyulan cümle de o. Görünen metnin hiçbiri silinmiyor, ekranda
-            aynen duruyor. */}
-        <SmartLink
+        <FotoKart
           href="/iletisim"
-          className="onv-ct"
-          aria-label="İletişim: üç ülkede ofis, tek muhatap"
-          onClick={onGo}
-        >
-          <span className="onv-ct-top">
-            <span className="onv-ct-ic" aria-hidden="true">
-              <Mail size={20} strokeWidth={1.9} />
-            </span>
-            <span className="onv-ct-tx">
-              <b>İletişim</b>
-              <em>
-                Üç ülkede ofis, tek muhatap. Sorunuzu yazın; hangi ülkede olursanız olun aynı
-                ekip yanıtlar.
-              </em>
-            </span>
-          </span>
-
-          {/* Üç ofis şeridi. Sayfanın kendisi de bu omurga üzerine kurulu
-              (app/iletisim).
-
-              GEREKÇE DEĞİŞTİ, DAVRANIŞ DEĞİŞMEDİ. Eski not "lib/offices.ts'te
-              üçü de boş (SWAP:OFFICE_*)" diyordu; bu artık doğru değil, üç
-              ofisin de adresi, telefonu, WhatsApp hattı ve e-postası dolu
-              (18-19.08.2026, müşteriden). Yani adres ve telefon burada
-              "elimizde yok" diye basılmıyor DEĞİL: BİLEREK basılmıyor.
-
-              Sebep menünün işi: bu kart bir iletişim kartı değil, iletişim
-              SAYFASINA giden bir kapı. Üç ofisin dört bilgisi menüye girseydi
-              on iki satır olurdu ve açılır panel bir rehbere dönerdi; ayrıca
-              aynı değerlerin ikinci kopyası olurdu. Menüde yalnız ofislerin
-              hangi ülkelerde olduğu yazıyor, ayrıntı bir tık ötede. */}
-          <span className="onv-ct-of">
-            {OFFICE_ORDER.map((c) => (
-              <span key={c} className="onv-ct-of-i">
-                <span className="onv-ct-of-f" aria-hidden="true">
+          foto={PHOTO.formation}
+          baslik="İletişim"
+          satir="Üç ülkede ofis, tek muhatap"
+          dugme="İletişim sayfasına gidin"
+          label="İletişim: üç ülkede ofis, tek muhatap"
+          on={
+            <span className="onv-brief-flags" aria-hidden="true">
+              {OFFICE_ORDER.map((c) => (
+                <span key={c} className="onv-brief-flag">
                   <Flag country={c} />
                 </span>
-                {COUNTRY_NAME[c]}
-              </span>
-            ))}
-          </span>
-
-          <span className="onv-ct-go">
-            İletişim sayfasına gidin
-            <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
-          </span>
-        </SmartLink>
+              ))}
+            </span>
+          }
+          onGo={onGo}
+        />
       </div>
     </div>
   );

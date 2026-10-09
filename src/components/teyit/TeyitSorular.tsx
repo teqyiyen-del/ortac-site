@@ -20,7 +20,10 @@ import { useEffect, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import Logo from "@/components/shared/Logo";
 
-type Soru = { id: string; s: string; sik?: string[]; cok?: boolean; ipucu?: string };
+/* gorsel: sorunun sitedeki karşılığının ekran görüntüsü (public/teyit/…).
+   09.10.2026 · Burak: "gerekenlere görsel de koyabilirsin; sitede böyle
+   gözüküyor, bu okey mi gibisinden." */
+type Soru = { id: string; s: string; sik?: string[]; cok?: boolean; ipucu?: string; gorsel?: string };
 const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
   {
     ad: "Fiyat",
@@ -30,6 +33,7 @@ const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
       { id: "f-uk", s: "İngiltere için teklif belgesi gelecek mi? Sitede Basic 900, Gold 1.500, Platinium 2.600 dolar yazıyor.", sik: ["Rakamlar doğru, kalsın", "Belge göndereceğim", "Paket yok, tek fiyat", "Fiyat yazmayalım"], ipucu: "Dolar mı sterlin mi, onu da yazın." },
       { id: "f-ukmuh", s: "İngiltere muhasebe ücretini sitede nasıl yazalım?", sik: ["Yıllık sabit tutar", "Aylık tutar", "Fiyat yazmayalım"], ipucu: "Tutarı biliyorsanız yazın." },
       { id: "f-kharc", s: "KKTC'de başvuru harcı (2.000 USD) ve tescil harcı (2.500 USD) 9.920 €'nun içinde mi?", sik: ["İçinde", "Ayrıca ödeniyor", "Bu harçlar yok"] },
+      { id: "f-kharc2", s: "KKTC başvuru harcı sitede 2.000 USD yazıyor; Serbest Liman'ın resmî sayfasında 200 USD geçiyor. Hangisi doğru?", sik: ["2.000 USD", "200 USD", "Başka, aşağıya yazıyorum"] },
       { id: "f-kdenetci", s: "KKTC'de denetçi raporu 270 € / 900 € ücrete dahil mi?", sik: ["Dahil", "Ayrı ücret", "Denetçi raporu gerekmiyor"] },
     ],
   },
@@ -65,9 +69,21 @@ const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
       { id: "s-gelisme", s: "\"Gelişmeler\" sayfasına yazmamızı istediğiniz son dönem değişiklikleri var mı?", ipucu: "Dubai, KKTC ya da İngiltere'de müşteriyi etkileyen 3-5 değişiklik: ne, hangi tarihte." },
     ],
   },
+  {
+    ad: "Yeni sayfalar · sitede böyle görünüyor",
+    sorular: [
+      { id: "y-vergi", gorsel: "/teyit/vergi-kapsam.jpg", s: "Vergi danışmanlığı sayfasında \"ne yapıyoruz\" ve \"dışında kalanlar\" listesi doğru mu?", sik: ["Doğru", "Düzeltme var, aşağıya yazıyorum"], ipucu: "Çıkarılacak ya da eklenecek madde varsa yazın." },
+      { id: "y-ceza", gorsel: "/teyit/vergi-ceza.jpg", s: "Dubai'de geç beyan cezası: ilk 12 ay ayda 500 AED, sonra ayda 1.000 AED yazdık. Güncel mi?", sik: ["Güncel", "Değişti, aşağıya yazıyorum", "Ceza rakamı yazmayalım"] },
+      { id: "y-ktakvim", gorsel: "/teyit/kktc-takvim.jpg", s: "KKTC vergi takvimi (nisan beyanname, mayıs ve ekim ödeme) Serbest Liman şirketi için de geçerli mi?", sik: ["Geçerli", "Serbest Liman şirketinde farklı, aşağıya yazıyorum"] },
+      { id: "y-kurumsal", gorsel: "/teyit/kurumsal-kapsam.jpg", s: "Kurumsal danışmanlık sayfasında üstlendiğimiz işler doğru mu?", sik: ["Doğru", "Düzeltme var, aşağıya yazıyorum"], ipucu: "Pay devri, yönetici değişikliği, faaliyet ekleme, şirket kapatma gibi işleri yapıyor muyuz?" },
+      { id: "y-aml", gorsel: "/teyit/aml-kapsam.jpg", s: "AML ve uyum sayfasında üstlendiğimiz işler doğru mu?", sik: ["Doğru", "Düzeltme var, aşağıya yazıyorum"], ipucu: "Risk değerlendirmesi ve iç politika metni yazıyor muyuz?" },
+      { id: "y-ulke", s: "Kurumsal danışmanlık ve AML hizmetini hangi ülkelerde veriyoruz?", cok: true, sik: ["Dubai", "İngiltere", "KKTC"] },
+      { id: "y-eori", s: "Müşteriler için EORI numarası başvurusu yapıyor muyuz?", sik: ["Evet", "Hayır"] },
+    ],
+  },
 ];
 
-const ANAHTAR = "ortac-teyit-sorular-v4";
+const ANAHTAR = "ortac-teyit-sorular-v5";
 type Cevap = { sec: string[]; yazi: string };
 const BOS: Cevap = { sec: [], yazi: "" };
 
@@ -155,6 +171,12 @@ export default function TeyitSorular() {
                         {q.cok && <em> Birden fazla seçebilirsiniz.</em>}
                       </span>
                     </p>
+                    {q.gorsel && (
+                      <a className="tsr-gorsel" href={q.gorsel} target="_blank" rel="noopener noreferrer">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={q.gorsel} alt="Sitedeki görünüm" loading="lazy" />
+                      </a>
+                    )}
                     {q.sik && (
                       <div className="tsr-sik" role="group" aria-label={q.s}>
                         {q.sik.map((s) => {

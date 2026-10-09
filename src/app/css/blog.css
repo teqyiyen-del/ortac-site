@@ -988,3 +988,97 @@
     font-size: 16px;
   }
 }
+
+/* ============================================================================
+   09.10.2026 · YAZI SAYFASI ÜÇÜNCÜ TUR (Burak)
+   · içindekiler masaüstünde geniş (240 → 320): "çok sıkıştırmana gerek yok"
+   · kapanış: "çok yazı" · tek başlık ve düğme; çıkış kartlarında yalnız ad
+   · diğer yazılar: kapaklı, kısa kart
+   · yazar kartı
+   ========================================================================== */
+@media (min-width: 1024px) {
+  .bp-wrap {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 56px;
+  }
+}
+.bp-toc {
+  padding: 24px;
+}
+.bp-toc a {
+  font-size: 15px;
+}
+.bp-exit {
+  align-items: center;
+}
+.bp-exit-btn {
+  margin-top: 24px;
+}
+.bp-link {
+  padding-block: 16px;
+}
+.bp-more-c {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.bp-more-g {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.bp-more-c > :is(.bp-more-k, .bp-more-t, .bp-more-s) {
+  margin-inline: 20px;
+}
+.bp-more-k {
+  margin-top: 18px;
+}
+.bp-more-t {
+  margin-top: 6px;
+}
+.bp-more-s {
+  margin-top: 6px;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.bp-yazar {
+  display: flex;
+  gap: 16px;
+  margin-top: 40px;
+  padding: 24px;
+  border-radius: var(--r-lg);
+  background: var(--paper);
+}
+.bp-yazar-h {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--blue-700);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+}
+.bp-yazar-k {
+  font-size: 14px;
+  color: var(--text-600);
+}
+.bp-yazar-a {
+  margin-top: 2px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.bp-yazar-s {
+  margin: 6px 0 10px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-600);
+}

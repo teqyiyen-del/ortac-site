@@ -833,78 +833,184 @@
   color: var(--amber-700, #8a5200);
 }
 
-/* ====================================================== UYULMAZSA · GECE
-   Sayfanın tek koyu yüzeyi: bölüm açık zeminde, siyah yoğunluk tek büyük
-   kartta (globals.css · .gece-kart notu). Dış kart 28, iç karolar 18.
-   Karolar 1 → 2 (720) → 4 (1100). İkon amber (risk); koyu zeminde koyu
-   amber kuyu + açık amber ikon. Parıltı yok. */
-.sam-gece {
-  margin-top: var(--space-head);
-  padding: 20px;
-  border-radius: var(--r-panel);
-  background: var(--night);
-}
-@media (min-width: 720px) {
-  .sam-gece {
-    padding: 28px;
-  }
-}
-.sam-gece-l {
+/* ============================================================ UYULMAZSA
+   İlk yazımda sayfanın tek gece kartıydı. 09.10.2026'da AÇIK karta döndü:
+   Burak koyu kartı uyum döngüsünde istedi ("Mesela AML'de 'uyum yıl içinde
+   nasıl dönüyor' kısmını siyah yapabilirsin") ve döngü bu bölümün hemen
+   üstünde; ikisi birden koyu kalsa art arda iki gece kart olurdu. Risk
+   anlamı ikonun amber kuyusunda duruyor (renk kuralı: amber şart ve risk).
+   Karolar 1 → 2 (720) → 4 (1100); kart 18, beyaz + 1 px çerçeve. */
+.sam-son {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
-  margin: 0;
+  margin: var(--space-head) 0 0;
   padding: 0;
   list-style: none;
 }
 @media (min-width: 720px) {
-  .sam-gece-l {
+  .sam-son {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (min-width: 1100px) {
-  .sam-gece-l {
+  .sam-son {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
-.sam-gece-l > li {
+.sam-son > li {
   display: flex;
   min-width: 0;
 }
-.sam-gece-k {
+.sam-son-k {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   min-width: 0;
   padding: 20px;
-  border: 1px solid var(--night-line);
+  border: 1px solid var(--border);
   border-radius: var(--r-lg);
-  background: var(--night-2);
+  background: var(--white);
 }
-.sam-gece-ic {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--r-md);
-  background: #33260d;
-  color: #f0b44c;
-}
-.sam-gece-k > b {
+.sam-son-k > b {
   margin-top: 16px;
   font-size: 16px;
   font-weight: 600;
   line-height: 1.35;
-  color: #ffffff;
+  color: var(--text-900);
 }
-.sam-gece-k > p {
+.sam-son-k > p {
   margin: 8px 0 0;
   font-size: 14px;
   line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ============================================================ GECE KARTLAR
+   09.10.2026 · Burak: "Şu an çok beyaz akıyor sayfa. Arka planı siyah
+   yapmıyoruz artık ama bazı yerlerini, kartları siyah yapıyoruz ya. Bir tane
+   yer yapmışsın, o da çok göze çarpmıyor, yeterli değil ... İki beyaz bir
+   siyah gibi düşün. Mesela AML'de 'uyum yıl içinde nasıl dönüyor' kısmını
+   siyah yapabilirsin."
+
+   ÜÇ GECE KART: kapsam (2) · uyum döngüsü (6) · ilgili hizmetler (8).
+   Aralarında üç ve bir açık bölüm; art arda iki koyu kart yok. Bölüm
+   ZEMİNLERİ yerinde (beyaz / kırık beyaz): koyu olan içerideki 28 köşeli
+   pano, içindeki kartlar --night-2 + --night-line (18). Elenenler: tarama
+   akışı (5) ve "uyulmazsa" (7) döngüyle art arda; zincir (4) seçilse 2-4-6
+   bir açık bir koyu olurdu.
+
+   KOYU ZEMİNDE RENK (pano #080808, kart #111): başlık beyaz 18,9:1 · cümle
+   --night-text 10:1 üstü · mavi #9cc6f8 10,5:1 · amber #f0b44c 10:1 üstü.
+   Marka mavisi küçük öğede koyu zeminde zayıf, o yüzden kuyular koyu mavi
+   zemin (#10294a) + açık mavi ikon; amber kuyu #33260d + #f0b44c. Halkada
+   dilim açık mavi (--blue-500) / açık amber, numara koyu (7:1 üstü).
+   Parıltı, ışık, gölge yok. İç boşluk telefonda 20, 720'den sonra 28. */
+.sam-kap,
+.sam-don-kart,
+.sam-ilg {
+  padding: 20px;
+  border-radius: var(--r-panel);
+  background: var(--night);
+}
+@media (min-width: 720px) {
+  .sam-kap,
+  .sam-don-kart,
+  .sam-ilg {
+    padding: 28px;
+  }
+}
+:is(.sam-kap, .sam-don-kart, .sam-ilg) .sam-ic {
+  background: #10294a;
+  color: #9cc6f8;
+}
+:is(.sam-kap, .sam-don-kart, .sam-ilg) .sam-ic[data-ton="amber"] {
+  background: #33260d;
+  color: #f0b44c;
+}
+
+/* kapsam: iki kart */
+.sam-kap .sam-kap-k {
+  border-color: var(--night-line);
+  background: var(--night-2);
+}
+.sam-kap .sam-kap-t {
+  color: var(--white);
+}
+.sam-kap .sam-kap-l > li {
   color: var(--night-text);
+}
+.sam-kap .sam-kap-i {
+  background: #10294a;
+  color: #9cc6f8;
+}
+.sam-kap .sam-kap-i[data-ton="amber"] {
+  background: #33260d;
+  color: #f0b44c;
+}
+
+/* uyum döngüsü: halka ve dört satır tek gece kartta. Halkanın kendi panosu
+   yok (zemin kartın zemini); satırlar --night-2. */
+@media (min-width: 1024px) {
+  .sam-don-kart {
+    align-items: center;
+    gap: 28px;
+    padding: 40px;
+  }
+}
+.sam-don-kart > .sam-sahne {
+  min-height: 0;
+  padding: 12px 0;
+  border: 0;
+  background: none;
+}
+.sam-don-kart .sam-mad-s {
+  border-color: var(--night-line);
+  background: var(--night-2);
+}
+.sam-don-kart .sam-mad-t {
+  color: var(--white);
+}
+.sam-don-kart .sam-mad-p {
+  color: var(--night-text);
+}
+.sam-don-kart .sam-no {
+  background: var(--blue-500);
+  color: var(--night);
+}
+.sam-don-kart .sam-no[data-ton="amber"] {
+  background: #f0b44c;
+}
+.sam-don-kart .sam-zaman {
+  background: rgba(92, 158, 235, 0.16);
+  color: #b9d6f8;
+}
+.sam-don-kart .sam-zaman[data-ton="amber"] {
+  background: rgba(240, 180, 76, 0.16);
+  color: #f5c56e;
+}
+.sam-don-kart .sam-don-dilim {
+  stroke: var(--blue-500);
+}
+.sam-don-kart .sam-don-dilim[data-ton="amber"] {
+  stroke: #f0b44c;
+}
+.sam-don-kart .sam-don-no {
+  fill: var(--night);
+}
+.sam-don-kart .sam-don-el > circle {
+  fill: var(--white);
+  stroke: var(--night);
+}
+.sam-don-kart .sam-don-ik {
+  color: #9cc6f8;
+}
+.sam-don-kart .sam-don-orta {
+  fill: var(--white);
 }
 
 /* ======================================================= İLGİLİ HİZMETLER
+   GECE PANODA (09.10.2026; pano ve gerekçe yukarıda · GECE KARTLAR).
    Dört bağlantı kartı; 1 → 2 (720) → 4 (1100). Dar ve orta ekranda satır
    (ikon · ad ve cümle · ok), dört sütunda dikey kart. Yayında olmayan adres
    SmartLink'ten <span data-soon> olarak çıkıyor; sönüklüğü globals.css
@@ -914,7 +1020,7 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   margin: var(--space-head) 0 0;
-  padding: 0;
+  /* iç boşluk gece panodan (yukarıda · GECE KARTLAR); burada sıfırlanmıyor */
   list-style: none;
 }
 @media (min-width: 720px) {
@@ -947,10 +1053,10 @@
   column-gap: 16px;
   min-width: 0;
   padding: 20px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--night-line);
   border-radius: var(--r-lg);
-  background: var(--white);
-  color: var(--text-900);
+  background: var(--night-2);
+  color: var(--white);
   text-decoration: none;
   transition: border-color 160ms linear;
 }
@@ -968,11 +1074,11 @@
   margin-top: 4px;
   font-size: 14px;
   line-height: 1.5;
-  color: var(--text-600);
+  color: var(--night-text);
 }
 .sam-ilg-ok {
   grid-area: ok;
-  color: var(--text-600);
+  color: var(--night-text);
   transition: transform 200ms var(--ease-out-quint);
 }
 @media (min-width: 1100px) {
@@ -983,6 +1089,9 @@
       "b b b"
       "p p p";
     align-items: start;
+    /* satırlar karta yayılmasın: tek satırlık cümlede ad aşağı kayıyordu
+       (1440'ta görüldü, 09.10.2026) */
+    align-content: start;
   }
   .sam-ilg-k > b {
     margin-top: 16px;
@@ -990,11 +1099,11 @@
 }
 @media (hover: hover) {
   a.sam-ilg-k:hover {
-    border-color: var(--chart-blue);
+    border-color: var(--blue-500);
   }
   a.sam-ilg-k:hover .sam-ilg-ok {
     transform: translateX(3px);
-    color: var(--blue-700);
+    color: #9cc6f8;
   }
 }
 

@@ -30,6 +30,19 @@ export const POST_PHOTO = {
   corpTax: U("1554224155-6726b3ff858f", 900), // masada vergi formları, hesap makinesi ve kalem
   bank: U("1601597111158-2fceff292cdc", 900), // ATM tuş takımında şifre giren el; banka salonu değil
   visa: U("1544620347-c4fd4a3d5957", 900), // KULLANILMIYOR — kare kaymıştı (bkz. TEAM_PHOTO notu)
+  /* 09.10.2026 · blog yazıları için yeni kareler. Burak: "fotoğraflar tekrar
+     ediyor; Unsplash'e gir seç, yenisini ÜRETME." Hepsi Unsplash aramasından
+     seçildi ve küçük hâlleri tek tek gözle doğrulandı (yanındaki not görülen
+     şeydir). */
+  dubaiMarina: U("1611577810610-642f8ac05c32", 900), // denizden Dubai Marina kuleleri, gün batımı ışığı
+  dubaiMerkez: U("1617449512807-7401d38e5c29", 900), // Downtown Dubai: gölet, yürüyen insanlar, arkada kuleler
+  dubaiHor: U("1598343530164-8f8922e123ba", 900), // Dubai Hor'unda (Creek) ahşap yük tekneleri
+  girneLiman: U("1664075919566-5807a9fc567c", 900), // havadan Girne Limanı ve kalesi
+  lefkosa: U("1689477602442-8c8a3e785143", 900), // Lefkoşa'da Selimiye Camii, minarede bayraklar
+  londraEvler: U("1512359953714-f0c9a632ab85", 900), // Londra'da renkli sıra evler
+  londraSokak: U("1729897671630-b335eca8045f", 900), // Londra'da pastel sıra evli sokak, yürüyen biri
+  konteyner: U("1578575437130-527eed3abbec", 900), // limanda vinçlerin altında konteyner gemisi
+  kafe: U("1518473537958-1d1b23cac484", 900), // kafede tezgâh arkasında çalışan iki kişi
 } as const;
 
 /**

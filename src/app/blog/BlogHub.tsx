@@ -293,7 +293,10 @@ function noteFor(view: HubView): string {
     named ? label : "",
     list.length > 0 ? `${list.length} ${unit}` : `Bu listede ${unit} yok`,
     seeds > 0 ? `${seeds} tanesi örnek kayıt` : "",
-    list.length > 0 ? "bağlantılar şimdilik demo sayfasına iniyor" : "",
+    /* 09.10.2026 · "bağlantılar şimdilik demo sayfasına iniyor" notu kalktı:
+       örnek yazılar kapatıldı, her satır kendi yazısına gidiyor. Örnek kayıt
+       yeniden açılırsa not yalnız o zaman basılır. */
+    seeds > 0 ? "örnek kayıtların bağlantısı demo sayfasına iniyor" : "",
   ]
     .filter(Boolean)
     .join(" · ");

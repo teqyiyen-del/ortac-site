@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight, ArrowUpRight, Info, Quote, TriangleAlert } from "lucide-react";
+import { ArrowRight, Info, Quote, TriangleAlert } from "lucide-react";
 import Nav from "@/components/Nav";
 import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
@@ -642,6 +642,32 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                     />
                   ))}
 
+                  {/* YAZAR KARTI (09.10.2026 · Burak: "belki yazar kartı
+                      ekleyebilirsin"). Yalnız kişi adıyla yazılmış yazılarda.
+                      Metin sitede doğrulanmış bilgiden (lib/about: yönetici
+                      ortak, Certified Accountant; firma 1996'dan beri). Fotoğraf yok: elimizde
+                      gerçek bir portre yok, stok yüz konmuyor. */}
+                  {post.author !== "Ortac Global" && (
+                    <aside className="bp-yazar" aria-label="Yazar">
+                      <span className="bp-yazar-h" aria-hidden="true">
+                        {post.author
+                          .split(" ")
+                          .map((x) => x[0])
+                          .join("")}
+                      </span>
+                      <div>
+                        <p className="bp-yazar-k">Yazar</p>
+                        <p className="bp-yazar-a">{post.author}</p>
+                        <p className="bp-yazar-s">
+                          Ortac Global yönetici ortağı, Certified Accountant. Ortac Global 1996&apos;dan beri
+                          muhasebe, vergi ve şirket kuruluşu alanında çalışıyor.
+                        </p>
+                        <SmartLink href="/hakkimizda" className="bp-a">
+                          Ortac Global hakkında
+                        </SmartLink>
+                      </div>
+                    </aside>
+                  )}
                   <p className="bp-source">{post.sourceNote}</p>
                   <p className="bp-footnote">{post.footnote}</p>
                 </div>
@@ -681,7 +707,6 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             <div className="bp-exit">
               <FadeUp className="bp-exit-l">
                 <h2 className="bp-exit-h">{post.closing.title}</h2>
-                <p className="bp-exit-p">{post.closing.line}</p>
                 <SmartLink href="/iletisim" className="btn btn-solid bp-exit-btn">
                   {post.closing.cta}
                   <ArrowRight size={16} strokeWidth={2.1} aria-hidden="true" />
@@ -695,7 +720,6 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                     <SmartLink key={l.href} href={l.href} className="bp-link">
                       <span>
                         <b>{l.label}</b>
-                        <i>{l.line}</i>
                       </span>
                       <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
                     </SmartLink>
@@ -715,29 +739,17 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             <div className="container-o">
               <h2 className="bp-more-h">Diğer yazılar</h2>
               <div className="bp-more">
-                {others.map((o, i) => (
+                {others.slice(0, 3).map((o, i) => (
                   <FadeUp key={o.slug} delay={0.1 + i * 0.06}>
+                    {/* 09.10.2026 · Burak: "diğer yazılarda görsel koy; bu kadar
+                        uzun gösterme, başlığı ve açıklaması olsun." Kapak üstte,
+                        altında kategori, başlık ve tek cümle; tarih ve ok kalktı. */}
                     <SmartLink href={demoHref(o)} className="bp-more-c">
-                      {/* İşaret kategori satırının İÇİNDE, ayrı bir satır
-                          değil: .bp-more-c bir sütun flex kabı ve doğrudan
-                          çocuk olarak konsaydı rozet kart genişliğine
-                          gerilirdi. Araya düz boşluk konuyor — .bp-more-k'nin
-                          kendi kuralına dokunmadan (blog.css başka bir elden
-                          yürüyor). */}
-                      <span className="bp-more-k">
-                        {o.placeholder && (
-                          <>
-                            <span className="bh-seed">Örnek</span>{" "}
-                          </>
-                        )}
-                        {CATEGORY[o.category].label}
-                      </span>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img className="bp-more-g" src={o.cover} alt="" loading="lazy" width={450} height={253} />
+                      <span className="bp-more-k">{CATEGORY[o.category].label}</span>
                       <b className="bp-more-t">{o.title}</b>
                       <i className="bp-more-s">{o.summary}</i>
-                      <span className="bp-more-f">
-                        <time dateTime={o.publishedAt}>{formatDate(o.publishedAt)}</time>
-                        <ArrowUpRight size={15} strokeWidth={2.1} aria-hidden="true" />
-                      </span>
                     </SmartLink>
                   </FadeUp>
                 ))}

@@ -55,13 +55,19 @@ import type { VergiGorsel, VergiIkon, VergiIsaret, VergiVeri } from "@/lib/vergi
    DURAKLAR (zemin beyaz ve kırık beyaz sırayla; tam siyah BÖLÜM yok)
      giriş      foto giriş (PageHero · art dalı), tek düğme: İletişime geçin
      çerçeve    oranlar ve eşikler: ülkeye özgü çizim + dört rakam kartı
+                (rakam kartları GECE panoda)
      kapsam     bu hizmette yaptığımız altı iş + dışında kalanlar
      takvim     yıl halkası (12 ay, işaretli aylar) + dört süre kartı
-     türkiye    vergi nerede çıkıyor: sayfanın TEK gece kartı, üç durak
+     türkiye    vergi nerede çıkıyor: GECE kart, üç durak
      hatalar    altı hata kartı (+ resmî rakamı olan ülkede ceza merdiveni)
      süreç      dört adım; üstte sırayla dolan çubuk ve sayı
-     ilgili     muhasebe, banka, kuruluş sayfalarına bağ
+     ilgili     muhasebe, banka, kuruluş sayfalarına bağ (GECE pano)
      SSS · kapanış
+
+   09.10.2026 · ÜÇ GECE KART (çerçeve, Türkiye, ilgili). İlk yazımda yalnız
+   Türkiye kartı koyuydu. Burak: "Şu an çok beyaz akıyor sayfa ... Bir tane
+   yer yapmışsın, o da çok göze çarpmıyor, yeterli değil ... İki beyaz bir
+   siyah gibi düşün." Zeminler aynı; işin tamamı svc-vergi.css'te.
 
    ÇİZİMLER (hepsi aria-hidden; iddia başlıkta, cümlede ve kartlarda)
      · çerçeve: Dubai kaydırıcılı eşik çubuğu (VergiHesap), İngiltere oran
@@ -403,7 +409,7 @@ export default function VergiSayfa({ veri: V }: { veri: VergiVeri }) {
         </section>
 
         {/* ------------------------------------ TÜRKİYE'DE YAŞIYORSANIZ
-            Sayfanın tek gece kartı. Üç durak; aralarındaki bağda para yol
+            Gece kart. Üç durak; aralarındaki bağda para yol
             alıyor, iki alternatif arasında ok yerine "ya da". Şartlar açılır
             kutuda (hafıza: sayfaya not düşme). */}
         <section id={Y.id} className="sec-pad svr-kirik">

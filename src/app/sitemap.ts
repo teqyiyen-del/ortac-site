@@ -74,7 +74,10 @@ const HARITA_DISI = new Map<string, string>([
 function noindexYazi(path: string): boolean {
   const m = path.match(/^\/blog\/([^/]+)$/);
   if (!m) return false;
-  return Boolean(postFor(m[1])?.placeholder);
+  /* kaydı olmayan adres de haritaya girmez (örnek yazılar 09.10.2026'da
+     kapatıldı; adresleri defterde demo hedefi olarak duruyor olabilir) */
+  const yazi = postFor(m[1]);
+  return !yazi || Boolean(yazi.placeholder);
 }
 
 /* Yayımlanmış yazısı olmayan blog kategorisi (yalnız örnek yazı taşıyor):

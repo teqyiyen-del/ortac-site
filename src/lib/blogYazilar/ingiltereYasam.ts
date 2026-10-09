@@ -51,7 +51,7 @@ export const POST_UK_YASAM: BlogPost = {
   country: "ingiltere",
   tags: ["İngiltere", "Vize", "Yaşam maliyeti"],
   author: "Murat Ortaç",
-  cover: POST_PHOTO.ukTax,
+  cover: POST_PHOTO.londraEvler,
 
   seo: {
     title: "İngiltere'de Yaşam 2026: Vize, İş İmkanları, Maliyetler",

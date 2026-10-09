@@ -53,7 +53,7 @@ export const POST_EORI: BlogPost = {
   topic: "Gümrük ve dış ticaret",
   tags: ["EORI", "Gümrük", "E-ticaret"],
   author: "Murat Ortaç",
-  cover: POST_PHOTO.corpTax,
+  cover: POST_PHOTO.konteyner,
 
   seo: {
     title: "EORI Numarası Nedir, Nasıl Alınır? EORI Sorgulama 2026",

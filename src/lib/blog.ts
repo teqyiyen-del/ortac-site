@@ -1443,7 +1443,14 @@ const SEED_POSTS: BlogPost[] = [
  */
 /* 09.10.2026 · eski siteden taşınan yazılar ayrı dosyalarda (lib/blog/yazilar):
    bu dosya 1.600 satırı geçti ve her yazı kendi kaynak notuyla duruyor. */
-export const BLOG_POSTS: BlogPost[] = [POST_DUBAI_MALIYET, ...TASINAN_YAZILAR, ...SEED_POSTS];
+/* ÖRNEK YAZILAR KAPALI (09.10.2026 · Burak: "aktif olmayan blogları kapat;
+   belki sonra yazarız, fikir olarak dursun"). SEED_POSTS (on dört yer tutucu)
+   artık hiçbir listede ve adreste yok; kayıtlar silinmedi, başlıkları
+   docs/blog-fikirleri.md'de yazılacaklar listesinde. Geri açmak: aşağıya
+   ...SEED_POSTS eklemek. */
+export const BLOG_POSTS: BlogPost[] = [POST_DUBAI_MALIYET, ...TASINAN_YAZILAR];
+/** kapalı yer tutucular; yazı fikri olarak duruyor */
+export const BLOG_FIKIRLERI: BlogPost[] = SEED_POSTS;
 
 /* ---------------------------------------------------------------- yardımcı */
 

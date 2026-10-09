@@ -112,12 +112,26 @@
   margin-top: 0;
 }
 
+/* 09.10.2026 · RAKAM KARTLARI GECE PANODA. Burak: "Şu an çok beyaz akıyor
+   sayfa. Arka planı siyah yapmıyoruz artık ama bazı yerlerini, kartları
+   siyah yapıyoruz ya. Bir tane yer yapmışsın, o da çok göze çarpmıyor,
+   yeterli değil ... Daha fazla yerde kullan. İki beyaz bir siyah gibi düşün."
+   Sayfanın ritmi: çerçeve (1) · Türkiye (4) · ilgili (7) koyu, aralarında
+   ikişer açık bölüm. Bölüm zeminleri yerinde; koyu olan 28 köşeli pano,
+   içindeki kartlar --night-2 + --night-line (18). Elenenler: yıl halkası (3)
+   ve hatalar (5), ikisi de Türkiye kartıyla art arda geliyordu. Soldaki
+   çizim açık kaldı (üç ülkede üç ayrı çizim; ikisi başka sayfalarla ortak).
+   Rakam renkleri Türkiye kartındakilerle aynı (#111 üstünde): mavi #9cc6f8
+   10,5:1 · yeşil #63d69d 10,6:1 · amber #f2b866 10,7:1; etiket beyaz, cümle
+   --night-text. İç boşluk her genişlikte 20. */
 .svr-oran {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 8px;
   margin: 0;
-  padding: 0;
+  padding: 20px;
+  border-radius: var(--r-panel);
+  background: var(--night);
   list-style: none;
 }
 @media (min-width: 720px) and (max-width: 1023.5px) {
@@ -140,32 +154,48 @@
   gap: 16px;
   min-width: 0;
   padding: 16px 20px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--night-line);
   border-radius: var(--r-lg);
-  background: var(--white);
+  background: var(--night-2);
 }
 .svr-oran-d {
   font-size: 26px;
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.03em;
-  color: var(--blue-700);
+  color: #9cc6f8;
 }
 .svr-oran-d[data-ton="yesil"] {
-  color: var(--green-700, #16704a);
+  color: #63d69d;
 }
 .svr-oran-d[data-ton="amber"] {
-  color: var(--amber-700, #8a5200);
+  color: #f2b866;
 }
-/* Telefonda sütun 96, rakam 22: yazıya 200 px kalıyor ve cümle iki satırda
-   bitiyor (116'da üç satıra iniyordu, 390'da görüldü). */
+/* Telefonda etiket solda, rakam sağda, cümle altta tam genişlikte (yazı
+   kutusu `display: contents` ile ızgaraya açılıyor). Önceki hâl rakam solda
+   96 px sütundaydı ve beyaz kartta yazıya 200 px kalıyordu; gece pano 20 px
+   iç boşluk ekleyince 158 px'e indi ve cümle üç satıra çıktı (390'da
+   görüldü, 09.10.2026; kural: açıklama en çok iki satır). */
 @media (max-width: 719.5px) {
   .svr-oran-k {
-    grid-template-columns: 96px minmax(0, 1fr);
-    gap: 14px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "e d"
+      "s s";
+    gap: 4px 14px;
+  }
+  .svr-oran-k > div {
+    display: contents;
   }
   .svr-oran-d {
+    grid-area: d;
     font-size: 22px;
+  }
+  .svr-oran-e {
+    grid-area: e;
+  }
+  .svr-oran-s {
+    grid-area: s;
   }
 }
 .svr-oran-e {
@@ -173,13 +203,13 @@
   font-size: 15px;
   font-weight: 600;
   line-height: 1.35;
-  color: var(--text-900);
+  color: var(--white);
 }
 .svr-oran-s {
   margin: 2px 0 0;
   font-size: 14px;
   line-height: 1.5;
-  color: var(--text-600);
+  color: var(--night-text);
 }
 
 /* ------------------------------------------------ çizim · eşik hesabı (Dubai)
@@ -782,8 +812,9 @@
 }
 
 /* ====================================================== TÜRKİYE · GECE KART
-   Sayfanın tek siyah yüzeyi (hafıza: tam siyah bölüm yok; siyah yalnız
-   büyük gece kartta). Üç durak yan yana, aralarında 64 px'lik bağ. Durak
+   İlk yazımda sayfanın tek siyah yüzeyiydi; 09.10.2026'da çerçevenin rakam
+   panosu ve ilgili hizmetler de geceye döndü (gerekçe .svr-oran'ın başında).
+   Tam siyah bölüm yok; siyah yalnız büyük gece kartta. Üç durak yan yana, aralarında 64 px'lik bağ. Durak
    kartlarının eşit genişlikte kalması için ilk iki öğenin tabanı 64 px
    (bağın payı), sonuncununki 0; üçü de eşit büyüyor.
    Kontrast (zemin #111): beyaz 18,9:1 · --night-text 10:1 üstü · yeşil
@@ -1226,19 +1257,30 @@
 }
 
 /* ====================================================== İLGİLİ HİZMETLER
-   Kartın tamamı bağlantı: 1 → 2 (720) → 3 ya da 4 (1024, kart sayısına göre). */
+   Kartın tamamı bağlantı: 1 → 2 (720) → 3 ya da 4 (1024, kart sayısına göre).
+   09.10.2026 · GECE PANO (sayfanın üçüncü koyu yüzeyi; gerekçe .svr-oran'ın
+   başında). Liste 28 köşeli gece kartın içinde, kartlar --night-2. İç boşluk
+   telefonda 20, 720'den sonra 28. Ad beyaz, cümle --night-text, kuyu #10294a
+   + #9cc6f8 (Türkiye kartındaki .svr-yol-ic ile aynı), ok --night-text. */
 .svr-ilg {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   margin: var(--space-head) 0 0;
-  padding: 0;
+  padding: 20px;
+  border-radius: var(--r-panel);
+  background: var(--night);
   list-style: none;
 }
 @media (min-width: 720px) {
   .svr-ilg {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 28px;
   }
+}
+.svr-ilg .svr-ic {
+  background: #10294a;
+  color: #9cc6f8;
 }
 @media (min-width: 1024px) {
   .svr-ilg {
@@ -1260,10 +1302,10 @@
   flex-direction: column;
   min-width: 0;
   padding: 20px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--night-line);
   border-radius: var(--r-lg);
-  background: var(--white);
-  color: inherit;
+  background: var(--night-2);
+  color: var(--white);
   text-decoration: none;
   transition: border-color 200ms var(--ease-out-soft);
 }
@@ -1273,7 +1315,7 @@
   justify-content: space-between;
 }
 .svr-ilg-ok {
-  color: #a3a3a3;
+  color: var(--night-text);
   transition:
     color 200ms var(--ease-out-soft),
     transform 200ms var(--ease-out-soft);
@@ -1284,25 +1326,25 @@
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.015em;
-  color: var(--text-900);
+  color: var(--white);
 }
 .svr-ilg-s {
   margin-top: 6px;
   font-size: 14px;
   line-height: 1.55;
-  color: var(--text-600);
+  color: var(--night-text);
 }
 a.svr-ilg-k:hover,
 a.svr-ilg-k:focus-visible {
-  border-color: var(--blue-700);
+  border-color: var(--blue-500);
 }
 a.svr-ilg-k:hover .svr-ilg-ok,
 a.svr-ilg-k:focus-visible .svr-ilg-ok {
-  color: var(--blue-700);
+  color: #9cc6f8;
   transform: translate(2px, -2px);
 }
 a.svr-ilg-k:focus-visible {
-  outline: 2px solid var(--blue-700);
+  outline: 2px solid var(--blue-500);
   outline-offset: 2px;
 }
 

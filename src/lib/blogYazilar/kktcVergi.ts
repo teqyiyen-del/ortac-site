@@ -55,7 +55,7 @@ export const POST_KKTC_VERGI: BlogPost = {
   country: "kktc",
   tags: ["KKTC", "Vergi", "Serbest Liman"],
   author: "Murat Ortaç",
-  cover: POST_PHOTO.kktc,
+  cover: POST_PHOTO.lefkosa,
 
   seo: {
     title: "Kıbrıs'ta Şirket Kurmanın Avantajları: KKTC Vergileri 2026",

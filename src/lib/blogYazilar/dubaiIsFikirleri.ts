@@ -58,7 +58,7 @@ export const POST_DUBAI_IS_FIKIRLERI: BlogPost = {
   country: "dubai",
   tags: ["Dubai", "İş fikirleri", "Şirket kuruluşu"],
   author: "Murat Ortaç",
-  cover: POST_PHOTO.dubaiCost,
+  cover: POST_PHOTO.dubaiMerkez,
 
   seo: {
     title: "Dubai'de Ne İş Yapılır? 2026 İş Fikirleri ve İmkanları",
