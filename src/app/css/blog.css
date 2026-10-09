@@ -750,3 +750,116 @@
     transition: none;
   }
 }
+
+/* ============================================================================
+   09.10.2026 · YENİ GÖVDE BLOKLARI (lib/blog.ts · ozet, tablo, sss) ve metin
+   içi bağlantı. Eski siteden taşınan yazılar için; SEO/GEO rehberindeki yazı
+   iskeletinin karşılığı.
+   ========================================================================== */
+.bp-a {
+  color: var(--blue-900);
+  text-decoration: underline;
+  text-decoration-color: var(--blue-500);
+  text-underline-offset: 3px;
+}
+.bp-a:hover {
+  text-decoration-color: currentColor;
+}
+.bp-ozet {
+  margin-top: 24px;
+  padding: 20px 24px;
+  border-radius: var(--r-lg);
+  background: var(--blue-100);
+}
+.bp-ozet-h {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-900);
+}
+.bp-ozet ul {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+  padding-left: 20px;
+  list-style: disc;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-900);
+}
+.bp-tablo {
+  margin-top: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  overflow: hidden;
+}
+.bp-tablo table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  line-height: 1.45;
+  text-align: left;
+}
+.bp-tablo caption {
+  padding: 12px 16px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  color: var(--text-900);
+}
+.bp-tablo :is(th, td) {
+  padding: 12px 16px;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.bp-tablo thead th {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-600);
+  border-bottom: 1px solid var(--border);
+}
+.bp-tablo tbody tr + tr :is(th, td) {
+  border-top: 1px solid var(--border);
+}
+.bp-tablo tbody th {
+  font-weight: 600;
+  color: var(--text-900);
+}
+.bp-tablo tbody td {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-900);
+}
+.bp-tablo .bp-facts-foot {
+  border-top: 1px solid var(--border);
+}
+@media (max-width: 719.5px) {
+  .bp-tablo :is(th, td) {
+    padding: 10px 12px;
+  }
+  .bp-tablo table {
+    font-size: 14px;
+  }
+}
+.bp-sss {
+  display: grid;
+  gap: 8px;
+  margin-top: 24px;
+}
+.bp-sss .bp-details {
+  margin-top: 0;
+}
+.bp-sss-q {
+  flex: 1 1 auto;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.bp-sss-a {
+  padding: 0 16px 16px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-900);
+}

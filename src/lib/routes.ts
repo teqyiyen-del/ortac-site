@@ -7,6 +7,7 @@ import {
   CATEGORY_ORDER,
   categoryHref,
   DEMO_POST,
+  TASINAN_SLUGLAR,
 } from "@/lib/blogTemel";
 import { KV_ULKELER, kvHref } from "@/lib/tools/catalog";
 import { ALT_SLUGLAR, altHizmetHref } from "@/lib/muhasebeAltAdres";
@@ -382,6 +383,8 @@ for (const slug of ALT_SLUGLAR) LIVE.add(altHizmetHref(slug));
    açılıyor — yukarıdaki hizmet adreslerindeki kalıbın aynısı. Elle yazılsaydı
    slug bir gün değiştiğinde bağlantı sessizce sönerdi. */
 for (const slug of Object.values(DEMO_POST)) LIVE.add(blogHref(slug));
+/* 09.10.2026 · eski siteden taşınan gerçek yazılar */
+for (const slug of TASINAN_SLUGLAR) LIVE.add(blogHref(slug));
 
 /** Adres yayında mı? Site dışı bağlantılar (http, mailto, tel) her zaman açık. */
 export function isLive(href: string): boolean {

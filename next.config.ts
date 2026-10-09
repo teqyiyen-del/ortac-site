@@ -33,7 +33,9 @@ const FRAMER_ESKI: [string, string][] = [
   ["/ingilterede-yasam", "/blog/ingiltere-yasam-rehberi-is-imkanlari-vize-maliyetler"],
   ["/eori-numarasi", "/blog/eori-numarasi-nedir-nasil-alinir"],
   ["/etsy-nedir-etsyde-nasil-satis-yapilir", "/blog/etsy-nedir-nasil-satis-yapilir"],
-  ["/2025-ingiltere-asgari-ucret", "/blog/ingiltere-asgari-ucret-2025"],
+  /* asgari ücret yazısının adresinden yıl çıktı (lib/blogTemel · ukAsgariUcret) */
+  ["/2025-ingiltere-asgari-ucret", "/blog/ingiltere-asgari-ucret"],
+  ["/blog/ingiltere-asgari-ucret-2025", "/blog/ingiltere-asgari-ucret"],
 ];
 const framerEski = FRAMER_ESKI.flatMap(([source, hedef]) => {
   const destination = encodeURI(hedef);

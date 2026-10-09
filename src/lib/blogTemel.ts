@@ -107,6 +107,12 @@ export const SLUG = {
   /* yayınlanmış tek gerçek yazı */
   dubaiMaliyet: "dubaide-sirket-kurmanin-maliyet-kalemleri",
 
+  /* 09.10.2026 · eski siteden taşınan yazılar (lib/blogYazilar). Adresler
+     eski sitedekiyle AYNI (Google'daki sıra korunsun). Tek istisna asgari
+     ücret: adreste yıl vardı ("…-2025"), yıl başlığa taşındı ve eski adres
+     buraya yönleniyor (next.config.ts); yazı her yıl aynı adreste güncellenir. */
+  ukAsgariUcret: "ingiltere-asgari-ucret",
+
   /* yer tutucu · ülke rehberi DIŞINDAKİ dört kategori */
   bolgeSecimi: "serbest-bolge-mi-mainland-mi",
   kurulusSonrasi: "kurulustan-sonra-takvimde-ne-var",
@@ -174,6 +180,11 @@ export const blogHref = (slug: string) => `/blog/${slug}`;
    GERİ ALMA: yazılar yayına girdiğinde bu blok siliniyor, liste yüzeyleri
    `blogHref`e dönüyor ve routes.ts'teki döngünün yerini bütün slug'lar
    alıyor. Başka hiçbir yere dokunmak gerekmiyor. */
+/** Eski siteden taşınıp YAYIMLANAN yazıların slugları. lib/routes bu listeyi
+ *  yayındaki adreslere ekliyor (bağlantılar sönük çıkmasın, haritaya girsin).
+ *  Yeni yazı taşındığında slug'ı buraya da yazılır. */
+export const TASINAN_SLUGLAR: BlogSlug[] = [SLUG.ukAsgariUcret];
+
 export const DEMO_POST: Record<BlogCategory, BlogSlug> = {
   "ulke-rehberi": SLUG.dubaiRehber,
   "yapi-ve-ulke-secimi": SLUG.dubaiMaliyet,

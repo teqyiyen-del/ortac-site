@@ -143,10 +143,40 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
    tanımlı türlerin hepsi burada karşılanıyor — yeni bir tür eklenirse
    TypeScript bu switch'te eksik dal olduğunu söylüyor (dönüş tipi JSX,
    default dalı yok, `never` kontrolü aşağıda). */
+/* METİN İÇİ BAĞLANTI (09.10.2026). Gövde metinlerinde [yazı](/adres) biçimi
+   bağlantıya çevriliyor: site içi adres SmartLink (yayında olmayan adres
+   kendiliğinden sönük basılır), dış adres yeni sekmede. Başka biçimlendirme
+   yok; kalın, italik, başlık bu yoldan gelmez. */
+function Zengin({ text }: { text: string }) {
+  const parcalar = text.split(/(\[[^\]]+\]\([^)\s]+\))/g);
+  return (
+    <>
+      {parcalar.map((p, i) => {
+        const m = p.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/);
+        if (!m) return p;
+        const [, yazi, adres] = m;
+        return adres.startsWith("/") ? (
+          <SmartLink key={i} href={adres} className="bp-a">
+            {yazi}
+          </SmartLink>
+        ) : (
+          <a key={i} href={adres} className="bp-a" target="_blank" rel="noopener noreferrer">
+            {yazi}
+          </a>
+        );
+      })}
+    </>
+  );
+}
+
 function Block({ block }: { block: BlogBlock }) {
   switch (block.kind) {
     case "p":
-      return <p className="bp-p">{block.text}</p>;
+      return (
+        <p className="bp-p">
+          <Zengin text={block.text} />
+        </p>
+      );
 
     /* scroll-margin CSS'te: içindekilerden inen bağlantı başlığı sabit
        navigasyonun altına sokmasın diye. */
@@ -165,7 +195,9 @@ function Block({ block }: { block: BlogBlock }) {
       return (
         <Tag className="bp-list" data-ordered={block.ordered ? "true" : undefined}>
           {block.items.map((it) => (
-            <li key={it}>{it}</li>
+            <li key={it}>
+              <Zengin text={it} />
+            </li>
           ))}
         </Tag>
       );
@@ -250,8 +282,83 @@ function Block({ block }: { block: BlogBlock }) {
         </details>
       );
     }
+
+    /* "Kısaca": yazının cevabı ilk ekranda. Arama özeti ve yapay zeka
+       cevapları ilk paragrafları ağırlıklı okuyor (SEO rehberi · özet önce). */
+    case "ozet":
+      return (
+        <aside className="bp-ozet" aria-label="Kısaca">
+          <p className="bp-ozet-h">Kısaca</p>
+          <ul>
+            {block.items.map((it) => (
+              <li key={it}>
+                <Zengin text={it} />
+              </li>
+            ))}
+          </ul>
+        </aside>
+      );
+
+    /* Gerçek <table>: satır ve sütun ilişkisi ekran okuyucuya ve tarayıcıya
+       başlık hücreleriyle söyleniyor. Telefonda kap yana kaymıyor; hücreler
+       sarıyor (en çok dört sütun yazılır). */
+    case "tablo":
+      return (
+        <figure className="bp-tablo">
+          <table>
+            <caption>{block.caption}</caption>
+            <thead>
+              <tr>
+                {block.head.map((h) => (
+                  <th key={h} scope="col">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((r) => (
+                <tr key={r.join("|")}>
+                  {r.map((c, i) =>
+                    i === 0 ? (
+                      <th key={i} scope="row">
+                        {c}
+                      </th>
+                    ) : (
+                      <td key={i}>{c}</td>
+                    ),
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {block.foot && <p className="bp-facts-foot">{block.foot}</p>}
+        </figure>
+      );
+
+    /* Soru-cevap: native <details>, cevap HTML'de duruyor (kapalıyken de
+       dizine girer). Sayfadaki bütün sorular tek FAQPage yapılı verisinde. */
+    case "sss":
+      return (
+        <div className="bp-sss">
+          {block.items.map((x) => (
+            <details className="bp-details" key={x.q}>
+              <summary>
+                <h3 className="bp-sss-q">{x.q}</h3>
+                <span className="bp-details-x" aria-hidden="true" />
+              </summary>
+              <p className="bp-sss-a">
+                <Zengin text={x.a} />
+              </p>
+            </details>
+          ))}
+        </div>
+      );
   }
 }
+
+/** [yazı](/adres) işaretlerini düz metne çevirir (yapılı veri için) */
+const duzMetin = (t: string) => t.replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1");
 
 /* -------------------------------------------------------------------- sayfa */
 
@@ -310,6 +417,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
      YER TUTUCUDA Article DÜĞÜMÜ HİÇ BASILMIYOR: datePublished'ı olan bir
      Article, yazılmamış bir yazıyı yayınlanmış ilan etmek olurdu. Kırıntı
      kalıyor, çünkü sayfanın sitedeki yeri yer tutucuyken de doğru. */
+  const sssHepsi = post.body.flatMap((b) => (b.kind === "sss" ? b.items : []));
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -338,6 +446,20 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               keywords: post.tags.join(", "),
               timeRequired: `PT${minutes}M`,
             },
+            /* sayfadaki bütün soru-cevap blokları TEK FAQPage'de (rehber:
+               sayfada tek FAQPage, yalnız görünen sorular) */
+            ...(sssHepsi.length > 0
+              ? [
+                  {
+                    "@type": "FAQPage",
+                    mainEntity: sssHepsi.map((x) => ({
+                      "@type": "Question",
+                      name: x.q,
+                      acceptedAnswer: { "@type": "Answer", text: duzMetin(x.a) },
+                    })),
+                  },
+                ]
+              : []),
           ]),
     ],
   };

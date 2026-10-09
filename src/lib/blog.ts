@@ -7,6 +7,7 @@ import {
 } from "@/lib/afterSetup";
 import { COUNTRY_CONTENT } from "@/lib/countryContent";
 import { COUNTRY_PHOTO, GUIDE_PHOTO, POST_PHOTO } from "@/lib/media";
+import { TASINAN_YAZILAR } from "@/lib/blogYazilar";
 import {
   CATEGORY_ORDER,
   DEMO_POST,
@@ -389,7 +390,22 @@ export type BlogBlock =
    * listeleri gibi ikincil ayrıntı açıkken metin duvarı yapıyor, tıklamayla
    * açıldığında yazının akışını bozmuyor.
    */
-  | { kind: "details"; summary: string; items: string[] };
+  | { kind: "details"; summary: string; items: string[] }
+  /* 09.10.2026 · üç yeni blok, SEO/GEO rehberinin (yazı iskeleti: özet →
+     soru başlıklı bölümler → tablo → SSS) karşılığı. Eski siteden taşınan
+     yazılar bunlarla yazılıyor.
+       ozet  : yazının başında 2-4 maddelik "kısaca" kutusu (yapay zeka
+               cevapları ve arama özeti ilk paragrafları ağırlıklı okuyor)
+       tablo : gerçek <table>; karşılaştırma ve yıllara göre rakam için
+       sss   : soru-cevap; native <details>, cevap HTML'de duruyor. Sayfadaki
+               sss blokları tek FAQPage yapılı verisinde toplanıyor.
+     METİN İÇİ BAĞLANTI: p, list, ozet ve sss metinlerinde [yazı](/adres)
+     biçimi bağlantıya çevriliyor (app/blog/[slug] · Zengin). Site içi adres
+     SmartLink, dış adres yeni sekme. Her yazıya en az beş bağlam içi iç
+     bağlantı kuralı bunun için. */
+  | { kind: "ozet"; items: string[] }
+  | { kind: "tablo"; caption: string; head: string[]; rows: string[][]; foot?: string }
+  | { kind: "sss"; items: { q: string; a: string }[] };
 
 export type BlogPost = {
   /** SLUG kaydından; ayrılmış adreslerle çakışması tip düzeyinde engelli */
@@ -1421,7 +1437,9 @@ const SEED_POSTS: BlogPost[] = [
  * demekti ve müşteri o bölünmeyi reddetti. Ayrım artık kaydın kendi
  * alanında (`placeholder`), dizinin adında değil.
  */
-export const BLOG_POSTS: BlogPost[] = [POST_DUBAI_MALIYET, ...SEED_POSTS];
+/* 09.10.2026 · eski siteden taşınan yazılar ayrı dosyalarda (lib/blog/yazilar):
+   bu dosya 1.600 satırı geçti ve her yazı kendi kaynak notuyla duruyor. */
+export const BLOG_POSTS: BlogPost[] = [POST_DUBAI_MALIYET, ...TASINAN_YAZILAR, ...SEED_POSTS];
 
 /* ---------------------------------------------------------------- yardımcı */
 
@@ -1446,7 +1464,11 @@ export const LEGACY_GUIDES_HREF = "/blog/rehberler";
  * Liste yüzeylerinin bağladığı adres — `blogHref`in geçici yerine geçeni.
  * Yazının kendi adresini DEĞİL, kategorisinin demo sayfasını döndürüyor.
  */
-export const demoHref = (post: BlogPost): string => blogHref(DEMO_POST[post.category]);
+/* 09.10.2026 · gerçek (yer tutucu olmayan) yazı KENDİ sayfasına gider; yalnız
+   örnek kayıtlar kategorinin demo yazısına iniyor. Eskiden hepsi demoya
+   iniyordu çünkü gerçek yazı tekti. */
+export const demoHref = (post: BlogPost): string =>
+  post.placeholder ? blogHref(DEMO_POST[post.category]) : blogHref(post.slug);
 
 /**
  * Bir demo sayfasına HANGİ kategorilerin bağlandığı. Sayfa bunu okuyup
@@ -1594,6 +1616,15 @@ export function readingMinutes(post: BlogPost): number {
         break;
       case "details":
         chunks.push(b.summary, ...b.items);
+        break;
+      case "ozet":
+        chunks.push(...b.items);
+        break;
+      case "tablo":
+        chunks.push(b.caption, ...b.head, ...b.rows.flat(), b.foot ?? "");
+        break;
+      case "sss":
+        for (const x of b.items) chunks.push(x.q, x.a);
         break;
     }
   }
