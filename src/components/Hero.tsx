@@ -194,7 +194,7 @@ export default function Hero({ scene, partners = true }: HeroProps) {
                 değişti: (1) olgu yanlıştı — üç ülkede de kendi ofisimiz var,
                 (2) ana sayfa nötr alan, bir ülkeyi öne çıkarmıyor. Aynı kural
                 CTA'ya da uygulandı (Footer.tsx · FT2_POINTS). */}
-            Üç ülkede kendi ofislerimizden, Türkçe ve İngilizce yürütülür.
+            Üç ülkede kendi ofislerimizden, Türkçe yürütülür.
           </p>
         </FadeUp>
 

@@ -229,7 +229,7 @@ export const VERGI_DUBAI: VergiVeri = {
     ],
     kalemler: [
       { sure: "3 ay", ne: "Kurumlar vergisi kaydı", kural: "Kuruluştan itibaren üç ay içinde yapılıyor.", ceza: "Geç kayıt: 10.000 AED" },
-      { sure: "9 ay", ne: "Kurumlar vergisi beyanı", kural: "Dönem sonundan itibaren; ödeme de aynı süre içinde.", ceza: "Geç beyan: ayda 500 AED'den" },
+      { sure: "9 ay", ne: "Kurumlar vergisi beyanı", kural: "Dönem sonundan itibaren; ödeme de aynı süre içinde." },
       { sure: "30 gün", ne: "KDV kaydı", kural: "Eşik aşıldıktan sonra otuz gün içinde başvuru.", ceza: "Geç kayıt: 10.000 AED" },
       { sure: "28 gün", ne: "KDV beyanı", kural: "Üç aylık dönemi izleyen 28. güne kadar beyan ve ödeme.", ceza: "Geç beyan: 1.000 AED" },
     ],
@@ -271,22 +271,13 @@ export const VERGI_DUBAI: VergiVeri = {
     items: [
       { icon: "kalkan", title: "Serbest bölgeyi otomatik %0 sanmak", line: "Serbest bölge şirketi de kayıt oluyor ve beyan veriyor; %0 ağır şartlara bağlı." },
       { icon: "dosya", title: "Kaydı geciktirmek", line: "Kurumlar vergisi kaydı kuruluştan sonraki üç ay içinde yapılıyor.", ceza: "10.000 AED" },
-      { icon: "takvim", title: "Kâr yok diye beyan vermemek", line: "Vergi çıkmasa da şirket her dönem beyan veriyor.", ceza: "Ayda 500 AED'den" },
+      { icon: "takvim", title: "Kâr yok diye beyan vermemek", line: "Vergi çıkmasa da şirket her dönem beyan veriyor." },
       { icon: "fatura", title: "KDV eşiğini izlememek", line: "Son 12 ayın tedariki 375.000 AED'yi aşınca 30 gün içinde başvuru gerekiyor.", ceza: "10.000 AED" },
       { icon: "saat", title: "Vergiyi geç ödemek", line: "Ödenmeyen tutara gecikme cezası her ay işliyor.", ceza: "Yıllık %14" },
       { icon: "kimlik", title: "Oturumla mukimliğin bittiğini sanmak", line: "Emirates ID, Türkiye'deki vergi mukimliğini tek başına sona erdirmiyor." },
     ],
-    merdiven: {
-      baslik: "Geciken beyanda ceza birikiyor",
-      alt: "Kurumlar vergisi beyanı, gecikme süresine göre toplam ceza.",
-      birim: "AED",
-      basamaklar: [
-        { sure: "1 ay", tutar: 500 },
-        { sure: "6 ay", tutar: 3000 },
-        { sure: "12 ay", tutar: 6000 },
-        { sure: "18 ay", tutar: 12000 },
-      ],
-    },
+    /* 09.10.2026 · geç beyan cezası merdiveni (ayda 500, sonra 1.000 AED)
+       KALKTI: Murat Bey rakamı teyit etmedi, Burak: "bir şey yazmasak da olur." */
   },
 
   /* --------------------------------------------------------------- adımlar

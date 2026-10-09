@@ -138,7 +138,9 @@ export default function HeroAkis({ partners = true }: { partners?: boolean }) {
         <div>
           <FadeUp delay={0.05} y={14} ilk>
             <p className="hak-ust">
-              <b>1996</b>&apos;dan beri · Muhasebe · Vergi · Kurumsal danışmanlık
+              {/* telefonda yalnız "1996'dan beri" kalıyor (css/mobil-deneme.css):
+                  Burak, 09.10.2026: "mobilde ana sayfa herosu kalabalık" */}
+              <b>1996</b>&apos;dan beri<span className="hak-ust-ek"> · Muhasebe · Vergi · Kurumsal danışmanlık</span>
             </p>
           </FadeUp>
           {/* accent, metnin içinde birebir geçmek zorunda (SplitWords tuzağı:

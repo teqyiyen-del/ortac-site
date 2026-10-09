@@ -399,8 +399,7 @@ export default function PageHero({
             </>
           }
           guven={[
-            { icon: <MapPin size={15} strokeWidth={2} aria-hidden="true" />, /* 09.10.2026 · Burak: "yalnız Türkçe varmış gibi olmasın" */
-            line: "Kendi ofisimizden, Türkçe ve İngilizce yürütülür." },
+            { icon: <MapPin size={15} strokeWidth={2} aria-hidden="true" />, line: "Kendi ofisimizden, Türkçe yürütülür." },
             { icon: <Info size={15} strokeWidth={2} aria-hidden="true" />, line: FACTS[country].limit },
           ]}
         />

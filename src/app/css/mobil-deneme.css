@@ -1356,3 +1356,15 @@ html[lang] :is(.uyg-sum-note, .ctk-ceza, .srp-note, .krm-note, .sxk-note, .sxk-m
   border-radius: var(--r-lg);
   background: var(--white);
 }
+
+/* ANA SAYFA GİRİŞİ · telefonda sadeleşti (09.10.2026). Burak: "mobilde ana
+   sayfa herosu biraz kalabalık gibi." İlk ekranda altı öğe vardı (iki satır
+   künye, dört satır başlık, iki satır alt yazı, iki düğme, iki kart). Çıkan:
+   künyenin hizmet listesi (hemen aşağıda hizmetler bölümü var) ve ikinci
+   düğme (iletişim menüde ve sayfa sonunda). Başlık, görsel ve kartlar duruyor. */
+@media (max-width: 719px) {
+  html[data-mobil="yeni"] .hak-ust-ek,
+  html[data-mobil="yeni"] .hak-btn-cizgi {
+    display: none;
+  }
+}

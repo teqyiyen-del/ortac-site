@@ -26,3 +26,8 @@ rota kontrolü yeterli; tam ölçüm yalnızca onaylanmış canlı işlerde yap�
 
 Kod yorumları Türkçe ve **karar kaydı** niteliğinde: ne yapıldı, neden, hangi alternatif
 neden elendi, hangi sayı ölçüldü. Mevcut dosyaların yorum yoğunluğunu sürdür.
+
+**İki dil bağlı.** Türkçe bir içerik dosyasını (`src/lib/*.ts` metin modülleri,
+`src/lib/blogYazilar/*`) değiştirdiğin her turun sonunda `node scripts/ceviri-durum.mjs`
+çalıştır; "ESKİDİ" çıkan İngilizce dosyayı (`src/lib/en/`) aynı turda güncelle. Yol
+haritası ve kurallar: `docs/dil-altyapisi.md`.
