@@ -51,15 +51,26 @@ html[lang] :is(.uyg-sum-note, .ctk-ceza, .srp-note, .krm-note, .sxk-note, .sxk-m
   line-height: 1.5;
 }
 
-/* ---- FOOTER: yayında olmayan sayfaların SOLUK, TIKLANMAYAN girdileri
-   (Sponsor Licence, Şirket Adresi, Serbest Bölge …) dizinde basılmıyor.
-   İki görsel denetim de aynı şeyi yazdı: "site kendi ağzıyla yarımım diyor."
-   Girdiler lib/brand ve lib/routes'ta duruyor; sayfa yayına alındığı gün
-   (isLive) kendiliğinden görünür. Üst menüdeki "yakında" işaretli girdilere
-   dokunulmadı (orada "yakında" etiketi var; karar Burak'ın listesinde:
-   docs/teslim/README.md). */
-.ft2-col > [data-soon] {
-  display: none;
+/* FOOTER · soluk "yakında" girdileri GÖRÜNÜR (09.10.2026, Burak: "komple
+   kaldırmana gerek yok, neler yapılacağını hatırlayayım diye duruyorlar; şu an
+   demo takılıyoruz"). Bir gece gizlenmişlerdi; geri açıldı. Ana alan adına
+   geçerken yeniden konuşulacak.
+
+   SOSYAL MEDYA satırı: eski sitedeki beş hesap (Footer · SOSYAL). */
+.ft2-sosyal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 6px;
+}
+.ft2-sosyal a {
+  padding-block: 6px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+}
+.ft2-sosyal a:hover {
+  color: #ffffff;
 }
 
 /* ---- TABLET (720-1023) · masaüstü denetiminin 820 px bulguları

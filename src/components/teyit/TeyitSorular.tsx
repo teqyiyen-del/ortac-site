@@ -23,65 +23,60 @@ import Logo from "@/components/shared/Logo";
 type Soru = { id: string; s: string; sik?: string[]; cok?: boolean; ipucu?: string };
 const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
   {
-    ad: "Dubai",
+    ad: "Fiyat",
     sorular: [
-      { id: "d-yil", s: "2. ve 3. yıl lisans fiyatı ne kadar? (Sitede şu an yer tutucu rakam var.)", sik: ["İlk yılla aynı", "Farklı, aşağıya yazıyorum"], ipucu: "IFZA, Meydan ve DWTC için ayrı ayrı" },
-      { id: "d-vip", s: "VIP bölümünün başlığında \"yaklaşık 5 iş günü\" yazıyor. Fiyat kartındaki gibi \"yaklaşık\"ı kaldıralım mı?", sik: ["Kaldıralım, \"5 iş günü\"", "\"Yaklaşık\" kalsın"] },
+      { id: "f-yil", s: "Dubai'de 2. ve 3. yıl lisans bedeli ne kadar? (Sitede şu an yer tutucu rakam var.)", sik: ["İlk yılla aynı", "Farklı, aşağıya bölge bölge yazıyorum"], ipucu: "IFZA, Meydan ve DWTC için ayrı ayrı." },
+      { id: "f-ifza", s: "Teklifte IFZA \"7.800 $ vergi dahil\" yazıyor; kalemleri toplayınca 7.873 + %5 = 8.266,65 çıkıyor. Müşteri hangisini ödüyor?", sik: ["7.800 $", "8.266,65 $", "Başka, aşağıya yazıyorum"] },
+      { id: "f-uk", s: "İngiltere için teklif belgesi gelecek mi? Sitede Basic 900, Gold 1.500, Platinium 2.600 dolar yazıyor.", sik: ["Rakamlar doğru, kalsın", "Belge göndereceğim", "Paket yok, tek fiyat", "Fiyat yazmayalım"], ipucu: "Dolar mı sterlin mi, onu da yazın." },
+      { id: "f-ukmuh", s: "İngiltere muhasebe ücretini sitede nasıl yazalım?", sik: ["Yıllık sabit tutar", "Aylık tutar", "Fiyat yazmayalım"], ipucu: "Tutarı biliyorsanız yazın." },
+      { id: "f-kharc", s: "KKTC'de başvuru harcı (2.000 USD) ve tescil harcı (2.500 USD) 9.920 €'nun içinde mi?", sik: ["İçinde", "Ayrıca ödeniyor", "Bu harçlar yok"] },
+      { id: "f-kadres", s: "KKTC'de adres hizmeti herkese zorunlu mu?", sik: ["Zorunlu", "Müşteri isterse"] },
+      { id: "f-kdenetci", s: "KKTC'de denetçi raporu 270 € / 900 € ücrete dahil mi?", sik: ["Dahil", "Ayrı ücret", "Denetçi raporu gerekmiyor"] },
+      { id: "f-gecerli", s: "Sitedeki kurulum özeti kaç gün geçerli sayılsın?", sik: ["7 gün", "15 gün", "30 gün", "Süre yazmayalım"] },
     ],
   },
   {
-    ad: "KKTC · Muhasebe",
+    ad: "İletişim ve firma bilgisi",
     sorular: [
-      { id: "k-ay", s: "Yıllık hesap ve beyan hangi ayda veriliyor?", sik: ["Ocak - Mart", "Nisan", "Mayıs - Haziran", "Şirkete göre değişiyor"], ipucu: "Geç kalınırsa ceza varsa yazın" },
-      { id: "k-ne", s: "Her yıl tam olarak ne veriliyor?", cok: true, sik: ["Beyanname", "Bilanço", "Denetçi raporu", "Serbest Liman faaliyet raporu"] },
-      { id: "k-denetci", s: "Denetçi raporu 270 € / 900 € ücrete dahil mi?", sik: ["Dahil", "Ayrı ücret", "Denetçi raporu gerekmiyor"] },
-      { id: "k-yenileme", s: "İkinci yıldan itibaren faaliyet harcı (2.700 €) ve adres hizmeti (2.000 € + KDV) aynı tutarla mı yenileniyor?", sik: ["Evet, aynı", "Farklı, aşağıya yazıyorum"] },
-      { id: "k-devir", s: "Başka bir ofisteki KKTC şirketinin muhasebesini devralıyor muyuz?", sik: ["Evet, adres ve temsilci de bize geçiyor", "Evet, yalnız muhasebe", "Hayır"] },
-      { id: "k-belge", s: "Müşteri belgeleri bize hangi yoldan iletiyor?", cok: true, sik: ["Müşteri paneli", "E-posta", "WhatsApp"] },
-      { id: "k-islem", s: "Aylık 270 €'luk standart kapsam ayda kaç işleme kadar?", sik: ["100", "250", "500", "Sınır koymuyoruz"] },
-      { id: "k-imza", s: "KKTC şirketinin defterini kim imzalıyor? Dubai sayfasındaki gibi \"defterinizi imzalayan\" kutusu koyalım mı?", sik: ["Murat Ortaç, kutu koyalım", "KKTC'deki mali müşavir", "Kutu koymayalım"] },
+      { id: "i-form", s: "Sitedeki formlardan gelen iletiler hangi e-posta adresine düşsün?", ipucu: "Tek adres ya da ülkeye göre üç adres." },
+      { id: "i-wa", s: "Kurulum akışından gelenler WhatsApp'ta hangi numaraya yazsın?", sik: ["Dubai numarası", "Ülkesine göre ilgili ofis", "Başka, aşağıya yazıyorum"] },
+      { id: "i-kktc", s: "KKTC ofisi: adres \"Şht. Murat İlhan Sokak No:5, Kumsal, Lefkoşa\" doğru mu? E-posta hangisi?", sik: ["Adres doğru", "cyprus@ortacglobal.com", "info@ortacglobal.com"], cok: true, ipucu: "Cep numarası +90 548 841 66 66 mı 844 66 66 mı?" },
+      { id: "i-uk", s: "İngiltere ofisi: Great Portland Street gerçek ofis mi, kayıtlı adres mi? Telefon ve e-posta doğru mu?", sik: ["Gerçek ofis", "Kayıtlı adres", "uk@ortacaudit.com doğru"], cok: true },
+      { id: "i-unvan", s: "KKTC ve İngiltere şirketlerinin tescilli tam adı nedir?", ipucu: "Sitenin künyesine ve KVKK metnine yazılacak." },
+      { id: "i-lisans", s: "Hakkımızda sayfasına muhasebe lisans numarasını yazalım mı?", sik: ["Yazalım, numarayı aşağıya yazıyorum", "Yazmayalım"] },
+      { id: "i-kvkk", s: "KVKK metni için veri sorumlusu hangi şirket? Türkiye'de şirketimiz var mı?", ipucu: "Unvan, adres ve başvuru e-postası." },
+      { id: "i-panel", s: "Müşteri paneli adresi eski sitedekiyle aynı mı kalacak?", sik: ["Aynı", "Değişecek, aşağıya yazıyorum"] },
     ],
   },
   {
-    ad: "KKTC · Banka ve ödeme",
+    ad: "Doğru bilgi",
     sorular: [
-      { id: "k-sure", s: "Banka hesabı kabaca ne kadar sürede açılıyor?", sik: ["1 hafta içinde", "2 - 4 hafta", "1 aydan uzun", "Sitede süre yazmayalım"] },
-      { id: "k-sahsen", s: "Hesap için bankaya şahsen gitmek şart mı?", sik: ["Evet, her bankada", "Bazı bankalarda", "Hayır"] },
-      { id: "k-tr", s: "\"Türkiye bankalarıyla çalışmak mümkün olabiliyor\" cümlesi sitede kalsın mı?", sik: ["Kalsın", "Kaldıralım"], ipucu: "Hangi durumda mümkün olduğunu biliyorsanız yazın" },
-      { id: "k-tiko", s: "Sanal POS için \"Tiko\" adını sitede yazmaya devam edelim mi?", sik: ["Evet", "Hayır, \"yerel sanal POS\" diyelim"], ipucu: "Tiko'nun aradığı şart varsa yazın (site, ciro, sektör)" },
-      { id: "k-doviz", s: "Yurt dışından gelen dövizde müşterinin bilmesi gereken bir sınır ya da masraf var mı?", sik: ["Yok", "Var, aşağıya yazıyorum"] },
+      { id: "b-ortak", s: "Hangileriyle yazılı iş ortaklığımız var? (Sitede \"iş ortağı\" diye geçiyorlar.)", cok: true, sik: ["IFZA", "Meydan", "DWTC", "Wio", "Mashreq", "PayPal", "wamo", "Xero", "QuickBooks", "Sage"] },
+      { id: "b-dodeme", s: "Dubai'de hangi ödeme kanalları listede kalsın?", cok: true, sik: ["Stripe", "PayPal", "Binance", "Amazon Payment Services", "Network International", "Payoneer", "wamo"] },
+      { id: "b-ukhesap", s: "İngiltere'de fiilen hangi hesapları açtırıyoruz?", cok: true, sik: ["Tide", "Revolut", "Wise", "Payoneer", "Yerel banka"] },
+      { id: "b-oturum", s: "Dubai oturumu kaç ay ülke dışında kalınca düşüyor?", sik: ["6 ay", "12 ay", "Vize türüne göre değişiyor"] },
+      { id: "b-vize", s: "Ortak vizesi kaç yıllık?", sik: ["2 yıl", "3 yıl", "Serbest bölgeye göre değişiyor"] },
+      { id: "b-mainland", s: "\"Serbest bölgeden mainland'e geçmek yeni kuruluş demek\" cümlesi doğru mu?", sik: ["Doğru", "Yanlış, aşağıya yazıyorum"] },
+      { id: "b-bordro", s: "Dubai'de bordro hizmeti veriyor muyuz?", sik: ["Evet", "Hayır"] },
+      { id: "b-ekip", s: "KKTC ve İngiltere'de muhasebeyi kendi ekibimiz mi yapıyor?", sik: ["İkisinde de kendi ekibimiz", "KKTC kendi, İngiltere anlaşmalı", "İkisi de anlaşmalı firma"] },
+      { id: "b-kay", s: "KKTC'de yıllık hesap ve beyan hangi ayda veriliyor?", sik: ["Ocak - Mart", "Nisan", "Mayıs - Haziran", "Şirkete göre değişiyor"] },
+      { id: "b-ksure", s: "KKTC'de banka hesabı kabaca ne kadar sürede açılıyor?", sik: ["1 hafta içinde", "2 - 4 hafta", "1 aydan uzun", "Sitede süre yazmayalım"] },
     ],
   },
   {
-    ad: "İngiltere",
+    ad: "Sitede açılacaklar",
     sorular: [
-      { id: "i-pdf", s: "İngiltere için de Dubai ve KKTC'deki gibi bir teklif belgesi gelecek mi?", sik: ["Evet, göndereceğim", "Yok, sitedekiyle devam"] },
-      { id: "i-fiyat", s: "Sitede İngiltere kuruluşu üç paketle duruyor: Basic 900, Gold 1.500, Platinium 2.600 dolar. Doğru mu?", sik: ["Doğru", "Paket yok, tek fiyat", "Yanlış, aşağıya yazıyorum"] },
-      { id: "i-muh", s: "İngiltere muhasebe ücretini sitede nasıl yazalım?", sik: ["Yıllık sabit tutar", "Aylık tutar", "Fiyat yazmayalım"], ipucu: "Tutarı biliyorsanız yazın" },
-      { id: "i-hesap", s: "Müşteriyi fiilen hangi hesapla başlatıyoruz?", cok: true, sik: ["Tide", "Revolut Business", "Wise Business", "Payoneer", "Geleneksel banka"] },
-      { id: "i-basvuru", s: "Hesap başvurusunu kim yapıyor?", sik: ["Biz yapıyoruz", "Müşteri yapıyor, biz yönlendiriyoruz"] },
-      { id: "i-ek", s: "İngiltere'de bunlardan hangilerini veriyoruz?", cok: true, sik: ["KDV kaydı ve beyanı", "Bordro (PAYE)", "Sponsor Licence", "Kayıtlı adres ve posta"] },
-    ],
-  },
-  {
-    ad: "Henüz açılmamış sayfalar",
-    sorular: [
-      { id: "s-hangi", s: "Bunlardan hangilerinin sayfası açılsın?", cok: true, sik: ["İngiltere şirket adresi", "İngiltere Sponsor Licence", "KKTC Serbest Bölge", "Kurumsal danışmanlık (İngiltere, KKTC)", "AML ve uyum (İngiltere, KKTC)", "Mevcut şirketi Ortac'a taşıma"] },
-      { id: "s-tasima", s: "Başka bir firmadaki şirketi hangi ülkelerde devralıyoruz?", cok: true, sik: ["Dubai", "İngiltere", "KKTC"] },
-      { id: "s-aml", s: "AML ve uyum hizmeti İngiltere ve KKTC'de ne kapsıyor?", ipucu: "Birkaç madde yeter; yoksa \"yok\" yazın" },
-    ],
-  },
-  {
-    ad: "Genel",
-    sorular: [
-      { id: "g-panel", s: "Müşteri paneli için sitede hangi adresi kullanalım?", ipucu: "\"Panel girişi\" ve kurulum akışının son adımı bu adrese gidecek" },
-      { id: "g-wa", s: "Kurulum akışındaki WhatsApp düğmesi hangi numaraya gitsin?", sik: ["Sitedeki Dubai numarası (+971 5628 66 466)", "Başka numara, aşağıya yazıyorum"] },
-      { id: "g-kvkk", s: "KVKK metni için: veri sorumlusunun tam unvanı ve başvuru e-postası ne olsun?" },
+      { id: "s-kariyer", s: "Kariyer sayfasına koyacağımız açık bir ilan var mı?", sik: ["Var, aşağıya yazıyorum", "Yok, yalnız açık başvuru kalsın", "Kariyer sayfasını kapatalım"], ipucu: "Eski sitede \"Muhasebeci, KKTC\" ilanı vardı; hâlâ geçerli mi?" },
+      { id: "s-ortaklik", s: "İş ortaklığı sayfasını kullanacak mıyız?", sik: ["Evet", "Şimdilik hayır, kapalı dursun"], ipucu: "Evetse komisyon ve şartları yazın; sayfada dört satır boş duruyor." },
+      { id: "s-gelisme", s: "\"Gelişmeler\" sayfasına yazmamızı istediğiniz son dönem değişiklikleri var mı?", ipucu: "Dubai, KKTC ya da İngiltere'de müşteriyi etkileyen 3-5 değişiklik: ne, hangi tarihte." },
+      { id: "s-sayfa", s: "Henüz yazılmamış sayfalardan hangilerini açalım?", cok: true, sik: ["İngiltere şirket adresi", "İngiltere Sponsor Licence", "KKTC Serbest Bölge", "İngiltere kurumsal danışmanlık ve AML", "KKTC kurumsal danışmanlık ve AML", "Şirket taşıma"] },
+      { id: "s-tasinma", s: "Site ortacglobal.com'a hangi gün taşınsın? Alan adını kim yönetiyor?" },
+      { id: "s-musteri", s: "Eski sitede \"1.200+ mutlu müşteri\" yazıyordu. Yeni sitede kullanalım mı?", sik: ["Kullanalım, rakam doğru", "Rakam farklı, aşağıya yazıyorum", "Kullanmayalım"] },
     ],
   },
 ];
 
-const ANAHTAR = "ortac-teyit-sorular-v2";
+const ANAHTAR = "ortac-teyit-sorular-v3";
 type Cevap = { sec: string[]; yazi: string };
 const BOS: Cevap = { sec: [], yazi: "" };
 

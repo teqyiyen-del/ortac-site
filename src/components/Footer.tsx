@@ -379,6 +379,14 @@ export function Ft2Directory({
               <a href={FT2_OFFICE.contact.email.href}>{FT2_OFFICE.contact.email.value}</a>
             </span>
           )}
+          {/* 09.10.2026 · eski sitedeki beş hesap (Burak: "hepsini bağla, footer'a koy") */}
+          <nav className="ft2-sosyal" aria-label="Sosyal medya">
+            {SOSYAL.map((h) => (
+              <a key={h.ad} href={h.href} target="_blank" rel="noopener noreferrer">
+                {h.ad}
+              </a>
+            ))}
+          </nav>
         </div>
 
         <div className="ft2-nav">
@@ -426,6 +434,14 @@ export function Ft2Directory({
    `.ft2-ac` düğmesi yalnız deneme düzeninde ve telefonda var (öbür her yerde
    `display: none`, yani erişilebilirlik ağacında da yok); başlığın üstünde
    görünmez durur. Bağlantılar kapalıyken de DOM'da. */
+const SOSYAL = [
+  { ad: "Instagram", href: "https://www.instagram.com/ortacglobal/" },
+  { ad: "LinkedIn", href: "https://www.linkedin.com/company/ortacglobal" },
+  { ad: "YouTube", href: "https://www.youtube.com/@OrtacGlobal" },
+  { ad: "Facebook", href: "https://www.facebook.com/ortacglobal/" },
+  { ad: "TikTok", href: "https://www.tiktok.com/@ortacglobal" },
+];
+
 function FtKol({ baslik, children }: { baslik: string; children: React.ReactNode }) {
   const [acik, setAcik] = useState(false);
   return (
