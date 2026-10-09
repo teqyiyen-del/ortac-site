@@ -1,0 +1,1456 @@
+/* ============================================================================
+   VERGİ DANIŞMANLIĞI — /dubai/vergi · /ingiltere/vergi · /kktc/vergi
+   Ad alanı .svr- · Gövde: components/services/VergiSayfa.tsx (+ VergiHesap)
+   Metin: lib/vergiDubai.ts · vergiIngiltere.ts · vergiKktc.ts
+
+   09.10.2026 · İLK YAZIM. Üç sayfa genel hizmet şablonundan kendi gövdesine
+   çıktı (Burak: "üç dört kart koymuşsun, bitmiş … SVG görseller, animasyonlar
+   … bunları da öyle doldur").
+
+   YENİ BİR DİL YOK. Kart: 1 px kenarlık + 18 (banka sayfasının satırı ve
+   karosu). Çizim panosu: kırık beyaz zemin + 28 (.svb-sahne). Ceza satırı
+   ülke sayfasındaki takvim kartının amber satırı (.ctk-ceza). Gece kart
+   sitenin gece tonları (--night, --night-2, --night-line).
+
+   RENK (hafıza: renk-anlam-kurali): ağırlık mavide; yeşil yalnız para ve
+   "vergi çıkmıyor"; amber şart, risk, ceza. Küçük yazıda 700'ler
+   (--green-700 · --amber-700 · --blue-900): 600'ler açık zeminde 4,5:1'in
+   altında kalıyor (ds-renk.css başındaki ölçüm).
+
+   KÖŞE: 8 (çip, kuyu) · 12 (ikon kuyusu, küçük kutu) · 18 (kart) · 28 (pano,
+   gece kart). ŞERİT YOK: hiçbir kutunun kenarında kalın çizgi yok; eşik
+   işareti ve adım çubuğu kenarlık değil, kendi başına duran öğe.
+
+   IZGARA: her sütun minmax(0, 1fr) (tuzak B). TELEFON: tek sütun, yana
+   kaydırma yok; iç boşluklar kısılmıyor (mobil-deneme.css başındaki kural).
+
+   HAREKET: hepsi CSS, hepsi prefers-reduced-motion: no-preference kapısında;
+   ekran dışında shared/EkranDisiDurdur duraklatıyor. Periyotlar 36,7 · 11,3
+   · 5,7 · 8,3 · 14,9 s: sitedeki öteki döngülerle ortak katı dakikaları
+   aşıyor (tuzak K); `alternate` yok.
+   ========================================================================= */
+
+/* kırık beyaz bölüm (zemin beyaz ve kırık beyaz sırayla) */
+.svr-kirik {
+  background: var(--paper);
+}
+
+/* ---------------------------------------------------------- ikon kuyusu */
+.svr-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.svr-ic[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-700, #8a5200);
+}
+
+/* bölümden çıkış bağlantısı (banka sayfasındaki .svb-adim-cik'in kardeşi) */
+.svr-cik {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  min-height: 44px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--blue-900);
+  text-decoration: none;
+}
+.svr-cik:hover {
+  text-decoration: underline;
+}
+
+/* çizim panosu: kırık beyaz, 28. Yalnız BEYAZ bölümlerde kullanılıyor. */
+.svr-sahne {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 24px;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+
+/* ============================================================== ÇERÇEVE
+   Solda çizim (7), sağda dört rakam kartı alt alta (5). 1024'ün altında
+   çizim üstte; 720-1023 arasında kartlar iki sütun. */
+.svr-cer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 1024px) {
+  .svr-cer {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+}
+.svr-cer-g {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.svr-cer-g > * {
+  flex: 1 1 auto;
+}
+/* İngiltere eğrisi kendi panosunu ve üst boşluğunu taşıyor (tax.css ·
+   .txm-egri, ülke sayfasında bölüm başlığının altında duruyor); burada
+   ızgaranın içinde, üst boşluk ızgaradan. */
+.svr-egri {
+  display: flex;
+  flex-direction: column;
+}
+.svr-egri > .txm-egri {
+  flex: 1 1 auto;
+  margin-top: 0;
+}
+
+.svr-oran {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) and (max-width: 1023.5px) {
+  .svr-oran {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.svr-oran > li {
+  display: flex;
+  min-width: 0;
+}
+/* Rakam solda sabit sütunda: dört kartın yazısı aynı x'ten başlıyor.
+   Sütun 116 px: en uzun değer "£90.000" 26 px/700'de ~112 px. Rakam ile
+   yazı ortadan hizalı (tuzak AC: taban hizası küçük yazıyı aşağı kaydırıyor). */
+.svr-oran-k {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 116px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svr-oran-d {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--blue-700);
+}
+.svr-oran-d[data-ton="yesil"] {
+  color: var(--green-700, #16704a);
+}
+.svr-oran-d[data-ton="amber"] {
+  color: var(--amber-700, #8a5200);
+}
+/* Telefonda sütun 96, rakam 22: yazıya 200 px kalıyor ve cümle iki satırda
+   bitiyor (116'da üç satıra iniyordu, 390'da görüldü). */
+@media (max-width: 719.5px) {
+  .svr-oran-k {
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 14px;
+  }
+  .svr-oran-d {
+    font-size: 22px;
+  }
+}
+.svr-oran-e {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.svr-oran-s {
+  margin: 2px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------ çizim · eşik hesabı (Dubai)
+   Beyaz pano, 28. Üstte başlık, kâr satırı, çubuk, kaydırıcı; altta dört
+   sonuç kutusu (12). */
+.svr-hsp {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.svr-hsp-h {
+  margin: 0;
+}
+.svr-hsp-h b {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.svr-hsp-h span {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--text-600);
+}
+.svr-hsp-kar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-top: 8px;
+}
+.svr-hsp-et {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-600);
+}
+.svr-hsp-tutar {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-900);
+}
+/* Çubuk: iz kırık beyaz, iki dilim yan yana. Alt boşluk eşik etiketinin yeri. */
+.svr-hsp-cubuk {
+  position: relative;
+  display: flex;
+  height: 32px;
+  margin-bottom: 22px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+}
+.svr-hsp-dilim {
+  height: 100%;
+  transition: width 220ms var(--ease-out-soft);
+}
+.svr-hsp-dilim[data-ton="yesil"] {
+  border-radius: var(--r-sm) 0 0 var(--r-sm);
+  background: var(--green-600);
+}
+.svr-hsp-dilim[data-ton="mavi"] {
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  background: var(--blue-700);
+}
+/* Eşik işareti: çubuğu aşan ince çizgi ve altında tutar. Kenarlık değil,
+   kendi başına duran 2 px'lik öğe (şerit kuralının konusu kutu kenarı). */
+.svr-hsp-esik {
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 0;
+}
+.svr-hsp-esik i {
+  position: absolute;
+  inset-block: 0;
+  left: -1px;
+  width: 2px;
+  background: var(--text-900);
+}
+.svr-hsp-esik b {
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 0;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-600);
+}
+.svr-hsp-kay {
+  width: 100%;
+  height: 28px;
+  margin: 0;
+  accent-color: var(--blue-700);
+  cursor: pointer;
+}
+.svr-hsp-son {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+@media (min-width: 720px) {
+  .svr-hsp-son {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.svr-hsp-k {
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+.svr-hsp-k dt {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.svr-hsp-k dd {
+  margin: 4px 0 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-900);
+}
+.svr-hsp-k[data-ton="yesil"] dd {
+  color: var(--green-700, #16704a);
+}
+.svr-hsp-k[data-ton="mavi"] dd {
+  color: var(--blue-900);
+}
+.svr-hsp-k[data-ton="ana"] {
+  background: var(--blue-100);
+}
+.svr-hsp-k[data-ton="ana"] dt,
+.svr-hsp-k[data-ton="ana"] dd {
+  color: var(--blue-900);
+}
+
+/* ---------------------------------------------- çizim · ayrım şeması (KKTC)
+   Geniş ekranda soldan sağa: şirket · çatal · iki sonuç alt alta. Telefonda
+   yukarıdan aşağı: şirket · çatal · iki sonuç YAN YANA (çizim listeye
+   dönmüyor). Çatalın uçları kutuların merkezine denk: sağda iki eşit satır
+   (%25 ve %75), telefonda iki eşit sütun. */
+.svr-ayr {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+}
+.svr-ayr-kay {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svr-ayr-kay b {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.svr-ayr-kay small {
+  font-size: 14px;
+  color: var(--text-600);
+}
+.svr-ayr-bag {
+  display: block;
+  width: 100%;
+}
+.svr-ayr-bag-yatay {
+  display: none;
+}
+.svr-ayr-bag-dikey {
+  height: 48px;
+}
+.svr-ayr-yol {
+  fill: none;
+  stroke: #c9c9c9;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.svr-ayr-son {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.svr-ayr-k {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svr-ayr-k small {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.svr-ayr-k b {
+  display: block;
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.svr-ayr-k[data-ton="yesil"] b {
+  color: var(--green-700, #16704a);
+}
+.svr-ayr-k[data-ton="amber"] b {
+  color: var(--amber-700, #8a5200);
+}
+/* Cümle telefonda yok: 150 px'lik kutuda beş satıra iniyordu; aynı cümle
+   hemen alttaki rakam kartlarında ve bölüm girişinde yazıyor. */
+.svr-ayr-k p {
+  display: none;
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+@media (min-width: 720px) {
+  .svr-ayr {
+    grid-template-columns: minmax(0, 5fr) 88px minmax(0, 7fr);
+    align-items: stretch;
+  }
+  .svr-ayr-kay {
+    align-self: center;
+  }
+  .svr-ayr-bag-yatay {
+    display: block;
+    height: 100%;
+    min-height: 220px;
+  }
+  .svr-ayr-bag-dikey {
+    display: none;
+  }
+  .svr-ayr-son {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+  }
+  .svr-ayr-k {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 18px 20px;
+  }
+  .svr-ayr-k b {
+    font-size: 24px;
+  }
+  .svr-ayr-k p {
+    display: block;
+  }
+}
+@media (min-width: 1024px) {
+  .svr-cer-g > .svr-sahne {
+    padding: 28px;
+  }
+}
+
+/* =============================================================== KAPSAM
+   Altı iş kartı: 1 → 2 (720) → 3 (1024). İkon solda, yazı sağda: telefonda
+   kart kısa kalıyor. */
+.svr-kap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .svr-kap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .svr-kap {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.svr-kap > li {
+  display: flex;
+  min-width: 0;
+}
+.svr-kap-k {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svr-kap-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.svr-kap-s {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+/* Dışında kalanlar: tek kutu, dört çip. Nötr (amber değil): bu bir risk
+   değil, hizmetin sınırı. */
+.svr-har {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 12px 28px;
+  margin-top: 12px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+@media (min-width: 1024px) {
+  .svr-har {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+}
+.svr-har-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.svr-har-l {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.svr-har-l li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 12px 6px 10px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--text-600);
+}
+.svr-har-l svg {
+  flex: none;
+  color: #8a8a8a;
+}
+
+/* =============================================================== TAKVİM
+   Solda yıl halkası panosu (5), sağda dört süre satırı alt alta (7). */
+.svr-tak {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 1024px) {
+  .svr-tak {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+}
+.svr-tak-g {
+  flex-direction: column;
+}
+.svr-hlk {
+  display: grid;
+  justify-items: center;
+  gap: 20px;
+  width: 100%;
+}
+.svr-hlk-cizim {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
+}
+.svr-hlk-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.svr-hlk-yay {
+  fill: none;
+  stroke: #dcdcdc;
+  stroke-width: 30;
+}
+.svr-hlk-yay[data-ton="ana"] {
+  stroke: var(--blue-700);
+}
+.svr-hlk-yay[data-ton="ara"] {
+  stroke: #9cc6f8;
+}
+.svr-hlk-yay[data-ton="yesil"] {
+  stroke: var(--green-600);
+}
+.svr-hlk-ay {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  fill: #6b6b6b;
+}
+.svr-hlk-ay[data-dolu] {
+  font-weight: 700;
+  fill: var(--text-900);
+}
+/* İmleç: yayın üstünde dönen beyaz nokta. Dönme merkezi viewBox'ın ortası
+   (SVG öğesinde transform-origin viewBox birimiyle). Duruş karesinde saat
+   12'de: yılın başı. */
+.svr-hlk-imlec {
+  transform-origin: 180px 180px;
+}
+.svr-hlk-imlec circle {
+  fill: var(--white);
+  stroke: var(--text-900);
+  stroke-width: 3;
+}
+.svr-hlk-orta {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 2px;
+  text-align: center;
+  pointer-events: none;
+}
+.svr-hlk-orta small {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.svr-hlk-orta b {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.svr-hlk-lej {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.svr-hlk-lej li {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+}
+.svr-hlk-lej i {
+  width: 14px;
+  height: 14px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background: #dcdcdc;
+}
+.svr-hlk-lej i[data-ton="ana"] {
+  background: var(--blue-700);
+}
+.svr-hlk-lej i[data-ton="ara"] {
+  background: #9cc6f8;
+}
+.svr-hlk-lej i[data-ton="yesil"] {
+  background: var(--green-600);
+}
+.svr-hlk-lej b {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-900);
+}
+.svr-hlk-lej small {
+  display: block;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+
+/* Dört süre SATIRI alt alta (banka sayfasındaki sahne + satır iskeleti).
+   İlk hâl 2×2 karttı: kartlar halka panosunun boyuna (~580 px) gerildi,
+   cezası olmayan kartın yarısı boş kaldı (1440'ta görüldü). Satırda süre
+   solda sabit sütunda (144 px: "9 ay 1 gün" 24 px/700'de ~130 px), ceza
+   sağda; dört satır panonun boyunu dolduruyor. Telefonda alt alta. */
+.svr-tak-l {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.svr-tak-l > li {
+  display: flex;
+  min-width: 0;
+}
+.svr-tak-k {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 4px 20px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svr-tak-sure {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  color: var(--blue-700);
+}
+.svr-tak-sure svg {
+  flex: none;
+}
+.svr-tak-yazi {
+  min-width: 0;
+}
+.svr-tak-ne {
+  margin: 8px 0 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-900);
+}
+.svr-tak-kural {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.svr-tak-k > .svr-ceza {
+  justify-self: start;
+  margin-top: 10px;
+}
+@media (min-width: 720px) {
+  .svr-tak-k {
+    grid-template-columns: 144px minmax(0, 1fr) auto;
+    padding: 18px 20px;
+  }
+  .svr-tak-ne {
+    margin-top: 0;
+  }
+  .svr-tak-k > .svr-ceza {
+    justify-self: end;
+    max-width: 200px;
+    margin-top: 0;
+  }
+}
+/* ceza satırı: amber zemin, dört kenar eşit (şerit değil) */
+.svr-ceza {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  background: var(--amber-100);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--amber-700, #8a5200);
+}
+
+/* ====================================================== TÜRKİYE · GECE KART
+   Sayfanın tek siyah yüzeyi (hafıza: tam siyah bölüm yok; siyah yalnız
+   büyük gece kartta). Üç durak yan yana, aralarında 64 px'lik bağ. Durak
+   kartlarının eşit genişlikte kalması için ilk iki öğenin tabanı 64 px
+   (bağın payı), sonuncununki 0; üçü de eşit büyüyor.
+   Kontrast (zemin #111): beyaz 18,9:1 · --night-text 10:1 üstü · yeşil
+   #63d69d 10,6:1 · mavi #9cc6f8 10,5:1 · amber #f2b866 10,7:1. */
+.svr-gece {
+  margin-top: var(--space-head);
+  padding: 20px;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  color: var(--white);
+}
+@media (min-width: 900px) {
+  .svr-gece {
+    padding: 28px;
+  }
+}
+.svr-yol {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.svr-yol-li {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.svr-yol-d {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+.svr-yol-bas {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.svr-yol-bas small {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--night-text);
+}
+.svr-yol-bas b {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--white);
+}
+.svr-yol-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: #10294a;
+  color: #9cc6f8;
+}
+.svr-yol-v {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--white);
+}
+.svr-yol-v[data-ton="sifir"] {
+  color: #63d69d;
+}
+.svr-yol-v[data-ton="vergi"] {
+  color: #9cc6f8;
+}
+.svr-yol-v[data-ton="beyan"] {
+  color: #f2b866;
+}
+.svr-yol-s {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--night-text);
+}
+/* bağ: telefonda dikey (44 px), geniş ekranda yatay (64 px) */
+.svr-yol-bag {
+  position: relative;
+  flex: none;
+  height: 44px;
+}
+.svr-yol-hat {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 50%;
+  width: 1px;
+  background: #3d3d3d;
+}
+.svr-yol-yada {
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--night-text);
+}
+/* Para duruş karesinde görünmüyor: yol ortasında donmuş para "takıldı"
+   okunur (banka sayfasındaki karar). */
+.svr-para {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-left: -10px;
+  opacity: 0;
+  pointer-events: none;
+  --svr-x: 0px;
+  --svr-y: 20px;
+}
+.svr-para-y {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+.svr-para-yuz {
+  fill: #1e8a54;
+  stroke: #63d69d;
+  stroke-width: 1.5;
+}
+.svr-para-halka {
+  fill: none;
+  stroke: #63d69d;
+  stroke-width: 1.2;
+}
+@media (min-width: 900px) {
+  .svr-yol {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .svr-yol-li {
+    flex: 1 1 64px;
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .svr-yol-li:last-child {
+    flex-basis: 0;
+  }
+  .svr-yol-bag {
+    align-self: center;
+    width: 64px;
+    height: 24px;
+  }
+  .svr-yol-hat {
+    top: 50%;
+    bottom: auto;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    height: 1px;
+  }
+  .svr-para {
+    top: 50%;
+    left: 4px;
+    margin: -10px 0 0;
+    --svr-x: 36px;
+    --svr-y: 0px;
+  }
+}
+/* açılır "Ayrıntılar" kırık beyaz bölümde duruyor: başlığı beyaz kutu */
+.svr-kirik .ayr > summary {
+  background: var(--white);
+}
+
+/* ============================================================== HATALAR
+   Altı kart: 1 → 2 (720) → 3 (1024). Kuyu amber (risk); resmî tutarı olan
+   kartta sağ üstte ceza etiketi. */
+.svr-hata {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .svr-hata {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .svr-hata {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.svr-hata > li {
+  display: flex;
+  min-width: 0;
+}
+.svr-hata-k {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svr-hata-ust {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.svr-hata-ceza {
+  padding: 5px 10px;
+  border-radius: var(--r-sm);
+  background: var(--amber-100);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--amber-700, #8a5200);
+}
+.svr-hata-t {
+  margin: 14px 0 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.svr-hata-s {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------- çizim · ceza merdiveni
+   Kırık beyaz pano, 28. Solda başlık ve tek cümle, sağda dört basamak:
+   boy = tutar / en büyük tutar. Renk amberin dört kademesi, açıktan koyuya
+   (risk büyüdükçe). Tutar basamağın üstünde, süre altında; ikisi de HTML. */
+.svr-mrd {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: 24px;
+  margin-top: 12px;
+  padding: 24px;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+@media (min-width: 900px) {
+  .svr-mrd {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 40px;
+    padding: 32px;
+  }
+}
+.svr-mrd-yazi {
+  min-width: 0;
+}
+.svr-mrd-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.svr-mrd-s {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.svr-mrd-l {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 8px;
+  height: 220px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .svr-mrd-l {
+    gap: 16px;
+  }
+}
+.svr-mrd-b {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+  text-align: center;
+}
+.svr-mrd-b b {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--amber-700, #8a5200);
+}
+/* Basamağın boyu: listenin yüksekliğinden yazıların payı (tutar, süre ve
+   iki ara) düşülüyor, kalan --h oranında (0-1, VergiSayfa'dan). Pay
+   telefonda büyük: "12.000 AED" ve "1 aya kadar" iki satıra iniyor. */
+.svr-mrd-b i {
+  flex: none;
+  height: calc((100% - var(--svr-pay, 92px)) * var(--h, 1));
+  min-height: 10px;
+  border-radius: var(--r-sm);
+  background: #f3d9a6;
+  transform-origin: center bottom;
+}
+.svr-mrd-b[data-k="1"] i {
+  background: #e6b866;
+}
+.svr-mrd-b[data-k="2"] i {
+  background: #cf8f24;
+}
+.svr-mrd-b[data-k="3"] i {
+  background: var(--amber-600);
+}
+.svr-mrd-b span {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--text-600);
+}
+@media (min-width: 720px) {
+  .svr-mrd-l {
+    --svr-pay: 68px;
+  }
+}
+
+/* =============================================================== SÜREÇ
+   Dört adım: 1 → 2 (720) → 4 (1024). Kartın üstünde sayı ve çubuk; çubuk
+   duruş karesinde dolu (reduce altında da), hareket varken sırayla doluyor. */
+.svr-adim {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .svr-adim {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .svr-adim {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.svr-adim > li {
+  display: flex;
+  min-width: 0;
+}
+.svr-adim-k {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.svr-adim-ray {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 18px;
+}
+.svr-adim-ray b {
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-900);
+}
+.svr-adim-ray i {
+  position: relative;
+  overflow: hidden;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--border);
+}
+.svr-adim-ray i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--blue-700);
+  transform-origin: left center;
+}
+.svr-adim-t {
+  margin: 14px 0 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text-900);
+}
+.svr-adim-s {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* Telefonda ikon kuyusu yok: sayı ve çubuk adımı zaten işaretliyor, kuyu
+   dört kartın her birine 54 px ekliyordu (içerik alt alta ve kısa). */
+@media (max-width: 719.5px) {
+  .svr-adim-k > .svr-ic {
+    display: none;
+  }
+  .svr-adim-ray {
+    margin-bottom: 14px;
+  }
+  .svr-adim-t {
+    margin-top: 0;
+  }
+}
+
+/* ====================================================== İLGİLİ HİZMETLER
+   Kartın tamamı bağlantı: 1 → 2 (720) → 3 ya da 4 (1024, kart sayısına göre). */
+.svr-ilg {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .svr-ilg {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .svr-ilg {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .svr-ilg[data-n="4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.svr-ilg > li,
+.svr-ilg-f {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.svr-ilg-k {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 200ms var(--ease-out-soft);
+}
+.svr-ilg-ust {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.svr-ilg-ok {
+  color: #a3a3a3;
+  transition:
+    color 200ms var(--ease-out-soft),
+    transform 200ms var(--ease-out-soft);
+}
+.svr-ilg-t {
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.svr-ilg-s {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+a.svr-ilg-k:hover,
+a.svr-ilg-k:focus-visible {
+  border-color: var(--blue-700);
+}
+a.svr-ilg-k:hover .svr-ilg-ok,
+a.svr-ilg-k:focus-visible .svr-ilg-ok {
+  color: var(--blue-700);
+  transform: translate(2px, -2px);
+}
+a.svr-ilg-k:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+
+/* Telefonda kart tek satır: kuyu solda, ad ve cümle ortada, ok sağda
+   (üst satır `display: contents` ile ızgaraya açılıyor). */
+@media (max-width: 719.5px) {
+  .svr-ilg-k {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) 18px;
+    align-items: center;
+    gap: 2px 14px;
+  }
+  .svr-ilg-ust {
+    display: contents;
+  }
+  .svr-ilg-ust > .svr-ic {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .svr-ilg-ok {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+  .svr-ilg-t {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: 0;
+  }
+  .svr-ilg-s {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 0;
+  }
+}
+
+/* ============================================================== HAREKET
+   Duruş karesi (reduce) her çizimin tamamlanmış hâli: halka imleci saat
+   12'de, ayrım yolları gri, para görünmüyor, basamaklar yerinde, adım
+   çubukları dolu. */
+@media (prefers-reduced-motion: no-preference) {
+  /* yıl halkası: imleç yılda bir tur */
+  .svr-hlk-imlec {
+    animation: svrDon 36.7s linear infinite;
+  }
+  @keyframes svrDon {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ayrım: önce yeşil yol ve kutusu, sonra amber yol ve kutusu */
+  .svr-ayr-yol,
+  .svr-ayr-k {
+    animation-duration: 11.3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: var(--ease-inout);
+  }
+  .svr-ayr-yol[data-k="0"] {
+    animation-name: svrYolYesil;
+  }
+  .svr-ayr-yol[data-k="1"] {
+    animation-name: svrYolAmber;
+    animation-delay: 5.65s;
+  }
+  .svr-ayr-k[data-k="0"] {
+    animation-name: svrKutuYesil;
+  }
+  .svr-ayr-k[data-k="1"] {
+    animation-name: svrKutuAmber;
+    animation-delay: 5.65s;
+  }
+  @keyframes svrYolYesil {
+    0%, 42%, 100% { stroke: #c9c9c9; }
+    8%, 32% { stroke: var(--green-600); }
+  }
+  @keyframes svrYolAmber {
+    0%, 42%, 100% { stroke: #c9c9c9; }
+    8%, 32% { stroke: var(--amber-600); }
+  }
+  @keyframes svrKutuYesil {
+    0%, 46%, 100% { border-color: var(--border); }
+    12%, 36% { border-color: var(--green-600); }
+  }
+  @keyframes svrKutuAmber {
+    0%, 46%, 100% { border-color: var(--border); }
+    12%, 36% { border-color: var(--amber-600); }
+  }
+
+  /* para yolu: para bağın bir ucundan ötekine */
+  .svr-para {
+    animation: svrPara 5.7s var(--ease-inout) infinite;
+  }
+  .svr-yol-li:nth-child(2) .svr-para {
+    animation-delay: 2.85s;
+  }
+  @keyframes svrPara {
+    0% { opacity: 0; transform: none; }
+    12% { opacity: 1; transform: none; }
+    48% { opacity: 1; transform: translate(var(--svr-x), var(--svr-y)); }
+    60%, 100% { opacity: 0; transform: translate(var(--svr-x), var(--svr-y)); }
+  }
+
+  /* ceza merdiveni: basamaklar sırayla bir an yükseliyor */
+  .svr-mrd-b i {
+    animation: svrBasamak 8.3s var(--ease-inout) infinite;
+  }
+  .svr-mrd-b[data-k="1"] i { animation-delay: 2.075s; }
+  .svr-mrd-b[data-k="2"] i { animation-delay: 4.15s; }
+  .svr-mrd-b[data-k="3"] i { animation-delay: 6.225s; }
+  @keyframes svrBasamak {
+    0%, 24%, 100% { transform: none; }
+    7%, 15% { transform: scaleY(1.06); }
+  }
+
+  /* adım çubukları: sırayla doluyor, tur sonunda birlikte boşalıyor */
+  .svr-adim-ray i::after {
+    animation: svrRay0 14.9s var(--ease-inout) infinite;
+  }
+  .svr-adim-ray i[data-k="1"]::after { animation-name: svrRay1; }
+  .svr-adim-ray i[data-k="2"]::after { animation-name: svrRay2; }
+  .svr-adim-ray i[data-k="3"]::after { animation-name: svrRay3; }
+  @keyframes svrRay0 {
+    0% { transform: scaleX(0); }
+    18%, 94% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+  }
+  @keyframes svrRay1 {
+    0%, 20% { transform: scaleX(0); }
+    38%, 94% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+  }
+  @keyframes svrRay2 {
+    0%, 40% { transform: scaleX(0); }
+    58%, 94% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+  }
+  @keyframes svrRay3 {
+    0%, 60% { transform: scaleX(0); }
+    78%, 94% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+  }
+}
+/* üstüne gelince: halka hızlanmıyor, duruyor (okumak için); para yolu da */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .svr-hlk-cizim:hover .svr-hlk-imlec,
+  .svr-yol:hover .svr-para,
+  .svr-ayr:hover .svr-ayr-yol,
+  .svr-ayr:hover .svr-ayr-k {
+    animation-play-state: paused;
+  }
+}

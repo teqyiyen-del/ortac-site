@@ -14,7 +14,7 @@ const withSlug = async (params: Params) => {
    (Dubai'ninkilerle aynı bölümler). Bu şablon aynı adresi üretirse üretim
    derlemesinde ŞABLON KAZANIYOR (app/dubai/[hizmet]'teki not); o yüzden
    burada üretilmiyorlar. */
-const KENDI_SAYFASI = new Set(["muhasebe", "banka-hesabi"]);
+const KENDI_SAYFASI = new Set(["muhasebe", "banka-hesabi", "vergi", "kurumsal-danismanlik", "aml-uyum"]);
 
 export function generateStaticParams() {
   return pagedServicesFor("kktc")

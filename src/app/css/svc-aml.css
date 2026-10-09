@@ -1,0 +1,1111 @@
+/* ============================================================================
+   AML VE MEVZUAT UYUMU — /dubai/aml-uyum · /ingiltere/aml-uyum · /kktc/aml-uyum
+   Ad alanı .sam- · Gövde: components/services/AmlSayfa.tsx · Metin: lib/aml*.ts
+
+   09.10.2026 · İLK YAZIM. Banka ve vize sayfalarının kardeşi: aynı iskelet
+   (beyaz kart, sahne panosu + madde satırları), kendi ad alanında. Paylaşmak
+   yerine kopya; gerekçesi svc-vize.css başında (bir sayfanın turu ötekini
+   bozmasın).
+
+   RENK (advx-renk.css kuralı): ağırlık mavide. Amber yalnız ŞART ve RİSK:
+   "yalnız belirli faaliyetler" kolu ve etiketi, "değişiklik olursa" dilimi,
+   risk göstergesinin son dilimi, "uyulmazsa" kartının ikonları, "kapsam
+   dışında" işaretleri. Yeşil yok (bu sayfada para yok).
+   Küçük amber yazı --amber-700 (#8a5200, açık amber zeminde 6,4:1);
+   --amber-600 yalnız ikon ve çizgide (grafik eşiği 3).
+
+   KUTU KENARINA ŞERİT YOK: renkli kollarda çerçevenin TAMAMI renkli (1 px,
+   dört kenar eşit). Köşeler role göre 8 / 12 / 18 / 28. Izgaralar
+   minmax(0, 1fr). Çizimlerin iç ölçüleri (rx, yazı) viewBox birimi.
+
+   HAREKET yalnız @media (prefers-reduced-motion: no-preference) altında;
+   kuralların DIŞINDAKİ hâl duruş karesi. Periyotlar sitedekilerle ve
+   birbirleriyle ortak katsız seçildi (3,7 · 4,3 · 5,9 · 6,7 · 8,3 · 10,3 ·
+   23 s; sitede 4,7 · 5,3 · 6,1 · 7,1 · 7,9 · 9,1 var). Ekran dışında
+   globals.css · [data-ekran-disi] durduruyor.
+   ========================================================================= */
+
+/* ------------------------------------------------------------ zemin ritmi
+   Bölümler beyaz ve kırık beyaz sırayla (tam siyah bölüm yok). Kırık beyaz
+   bölümde sahne panosu beyaza dönüyor ki zeminden ayrılsın. */
+.sam-sec {
+  background: var(--white);
+}
+.sam-kirik {
+  background: var(--paper);
+}
+.sam-sec h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+}
+
+/* FadeUp yalnız className geçiriyor; data- taşıyan kutu içeride. Sarmalayıcı
+   kutuyu boyuna ve enine doldursun. */
+.sam-fu {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sam-fu > * {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------- ikon kuyusu */
+.sam-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.sam-ic[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+.sam-ic[data-ton="gri"] {
+  background: var(--paper);
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------- "kimin için" etiketi */
+.sam-et {
+  display: inline-block;
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-900);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.sam-et[data-kim="belirli"] {
+  background: var(--amber-100);
+  color: var(--amber-700, #8a5200);
+}
+.sam-et[data-kim="kalkti"] {
+  background: var(--paper);
+  color: var(--text-600);
+}
+
+/* =========================================================== KARAR ŞEMASI
+   Kök kutu ortada; çatal geniş ekranda iki kola ayrılan eğri (72 px boy,
+   enine esniyor), dar ekranda kısa dikme. Kollar 1 → 2 (900). */
+.sam-agac {
+  margin-top: var(--space-head);
+}
+.sam-agac-kok {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 12px 20px 12px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.sam-agac-cat {
+  display: none;
+  width: 100%;
+  height: 72px;
+}
+.sam-agac-dik {
+  display: block;
+  width: 24px;
+  height: 36px;
+  margin: 0 auto;
+}
+@media (min-width: 900px) {
+  .sam-agac-cat {
+    display: block;
+  }
+  .sam-agac-dik {
+    display: none;
+  }
+}
+.sam-agac-yol {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 5 7;
+  vector-effect: non-scaling-stroke;
+}
+.sam-agac-yol[data-ton="amber"] {
+  stroke: var(--amber-600);
+}
+.sam-agac-kollar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+@media (min-width: 900px) {
+  .sam-agac-kollar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* Kol ~300 px ve üstü kart: 18. Çerçevenin tamamı kolun renginde. */
+.sam-kol {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border: 1px solid var(--chart-blue);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.sam-kol[data-ton="amber"] {
+  border-color: #efd7a6;
+}
+.sam-kol-t {
+  margin-top: 16px;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.sam-sec .sam-kol-t {
+  margin-top: 16px;
+}
+.sam-kol-l {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.sam-kol-l > li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--text-900);
+}
+.sam-kol-l svg {
+  margin-top: 4px;
+  color: var(--blue-700);
+}
+.sam-kol[data-ton="amber"] .sam-kol-l svg {
+  color: var(--amber-600);
+}
+.sam-cip-l {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.sam-cip {
+  max-width: 100%;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  background: var(--amber-100);
+  color: var(--text-900);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.sam-kol-kopru {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--amber-700, #8a5200);
+}
+.sam-kol-kopru + .sam-kol-l {
+  margin-top: 12px;
+}
+.sam-agac-not {
+  max-width: 60ch;
+  margin: 24px auto 0;
+  font-size: 14px;
+  line-height: 1.55;
+  text-align: center;
+  color: var(--text-600);
+}
+
+/* ================================================================ KAPSAM
+   İki kart; 1 → 2 (900). */
+.sam-kap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 900px) {
+  .sam-kap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.sam-kap-k {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.sam-kap-t {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.sam-kap-l {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.sam-kap-l > li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-900);
+}
+.sam-kap-i {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.sam-kap-i[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+
+/* ========================================================= YÜKÜMLÜLÜKLER
+   Açılır kart = <details>. Kapalı satır geniş ekranda dört sütun (ikon · ad
+   ve cümle · etiket · ok); dar ekranda ikon, etiket ve ok üstte, ad altta
+   (vize sayfasının adım satırındaki düzen). Açılınca üç cevap kutusu:
+   1 → 3 (900). Kart ~76 px ve üstü: 18; iç kutu: 12. */
+.sam-yk-l {
+  display: grid;
+  gap: 8px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.sam-yk-l > li {
+  min-width: 0;
+}
+.sam-yk {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.sam-yk[open] {
+  border-color: var(--chart-blue);
+}
+.sam-yk[open][data-kim="belirli"] {
+  border-color: #efd7a6;
+}
+.sam-yk-bas {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 18px;
+  grid-template-areas:
+    "ic et ok"
+    "ad ad ad";
+  align-items: center;
+  gap: 16px 12px;
+  padding: 20px;
+  border-radius: var(--r-lg);
+  list-style: none;
+  cursor: pointer;
+}
+.sam-yk-bas::-webkit-details-marker {
+  display: none;
+}
+.sam-yk-bas:focus-visible {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+.sam-yk-bas > .sam-ic {
+  grid-area: ic;
+}
+.sam-yk-bas > .sam-et {
+  grid-area: et;
+  justify-self: end;
+}
+.sam-yk-ad {
+  grid-area: ad;
+  min-width: 0;
+}
+.sam-yk-ad > b {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.sam-yk-ad > span {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+.sam-yk-ok {
+  grid-area: ok;
+  color: var(--text-600);
+  transition: transform 200ms var(--ease-out-quint);
+}
+.sam-yk[open] .sam-yk-ok {
+  transform: rotate(180deg);
+}
+@media (min-width: 720px) {
+  .sam-yk-bas {
+    grid-template-columns: 40px minmax(0, 1fr) auto 18px;
+    grid-template-areas: "ic ad et ok";
+    gap: 20px;
+    padding: 16px 24px 16px 20px;
+  }
+}
+.sam-yk-ic {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0 20px 20px;
+}
+@media (min-width: 900px) {
+  .sam-yk-ic {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.sam-yk-ic > div {
+  min-width: 0;
+  padding: 16px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+.sam-yk-ic dt {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-600);
+}
+.sam-yk-ic dd {
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-900);
+}
+
+/* ================================================ SAHNE + MADDE SATIRLARI
+   Banka ve vize sayfalarının iskeleti: 5/7, pano 28. data-yon="ayna":
+   pano sağda. Dar ekranda pano önce, satırlar altında. */
+.sam-bol {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 1024px) {
+  .sam-bol {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+  .sam-bol[data-yon="ayna"] {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+  .sam-bol[data-yon="ayna"] > .sam-sahne {
+    order: 2;
+  }
+}
+.sam-sahne {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 300px;
+  padding: 24px;
+  border-radius: var(--r-panel);
+  background: var(--paper);
+}
+.sam-kirik .sam-sahne {
+  border: 1px solid var(--border);
+  background: var(--white);
+}
+.sam-mad {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sam-mad > li {
+  display: flex;
+  min-width: 0;
+}
+.sam-mad-s {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  min-width: 0;
+  padding: 20px 20px 20px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.sam-mad-t {
+  display: block;
+  margin-top: 2px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.sam-mad-p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------ gerçek faydalanıcı zinciri
+   viewBox 360×330; pano içinde en çok 380 px. Kişi kutusu mavi çerçeve
+   (aranan o), ara şirket nötr, "şirketiniz" koyu mavi dolu (beyaz yazıyla
+   7,14:1). */
+.sam-zin {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+}
+.sam-zin > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.sam-zin-yol {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 4 7;
+}
+.sam-zin-kisi {
+  fill: var(--white);
+  stroke: var(--blue-600);
+  stroke-width: 1.5;
+}
+.sam-zin-ara {
+  fill: var(--white);
+  stroke: #c4c4c4;
+  stroke-width: 1.5;
+}
+.sam-zin-sirket {
+  fill: var(--blue-900);
+}
+.sam-zin-ik {
+  color: var(--blue-700);
+}
+.sam-zin-ik-s {
+  color: var(--text-600);
+}
+.sam-zin-ik-b {
+  color: var(--white);
+}
+.sam-zin-t {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--text-900);
+}
+.sam-zin-t-s {
+  fill: var(--text-600);
+}
+.sam-zin-t-b {
+  fill: var(--white);
+}
+.sam-zin-pay {
+  fill: var(--white);
+  stroke: var(--chart-blue);
+  stroke-width: 1.2;
+}
+.sam-zin-pt {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  fill: var(--blue-900);
+}
+.sam-zin-tik {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.sam-zin-tik > circle {
+  fill: var(--blue-600);
+  stroke: var(--white);
+  stroke-width: 2;
+}
+.sam-zin-tik > path {
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sam-zin-alt {
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--text-900);
+}
+
+/* ========================================================== TARAMA AKIŞI
+   Beş durak; 1 → 5 (1024). Dar ekranda çizim solda, yazı sağda (alt alta
+   satırlar; yana kaydırma yok). Geniş ekranda çizim üstte. Kart: 18,
+   çizim kuyusu: 12. */
+.sam-tar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 1024px) {
+  .sam-tar {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+.sam-tar > li {
+  display: flex;
+  min-width: 0;
+}
+.sam-tar-k {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  grid-template-areas:
+    "c n"
+    "c t"
+    "c s";
+  align-content: start;
+  column-gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.sam-tar-c {
+  display: grid;
+  grid-area: c;
+  place-items: center;
+  align-self: start;
+  height: 76px;
+  padding: 8px;
+  border-radius: var(--r-md);
+  background: var(--paper);
+}
+.sam-tc {
+  display: block;
+  width: 100%;
+  max-width: 96px;
+  height: auto;
+}
+.sam-tar-n {
+  grid-area: n;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-900);
+}
+.sam-tar-t {
+  grid-area: t;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.sam-sec .sam-tar-t {
+  margin-top: 4px;
+}
+.sam-tar-s {
+  grid-area: s;
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+@media (min-width: 1024px) {
+  .sam-tar-k {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "c"
+      "n"
+      "t"
+      "s";
+  }
+  .sam-tar-c {
+    align-self: stretch;
+    height: 104px;
+  }
+  .sam-tar-n {
+    margin-top: 20px;
+  }
+}
+/* çizim paleti */
+.sam-tc-kutu {
+  fill: var(--white);
+  stroke: #bdbdbd;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.sam-tc-dolu {
+  fill: var(--blue-600);
+}
+.sam-tc-cizgi,
+.sam-tc-tik,
+.sam-tc-beyaz {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sam-tc-beyaz {
+  stroke: var(--white);
+  stroke-width: 2.4;
+}
+.sam-tc-satir {
+  fill: none;
+  stroke: #c9c9c9;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+.sam-tc-tara {
+  fill: var(--blue-500);
+  transform-box: fill-box;
+}
+.sam-tc-mercek {
+  fill: var(--white);
+  stroke: var(--blue-600);
+  stroke-width: 2.2;
+}
+.sam-tc-yay {
+  fill: none;
+  stroke: var(--chart-blue);
+  stroke-width: 7;
+}
+.sam-tc-yay[data-d="1"] {
+  stroke: var(--blue-600);
+}
+.sam-tc-yay[data-d="2"] {
+  stroke: var(--amber-600);
+}
+/* ibre: duruş karesinde orta dilimde */
+.sam-tc-ibre {
+  fill: none;
+  stroke: var(--text-900);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  transform-box: view-box;
+  transform-origin: 48px 50px;
+  transform: rotate(-18deg);
+}
+.sam-cik {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-900);
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 5px;
+}
+.sam-cik:hover {
+  text-decoration-color: currentColor;
+}
+
+/* ========================================================== UYUM DÖNGÜSÜ
+   Halka 240×240 viewBox, en çok 320 px. Dilim kalınlığı 30: içine 15'lik
+   numara sığıyor. Numara dilimin üstünde koyu mavi / koyu amber. */
+.sam-don {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
+.sam-don-dilim {
+  fill: none;
+  stroke: var(--chart-blue);
+  stroke-width: 30;
+}
+.sam-don-dilim[data-ton="amber"] {
+  stroke: #f3d9a6;
+}
+.sam-don-no {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 700;
+  fill: var(--blue-900);
+}
+.sam-don-no[data-ton="amber"] {
+  fill: var(--amber-700, #8a5200);
+}
+.sam-don-el {
+  transform-box: view-box;
+  transform-origin: 120px 120px;
+}
+.sam-don-el > circle {
+  fill: var(--blue-600);
+  stroke: var(--white);
+  stroke-width: 2;
+}
+.sam-don-ik {
+  color: var(--blue-700);
+}
+.sam-don-orta {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  fill: var(--text-900);
+}
+/* listedeki numara (halkadaki dilimle aynı sayı) ve "ne zaman" etiketi */
+.sam-no {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-900);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 700;
+}
+.sam-no[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-700, #8a5200);
+}
+.sam-zaman {
+  display: block;
+  width: fit-content;
+  margin-bottom: 8px;
+  padding: 3px 8px;
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  color: var(--text-900);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.sam-zaman[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-700, #8a5200);
+}
+
+/* ====================================================== UYULMAZSA · GECE
+   Sayfanın tek koyu yüzeyi: bölüm açık zeminde, siyah yoğunluk tek büyük
+   kartta (globals.css · .gece-kart notu). Dış kart 28, iç karolar 18.
+   Karolar 1 → 2 (720) → 4 (1100). İkon amber (risk); koyu zeminde koyu
+   amber kuyu + açık amber ikon. Parıltı yok. */
+.sam-gece {
+  margin-top: var(--space-head);
+  padding: 20px;
+  border-radius: var(--r-panel);
+  background: var(--night);
+}
+@media (min-width: 720px) {
+  .sam-gece {
+    padding: 28px;
+  }
+}
+.sam-gece-l {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .sam-gece-l {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .sam-gece-l {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.sam-gece-l > li {
+  display: flex;
+  min-width: 0;
+}
+.sam-gece-k {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+.sam-gece-ic {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  background: #33260d;
+  color: #f0b44c;
+}
+.sam-gece-k > b {
+  margin-top: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #ffffff;
+}
+.sam-gece-k > p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--night-text);
+}
+
+/* ======================================================= İLGİLİ HİZMETLER
+   Dört bağlantı kartı; 1 → 2 (720) → 4 (1100). Dar ve orta ekranda satır
+   (ikon · ad ve cümle · ok), dört sütunda dikey kart. Yayında olmayan adres
+   SmartLink'ten <span data-soon> olarak çıkıyor; sönüklüğü globals.css
+   veriyor. */
+.sam-ilg {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .sam-ilg {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .sam-ilg {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.sam-ilg > li {
+  display: flex;
+  min-width: 0;
+}
+.sam-ilg-s {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sam-ilg-k {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 40px minmax(0, 1fr) 18px;
+  grid-template-areas:
+    "ic b ok"
+    "ic p ok";
+  align-items: center;
+  column-gap: 16px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  color: var(--text-900);
+  text-decoration: none;
+  transition: border-color 160ms linear;
+}
+.sam-ilg-k > .sam-ic {
+  grid-area: ic;
+}
+.sam-ilg-k > b {
+  grid-area: b;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.sam-ilg-p {
+  grid-area: p;
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+.sam-ilg-ok {
+  grid-area: ok;
+  color: var(--text-600);
+  transition: transform 200ms var(--ease-out-quint);
+}
+@media (min-width: 1100px) {
+  .sam-ilg-k {
+    grid-template-columns: 40px minmax(0, 1fr) 18px;
+    grid-template-areas:
+      "ic . ok"
+      "b b b"
+      "p p p";
+    align-items: start;
+  }
+  .sam-ilg-k > b {
+    margin-top: 16px;
+  }
+}
+@media (hover: hover) {
+  a.sam-ilg-k:hover {
+    border-color: var(--chart-blue);
+  }
+  a.sam-ilg-k:hover .sam-ilg-ok {
+    transform: translateX(3px);
+    color: var(--blue-700);
+  }
+}
+
+/* ================================================================ HAREKET
+   Hepsi sürekli ve küçük (sayfada dört çizim var: hepsi minimal).
+     çatal ve zincir   kesik çizgi yol boyunca akıyor (3,7 s · 4,3 s)
+     zincir onayları   sırayla beliriyor: önce doğrudan ortak, sonra
+                       zincirin ucundaki (8,3 s)
+     duraklar          beş kart sırayla mavi çerçeveyle yanıyor (10,3 s,
+                       kart başına 1,7 s kayma)
+     kimlik            tarama çizgisi kartın boyunca iniyor (5,9 s)
+     liste             üç satır sırayla işaretleniyor (6,7 s)
+     risk              ibre dilimler arasında geziyor (5,9 s)
+     döngü             dıştaki nokta halkayı dolaşıyor (23 s, doğrusal)
+   animation-direction: alternate YOK (tuzak K: gerçek periyodu ikiye
+   katlıyor); gidiş dönüş keyframe'in içinde. */
+@media (prefers-reduced-motion: no-preference) {
+  .sam-agac-yol {
+    animation: samAk 3.7s linear infinite;
+  }
+  .sam-zin-yol {
+    animation: samAkZ 4.3s linear infinite;
+  }
+  .sam-zin-tik {
+    animation: samTik 8.3s var(--ease-inout) infinite backwards;
+  }
+  .sam-zin-tik[data-i="1"] {
+    animation-delay: 1.3s;
+  }
+  .sam-tar-k {
+    animation: samDurak 10.3s linear infinite backwards;
+  }
+  .sam-tar-k .sam-tar-c {
+    animation: samKuyu 10.3s linear infinite backwards;
+  }
+  .sam-tar-k[data-i="1"],
+  .sam-tar-k[data-i="1"] .sam-tar-c {
+    animation-delay: 1.7s;
+  }
+  .sam-tar-k[data-i="2"],
+  .sam-tar-k[data-i="2"] .sam-tar-c {
+    animation-delay: 3.4s;
+  }
+  .sam-tar-k[data-i="3"],
+  .sam-tar-k[data-i="3"] .sam-tar-c {
+    animation-delay: 5.1s;
+  }
+  .sam-tar-k[data-i="4"],
+  .sam-tar-k[data-i="4"] .sam-tar-c {
+    animation-delay: 6.8s;
+  }
+  .sam-tc-tara {
+    animation: samTara 5.9s var(--ease-inout) infinite;
+  }
+  .sam-tc-tik {
+    animation: samIsaret 6.7s linear infinite backwards;
+  }
+  .sam-tc-tik[data-i="1"] {
+    animation-delay: 0.6s;
+  }
+  .sam-tc-tik[data-i="2"] {
+    animation-delay: 1.2s;
+  }
+  .sam-tc-ibre {
+    animation: samIbre 5.9s var(--ease-inout) infinite;
+  }
+  .sam-don-el {
+    animation: samDon 23s linear infinite;
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .sam-tar:hover .sam-tar-k,
+  .sam-tar:hover .sam-tar-c {
+    animation-play-state: paused;
+  }
+}
+@keyframes samAk {
+  to { stroke-dashoffset: -24; }
+}
+@keyframes samAkZ {
+  to { stroke-dashoffset: -22; }
+}
+@keyframes samTik {
+  0%, 8% { transform: scale(0); }
+  16%, 90% { transform: scale(1); }
+  100% { transform: scale(0); }
+}
+@keyframes samDurak {
+  0%, 100% { border-color: var(--border); }
+  3%, 15% { border-color: var(--blue-600); }
+  19% { border-color: var(--border); }
+}
+@keyframes samKuyu {
+  0%, 100% { background-color: var(--paper); }
+  3%, 15% { background-color: var(--blue-100); }
+  19% { background-color: var(--paper); }
+}
+@keyframes samTara {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(37px); }
+}
+@keyframes samIsaret {
+  0% { opacity: 0; }
+  8%, 82% { opacity: 1; }
+  94%, 100% { opacity: 0; }
+}
+@keyframes samIbre {
+  0%, 100% { transform: rotate(-62deg); }
+  38% { transform: rotate(-18deg); }
+  62%, 78% { transform: rotate(48deg); }
+}
+@keyframes samDon {
+  to { transform: rotate(360deg); }
+}

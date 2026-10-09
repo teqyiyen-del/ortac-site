@@ -104,6 +104,7 @@ export type ServiceKey =
   | "muhasebe"
   | "banka-hesabi"
   | "oturum-vize"
+  | "aml-uyum"
   | "sponsor-licence"
   | "serbest-bolge"
   | "adres"
@@ -123,6 +124,11 @@ export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
        (services.ts · legal · research). */
     /* 08.10.2026 · "Hukuki Danışmanlık" ve "Pazar Araştırması" satırları
        kalktı: iki hizmet iptal (Burak, 07.10) ama alt menüde sönük duruyordu. */
+    /* 09.10.2026 · AML ve mevzuat uyumu üç ülkede kendi sayfasıyla açıldı
+       (services/AmlSayfa.tsx); dizinde ve kıyas tablosunda görünsün diye üç
+       listeye de girdi. 22.09'da çıkan "Uyum" satırı eski, içeriksiz
+       sayfaydı. */
+    { key: "aml-uyum", label: "AML & Uyum", href: "/dubai/aml-uyum" },
   ],
   ingiltere: [
     { key: "kurulus", label: "Şirket Kuruluşu", href: "/ingiltere", meta: "$1.200 · 3-7 gün" },
@@ -130,12 +136,14 @@ export const COUNTRY_SERVICES: Record<CountrySlug, NavService[]> = {
     { key: "banka-hesabi", label: "Banka & Ödeme", href: "/ingiltere/banka-hesabi", meta: "Payoneer" },
     { key: "sponsor-licence", label: "Sponsor Licence", href: "/ingiltere/sponsor-licence" },
     { key: "adres", label: "Şirket Adresi", href: "/ingiltere/adres", meta: "yıllık" },
+    { key: "aml-uyum", label: "AML & Uyum", href: "/ingiltere/aml-uyum" },
   ],
   kktc: [
     { key: "kurulus", label: "Şirket Kuruluşu", href: "/kktc", meta: "€9.920 · 30-40 iş günü" },
     { key: "muhasebe", label: "Muhasebe & Vergi", href: "/kktc/muhasebe", meta: "aylık" },
     { key: "banka-hesabi", label: "Banka & Ödeme", href: "/kktc/banka-hesabi", meta: "yerel banka" },
     { key: "serbest-bolge", label: "Serbest Bölge", href: "/kktc/serbest-bolge" },
+    { key: "aml-uyum", label: "AML & Uyum", href: "/kktc/aml-uyum" },
   ],
 };
 

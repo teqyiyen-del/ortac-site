@@ -4955,6 +4955,31 @@ Aynı sorunu geciktiren iki alışkanlık:
   yorumlarında; ham kayıtlar silinebilir:
   `rm -rf ~/.claude/projects/-Users-burak-ORTAC-S-TE/*/subagents`
 
+## 09.10.2026 (2) · Gündüz: yönlendirmeler, sekiz blog yazısı, dokuz hizmet sayfası
+
+Burak gece raporunu okudu, şunları istedi ve yapıldı (hepsi canlıda):
+- Footer'daki soluk "yakında" girdileri GERİ (hatırlatma olarak duruyorlar); beş sosyal hesap footer'da.
+- /teyit/sorular baştan (23 soru), Murat Bey'e gönderildi. Halil'in işleri docs/teslim/halil.md, gönderildi.
+  Formların alıcısı web@ortacglobal.com. KKTC şehri Lefkoşa.
+- ESKİ ADRESLER: sayfa yönlendirmeleri ve Framer'daki WordPress listesi next.config.ts'te. Adres düzeni
+  yeni hâliyle kalıyor. Eski /en/... geçici olarak Türkçeye (307); İNGİLİZCE SÜRÜM yeni İngilizce
+  adreslerle kurulacak (karar; iş başlamadı; Burak "admin paneline de bağlayalım" dedi, hangi panel
+  olduğu sorulacak).
+- BLOG: yöntem /Users/burak/PİKTRAM SİTE/ana-site/araclar/seo/EVRENSEL-REHBER.md. Şablona ozet, tablo, sss,
+  gorsel blokları ve metin içi [yazı](/adres) bağlantısı geldi. Taşınan yazılar lib/blogYazilar altında
+  (slug: blogTemel · SLUG + TASINAN_SLUGLAR). Search Console'a göre trafiğin dörtte üçünü taşıyan sekiz
+  yazı yeniden yazıldı. Yazar Murat Ortaç, tarih yeni. Yazı sayfası beyaz girişli. Sıradaki parti:
+  hizmetle doğrudan ilgili rehberler (Dubai kuruluş, serbest bölgeler, KKTC kuruluş, muhasebe, banka).
+  Asgari ücret yazısı her 1 Nisan'da AYNI adreste güncellenir.
+- HİZMET SAYFALARI: vergi, kurumsal danışmanlık, AML üç ülkede kendi gövdesine çıktı
+  (services/VergiSayfa, KurumsalSayfa, AmlSayfa + lib/vergi*, kurumsal*, aml*). İngiltere ve KKTC'nin
+  kurumsal ve AML sayfaları ilk kez yayında. Veri dosyalarının başında "teyit isteyen" maddeler yazılı
+  (kapsam listeleri, KKTC takvimi, Dubai ceza merdiveni); Murat Bey'e sorulacak.
+- Halil'in dalı (telefon-duzeltme) iki commit daha main'e alındı.
+AÇIK: KKTC sermayesi (site 25.000 €, resmî sayfa yabancı ortakta 50.000 €) ve başvuru harcı (2.000 / 200 USD)
+çelişkisi; blog fotoğrafları tekrar ediyor; GTM + dönüşüm olayı + çerez bandı; İngilizce altyapı; gelişmeler
+sayfasına gerçek kayıt; siyah bölümlerin kaldırılması.
+
 ## 09.10.2026 · TESLİM ÖNCESİ GECE TURU · telefon düzeni CANLI, formlar açık, yedi denetim
 
 Burak (yatmadan önce): "yarın siteyi teslim etmemiz gerekiyor olabilir; her şeyi teslime

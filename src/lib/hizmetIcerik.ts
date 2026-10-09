@@ -43,6 +43,7 @@ const DUBAI: Partial<Record<ServiceSlug, HizmetIcerik>> = {
   /* ------------------------------------------------------------- VERGİ
      Belge: "Corporate Tax ve %0 Vergi Avantajı", "Standart UAE Corporate Tax
      Sistemi", "Kişisel Gelir Vergisi Avantajı", madde 8 ve 9.7. */
+  /* 09.10.2026 · ARTIK BASILMIYOR: vergi sayfası kendi gövdesine çıktı (services/VergiSayfa · lib/vergi*.ts); kayıt silinmedi. */
   vergi: {
     kartlar: {
       baslik: "Vergide neye bakıyoruz?",
@@ -85,6 +86,7 @@ const DUBAI: Partial<Record<ServiceSlug, HizmetIcerik>> = {
     ],
   },
 
+  /* 09.10.2026 · BU KAYIT ARTIK BASILMIYOR: sayfa kendi klasöründe (lib/kurumsalDubai.ts); kayıt kaynak olarak duruyor. */
   /* ------------------------------------------------ KURUMSAL DANIŞMANLIK
      Belge: "Hangi Dubai Free Zone?", "ORTAC ile Doğru Yapının Belirlenmesi",
      madde 2.1, "Şirket Adresi ve Workspace Seçenekleri", madde 10, 11, 14. */
@@ -130,6 +132,7 @@ const DUBAI: Partial<Record<ServiceSlug, HizmetIcerik>> = {
     ],
   },
 
+  /* 09.10.2026 · BU KAYIT ARTIK BASILMIYOR: üç ülkenin AML sayfası kendi gövdesinde (services/AmlSayfa.tsx · lib/aml*.ts). Kayıt olarak duruyor. */
   /* -------------------------------------------------------- AML VE UYUM
      Belge: süreç adımı "KYC ve Şirket Belgeleri", madde 3.2, 8 (UBO ve
      kurumsal kayıtların güncellenmesi, AML ve diğer uyum yükümlülükleri),
@@ -183,6 +186,7 @@ const DUBAI: Partial<Record<ServiceSlug, HizmetIcerik>> = {
    legislation.gov.uk; kontrol 23.09.2026) ve aynı rakamlar ülke sayfasında
    yayında. Fiyat yok. */
 const INGILTERE: Partial<Record<ServiceSlug, HizmetIcerik>> = {
+  /* 09.10.2026 · ARTIK BASILMIYOR: vergi sayfası kendi gövdesine çıktı (services/VergiSayfa · lib/vergi*.ts); kayıt silinmedi. */
   vergi: {
     kartlar: {
       baslik: "Vergide neye bakıyoruz?",
@@ -233,6 +237,7 @@ const INGILTERE: Partial<Record<ServiceSlug, HizmetIcerik>> = {
    anlaşması). Cümlelerin çoğu ülke sayfasının "vergi nerede çıkıyor"
    bölümünde yayında. Fiyat yok. */
 const KKTC: Partial<Record<ServiceSlug, HizmetIcerik>> = {
+  /* 09.10.2026 · ARTIK BASILMIYOR: vergi sayfası kendi gövdesine çıktı (services/VergiSayfa · lib/vergi*.ts); kayıt silinmedi. */
   vergi: {
     kartlar: {
       baslik: "Vergide neye bakıyoruz?",

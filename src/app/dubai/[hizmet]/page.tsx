@@ -19,7 +19,7 @@ const withSlug = async (params: Params) => {
    sunucusunda statik klasör öncelikli olduğu için görünmüyordu; optimizasyon
    turunda üretim derlemesinin ekran görüntüsünde yakalandı. Yeni bir hizmete
    kendi sayfası yazılınca slug'ı aşağıdaki listeye eklenir. */
-const KENDI_SAYFASI = new Set(["muhasebe", "banka-hesabi", "oturum-vize"]);
+const KENDI_SAYFASI = new Set(["muhasebe", "banka-hesabi", "vergi", "oturum-vize", "kurumsal-danismanlik", "aml-uyum"]);
 
 export function generateStaticParams() {
   return pagedServicesFor("dubai")

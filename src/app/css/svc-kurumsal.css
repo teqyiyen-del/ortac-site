@@ -1,0 +1,939 @@
+/* ============================================================================
+   KURUMSAL DANIŞMANLIK — /dubai · /ingiltere · /kktc /kurumsal-danismanlik
+   Ad alanı .skr- · Gövde: components/services/KurumsalSayfa.tsx (bu dosyayı
+   o bağlıyor, globals.css değil; gerekçe orada) · Metin: lib/kurumsal*.ts
+
+   09.10.2026 · İLK YAZIM. Banka ve vize sayfalarının kardeşi: aynı iskelet
+   (sahne panosu + satırlar, kartlar, adım kartları), kendi ad alanında.
+   Paylaşmak yerine kopya, çünkü o sayfalar hâlâ turlarla değişiyor ve bir
+   sayfanın turu ötekini bozmamalı (svc-vize.css'in başındaki kararla aynı).
+
+   KURALLAR (docs/tuzaklar.md):
+     · köşe role göre 8 / 12 / 18 / 28; çizimlerin kökü data-yaricap="serbest"
+     · kutu kenarına şerit yok; ayrım kutuyla (1 px çerçeve) ve boşlukla
+     · ızgarada her zaman minmax(0, 1fr) (tuzak B)
+     · okunacak yazı en az 14 px, etiket en az 12 px
+     · ağırlık mavide; yeşil yalnız para, amber şart, risk ve not
+     · hareket yalnız prefers-reduced-motion: no-preference altında; ekran
+       dışında durdurma globals.css · [data-ekran-disi] kuralından geliyor
+     · üç sürekli periyot: 3,1 s (ağaç) · 5,9 s (akış) · 11,3 s (yıl halkası).
+       Üçü de asal tabanlı (31 · 59 · 113) ve sitedeki öteki periyotlarla
+       ortak katları yok (tuzak K; 09.10.2026'da css/ altında tarandı).
+   ========================================================================= */
+
+/* Zemin sırası: beyaz ve kırık beyaz (hafıza: tam siyah bölüm yok). Kırık
+   beyaz bölümde kartlar beyaz + 1 px çerçeve, yani kart zeminden ayrışıyor. */
+.skr {
+  background: var(--white);
+}
+.skr-kirik {
+  background: #fafafa;
+}
+
+/* ---------------------------------------------------------- ikon kuyusu */
+.skr-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.skr-ic[data-ton="yesil"] {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.skr-ic[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+
+/* ----------------------------------------------- ortak kart yazıları
+   Başlık 17 / 600, cümle 14 / 1,55. Cümleler veride iki satırı geçmeyecek
+   uzunlukta yazıldı (hafıza: açıklama en fazla 2 satır). */
+.skr-kart-t,
+.skr-s-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.skr-kart-p,
+.skr-s-p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+
+/* ------------------------------------------------ 1 · durum kartları
+   Altı kart: 1 → 2 (720) → 3 (1024). */
+.skr-durum {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .skr-durum {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .skr-durum {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.skr-durum > li,
+.skr-sat > li,
+.skr-grup > li,
+.skr-tur > li,
+.skr-adim > li,
+.skr-ilgili > li {
+  display: flex;
+  min-width: 0;
+}
+.skr-kart {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.skr-kart .skr-kart-t {
+  margin-top: 20px;
+}
+/* Telefonda kart yatay: kuyu solda, yazı sağda. Dikey hâlde altı kart 1400 px
+   tutuyordu (390'da ölçüldü); iç boşluk aynı, yalnız dizilim değişti. */
+@media (max-width: 719.5px) {
+  .skr-durum .skr-kart {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    column-gap: 16px;
+    align-items: start;
+    padding: 20px;
+  }
+  .skr-durum .skr-ic {
+    grid-row: span 2;
+  }
+  .skr-durum .skr-kart-t {
+    margin-top: 0;
+  }
+}
+
+/* ------------------------------------------- 2 · yapı: sahne + satırlar
+   Banka sayfasındaki .svb-bol düzeni: sahne 5, satırlar 7. */
+.skr-bol {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: var(--space-head);
+}
+@media (min-width: 1024px) {
+  .skr-bol {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+}
+.skr-sahne {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 28px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.skr-sat {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.skr-s {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+
+/* ------------------------------------------------ ÇİZİM 1 · yapı ağacı
+   Üst kutu (ortaklar), 56 px'lik bağ SVG'si, üç şirket kutusu, altta iki
+   işaretli açıklama. Şirket kutusu: bayrak diski 28, ad 15 / 600, tür 12.
+   Sayfanın ülkesi mavi çerçeveli ve mavi zeminli; ötekiler kesik çerçeveli. */
+.skr-agac {
+  display: grid;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+.skr-agac-ust {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-self: center;
+  padding: 8px 16px 8px 8px;
+  border-radius: 12px;
+  background: #111;
+  color: var(--white);
+  font-size: 14px;
+}
+.skr-agac-ust b {
+  font-weight: 600;
+}
+.skr-agac-ui {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.skr-agac-bag {
+  display: block;
+  width: 100%;
+  height: 56px;
+  overflow: visible;
+}
+.skr-agac-yol,
+.skr-agac-akan {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+.skr-agac-yol {
+  stroke: #cfcfcf;
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+}
+.skr-agac-yol[data-aktif] {
+  stroke: var(--blue-700);
+  stroke-width: 2;
+  stroke-dasharray: none;
+}
+/* akan kesikler: dolu kolun üstünde, koyu mavi; reduce altında hiç yok */
+.skr-agac-akan {
+  display: none;
+  stroke: var(--blue-900);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 2 22;
+}
+.skr-agac-dal {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.skr-agac-k {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 14px 6px 12px;
+  border: 1px dashed #cfcfcf;
+  border-radius: 12px;
+  background: var(--white);
+  text-align: center;
+}
+.skr-agac-k[data-aktif] {
+  border: 1px solid var(--blue-700);
+  background: var(--blue-100);
+}
+.skr-agac-bayrak {
+  display: block;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 4px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.skr-agac-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.skr-agac-k b {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+.skr-agac-k small {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text-600);
+}
+.skr-agac-k[data-aktif] small {
+  color: var(--blue-900);
+}
+.skr-agac-not {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 20px;
+  margin: 20px 0 0;
+  font-size: 12px;
+  color: var(--text-600);
+}
+.skr-agac-not span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.skr-agac-not i {
+  display: block;
+  width: 22px;
+  height: 0;
+  border-top: 2px solid var(--blue-700);
+}
+.skr-agac-not i[data-cizgi="kesik"] {
+  border-top: 2px dashed #bdbdbd;
+}
+
+/* ------------------------------------------------- 3 · kapsam grupları
+   Üç kart: 1 → 3 (1024). Madde 14 px, başında mavi onay işareti. */
+.skr-grup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 1024px) {
+  .skr-grup {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.skr-grup-k {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.skr-grup-bas {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.skr-grup-t,
+.skr-haric-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.skr-grup-l,
+.skr-haric-l {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.skr-grup-l > li,
+.skr-haric-l > li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-900);
+}
+.skr-grup-l svg,
+.skr-haric-l svg {
+  margin-top: 2px;
+}
+.skr-grup-l svg {
+  color: var(--blue-700);
+}
+/* Kapsam dışı: NOT, o yüzden amber. Dört kenar eşit zemin; şerit yok. */
+.skr-haric {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+  padding: 24px;
+  border-radius: var(--r-lg);
+  background: var(--amber-100);
+}
+.skr-haric-l svg {
+  color: var(--amber-600);
+}
+@media (min-width: 1024px) {
+  .skr-haric {
+    grid-template-columns: 200px minmax(0, 1fr);
+    align-items: center;
+    gap: 24px;
+  }
+  .skr-haric-l {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+/* ---------------------------------------------- ÇİZİM 2 · değişiklik akışı
+   Pano kabın genişliğinde (28). İçinde üç durak eşit sütunda; sütun arası
+   boşluk YOK, çünkü belgenin yolu sütun merkezlerine göre hesaplanıyor
+   (1/6 · 3/6 · 5/6; adım 33,333cqw). Durağın ikon kutusu 56, belge 30:
+   belgenin tepesi (56 − 30) / 2 = 13. */
+.skr-akis-pano {
+  margin-top: var(--space-head);
+  padding: 32px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.skr-akis {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  container-type: inline-size;
+}
+.skr-akis-l {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.skr-akis-d {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding: 0 8px;
+  text-align: center;
+}
+.skr-akis-ic {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+.skr-akis-d b {
+  margin-top: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+.skr-akis-d small {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.skr-akis-ok {
+  position: absolute;
+  top: 19px;
+  right: -9px;
+  color: #bdbdbd;
+}
+/* belge: duruşta (ve reduce altında) görünmüyor; hareket aşağıda */
+.skr-akis-belge {
+  position: absolute;
+  top: 13px;
+  left: calc(100% / 6 - 15px);
+  z-index: 1;
+  display: none;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--blue-700);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--blue-700);
+}
+@media (max-width: 719.5px) {
+  /* üç dar sütun (~100 px): alt yazı gizli, ad kalıyor (telefon kuralı:
+     yazıyı azalt, görseli koru; iç boşluk kısılmıyor) */
+  .skr-akis-pano {
+    padding: 24px 20px;
+  }
+  .skr-akis-d {
+    padding: 0 4px;
+  }
+  .skr-akis-d small {
+    display: none;
+  }
+  .skr-akis-d b {
+    font-size: 15px;
+  }
+}
+
+/* ------------------------------------------------- 4 · değişiklik türleri
+   Altı satır: 1 → 2 sütun (1024). Satır: kuyu · metin · etiket. Telefonda
+   etiket metnin altına iniyor. */
+.skr-tur {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 1024px) {
+  .skr-tur {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.skr-tur-k {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.skr-tur-m {
+  min-width: 0;
+}
+.skr-etiket {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-900);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+/* amber-600 amber-100 üstünde 13 px'te 4,5'in altında (3,8:1): koyu amber */
+.skr-etiket[data-ton="amber"] {
+  background: var(--amber-100);
+  color: var(--amber-700, #8a5200);
+}
+@media (max-width: 719.5px) {
+  .skr-tur-k {
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: start;
+  }
+  .skr-etiket {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* ---------------------------------------------- ÇİZİM 3 · yıl halkası
+   SAYFANIN TEK GECE KARTI (hafıza: siyah yalnız büyük gece kartta). Solda
+   halka, sağda kalem kutuları. Gece zemininde marka mavisi küçük yazıda
+   okunmuyor (tuzaklar · kontrast): işaret ve numara AÇIK mavi (#5c9eeb)
+   zemin + koyu rakam; amber için açık amber (#f0b44c) + koyu rakam. */
+.skr-yil {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 28px;
+  margin-top: var(--space-head);
+  padding: 28px 20px;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  color: var(--white);
+}
+@media (min-width: 1024px) {
+  .skr-yil {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 40px;
+    padding: 48px;
+  }
+}
+.skr-yil-sahne {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+}
+.skr-yil-svg {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  overflow: visible;
+}
+.skr-yil-halka {
+  fill: none;
+  stroke: var(--night-3);
+  stroke-width: 18;
+}
+.skr-yil-dilim {
+  stroke: var(--night);
+  stroke-width: 2;
+}
+.skr-yil-kuyruk {
+  fill: none;
+  stroke: var(--blue-700);
+  stroke-width: 3;
+  stroke-linecap: round;
+  /* yayın on altıda biri görünüyor; başlangıcı tepe olsun diye -90° */
+  stroke-dasharray: 16 84;
+  transform: rotate(-147.6deg);
+  transform-origin: 160px 160px;
+  opacity: 0;
+}
+.skr-yil-nokta {
+  fill: var(--white);
+  opacity: 0;
+}
+.skr-yil-isaret circle {
+  fill: var(--blue-500);
+  stroke: var(--night);
+  stroke-width: 3;
+}
+.skr-yil-isaret[data-ton="amber"] circle {
+  fill: #f0b44c;
+}
+.skr-yil-isaret text {
+  fill: var(--night);
+  font-size: 14px;
+  font-weight: 700;
+}
+.skr-yil-orta {
+  fill: var(--white);
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.skr-yil-alt {
+  fill: var(--night-text);
+  font-size: 14px;
+}
+.skr-yil-l {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.skr-yil-k {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-2);
+}
+.skr-yil-no {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--blue-500);
+  color: var(--night);
+  font-size: 13px;
+  font-weight: 700;
+}
+.skr-yil-no[data-ton="amber"] {
+  background: #f0b44c;
+}
+.skr-yil-m {
+  min-width: 0;
+}
+.skr-yil-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--white);
+}
+.skr-yil-p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--night-text);
+}
+.skr-yil-z {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 3px 10px;
+  border-radius: var(--r-sm);
+  background: rgba(92, 158, 235, 0.16);
+  color: #b9d6f8;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.skr-yil-z[data-ton="amber"] {
+  background: rgba(240, 180, 76, 0.16);
+  color: #f5c56e;
+}
+@media (max-width: 1279.5px) {
+  /* çip metnin altına: dar kartta üçüncü sütun cümleyi dört satıra itiyordu */
+  .skr-yil-k {
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: start;
+  }
+  .skr-yil-z {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* --------------------------------------------------------- 5 · adımlar
+   Beş adım ALT ALTA SATIR (banka ve vize sayfalarındaki karar). İlk hâl beş
+   sütunlu karttı: 1440'ta sütun 210 px kalıyor, cümle üç satıra çıkıyordu
+   (kural: açıklama en çok iki satır). Satırda numara · kuyu · başlık · cümle
+   yan yana; telefonda cümle başlığın altına iniyor. */
+.skr-adim {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.skr-adim-k {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 28px 44px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+  min-width: 0;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.skr-adim-n {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #8a8a8a;
+}
+.skr-adim-m {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  min-width: 0;
+}
+.skr-adim-m .skr-kart-p {
+  margin: 0;
+}
+@media (min-width: 1024px) {
+  .skr-adim-m {
+    grid-template-columns: 300px minmax(0, 1fr);
+    align-items: center;
+    gap: 24px;
+  }
+}
+
+/* --------------------------------------------------- 6 · ilgili hizmetler
+   Dört bağlantı kartı: 1 → 2 (720). Dört sütunda (1200) kart 270 px kalıyor,
+   cümle üç satıra çıkıyordu; 2 x 2 kaldı. Kartın tamamı bağlantı. */
+.skr-ilgili {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .skr-ilgili {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.skr-ilgili-f {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.skr-ilgili-k {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 44px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+  color: var(--text-900);
+  text-decoration: none;
+  transition: border-color 200ms var(--ease-out-soft);
+}
+.skr-ilgili-m {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.skr-ilgili-m b {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.skr-ilgili-m small {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-600);
+}
+.skr-ilgili-ok {
+  color: var(--blue-700);
+  transition: transform 200ms var(--ease-out-soft);
+}
+@media (hover: hover) {
+  a.skr-ilgili-k:hover {
+    border-color: var(--blue-700);
+  }
+  a.skr-ilgili-k:hover .skr-ilgili-ok {
+    transform: translateX(3px);
+  }
+}
+
+/* ================================================================ HAREKET
+   Hepsi tek kapıda. Reduce altında: ağaçta akan kesik yok (dolu kol
+   duruyor), akışta belge yok (üç durak ve oklar duruyor), halkada dönen
+   nokta yok (işaretler duruyor). Yani hareketsiz hâl de tam bir çizim. */
+@media (prefers-reduced-motion: no-preference) {
+  /* ÇİZİM 1 · dolu kolda aşağı akan kesikler. Desen 24 birim; ofset bir
+     desen boyu kayınca döngü dikişsiz. */
+  .skr-agac-akan {
+    display: block;
+    animation: skrAkan 3.1s linear infinite;
+  }
+
+  /* ÇİZİM 2 · belge 1. duraktan 3.'ye. Durağın İÇİNE girerken küçülüp
+     kayboluyor, çıkarken büyüyor; duraklar belge vardığında bir kez
+     maviye dönüyor. Varış anları: 2. durak %44 (2,596 s), 3. durak %94
+     (5,546 s); 1. durak döngünün başında. */
+  .skr-akis-belge {
+    display: grid;
+    animation: skrBelge 5.9s var(--ease-inout) infinite;
+  }
+  .skr-akis-ic {
+    animation: skrDurak 5.9s linear infinite;
+  }
+  .skr-akis-d[data-k="1"] .skr-akis-ic {
+    animation-delay: 2.596s;
+  }
+  .skr-akis-d[data-k="2"] .skr-akis-ic {
+    animation-delay: 5.546s;
+  }
+
+  /* ÇİZİM 3 · halkada dönen nokta ve kuyruğu */
+  .skr-yil-don {
+    transform-box: view-box;
+    transform-origin: 160px 160px;
+    animation: skrDon 11.3s linear infinite;
+  }
+  .skr-yil-kuyruk,
+  .skr-yil-nokta {
+    opacity: 1;
+  }
+}
+/* fare çizimin üstündeyken duruyor (banka sahnesindeki davranış) */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .skr-akis:hover .skr-akis-belge,
+  .skr-akis:hover .skr-akis-ic {
+    animation-play-state: paused;
+  }
+}
+@keyframes skrAkan {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes skrBelge {
+  0% {
+    transform: translateX(0) scale(0);
+    opacity: 0;
+  }
+  6% {
+    transform: translateX(5cqw) scale(1);
+    opacity: 1;
+  }
+  38% {
+    transform: translateX(28.333cqw) scale(1);
+    opacity: 1;
+  }
+  44%,
+  50% {
+    transform: translateX(33.333cqw) scale(0);
+    opacity: 0;
+  }
+  56% {
+    transform: translateX(38.333cqw) scale(1);
+    opacity: 1;
+  }
+  88% {
+    transform: translateX(61.667cqw) scale(1);
+    opacity: 1;
+  }
+  94%,
+  100% {
+    transform: translateX(66.667cqw) scale(0);
+    opacity: 0;
+  }
+}
+@keyframes skrDurak {
+  0%,
+  16%,
+  100% {
+    border-color: var(--border);
+    background: var(--blue-100);
+    color: var(--blue-700);
+  }
+  3%,
+  10% {
+    border-color: var(--blue-700);
+    background: var(--blue-700);
+    color: var(--white);
+  }
+}
+@keyframes skrDon {
+  to {
+    transform: rotate(360deg);
+  }
+}

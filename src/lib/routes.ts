@@ -290,7 +290,15 @@ const STATIC_LIVE = [
   "/kktc/vergi",
   "/dubai/vergi",
   "/dubai/kurumsal-danismanlik",
+  /* 09.10.2026 · kurumsal danışmanlık İngiltere ve KKTC'de de kendi sayfasıyla
+     açıldı (components/services/KurumsalSayfa.tsx · lib/kurumsal*.ts). */
+  "/ingiltere/kurumsal-danismanlik",
+  "/kktc/kurumsal-danismanlik",
   "/dubai/aml-uyum",
+  /* 09.10.2026 · AML ve mevzuat uyumu üç ülkede kendi sayfasıyla
+     (components/services/AmlSayfa.tsx · lib/aml*.ts); İngiltere ve KKTC açıldı. */
+  "/ingiltere/aml-uyum",
+  "/kktc/aml-uyum",
   "/kktc",
   /* İngiltere kuruluş — 23.09.2026. Burak: "açabilirsin sayfayı." Not:
      "ortaç İngiltere şirket kuruluş tarafına çok odaklanmıyor … prestij

@@ -13,7 +13,7 @@ const withSlug = async (params: Params) => {
 /* 08.10.2026 · /ingiltere/muhasebe ve /ingiltere/banka-hesabi'nin kendi
    klasörü var; aynı adresi bu şablon da üretirse üretimde şablon kazanıyor
    (app/dubai/[hizmet]'teki not). */
-const KENDI_SAYFASI = new Set(["muhasebe", "banka-hesabi"]);
+const KENDI_SAYFASI = new Set(["muhasebe", "banka-hesabi", "vergi", "kurumsal-danismanlik", "aml-uyum"]);
 
 export function generateStaticParams() {
   return pagedServicesFor("ingiltere")

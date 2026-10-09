@@ -100,6 +100,10 @@
 @import "./css/svc-banka.css";
 /* Dubai · Vize & Oturum (/dubai/oturum-vize). Ad alanları .svz- · .svzk-. */
 @import "./css/svc-vize.css";
+/* Vergi danışmanlığı (/dubai/vergi · /ingiltere/vergi · /kktc/vergi). Ad alanı .svr-. */
+@import "./css/svc-vergi.css";
+/* AML ve mevzuat uyumu (/dubai, /ingiltere ve /kktc altında /aml-uyum). Ad alanı .sam-. */
+@import "./css/svc-aml.css";
 @import "./css/blog.css";
 @import "./css/hakkimizda.css";
 @import "./css/partnerlik.css";
