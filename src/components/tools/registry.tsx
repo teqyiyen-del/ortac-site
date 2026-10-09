@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import UaeVat from "@/components/tools/UaeVat";
 import NameForge from "@/components/tools/NameForge";
+import AlanAdi from "@/components/tools/AlanAdi";
 import UkIsimSorgu from "@/components/tools/UkIsimSorgu";
 import SicBulucu from "@/components/tools/SicBulucu";
 import IfzaFaaliyet from "@/components/tools/IfzaFaaliyet";
@@ -38,6 +39,7 @@ import type { PagedToolId } from "@/lib/tools/catalog";
 export const TOOL_VIEW: Record<PagedToolId, ComponentType> = {
   "bae-kdv": UaeVat,
   "isim-ureteci": NameForge,
+  "alan-adi-sorgulama": AlanAdi,
   "ingiltere-isim-sorgulama": UkIsimSorgu,
   "ingiltere-sic-kodu": SicBulucu,
   "ifza-faaliyet-kodu": IfzaFaaliyet,

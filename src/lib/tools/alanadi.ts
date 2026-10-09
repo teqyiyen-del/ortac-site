@@ -63,9 +63,50 @@
    geçerli — alan adının boş olması şirket adının onaylanacağı anlamına gelmez.
    ========================================================================= */
 
-/** Ölçülmüş uzantılar. Sıra ekranda da bu sıra: en çok istenen önde. */
+/* ------------------------------------------------ 09.10.2026 · DOKUZ UZANTI
+   Halil: "godaddy gibi; adam ismini girecek, alındıysa alındı diyecek, altta
+   mevcut olabilecek diğerlerini gösterecek. Satın alınabilir bir sistem değil,
+   sadece bilgi amaçlı." (.ae ve .com.tr istenmedi; ikisinin de RDAP'i yok.)
+
+   Sorgu artık rdap.org üzerinden DEĞİL, her uzantının kendi kütüğüne gidiyor:
+     · rdap.org bir yönlendirici ve IANA listesinde olmayan uzantıda her ada 404
+       dönüyor (.io böyle: listede yok, kütüğünün RDAP'i ise çalışıyor),
+     · tek bir aramada dokuz uzantı ve sekiz benzer ad soruluyor; hepsi aynı
+       yönlendiriciden geçseydi sınırına takılırdı. Şimdi istekler altı ayrı
+       kütüğe dağılıyor.
+   Her uç iki denetimle ölçüldü (kesin kayıtlı ad 200, kesin kayıtsız ad 404) ve
+   hepsi tarayıcıdan sorulabiliyor (Access-Control-Allow-Origin: *):
+
+     uzantı   kütük                        kayıtlı           kayıtsız
+     .com     Verisign                     google.com   200  qwzx9137asdk  404
+     .net     Verisign                     google.net   200  qwzx9137asdk  404
+     .org     Public Interest Registry     google.org   200  qwzx9137asdk  404
+     .co.uk   Nominet                      bbc.co.uk    200  qwzx9137asdk  404
+     .io      Identity Digital             google.io    200  qwzx9137asdk  404
+     .ai      Identity Digital             google.ai    200  qwzx9137asdk  404
+     .dev     Google Registry              google.dev   200  qwzx9137asdk  404
+     .app     Google Registry              google.app   200  qwzx9137asdk  404
+     .xyz     CentralNic                   abc.xyz      200  qwzx9137asdk  404
+   ------------------------------------------------------------------------- */
+const KUTUK = {
+  com: ["Verisign", "https://rdap.verisign.com/com/v1/domain/"],
+  net: ["Verisign", "https://rdap.verisign.com/net/v1/domain/"],
+  org: ["Public Interest Registry", "https://rdap.publicinterestregistry.org/rdap/domain/"],
+  "co.uk": ["Nominet", "https://rdap.nominet.uk/uk/domain/"],
+  io: ["Identity Digital", "https://rdap.identitydigital.services/rdap/domain/"],
+  ai: ["Identity Digital", "https://rdap.identitydigital.services/rdap/domain/"],
+  dev: ["Google Registry", "https://pubapi.registry.google/rdap/domain/"],
+  app: ["Google Registry", "https://pubapi.registry.google/rdap/domain/"],
+  xyz: ["CentralNic", "https://rdap.centralnic.com/xyz/domain/"],
+} as const;
+
+/** İsim üretecinin sorduğu dört uzantı (o aracın ekranı dört sütuna göre kurulu). */
 export const ALAN_UZANTILARI = ["com", "net", "org", "co.uk"] as const;
-export type AlanUzantisi = (typeof ALAN_UZANTILARI)[number];
+/** Alan adı aracının sorduğu dokuz uzantı. Sıra ekranda da bu sıra. */
+export const TUM_UZANTILAR = ["com", "net", "org", "co.uk", "io", "ai", "dev", "app", "xyz"] as const;
+export type AlanUzantisi = (typeof TUM_UZANTILAR)[number];
+/** Sorgunun gittiği kütüklerin adları; arayüz "kime ne gidiyor" cümlesinde yazıyor. */
+export const KUTUK_ADLARI = [...new Set(Object.values(KUTUK).map((k) => k[0]))];
 
 export type AlanDurum = "kayitli" | "bos" | "sorulamadi";
 
@@ -81,7 +122,7 @@ async function tekSorgu(etiket: string, uzanti: AlanUzantisi): Promise<AlanDurum
   const saat = setTimeout(() => kontrol.abort(), ZAMAN_ASIMI_MS);
 
   try {
-    const cevap = await fetch(`https://rdap.org/domain/${etiket}.${uzanti}`, {
+    const cevap = await fetch(`${KUTUK[uzanti][1]}${etiket}.${uzanti}`, {
       signal: kontrol.signal,
       headers: { accept: "application/rdap+json" },
     });
@@ -106,9 +147,37 @@ async function tekSorgu(etiket: string, uzanti: AlanUzantisi): Promise<AlanDurum
  * beklenirdi. Hiçbiri ötekini beklemiyor ve biri patlarsa öteki üçü yine
  * cevabını veriyor (tekSorgu kendi içinde hata yutuyor, yani `all` reddetmiyor).
  */
-export async function alanAdiSorgula(etiket: string): Promise<AlanSonuc[]> {
+export async function alanAdiSorgula(etiket: string, uzantilar: readonly AlanUzantisi[] = ALAN_UZANTILARI): Promise<AlanSonuc[]> {
   if (!etiket || etiket.length < 2) return [];
-  return Promise.all(
-    ALAN_UZANTILARI.map(async (uzanti) => ({ uzanti, durum: await tekSorgu(etiket, uzanti) })),
-  );
+  return Promise.all(uzantilar.map(async (uzanti) => ({ uzanti, durum: await tekSorgu(etiket, uzanti) })));
+}
+
+/* ----------------------------------------------------------- ALAN ADI ARACI */
+
+/** Yazılanı ada ve (varsa) uzantıya ayırıyor: "Halil.com" → { etiket: "halil", uzanti: "com" }.
+ *  Tanımadığımız bir uzantı yazıldıysa uzanti null ve `bilinmeyen` o uzantı: arayüz söylüyor.
+ *  Alan adında yalnız a-z, 0-9 ve tire olur; Türkçe harfler ASCII karşılığına iniyor. */
+const TR: Record<string, string> = { ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", â: "a", î: "i", û: "u" };
+export function alanAyristir(girdi: string): { etiket: string; uzanti: AlanUzantisi | null; bilinmeyen: string | null } {
+  let ham = girdi.trim().toLocaleLowerCase("tr-TR").replace(/^https?:\/\//, "").replace(/^www\./, "").split(/[/?#\s]/)[0];
+  ham = [...ham].map((c) => TR[c] ?? c).join("");
+  let uzanti: AlanUzantisi | null = null, bilinmeyen: string | null = null;
+  const nokta = ham.indexOf(".");
+  if (nokta > -1) {
+    const kuyruk = ham.slice(nokta + 1);
+    if ((TUM_UZANTILAR as readonly string[]).includes(kuyruk)) uzanti = kuyruk as AlanUzantisi;
+    else if (kuyruk) bilinmeyen = kuyruk.slice(0, 24);
+    ham = ham.slice(0, nokta);
+  }
+  const etiket = ham.replace(/[^a-z0-9-]/g, "").replace(/^-+|-+$/g, "").slice(0, 63);
+  return { etiket, uzanti, bilinmeyen };
+}
+
+/** Ad alınmışsa sorulacak benzerler: aynı adın önüne ve arkasına sık kullanılan ekler.
+ *  Liste sabit ve sırası sabit; rastgelelik yok (aynı girdi aynı öneriler). */
+const ON_EK = ["get", "try", "go", "the"] as const;
+const SON_EK = ["hq", "co", "global", "group", "labs", "online"] as const;
+export function alanBenzerleri(etiket: string): string[] {
+  const out = [...SON_EK.map((e) => etiket + e), ...ON_EK.map((e) => e + etiket)];
+  return out.filter((x) => x.length <= 63 && x !== etiket).slice(0, 8);
 }

@@ -1007,7 +1007,7 @@ function AdayKart({
 
 /* Uzantının işareti: .co.uk İngiltere'nin, bayrağı onun; ötekiler ülkesiz,
    küre. Bayrak BayrakDisk kabında (tuzak H). */
-function UzantiIsareti({ uzanti }: { uzanti: (typeof ALAN_UZANTILARI)[number] }) {
+function UzantiIsareti({ uzanti }: { uzanti: AlanSonuc["uzanti"] }) {
   return (
     <span className="ta-uretec-alan-i" aria-hidden="true">
       {uzanti === "co.uk" ? (
