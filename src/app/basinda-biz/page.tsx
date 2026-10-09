@@ -212,7 +212,8 @@ export default function BasindaBizPage() {
           lead={
             EMPTY
               ? "Bu sayfa bir basın arşivi ve bugün boş. Buraya yalnızca yayının kendi adresine bağlanabilen, tarihi belli kayıtlar giriyor; ekran görüntüsü, kaynağı yazılmayan alıntı ya da adı verilmeyen bir yayın girmiyor."
-              : "Dubai ekonomisini anlatan haberlerde uzman görüşümüzle yer alıyoruz. Her kaydın yanında yayının adı, tarihi ve haberin kendi adresi duruyor; alıntıyı buradan değil, kaynağından okuyun."
+              : /* 10.10.2026 · dört satırdı; Burak: "basında biz cümlesini kısalt" */
+                "Dubai ekonomisini anlatan haberlerde uzman görüşümüzle yer alıyoruz. Her haber kendi kaynağına bağlı."
           }
           foto={POST_PHOTO.dubaiAlaca}
           belge={{ ad: "Basın arşivi", cip: "Kaynağına bağlı" }}
