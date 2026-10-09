@@ -98,7 +98,7 @@ export const POST_DUBAI_KURULUS_REHBERI: BlogPost = {
   country: "dubai",
   tags: ["Dubai", "Şirket kuruluşu", "Maliyet"],
   author: "Murat Ortaç",
-  cover: POST_PHOTO.dubaiCost,
+  cover: POST_PHOTO.dubaiGece,
 
   seo: {
     title: "Dubai Şirket Kurma 2026: Şartlar, Maliyet ve Süreç",

@@ -93,7 +93,7 @@ export const POST_DUBAI_SERBEST_BOLGE_MAINLAND: BlogPost = {
   country: "dubai",
   tags: ["Dubai", "Şirket kuruluşu", "Vergi"],
   author: "Murat Ortaç",
-  cover: POST_PHOTO.dubaiHor,
+  cover: POST_PHOTO.dubaiAlaca,
 
   seo: {
     title: "Dubai Serbest Bölge mi Mainland mi? Farklar ve Seçim",

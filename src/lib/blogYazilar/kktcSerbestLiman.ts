@@ -74,7 +74,7 @@ export const POST_KKTC_SERBEST_LIMAN: BlogPost = {
   country: "kktc",
   tags: ["KKTC", "Serbest Liman", "Şirket kuruluşu"],
   author: "Murat Ortaç",
-  cover: POST_PHOTO.konteyner,
+  cover: POST_PHOTO.girneDag,
 
   seo: {
     title: "KKTC Serbest Liman Şirketi: Kıbrıs'ta Şirket Kurmak 2026",

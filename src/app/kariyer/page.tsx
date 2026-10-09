@@ -3,7 +3,9 @@ import { ArrowRight, Mail } from "lucide-react";
 
 import Nav from "@/components/Nav";
 import FinalCta from "@/components/FinalCta";
-import PageHero from "@/components/shared/PageHero";
+import KurumsalGiris from "@/components/shared/KurumsalGiris";
+import { CalendarClock as GirisRozet2, MapPin as GirisRozet3 } from "lucide-react";
+import { SECTOR_PHOTO } from "@/lib/media";
 import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
 import CareerSections from "@/app/kariyer/CareerSections";
@@ -149,7 +151,7 @@ export default function KariyerPage() {
             şeyi vaat etmek olurdu. Lead zaten iki hâli ayırıyordu, başlık
             ayırmıyordu. Aksan başlığın SONU olmak zorunda (PageHero
             title.endsWith(accent) ile ayırıyor), o yüzden iki hâlde iki aksan. */}
-        <PageHero
+        <KurumsalGiris
           crumb="Kariyer"
           title={EMPTY ? "Ekibimize başvurun." : "Ekibimizde açık pozisyonlar."}
           accent={EMPTY ? "başvurun." : "açık pozisyonlar."}
@@ -161,6 +163,12 @@ export default function KariyerPage() {
                 CAREERS_EMPTY.heroLead
               : "Muhasebe ve vergi, uyum, şirket kuruluşu ve vize: dört ekip, üç ülke. Her ilanın yanında hangi ekip, hangi ülke ve hangi çalışma biçimi olduğu yazıyor; başvuru formu da aynı sayfada."
           }
+          foto={SECTOR_PHOTO.danismanlik.work}
+          belge={{ ad: "Açık başvuru", cip: "Her zaman açık" }}
+          rozetler={[
+            { icon: <GirisRozet3 size={18} strokeWidth={2} />, b: "Dubai, Londra, Lefkoşa" },
+            { icon: <GirisRozet2 size={18} strokeWidth={2} />, b: "1996'dan", s: " beri" },
+          ]}
         />
 
         <CareerSections />

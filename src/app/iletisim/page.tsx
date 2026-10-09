@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 
 import Nav from "@/components/Nav";
 import FinalCta from "@/components/FinalCta";
-import PageHero from "@/components/shared/PageHero";
+import KurumsalGiris from "@/components/shared/KurumsalGiris";
+import { Mail as GirisPosta, MessageCircle as GirisWa, Phone as GirisTel } from "lucide-react";
+import { PHOTO } from "@/lib/media";
 import ContactSections from "@/app/iletisim/ContactSections";
 import { CHANNELS, OFFICES, isLiveChannel, linksOf } from "@/lib/offices";
 
@@ -192,12 +194,19 @@ export default function IletisimPage() {
             e-postası. Sıra çevrildi: önce çalışan kanal, sonra form. Formun
             hâlâ ilk bölüm olması değişmedi (müşterinin kararı); değişen,
             hangisinin ÖNCE VAAT EDİLDİĞİ. */}
-        <PageHero
+        <KurumsalGiris
           crumb="İletişim"
           title="Bizimle iletişime geçin."
           accent="iletişime geçin."
           /* 07.10.2026 · dört satırdan iki satıra (Burak: "bu kadar uzuna gerek yok") */
           lead="Dubai, İngiltere ve KKTC ofislerimizin telefonu, WhatsApp hattı ve e-postası aşağıda. Doğrudan arayın ya da yazın."
+          foto={PHOTO.formation}
+          belge={{ ad: "Üç ofis", cip: "Tek muhatap" }}
+          rozetler={[
+            { icon: <GirisTel size={18} strokeWidth={2} />, b: "Telefon" },
+            { icon: <GirisWa size={18} strokeWidth={2} />, b: "WhatsApp" },
+            { icon: <GirisPosta size={18} strokeWidth={2} />, b: "E-posta" },
+          ]}
         />
 
         <ContactSections />

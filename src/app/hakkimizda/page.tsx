@@ -20,7 +20,9 @@ import {
 } from "lucide-react";
 import Nav from "@/components/Nav";
 import FinalCta from "@/components/FinalCta";
-import PageHero from "@/components/shared/PageHero";
+import KurumsalGiris from "@/components/shared/KurumsalGiris";
+import { PHOTO } from "@/lib/media";
+import { BadgeCheck as GirisRozet1, CalendarClock as GirisRozet2, MapPin as GirisRozet3 } from "lucide-react";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import AskCta from "@/components/shared/AskCta";
@@ -696,7 +698,19 @@ export default function AboutPage() {
             hero yeniden TİP A değerlerini alıyor (--phg-glow-dim 0.72 vb.).
             O dosyanın kompakt sayfa listesinde /hakkimizda zaten yazılı —
             geçen tur güncellenmemişti, bu turda satır yeniden doğru oldu. */}
-        <PageHero crumb={HERO.crumb} title={HERO.title} accent={HERO.accent} lead={HERO.lead} />
+        <KurumsalGiris
+          crumb={HERO.crumb}
+          title={HERO.title}
+          accent={HERO.accent}
+          lead={HERO.lead}
+          foto={PHOTO.accounting}
+          belge={{ ad: "Ortac Global", cip: "1996'dan beri" }}
+          rozetler={[
+            { icon: <GirisRozet2 size={18} strokeWidth={2} />, b: "30 yıl", s: " muhasebe ve vergi" },
+            { icon: <GirisRozet3 size={18} strokeWidth={2} />, b: "Üç ülkede", s: " kendi ofis" },
+            { icon: <GirisRozet1 size={18} strokeWidth={2} />, b: "700'den fazla", s: " şirket kuruluşu" },
+          ]}
+        />
 
         {/* ================= 1 · KİM OLDUĞUMUZ · AFİŞ =================
             22.09.2026 · /lab/hakkimizda-kim'in K1'i, müşterinin tarifiyle:

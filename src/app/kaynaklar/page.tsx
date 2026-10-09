@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { OG_GORSEL } from "@/lib/seo";
 import Nav from "@/components/Nav";
-import PageHero from "@/components/shared/PageHero";
+import KurumsalGiris from "@/components/shared/KurumsalGiris";
+import { BookOpen as GirisKitap, FileText as GirisDosya } from "lucide-react";
+import { POST_PHOTO } from "@/lib/media";
 import KynDoors from "@/components/kaynaklar/KynDoors";
 import FinalCta from "@/components/FinalCta";
 import { KIND_ORDER, RESOURCE_KINDS } from "@/lib/resources";
@@ -74,11 +76,17 @@ export default function KaynaklarPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
 
-        <PageHero
+        <KurumsalGiris
           crumb="Kaynaklar"
           title="Aradığınız kaynak dört yerden birinde."
           accent="dört yerden birinde."
           lead="Bir konuyu okumak, bir ülkede yolunuzu bulmak, neyin ne zaman değiştiğini görmek ve bir dosya indirmek ayrı işler. Her biri kendi sayfasında, kendi ritminde."
+          foto={POST_PHOTO.corpTax}
+          belge={{ ad: "Kaynaklar", cip: "Dört bölüm" }}
+          rozetler={[
+            { icon: <GirisKitap size={18} strokeWidth={2} />, b: "Blog", s: " ve ülke rehberleri" },
+            { icon: <GirisDosya size={18} strokeWidth={2} />, b: "Gelişmeler", s: " ve e-kitaplar" },
+          ]}
         />
         <KynDoors />
         <FinalCta />

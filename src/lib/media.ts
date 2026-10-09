@@ -34,6 +34,14 @@ export const POST_PHOTO = {
      ediyor; Unsplash'e gir seç, yenisini ÜRETME." Hepsi Unsplash aramasından
      seçildi ve küçük hâlleri tek tek gözle doğrulandı (yanındaki not görülen
      şeydir). */
+  /* 10.10.2026 · Burak: "son blog yazılarının görseli kötü; Dubai'ye fakir
+     bir şey, Kıbrıs'a liman koymuşsun, daha havalı şeyler koy." Üçü de
+     Unsplash aramasından, küçük hâlleri gözle doğrulandı. KKTC karesi
+     bilerek kuzeyden: Beşparmak'tan Girne (aramada çıkan turkuaz koy
+     kareleri Ayia Napa ve Cape Greco, yani güney; kullanılmadı). */
+  dubaiGece: "https://images.unsplash.com/flagged/photo-1559717201-fbb671ff56b7?auto=format&fit=crop&w=900&q=70", // gece Burj Khalifa ve Downtown, altta ışıklı yollar
+  dubaiAlaca: U("1708361089093-beef4c4584e7", 900), // alacakaranlıkta havadan Downtown Dubai, Burj Khalifa sağda
+  girneDag: U("1626794464221-b6e1ea6ee38c", 900), // Beşparmak kayalıklarından Girne şehri ve deniz
   dubaiMarina: U("1611577810610-642f8ac05c32", 900), // denizden Dubai Marina kuleleri, gün batımı ışığı
   dubaiMerkez: U("1617449512807-7401d38e5c29", 900), // Downtown Dubai: gölet, yürüyen insanlar, arkada kuleler
   dubaiHor: U("1598343530164-8f8922e123ba", 900), // Dubai Hor'unda (Creek) ahşap yük tekneleri

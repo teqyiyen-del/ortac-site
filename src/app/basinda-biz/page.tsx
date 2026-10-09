@@ -4,7 +4,9 @@ import { ArrowRight, Inbox, Link2, Newspaper, Quote as QuoteMark } from "lucide-
 
 import Nav from "@/components/Nav";
 import FinalCta from "@/components/FinalCta";
-import PageHero from "@/components/shared/PageHero";
+import KurumsalGiris from "@/components/shared/KurumsalGiris";
+import { Link2 as GirisBag, Newspaper as GirisHaber } from "lucide-react";
+import { POST_PHOTO } from "@/lib/media";
 import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
 import { IDENTITY } from "@/lib/about";
@@ -203,7 +205,7 @@ export default function BasindaBizPage() {
             yakındı ama sayfanın adını hiç kullanmıyor ve "kaynağıyla birlikte"
             zaten lead'in söylediği şeyi başlıkta bir kez daha söylüyordu.
             Ölçü: sayfanın konusu başlıkta cümle içinde geçsin. */}
-        <PageHero
+        <KurumsalGiris
           crumb="Basında biz"
           title="Basında yer aldığımız haberler."
           accent="yer aldığımız haberler."
@@ -212,6 +214,12 @@ export default function BasindaBizPage() {
               ? "Bu sayfa bir basın arşivi ve bugün boş. Buraya yalnızca yayının kendi adresine bağlanabilen, tarihi belli kayıtlar giriyor; ekran görüntüsü, kaynağı yazılmayan alıntı ya da adı verilmeyen bir yayın girmiyor."
               : "Dubai ekonomisini anlatan haberlerde uzman görüşümüzle yer alıyoruz. Her kaydın yanında yayının adı, tarihi ve haberin kendi adresi duruyor; alıntıyı buradan değil, kaynağından okuyun."
           }
+          foto={POST_PHOTO.dubaiAlaca}
+          belge={{ ad: "Basın arşivi", cip: "Kaynağına bağlı" }}
+          rozetler={[
+            { icon: <GirisHaber size={18} strokeWidth={2} />, b: "Yayının adı", s: " ve tarihi" },
+            { icon: <GirisBag size={18} strokeWidth={2} />, b: "Haberin", s: " kendi adresi" },
+          ]}
         />
 
         {/* ÇİFT BAŞLIK KALKTI — hero'dan sonra doğrudan liste geliyor.
