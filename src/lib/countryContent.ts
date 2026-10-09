@@ -633,7 +633,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         },
         {
           title: "Tescil kolay, banka değil",
-          line: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; pratikte Tide gibi dijital hesapla başlanıyor.",
+          line: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; pratikte Revolut Business ya da Wise Business ile başlanıyor.",
         },
       ],
     },
@@ -855,7 +855,7 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
       },
       {
         q: "Banka hesabı açabilecek miyim?",
-        a: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; HSBC küçük işletme hesabı için İngiltere vergi mukimliği istiyor. Pratikte Tide gibi dijital hesapla başlanıyor.",
+        a: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; HSBC küçük işletme hesabı için İngiltere vergi mukimliği istiyor. Pratikte Revolut Business ya da Wise Business ile başlanıyor; ikisinin başvurusunu biz yürütüyoruz.",
       },
       {
         q: "Stripe için İngiltere mi, başka bir ülke mi?",
@@ -1221,8 +1221,10 @@ export const COUNTRY_CONTENT: Record<Country, CountryContent> = {
         { etiket: "En az ortak", deger: "2" },
         /* teyit (KKTC 18): "Başvuru harcı 2000$". 200'den bir sıfır fark
            olduğu için ayrıca tekrar soruldu; tescil harcı da o soruda. */
-        { etiket: "Başvuru harcı", deger: "2.000 USD" },
-        { etiket: "Tescil harcı", deger: "2.500 USD" },
+        /* 09.10.2026 · Murat Bey (teyit 5, 6): 2.000 USD doğru (resmî sayfadaki
+           200 eski) ve iki harç da 9.920 € kuruluş ücretinin İÇİNDE. */
+        { etiket: "Başvuru harcı · ücrete dahil", deger: "2.000 USD" },
+        { etiket: "Tescil harcı · ücrete dahil", deger: "2.500 USD" },
       ],
       kaynak: { label: "Kaynak: KKTC Serbest Liman ve Bölge Müdürlüğü", href: "https://sliman.gov.ct.tr/SLBM-%C5%9E%C4%B0RKET-HAK/%C5%9E%C4%B0RKET-M%C3%9CRACATI-VE-TESC%C4%B0L%C4%B0" },
     },

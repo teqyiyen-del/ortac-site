@@ -72,7 +72,7 @@ const DUBAI: Partial<Record<ServiceSlug, HizmetIcerik>> = {
       lead: "Dört adım; ilki bir görüşme.",
       items: [
         { icon: "ara", title: "Faaliyetinize bakıyoruz", line: "Ne iş yaptığınızı, müşterilerinizin nerede olduğunu ve gelir türlerinizi dinliyoruz." },
-        { icon: "terazi", title: "Rejimi netleştiriyoruz", line: "Standart rejim mi, serbest bölge avantajı mı; hangi geliriniz hangisine giriyor, yazıyla bildiriyoruz." },
+        { icon: "terazi", title: "Vergi uyumunu kuruyoruz", line: "Standart rejim mi, serbest bölge avantajı mı; hangi geliriniz hangisine giriyor, yazıyla bildiriyoruz." },
         { icon: "dosya", title: "Kayıt ve beyanı planlıyoruz", line: "Kurumlar vergisi kaydı ve beyan takvimi muhasebe ekibimizle birlikte kuruluyor." },
         { icon: "takvim", title: "Yıl içinde takip ediyoruz", line: "Faaliyet, gelir kaynağı ya da yapı değişirse statünüzün korunup korunmadığına yeniden bakıyoruz." },
       ],

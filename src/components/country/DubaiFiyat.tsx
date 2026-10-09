@@ -5,7 +5,7 @@
    olacak ve üstüne ekleyecekleri her şeye göre fiyat değişecek; biz de her
    yere '…'den başlayan fiyatlar' yazacağız."
      · serbest bölgeye göre baz fiyat (üç bölge: IFZA, Meydan, DWTC)
-     · baz fiyatın içinde 1 yıllık serbest bölge lisansı; 2 ya da 3 yıl seçilirse artar
+     · baz fiyatın içinde 1 yıllık serbest bölge lisansı; çok yıllı alınırsa lisans bedelinde indirim (lib/dubaiFiyat.ts)
      · vize: kişi başı 1.953 $ × kişi sayısı
      · VIP vize hizmeti: tek, 800 $
      · muhasebe: aylık zorunlu (200 $); yıllık alınırsa 10 ay fiyatına (2.000 $)
@@ -48,10 +48,12 @@ import {
   MUH_AYLIK,
   MUH_YILLIK,
   VIP,
+  bolgeYillar,
   dubaiBaslaHref,
   dubaiSatirlar,
   dubaiToplam,
   money,
+  yilUydur,
   type Bolge,
   type DubaiSecim,
 } from "@/lib/dubaiFiyat";
@@ -123,7 +125,8 @@ export function DubaiSecimFormu({
   /** formun en altına basılan düğüm (fiyat panelinde telefonun yapışık tutar şeridi) */
   dip?: React.ReactNode;
 }) {
-  const { bolge, yil, vize, vip, yillik } = secim;
+  const { bolge, vize, vip, yillik } = secim;
+  const yil = yilUydur(bolge, secim.yil);
   const set = (p: Partial<DubaiSecim>) => onSecim({ ...secim, ...p });
   const ekler = [
     {
@@ -171,7 +174,7 @@ export function DubaiSecimFormu({
                   data-on={bolge === k}
                   aria-pressed={bolge === k}
                   onClick={() => {
-                    set({ bolge: k });
+                    set({ bolge: k, yil: yilUydur(k, yil) });
                     gtm("dubai_bolge", { bolge: k });
                   }}
                 >
@@ -193,7 +196,10 @@ export function DubaiSecimFormu({
         <div className="ip-field">
           <span className="ip-label">Lisans süresi</span>
           <div className="dfy-uc dfy-uc-dar">
-            {[1, 2, 3].map((y) => (
+            {/* 09.10.2026 · Murat Bey'in cevabı: süre seçenekleri bölgeye göre
+                değişiyor (IFZA 1/2/3/5, Meydan 1/2/3, DWTC yalnız 1) ve çok
+                yıllı lisansta indirim var; yüzde kutunun üstünde yazıyor. */}
+            {bolgeYillar(bolge).map((y) => (
               <button
                 key={y}
                 type="button"
@@ -205,7 +211,16 @@ export function DubaiSecimFormu({
                 <span className="dfy-ic" aria-hidden="true">
                   <CalendarDays size={18} strokeWidth={1.9} />
                 </span>
-                <span className="dfy-ad">{y} yıl</span>
+                <span className="dfy-yil-yazi">
+                  <span className="dfy-ad">{y} yıl</span>
+                  {BOLGE[bolge].indirim[y] !== undefined && (
+                    <span className="dfy-yuzde">
+                      %{Math.round(BOLGE[bolge].indirim[y] * 100)}
+                      <span className="dfy-yuzde-ek"> indirim</span>
+                    </span>
+                  )}
+                  {bolgeYillar(bolge).length === 1 && <span className="dfy-alt">Her yıl yenilenir</span>}
+                </span>
               </button>
             ))}
           </div>

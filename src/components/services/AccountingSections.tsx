@@ -474,7 +474,7 @@ const KALEMLER: Kalem[] = [
     cipBaslik: C.exchange.usTitle,
     cipler: cikti("Dijital defter", "Fatura ve gider arşivi"),
     sinirBaslik: C.limits.title,
-    sinir: sinirlar("Bordro aylık muhasebede yok"),
+    sinir: sinirlar("Bordro hizmeti vermiyoruz"),
   },
   {
     id: "beyan",

@@ -5555,3 +5555,26 @@ Rakamların durumu:
 - Açık: menüdeki ve öteki sayfalardaki Dubai fiyatı hâlâ eski 3.900; "…'den başlayan"
   diline geçiş ayrı tur. PDF'te sitede henüz olmayan kalemler var: pasif şirket muhasebesi
   950 / yıl, yüksek hacim 600 / ay, KDV beyanı 350 / çeyrek.
+
+## 09.10.2026 (3) · MURAT BEY'İN 31 CEVABI İŞLENDİ
+
+Cevapların tamamı sohbet kaydında; siteye geçenler:
+- Dubai fiyat formu: yer tutucu ek yıl rakamı kalktı. IFZA 2 yıl %15, 3 yıl %20, 5 yıl %30; Meydan 2 ve 3 yıl %15; DWTC yalnız 1 yıl. Hesap N × baz × (1 − indirim); bazın tamamı lisans sayıldı (lib/dubaiFiyat.ts).
+- IFZA 7.800 $ vergi dahil: 7.873 + %5 − 466,65 "size özel" indirim. Sitedeki kalemler aynı kaldı.
+- İngiltere: paket yok, tek fiyat, sterlin. Üç paketli panel kalktı (country/IngiltereFiyat.tsx); tutar GELİNCE `TUTAR` sabitine yazılacak. Muhasebe ücreti yazılmıyor.
+- İngiltere hesapları Revolut ve Wise (Tide örneği çıktı).
+- Dubai vizesi: ortak 2 yıllık, ülke dışında 12 ay; çalışan 6 ay. Dubai'de bordro hizmeti yok.
+- KKTC: harçlar 9.920 €'nun içinde, başvuru harcı 2.000 USD; denetçi raporu gerekmiyor; yıllık hesap ve beyan nisanda; banka hesabı 2-4 hafta; takvim "Serbest Liman şirketi" diye sunuluyor.
+- Tescilli adlar (offices.ts, about.ts, KVKK): Dubai Ortac Accounting Services LLC · İngiltere Ortac International Accounting & Tax Services Limited · KKTC Murat Ortaç Accountancy. Lisans numarası yazılmıyor.
+- Rakamlar hakkımızda künyesinde: 700'den fazla şirket, 300 civarı aktif muhasebe müşterisi, 1.000'den fazla kişi.
+- Kariyer: örnek ilanlar kapandı, yalnız açık başvuru. Vergi sayfasında "Rejim değerlendirmesi" → "Vergi uyum hizmeti". EORI başvurusu yapmıyoruz (DUNS alıyoruz).
+
+AÇIK KALANLAR (Murat Bey "aşağıya yazıyorum" dedi, yazmadı ya da boş bıraktı):
+- 8: kurulum akışından gelenlerin yazacağı WhatsApp numarası
+- 11: yeni müşteri paneli adresi (Kıbrıs ve Dubai için ayrı portal varmış)
+- 26: Dubai geç beyan cezası (500 / 1.000 AED) güncel mi
+- 3: İngiltere tek fiyatı (sterlin); gelene kadar kıyas tablosu ve menüde eski "$1.200'den" yazısı duruyor (brand.ts · FACTS.ingiltere.fromLabel)
+- 29: AML sayfasının metinlerini sevmedi, "değerlendirmeliyiz" dedi; ne istediği sorulacak
+- 22: iş ortaklığı için B2B partner portalı fikri (ayrı iş, sitede yalnız sayfa var)
+- Dubai çok yıllı indirimde bazın tamamı mı lisans, yoksa içinde indirime girmeyen kuruluş payı var mı
+- "Yalnız Türkçe" algısı: iki hero satırı "Türkçe ve İngilizce" oldu; "Türkçe tek muhatap" (6 yer) ve blog kapanışları duruyor

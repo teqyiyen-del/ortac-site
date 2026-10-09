@@ -94,7 +94,7 @@ export const BANKA_KKTC: BankaVeri = {
       { icon: "secim", title: "İhtiyacı konuşuyoruz", line: "Hangi para biriminde, kimden tahsilat yapacağınızı kuruluştan önce netleştiriyoruz." },
       { icon: "dosya", title: "Dosya hazırlığı", line: "Bankanın ön onayı için belgeleri baştan istiyor, dosyayı biz derliyoruz." },
       { icon: "imza", title: "İmza ziyareti", line: "KKTC'ye bir kez geliyorsunuz; aynı ziyarette bankada sermaye hesabını açıyorsunuz." },
-      { icon: "karar", title: "Tescil ve bankanın kararı", line: "Şirket tescil olunca belgelerle bankaya başvuruluyor; kararı banka veriyor." },
+      { icon: "karar", title: "Tescil ve bankanın kararı", line: "Şirket tescil olunca belgelerle bankaya başvuruluyor; hesap genellikle 2-4 haftada açılıyor." },
       { icon: "kanal", title: "Tahsilat ve muhasebe", line: "Hesap açılınca sanal POS başvurusu yapılıyor; aylık muhasebe o ay başlıyor." },
     ],
   },
@@ -136,6 +136,8 @@ export const BANKA_KKTC: BankaVeri = {
     accent: "sorulanlar.",
     items: [
       { q: "Banka hesabı açılmasını garanti ediyor musunuz?", a: "Hayır. Bankalar kendi müşteri tanıma ve risk politikalarına göre bağımsız karar veriyor. Biz hazırlık ve yönlendirme desteği veriyoruz." },
+      /* 09.10.2026 · Murat Bey (teyit 20): "2 - 4 hafta" */
+      { q: "Hesap ne kadar sürede açılıyor?", a: "Başvurudan sonra genellikle 2-4 hafta içinde. Süreyi bankanın incelemesi belirliyor; kararı banka veriyor." },
       { q: "Hesap için KKTC'ye gelmem gerekiyor mu?", a: "Evet, bir kez. Belgeleri KKTC'de imzalıyorsunuz ve aynı ziyarette bankada şirketin sermaye hesabını açıyorsunuz." },
       { q: "Hesap hangi para biriminde açılıyor?", a: "KKTC bankasında kurumsal hesap TL ve dövizle açılıyor. Döviz bulundurmak, dövizle sözleşme yapmak ve yurt dışına transfer serbest." },
       { q: "Stripe ya da PayPal kullanabilir miyim?", a: "Hayır. İkisinin de ülke listesinde KKTC yok. Kartla tahsilatı yerel sanal POS'la yapıyorsunuz, ödemeler KKTC'deki şirket hesabına geliyor." },

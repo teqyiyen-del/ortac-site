@@ -4,7 +4,7 @@ import Nav from "@/components/Nav";
 import PageHero from "@/components/shared/PageHero";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
-import CountryPricing from "@/components/CountryPricing";
+import IngiltereFiyat from "@/components/country/IngiltereFiyat";
 import DubaiFiyat from "@/components/country/DubaiFiyat";
 import KktcFiyat from "@/components/country/KktcFiyat";
 import { DubaiBolgeler, DubaiVip } from "@/components/country/DubaiEkler";
@@ -258,8 +258,8 @@ export default async function CountryPage({ params }: { params: Params }) {
                   aynı aksan rengi. */}
               <SplitWords
                 as="h2"
-                text={slug === "kktc" ? "KKTC'de kuruluş, kalem kalem." : "Kurulumunuzu seçin, fiyatı anında görün."}
-                accent={slug === "kktc" ? "kalem kalem." : "fiyatı anında görün."}
+                text={slug === "kktc" ? "KKTC'de kuruluş, kalem kalem." : slug === "ingiltere" ? "İngiltere'de kuruluş, tek fiyat." : "Kurulumunuzu seçin, fiyatı anında görün."}
+                accent={slug === "kktc" ? "kalem kalem." : slug === "ingiltere" ? "tek fiyat." : "fiyatı anında görün."}
                 className="h2"
                 style={{ color: "var(--text-900)" }}
               />
@@ -269,14 +269,14 @@ export default async function CountryPage({ params }: { params: Params }) {
                     ? "Serbest bölgeyi ve eklemek istediklerinizi seçin; tutar sağda satır satır oluşur."
                     : slug === "kktc"
                       ? "Kuruluş ve ilk yılın kalemleri açık yazılı; muhasebe türünü siz seçiyorsunuz."
-                      : `${name} için paket ve ek hizmetleri seçin; tutar sağda satır satır oluşur.`}
+                      : "Paket yok, tek kuruluş fiyatı var. Tutarı sterlin olarak teklifte bildiriyoruz."}
                 </Tel></p>
               </FadeUp>
             </div>
             {/* 06.10.2026 · Dubai'de paket yok: baz fiyat + ekler
                 (country/DubaiFiyat.tsx). Öteki iki ülke eski panelde. */}
             <div className="sec-night gece-alan">
-              {slug === "dubai" ? <DubaiFiyat /> : slug === "kktc" ? <KktcFiyat /> : <CountryPricing country={slug} />}
+              {slug === "dubai" ? <DubaiFiyat /> : slug === "kktc" ? <KktcFiyat /> : <IngiltereFiyat />}
             </div>
           </div>
         </section>

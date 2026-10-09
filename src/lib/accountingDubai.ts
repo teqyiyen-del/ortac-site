@@ -955,8 +955,10 @@ export const ACCOUNTING_DUBAI = {
         line: "Bazı serbest bölge otoriteleri ve belirli büyüklüğe ulaşan şirketler için zorunlu olabiliyor. Sizin bölgenizde zorunlu olup olmadığı lisansınıza bağlı; gerekiyorsa ayrı kalem olarak fiyatlanıyor. Denetimi anlaşmalı denetim firmamız yapıyor, süreci biz yönetiyoruz.",
       },
       {
-        title: "Bordro aylık muhasebede yok",
-        line: "Çalışan bordrosu ayrı fiyatlanıyor. Kaç kişi olduğunu söylerseniz teklifte ayrı satır olarak gösteriyoruz.",
+        /* 09.10.2026 · Murat Bey (teyit 17): "Hayır, orada bordro yok." Önceki
+           hâli "ayrı fiyatlanıyor" diyordu, yani vermediğimiz hizmeti satıyordu. */
+        title: "Bordro hizmeti vermiyoruz",
+        line: "Dubai'de çalışan bordrosu hizmetimiz yok. Aylık muhasebe kaydı, beyanı ve raporlamayı kapsıyor.",
       },
       {
         title: "Kişiye özel vergi görüşü siteden verilmiyor",

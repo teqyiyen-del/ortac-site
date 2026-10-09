@@ -38,7 +38,8 @@ export const BANKA_INGILTERE: BankaVeri = {
     lead: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor. Pratikte dijital bir işletme hesabıyla başlanıyor.",
     hesap: { alt: "GB•• •••• •••• ••••", giderler: ["Tedarikçi ödemesi", "Maaşlar", "Vergi", "Faturalar"] },
     items: [
-      { logo: "kart", name: "Dijital işletme hesabı", line: "Tide gibi; başvuru yurt dışından yapılabiliyor, İngiliz cep numarası isteniyor." },
+      /* 09.10.2026 · Murat Bey (teyit 13): "Revolut, Wise." Tide örneği çıktı. */
+      { logo: "kart", name: "Revolut Business ve Wise Business", line: "Açılışını yürüttüğümüz iki dijital işletme hesabı; başvuru yurt dışından yapılıyor." },
       { logo: "banka", name: "Geleneksel banka", line: "HSBC küçük işletme hesabı için İngiltere'de vergi mukimliği arıyor." },
       { logo: "dunya", name: "Sterlin hesabı neden önemli", line: "Stripe ve Shopify, şirketle aynı ülkede bir banka hesabı istiyor." },
     ],
@@ -119,7 +120,7 @@ export const BANKA_INGILTERE: BankaVeri = {
     heading: "Sık sorulanlar.",
     accent: "sorulanlar.",
     items: [
-      { q: "Banka hesabı açabilecek miyim?", a: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; HSBC küçük işletme hesabı için İngiltere vergi mukimliği istiyor. Pratikte Tide gibi dijital hesapla başlanıyor." },
+      { q: "Banka hesabı açabilecek miyim?", a: "Geleneksel bankalar İngiltere'de yaşamayan direktöre kolay hesap açmıyor; HSBC küçük işletme hesabı için İngiltere vergi mukimliği istiyor. Pratikte Revolut Business ya da Wise Business ile başlanıyor; ikisinin başvurusunu biz yürütüyoruz." },
       { q: "Hesap açılmasını garanti ediyor musunuz?", a: "Hayır. Kararı başvurulan kurum veriyor; biz hangi hesabın sizin durumunuzda açılabildiğine bakıyor ve dosyayı hazırlıyoruz." },
       { q: "Hesap için İngiltere'ye gitmem gerekiyor mu?", a: "Dijital hesaplarda başvuru çevrim içi yapılıyor. Kurum İngiliz cep numarası gibi ek şartlar isteyebiliyor; başvurudan önce birlikte kontrol ediyoruz." },
       { q: "Stripe için ne gerekiyor?", a: "Stripe İngiltere şirketiyle çalışıyor; şartı İngiltere'de bir banka hesabı ve posta kutusu olmayan bir adres. Direktörün İngiltere'de yaşaması şartı yazmıyor." },

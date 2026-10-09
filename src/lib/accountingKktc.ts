@@ -158,7 +158,9 @@ export const ACCOUNTING_KKTC: MuhasebeVeri = {
     ] as KktcKapsam[],
   },
 
-  /* Tarih YOK (soruldu). Yıllık bildirim [TEYİT] KKTC 19; faaliyet harcı
+  /* 09.10.2026 · Murat Bey (teyit 19): yıllık hesap ve beyan nisanda.
+     (teyit 7): denetçi raporu gerekmiyor; istenirse ek ücretle, hacme göre.
+     Önceki not: Tarih YOK (soruldu). Yıllık bildirim [TEYİT] KKTC 19; faaliyet harcı
      ülke sayfasının SSS'inde yayında ("vergi değil, sabit bir bedel"). */
   takvim: {
     title: "Yıl içinde ne zaman ne çıkıyor.",
@@ -167,7 +169,7 @@ export const ACCOUNTING_KKTC: MuhasebeVeri = {
     kalemler: [
       { sure: "Her ay", ne: "Kayıt", kural: "Aktif şirkette banka hareketleri, gelir ve giderler kaydediliyor.", ceza: "" },
       { sure: "Yıl sonu", ne: "Yıllık hesaplar", kural: "Dönem kapanıyor, bilanço hazırlanıyor.", ceza: "" },
-      { sure: "Her yıl", ne: "Beyan ve yıllık raporlar", kural: "Vergi çıkmasa da ilgili mercilere veriliyor; zorunlu.", ceza: "" },
+      { sure: "Nisan", ne: "Yıllık hesap ve beyan", kural: "Vergi çıkmasa da nisanda veriliyor; zorunlu.", ceza: "" },
       { sure: "Her yıl", ne: "Yıllık faaliyet harcı", kural: "Vergi değil, sabit bir bedel; muhasebe ücretinden ayrı.", ceza: "" },
     ],
     kaynak: { label: "", href: "" },

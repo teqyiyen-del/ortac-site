@@ -109,21 +109,26 @@ export const VERGI_KKTC: VergiVeri = {
      Dördüncü kalem ve halka [RESMÎ] 7: kurumlar vergisi beyannamesi nisan,
      ödeme 31 Mayıs ve 31 Ekim. KKTC'nin genel takvimi; yalnız iç piyasa
      satışı olan şirket için (dosya başı · yumuşatılanlar). */
+  /* 09.10.2026 · Murat Bey (teyit 19, 27): yıllık hesap ve beyan NİSANDA
+     veriliyor ve bu takvim Serbest Liman şirketi için de geçerli. "Bunları
+     Serbest Liman diye bildirmeliyiz; KKTC yerel piyasasından ayrım önemli."
+     Takvim artık "iç piyasa satışı varsa" diye değil, doğrudan Serbest Liman
+     şirketinin takvimi olarak sunuluyor; ödeme satırı yalnız vergi çıkarsa. */
   takvim: {
     id: "takvim",
     heading: "Yıl içinde vergi takvimi.",
     accent: "vergi takvimi.",
-    lead: "Vergi çıkmasa da yıllık yükümlülükler sürüyor. KKTC içine satışınız varsa genel beyan takvimi de işliyor.",
-    ornek: { ust: "İç piyasa satışı", alt: "Genel takvim" },
+    lead: "Serbest Liman şirketinin takvimi bu. Vergi çıkmasa da beyan nisanda veriliyor.",
+    ornek: { ust: "Serbest Liman şirketi", alt: "Yıllık takvim" },
     isaretler: [
       { ad: "Kurumlar vergisi beyannamesi", ton: "ana", aylar: [4] },
       { ad: "Kurumlar vergisi ödemesi", ton: "yesil", aylar: [5, 10] },
     ],
     kalemler: [
       { sure: "Yıl sonu", ne: "Yıllık hesaplar", kural: "Dönem kapanıyor, bilanço hazırlanıyor." },
-      { sure: "Her yıl", ne: "Beyan ve yıllık raporlar", kural: "Vergi çıkmasa da ilgili mercilere veriliyor; zorunlu." },
+      { sure: "Nisan", ne: "Yıllık hesap ve beyan", kural: "Vergi çıkmasa da nisanda veriliyor; zorunlu." },
       { sure: "Her yıl", ne: "Yıllık faaliyet harcı", kural: "Vergi değil, sabit bir bedel; her yıl ödeniyor." },
-      { sure: "Nisan", ne: "İç piyasa satışı varsa", kural: "Kurumlar vergisi beyannamesi nisanda; ödeme mayıs ve ekim sonunda." },
+      { sure: "Mayıs ve ekim", ne: "Yerel piyasaya satış varsa", kural: "KKTC içine satıştan vergi çıkarsa ödeme mayıs ve ekim sonunda." },
     ],
   },
 

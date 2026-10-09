@@ -285,6 +285,29 @@
 .dfy-uc-dar {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+/* 09.10.2026 · lisans süresi kutuları bölgeye göre 1, 3 ya da 4 tane
+   (IFZA 1/2/3/5 yıl). Sütun sayısı kutu sayısından geliyor; indirim yüzdesi
+   para olduğu için yeşil (renk anlam kuralı). */
+.dfy-uc.dfy-uc-dar {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+}
+.dfy-yil-yazi {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.dfy-yuzde {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--green-600);
+  white-space: nowrap;
+}
+.sec-night .dfy-yuzde {
+  color: #6fe0a8;
+}
 /* KKTC paneli: iki kutulu sıra (css bu dosyada, bileşen KktcFiyat.tsx) */
 @media (min-width: 720px) {
   .dfy-uc.dfy-uc-iki {
@@ -713,4 +736,25 @@ button.dfy-kutu,
   letter-spacing: 0.04em;
   color: #1d1608;
   vertical-align: 1px;
+}
+
+/* İNGİLTERE · tek fiyat kartı (country/IngiltereFiyat.tsx, 09.10.2026).
+   Seçim formu yok, yalnız sonuç kartı; iki sütunlu .ip ızgarası tek sütuna
+   iniyor ve kart okunur genişlikte kalıyor. */
+.ip.ip-tek {
+  grid-template-columns: minmax(0, 560px);
+}
+.ip.ip-tek .ip-meta {
+  margin-top: 20px;
+}
+/* dört kutu yan yana gelince "indirim" kelimesi kutuya sığmıyor (390 px'te
+   taşıyordu); dar ekranda yalnız yüzde kalıyor */
+@media (max-width: 719px) {
+  .dfy-yuzde-ek {
+    display: none;
+  }
+}
+/* seçili kutu beyaz: açık yeşil orada okunmuyor */
+.sec-night .dfy-kutu[data-on="true"] .dfy-yuzde {
+  color: var(--green-600);
 }

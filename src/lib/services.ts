@@ -70,7 +70,7 @@ function accounting(c: Country): Service {
     unit: "aylık",
     duration: "Aylık döngü",
     includes: ["Defter tutma", "KDV beyanı", "Kurumlar vergisi beyanı", "Yıllık mali tablolar"],
-    excludes: ["Bağımsız denetim", "Bordro (ayrı fiyatlanır)"],
+    excludes: ["Bağımsız denetim", "Bordro"],
     lines: [
       { label: "Aylık defter ve kayıt", note: "12 ay", amount: money(p.annual * 0.55) },
       { label: "Dönemsel beyanlar", amount: money(p.annual * 0.3) },

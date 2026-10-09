@@ -101,7 +101,7 @@ export const KURUMSAL_KKTC: KurumsalVeri = {
     gruplar: [
       { icon: "yapi", title: "Yapı ve planlama", maddeler: ["Ortak, direktör ve sekreter yapısı", "Sermaye ve bloke planı", "Uluslararası iş yapılandırması", "Çok ülkeli yapı değerlendirmesi"] },
       { icon: "devir", title: "Değişiklik bildirimleri", maddeler: ["Direktör ve sekreter değişikliği", "Ortak değişikliği ve pay devri", "Sermaye artırımı", "Kayıtlı adres değişikliği"] },
-      { icon: "takvim", title: "Yıllık kayıtlar", maddeler: ["Yıllık rapor takibi", "Genel kurul ve denetçi ataması", "Karar metinlerinin hazırlanması", "Tasfiye sürecinin planlanması"] },
+      { icon: "takvim", title: "Yıllık kayıtlar", maddeler: ["Yıllık rapor takibi", "Genel kurul kararları", "Karar metinlerinin hazırlanması", "Tasfiye sürecinin planlanması"] },
     ],
     haric: {
       title: "Kapsam dışında",
@@ -124,7 +124,8 @@ export const KURUMSAL_KKTC: KurumsalVeri = {
       { icon: "yonetici", title: "Direktör ve sekreter", line: "Atama ve ayrılma Şirketler Mukayyitliği'ne bildiriliyor.", tag: "14 gün" },
       { icon: "adres", title: "Kayıtlı adres", line: "Şirketin kayıtlı yazıhanesi değişince yeni adres bildiriliyor.", tag: "14 gün" },
       { icon: "ortak", title: "Ortak değişikliği", line: "Yeni ortağın belgeleri hazırlanıyor; yabancı ortakta bloke payı oranında doğuyor.", tag: "Bloke şartı", ton: "amber" },
-      { icon: "onay", title: "Denetçi ataması", line: "Her genel kurulda denetçi atanıyor; bütün limited şirketler için geçerli.", tag: "Her yıl" },
+      /* 09.10.2026 · Murat Bey (teyit 7): denetçi raporu gerekmiyor; kart genel kurula döndü */
+      { icon: "onay", title: "Genel kurul", line: "Yıllık genel kurul toplanıyor; kararlar kayda geçiriliyor.", tag: "Her yıl" },
       { icon: "kayit", title: "Yıllık rapor", line: "Genel kuruldan sonra Şirketler Mukayyitliği'ne veriliyor.", tag: "42 gün" },
       { icon: "kapat", title: "Gönüllü tasfiye", line: "Tasfiye kararı 14 gün içinde Resmî Gazete'de ilan ediliyor.", tag: "Önce raporlar", ton: "amber" },
     ],
@@ -138,9 +139,9 @@ export const KURUMSAL_KKTC: KurumsalVeri = {
     lead: "Şirket pasif olsa da bu işler sürüyor; tarihleri sizin yerinize biz izliyoruz.",
     orta: "12 ay",
     kalemler: [
-      { ay: 6, ad: "Genel kurul ve denetçi", zaman: "Her yıl", line: "Her genel kurulda denetçi atanıyor; kararlar kayda geçiriliyor." },
+      { ay: 4, ad: "Yıllık hesaplar ve beyan", zaman: "Nisan", line: "Şirket pasif olsa da yıllık hesaplar hazırlanıyor ve beyan nisanda veriliyor." },
+      { ay: 6, ad: "Genel kurul", zaman: "Her yıl", line: "Yıllık genel kurul toplanıyor; kararlar kayda geçiriliyor." },
       { ay: 8, ad: "Yıllık rapor", zaman: "Genel kuruldan sonra 42 gün", line: "Rapor genel kuruldan sonra Şirketler Mukayyitliği'ne veriliyor." },
-      { ay: 12, ad: "Yıllık hesaplar ve beyanlar", zaman: "Her yıl", line: "Şirket pasif olsa da yıllık hesaplar hazırlanıyor ve beyanlar veriliyor." },
       { ad: "Direktör, sekreter ve adres", zaman: "Değişiklikten sonra 14 gün", line: "Değişiklik olduğunda ayrıca bildiriliyor; yıl sonu beklenmiyor.", ton: "amber" },
       { ad: "Ortak ve sermaye", zaman: "Değişiklik olunca", line: "Yabancı ortak girişinde bloke şartına yeniden bakılıyor.", ton: "amber" },
     ],
@@ -182,11 +183,11 @@ export const KURUMSAL_KKTC: KurumsalVeri = {
     heading: "Sık sorulanlar.",
     accent: "sorulanlar.",
     items: [
-      { q: "Kurumsal danışmanlık neyi kapsıyor?", a: "Serbest Liman şirketinin kuruluştan sonraki yapısal işlerini: direktör, sekreter ve ortak değişiklikleri, kayıtlı adres, genel kurul ve denetçi ataması, yıllık rapor ve karar metinleri." },
+      { q: "Kurumsal danışmanlık neyi kapsıyor?", a: "Serbest Liman şirketinin kuruluştan sonraki yapısal işlerini: direktör, sekreter ve ortak değişiklikleri, kayıtlı adres, genel kurul, yıllık rapor ve karar metinleri." },
       { q: "Şirket tek ortakla devam edebilir mi?", a: "Hayır. Serbest Liman şirketi en az iki, en çok elli ortakla kuruluyor; ortakların ve direktörlerin uyruğu kısıtlı değil." },
       { q: "Türkiye vatandaşı ortak yabancı sayılıyor mu?", a: "Evet. KKTC yurttaşı olmayan her ortak yabancı sayılıyor. Yabancı ortağın payı kadar tutar bankada bloke ediliyor ve tescilden sonra çözülüyor." },
       { q: "Direktör ya da adres değişince ne yapmak gerekiyor?", a: "Değişikliği 14 gün içinde Şirketler Mukayyitliği'ne bildirmek. Karar metnini ve bildirimi biz hazırlıyoruz." },
-      { q: "Her yıl neler veriliyor?", a: "Her genel kurulda denetçi atanıyor ve genel kuruldan sonra 42 gün içinde yıllık rapor veriliyor. Şirket pasif olsa da yıllık hesaplar hazırlanıyor ve beyanlar veriliyor." },
+      { q: "Her yıl neler veriliyor?", a: "Genel kuruldan sonra 42 gün içinde yıllık rapor veriliyor. Şirket pasif olsa da yıllık hesaplar hazırlanıyor ve beyan nisanda veriliyor." },
       { q: "Şirket nasıl kapatılır?", a: "Gönüllü tasfiyeyle. Önce tüm bilanço ve yıllık raporların verilmiş olması gerekiyor; tasfiye kararı Resmî Gazete'de ilan ediliyor." },
       { q: "Şirket kurmak vergi avantajı sağlar mı?", a: "Kendiliğinden hayır. Muafiyet Serbest Liman'daki faaliyetin kazancı için; kârı vergi mukimi olduğunuz ülkeye getirdiğinizde o ülkenin kuralları geçerli." },
       { q: "Ücreti ne kadar?", a: "Kapsam işleme göre değiştiği için sabit fiyat yazmıyoruz. Görüşmeden sonra, resmî harçlar ayrı satırda olacak şekilde teklif veriyoruz." },

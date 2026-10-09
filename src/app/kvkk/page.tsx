@@ -32,7 +32,7 @@ const BOLUM: { h: string; p?: string[]; l?: string[] }[] = [
     h: "Veri sorumlusu",
     p: [
       "Bu metin, sitemiz üzerinden bize ilettiğiniz kişisel verilerin 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında nasıl işlendiğini anlatır.",
-      "Verileriniz, hizmeti aldığınız ülkeye göre Ortac Accounting Services LLC (Al Saaha Offices Block B No 304, Dubai) ya da Ortac International Accounting (Şht. Murat İlhan Sokak No:5, Kumsal, KKTC) tarafından veri sorumlusu sıfatıyla işlenir.",
+      "Verileriniz, hizmeti aldığınız ülkeye göre Ortac Accounting Services LLC (Al Saaha Offices Block B No 304, Dubai) , Ortac International Accounting & Tax Services Limited (85 Great Portland St, Londra) ya da Murat Ortaç Accountancy (Şht. Murat İlhan Sokak No:5, Kumsal, Lefkoşa, KKTC) tarafından veri sorumlusu sıfatıyla işlenir.",
     ],
   },
   {

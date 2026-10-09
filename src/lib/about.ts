@@ -288,10 +288,20 @@ export const IDENTITY = {
        kişiliği aynı satıra sıkıştırmak, ikisinin aynı şey olduğu izlenimini
        verirdi. */
     { label: "Dubai tüzel kişiliği", value: "Ortac Accounting Services LLC" },
+    /* 09.10.2026 · Murat Bey (teyit 9): üç ülkede üç ayrı tescilli ad.
+       Lisans numarası YAZILMIYOR (teyit 10: "Her ülkede farklı, gerekmez"). */
+    { label: "İngiltere tüzel kişiliği", value: "Ortac International Accounting & Tax Services Limited" },
+    { label: "KKTC tüzel kişiliği", value: "Murat Ortaç Accountancy" },
     /* Ayraç em dash'ten orta noktaya geçti: bu turda gelen yazım kuralı
        paragraf ve başlıklarda `—` kullanılmasını kaldırdı ve künyenin geri
        kalanı (Ticari isim, Ülkeler) zaten orta nokta kullanıyordu. */
     { label: "Yönetici ortak", value: "Murat Ortaç · Managing Partner" },
+    /* 09.10.2026 · Murat Bey (teyit 23), kendi rakamları: "en az 700-800
+       şirket kurduk; aktif muhasebe müşterisi 300 civarında; işini yaptığımız
+       insan sayısı 1.000 üzeri." Alt sınırlar yazıldı, yuvarlama yukarı değil. */
+    { label: "Kurulan şirket", value: "700'den fazla" },
+    { label: "Aktif muhasebe müşterisi", value: "300 civarı" },
+    { label: "Hizmet verilen kişi", value: "1.000'den fazla" },
     { label: "Ülkeler", value: "KKTC · İngiltere · Dubai" },
 
     /* SWAP:FOUNDED — kuruluş yılı. HÂLÂ BOŞ ve bu turda da doldurulmadı.

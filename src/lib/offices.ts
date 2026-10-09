@@ -230,7 +230,9 @@ const BY_COUNTRY: Record<Country, Office> = {
        "Ortac International Accounting & Tax Services Ltd." Adres aynı.
        Sunumdaki telefon (+90 548 865 42 39) buradakinden farklı; canlı
        siteden gelen +44 hattı bırakıldı, fark teyit listesinde. */
-    legal: "Ortac International Accounting & Tax Services Ltd.",
+    /* 09.10.2026 · Murat Bey (teyit 9): "ORTAC INTERNATIONAL ACCOUNTING & TAX
+       SERVICES LIMITED". Sayfada büyük harf bağırdığı için baş harfli yazıldı. */
+    legal: "Ortac International Accounting & Tax Services Limited",
     at: [-0.1278, 51.5074],
     swap: "OFFICE_INGILTERE",
     contact: {
@@ -266,7 +268,8 @@ const BY_COUNTRY: Record<Country, Office> = {
     /* 09.10.2026 · teslim öncesi bilgi denetimi: sondaki "039" adres parçası değildi; KKTC teklif
          belgesinin antetinde "Sht. Murat İlhan Sokak No:5 Kumsal" */
       address: "Şht. Murat İlhan Sokak No:5, Kumsal",
-    legal: "",
+    /* 09.10.2026 · Murat Bey (teyit 9): KKTC'deki tescilli ad */
+    legal: "Murat Ortaç Accountancy",
     /* KUZEY LEFKOŞA, güney Lefkoşa DEĞİL. Eski değer [33.3823, 35.1856]
        kamuya açık "Nicosia" koordinatıydı ve Yeşil Hat'ın hemen üstüne,
        kimi kaynakta altına düşüyor. Bu ofis KKTC'de, o yüzden nokta da

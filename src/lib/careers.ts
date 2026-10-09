@@ -113,7 +113,11 @@ export const SEED_BADGE = "Örnek";
 
 /* SWAP:CAREER_OPENINGS — bkz. dosya başı.
    Diziliş burada değil sortedOpenings()'te: liste tarihe göre sıralanıyor. */
-export const OPENINGS: Opening[] = [
+/* 09.10.2026 · Murat Bey (teyit 21): "Yok, yalnız açık başvuru kalsın."
+   Dört örnek ilan yayından çıktı; kayıtlar ORNEK_ILANLAR'da duruyor, gerçek
+   ilan gelince OPENINGS'e kayıt eklemek yetiyor. */
+export const OPENINGS: Opening[] = [];
+export const ORNEK_ILANLAR: Opening[] = [
   {
     id: "muhasebe-dubai",
     title: "Kıdemli muhasebeci",

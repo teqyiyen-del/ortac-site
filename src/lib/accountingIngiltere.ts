@@ -86,7 +86,7 @@ export const ACCOUNTING_INGILTERE: MuhasebeVeri = {
         detay:
           "Eşiği aşan şirket KDV'ye kaydoluyor ve dönem dönem beyan veriyor. Müşteri profiliniz gerektiriyorsa eşiğin altında gönüllü kayıt da mümkün; hangisinin size uyduğunu birlikte değerlendiriyoruz.",
         cipler: [],
-        sinir: [{ t: "Mal taşıyorsanız", l: "Büyük Britanya ile mal alıp satan şirketin ayrıca EORI numarası alması gerekiyor." }],
+        sinir: [{ t: "Mal taşıyorsanız", l: "Büyük Britanya ile mal alıp satan şirketin ayrıca EORI numarası alması gerekiyor; başvuru hizmetimizin dışında." }],
       },
       {
         id: "yilsonu",

@@ -195,7 +195,8 @@ export const VERGI_DUBAI: VergiVeri = {
       { icon: "dosya", title: "Kurumlar vergisi kaydı", line: "Kuruluştan sonraki üç ay içinde vergi idaresine kayıt." },
       { icon: "takvim", title: "Kurumlar vergisi beyanı", line: "Dönem sonundan itibaren dokuz ay içinde beyan ve ödeme." },
       { icon: "fatura", title: "KDV kaydı ve beyanı", line: "Eşik takibi, kayıt başvurusu ve üç aylık beyanlar." },
-      { icon: "terazi", title: "Rejim değerlendirmesi", line: "Faaliyetinize göre hangi kuralın işlediğini yazıyla bildiriyoruz." },
+      { icon: "terazi", /* 09.10.2026 · Murat Bey (teyit 25): "Rejim değerlendirmesini çok sevmedim. Vergi uyum hizmeti daha iyi olur." */
+        title: "Vergi uyum hizmeti", line: "Faaliyetinize hangi kuralın işlediğini yazıyla bildiriyor, uyumu yıl boyu izliyoruz." },
       { icon: "kalkan", title: "Küçük işletme indirimi", line: "Geliri 3 milyon AED'yi aşmayan şirkette seçeneği her dönem değerlendiriyoruz." },
       { icon: "kisi", title: "Şirket ve kişisel mukimlik", line: "Şirketin ve sizin vergi mukimliğinizi birlikte ele alıyoruz." },
     ],
@@ -299,7 +300,7 @@ export const VERGI_DUBAI: VergiVeri = {
     lead: "Dört adım; ilki bir görüşme.",
     items: [
       { icon: "ara", title: "Faaliyetinize bakıyoruz", line: "Ne iş yaptığınızı ve gelir türlerinizi dinliyoruz." },
-      { icon: "terazi", title: "Rejimi netleştiriyoruz", line: "Hangi gelir hangi kurala giriyor, yazıyla bildiriyoruz." },
+      { icon: "terazi", title: "Vergi uyumunu kuruyoruz", line: "Hangi gelir hangi kurala giriyor, yazıyla bildiriyoruz." },
       { icon: "dosya", title: "Kayıt ve beyanı kuruyoruz", line: "Kayıt ve beyan takvimi muhasebe ekibimizle kuruluyor." },
       { icon: "pusula", title: "Yıl içinde takip ediyoruz", line: "Faaliyet ya da yapı değişirse yeniden bakıyoruz." },
     ],

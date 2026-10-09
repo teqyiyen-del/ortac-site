@@ -80,7 +80,7 @@ export const VIZE_DUBAI = {
     { key: "giris", word: "Giriş", meta: "Giriş izni başvurusunu biz yapıyoruz." },
     { key: "saglik", word: "Sağlık", meta: "Sağlık kontrolü ve biyometri, BAE'de bir kez." },
     { key: "kimlik", word: "Kimlik", meta: "Oturum izni ve Emirates ID tek başvuruda." },
-    { key: "oturum", word: "Oturum", meta: "Türüne göre 1-3 yıl geçerli, süre dolmadan yenileniyor." },
+    { key: "oturum", word: "Oturum", meta: "Ortak oturumu 2 yıl geçerli, süre dolmadan yenileniyor." },
   ],
   sceneFoot: "Dört adım, kuruluşun içinde. Ayrıntısı aşağıda.",
 
@@ -100,7 +100,7 @@ export const VIZE_DUBAI = {
         icon: "ortak" as VizeIkon,
         title: "Ortak vizesi",
         kim: "Şirket ortakları için",
-        line: "Şirketin ortağı olarak aldığınız oturum. Dubai'de yaşamak, banka hesabını yönetmek ve resmî işlemleri kendi adınıza yürütmek için temel belge.",
+        line: "Şirketin ortağı olarak aldığınız 2 yıllık oturum. Dubai'de yaşamak, banka hesabını yönetmek ve resmî işlemleri kendi adınıza yürütmek için temel belge.",
       },
       {
         icon: "calisan" as VizeIkon,
@@ -178,14 +178,17 @@ export const VIZE_DUBAI = {
      visa will not exceed that of the sponsor" · "grace periods that reach up
      to 6 months (according to resident category)". Ek süre için rakam
      yazılmadı: kategoriye göre değişiyor, "6 aya kadar" en üst sınır. */
+  /* 09.10.2026 · Murat Bey (teyit 14, 15): ortak (investor / partner) vizesi
+     2 yıllık ve BAE dışında 12 ay kalınca düşüyor; çalışan vizesinde sınır
+     6 ay. Önceki tek "180 gün" cümlesi ortak vizesi için yanlıştı. */
   keep: {
     id: "koruma",
     heading: "Oturumu korumak.",
     accent: "korumak.",
     lead: "Oturum bir kez alınıp unutulan bir belge değil. Düşmemesi için bilmeniz gereken dört kural:",
     items: [
-      { icon: "sure" as VizeIkon, title: "Süresi var", line: "Oturum türüne göre 1, 2 ya da 3 yıl geçerli; süre dolmadan yenileniyor." },
-      { icon: "yurtdisi" as VizeIkon, title: "180 gün kuralı", line: "BAE dışında kesintisiz 180 günden uzun kalırsanız oturum kendiliğinden düşüyor." },
+      { icon: "sure" as VizeIkon, title: "Süresi var", line: "Ortak oturumu 2 yıl geçerli; süre dolmadan yenileniyor." },
+      { icon: "yurtdisi" as VizeIkon, title: "Ülke dışında kalma sınırı", line: "Ortak oturumu BAE dışında 12 ay, çalışan oturumu 6 ay kesintisiz kalınınca düşüyor." },
       { icon: "bagli" as VizeIkon, title: "Aile size bağlı", line: "Aile üyelerinin oturumu sizinkinden uzun olamıyor; siz yenilediğinizde onlar da yenileniyor." },
       { icon: "iptal" as VizeIkon, title: "İptalden sonra ek süre", line: "Oturum iptal edildiğinde ya da süresi dolduğunda ülkede kalmak için bir ek süre tanınıyor; uzunluğu oturum türüne göre değişiyor." },
     ],
@@ -240,7 +243,7 @@ export const VIZE_DUBAI = {
     items: [
       {
         q: "Vize için Dubai'de yaşamam gerekiyor mu?",
-        a: "Hayır. Ama oturumun düşmemesi için BAE dışında kesintisiz 180 günden uzun kalmamanız gerekiyor.",
+        a: "Hayır. Ama oturumun düşmemesi için ortak vizesinde 12 ayda, çalışan vizesinde 6 ayda en az bir kez BAE'ye giriş yapmanız gerekiyor.",
       },
       {
         q: "Kaç kez BAE'ye gelmem gerekiyor?",

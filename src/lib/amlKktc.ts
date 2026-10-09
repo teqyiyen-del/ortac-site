@@ -72,7 +72,7 @@ export const AML_KKTC: AmlVeri = {
       maddeler: [
         "Yıllık rapor",
         "Direktör, sekreter ve adres değişikliği bildirimi",
-        "Denetçi atanması ve yıllık hesaplar",
+        "Yıllık hesaplar ve beyan",
         "Bankanın müşterini tanı sorularına belgeli cevap",
       ],
     },
@@ -149,10 +149,11 @@ export const AML_KKTC: AmlVeri = {
       },
       {
         icon: "defter", kim: "herkes", etiket: "Her şirket",
-        title: "Denetçi ve yıllık hesaplar",
-        line: "Her genel kurulda denetçi atanıyor.",
-        ne: "Şirket her genel kurulda bir denetçi atıyor; yıllık hesaplar denetleniyor.",
-        zaman: "Her yıl.",
+        /* 09.10.2026 · Murat Bey (teyit 7): "Denetçi raporu gerekmiyor." */
+        title: "Yıllık hesaplar ve beyan",
+        line: "Yıllık hesap ve beyan nisanda veriliyor.",
+        ne: "Şirketin yıllık hesapları hazırlanıyor ve beyanı veriliyor; denetçi raporu zorunlu değil.",
+        zaman: "Her yıl, nisanda.",
         biz: "Hesapları muhasebe ekibimiz hazırlıyor.",
       },
       {
