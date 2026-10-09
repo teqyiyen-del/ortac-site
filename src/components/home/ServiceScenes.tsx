@@ -54,33 +54,26 @@ function Pulse({
   y: number;
   delay?: number;
 }) {
-  const reduce = useReducedMotion();
-  /* `reduce` durumunda ERKEN DÖNMÜYORUZ (eskiden `if (reduce) return null`
-     vardı ve ana sayfada hidrasyon hatasının kaynağı oydu): sunucunun media
-     query bilgisi yok, dolayısıyla sunucu daireyi basıyor, istemci basmıyor
-     ve iki ağaç uyuşmuyordu.
-
-     Düzeltme, öğeyi kaldırmak yerine hareketi kapatmak. Görsel sonuç birebir
-     aynı, çünkü `initial` zaten `opacity: 0` — darbe hiç belirmiyor, yalnızca
-     DOM'da görünmez bir düğüm olarak duruyor. Sunucu HTML'i iki modda da
-     aynı, hidrasyon güvenli. */
+  /* 09.10.2026 · JS'TEN CSS'E. Darbe Motion ile sürülüyordu: `cx` ve `opacity`
+     öznitelikleri her karede JavaScript'ten yazılıyordu. Ölçüm (ana sayfa,
+     işlemci 4 kat yavaş): dört darbe sayfanın HER yerinde, kart ekranda
+     olmasa da saniyede ~60 kez öznitelik değiştiriyordu; ana sayfa dururken
+     ana iş parçacığının yarısı doluydu. (Bir önceki commit'teki "once yok"
+     denemesi de durdurmadı: çıkışta `initial`e dönen animasyon da
+     `repeat: Infinity` taşıyordu.)
+     Şimdi hareket globals.css'te (svxKay + svxSol): aynı süre (1,6 sn hareket
+     + 1,1 sn bekleme), aynı eğri, aynı gecikme. JS çalışmıyor; bölüm ekrandan
+     çıkınca EkranDisiDurdur duraklatıyor. Hareket azaltılmışsa animasyon hiç
+     bağlanmıyor ve daire `opacity="0"` ile görünmez kalıyor: sunucu ve
+     istemci aynı işaretlemeyi basıyor (tuzak A), useReducedMotion gerekmiyor. */
   return (
-    <motion.circle
+    <circle
       r="3.4"
+      cx={x1}
       cy={y}
+      opacity="0"
       className="svx-dot"
-      initial={{ cx: x1, opacity: 0 }}
-      whileInView={reduce ? { cx: x1, opacity: 0 } : { cx: [x1, x2], opacity: [0, 1, 1, 0] }}
-      /* 08.10.2026 · telefon hızı: VIEW `once: true` olduğu için darbe bir kez
-         görününce sayfanın geri kalanında da sonsuza dek dönüyordu (dört
-         darbe, her karede SVG özniteliği). `once` yok: kart ekrandan çıkınca
-         Motion `initial`e döner ve döngü durur, girince yeniden başlar. */
-      viewport={{ margin: VIEW.margin }}
-      transition={
-        reduce
-          ? { duration: 0 }
-          : { duration: 1.6, delay, repeat: Infinity, repeatDelay: 1.1, ease: "easeInOut" }
-      }
+      style={{ "--dx": `${x2 - x1}px`, "--gecik": `${delay}s` } as React.CSSProperties}
     />
   );
 }

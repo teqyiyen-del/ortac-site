@@ -213,12 +213,8 @@ export default function SurecP3({
                       <span className="srp-bar-t" aria-hidden="true">
                         {on && running ? (
                           /* çubuk aynı zamanda sayaç: bir adım boyunca doluyor */
-                          <motion.i
-                            key={current}
-                            initial={{ scaleX: 0 }}
-                            animate={{ scaleX: 1 }}
-                            transition={{ duration: STEP_MS / 1000, ease: "linear" }}
-                          />
+                          /* 09.10.2026 · JS'ten CSS'e (globals.css · cubukDol), aynı süre */
+                          <i key={current} className="srp-dol" style={{ "--sure": `${STEP_MS}ms` } as React.CSSProperties} />
                         ) : (
                           <i style={{ transform: `scaleX(${i <= current ? 1 : 0})` }} />
                         )}

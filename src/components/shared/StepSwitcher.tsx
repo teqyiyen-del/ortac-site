@@ -106,12 +106,15 @@ export default function StepSwitcher({
               <span className="stp-line">{s.line}</span>
             </span>
             {i === active && (
-              <motion.span
+              /* 09.10.2026 · JS'ten CSS'e (globals.css · cubukDol): Motion scaleX'i her
+                 karede JS ile yazıyordu; bölüm ekrandayken ana iş parçacığının
+                 ~%65'i buna gidiyordu (işlemci 4 kat yavaş). Aynı süre, doğrusal.
+                 Dururken çubuk 0,06'da bekliyor (eskiden 0,3 sn'de küçülüyordu). */
+              <span
                 className="stp-bar"
                 aria-hidden="true"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: running ? 1 : 0.06 }}
-                transition={{ duration: running ? interval / 1000 : 0.3, ease: "linear" }}
+                data-kos={running || undefined}
+                style={{ "--sure": `${interval}ms` } as React.CSSProperties}
               />
             )}
           </button>

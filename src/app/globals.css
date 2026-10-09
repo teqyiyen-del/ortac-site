@@ -8181,3 +8181,98 @@ li {
 [data-ekran-disi] *::after {
   animation-play-state: paused !important;
 }
+
+/* 09.10.2026 · JS'TEN CSS'E TAŞINAN BEŞ HAREKET
+   Bunlar Motion ile sürülüyordu ve hepsi tek tek öğelerde scale / scaleX /
+   opacity idi; Motion bu tek tek dönüşümleri ekran kartına devredemiyor, her
+   karede JavaScript'ten style (ya da SVG özniteliği) yazıyor. Her yazı stil
+   hesabı ve boyama demek. Ölçüm (işlemci 4 kat yavaş, öğe ekranda dururken
+   saniyede ana iş parçacığı): adım çubuğu ~650 ms, süreç çubuğu ~500 ms,
+   harita halkası ~420 ms; ana sayfada darbe ve nabız sayfanın her yerinde
+   ~540 ms. CSS animasyonları durdurulunca bu sayılar DEĞİŞMİYORDU; yani
+   pahalı olan JS ile sürülen hareketti.
+   Süreler, eğriler ve gecikmeler Motion'dakilerle aynı (easeOut =
+   cubic-bezier(0,0,.58,1), easeInOut = cubic-bezier(.42,0,.58,1)). */
+@keyframes ltNabiz {
+  from {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+@keyframes omapHalka {
+  from {
+    transform: scale(0.35);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+@keyframes cubukDol {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+/* darbe: 1,6 sn hareket + 1,1 sn bekleme = 2,7 sn tur; hareket turun %59,26'sı */
+@keyframes svxKay {
+  0% {
+    transform: translateX(0);
+    animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+  }
+  59.26%,
+  100% {
+    transform: translateX(var(--dx));
+  }
+}
+@keyframes svxSol {
+  0% {
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+  }
+  19.753% {
+    opacity: 1;
+  }
+  39.506% {
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+  }
+  59.26%,
+  100% {
+    opacity: 0;
+  }
+}
+/* duruş hâli (hareket azaltılmış ya da animasyon bağlanmadan): görünmez */
+.lt-pulse,
+.omap-ring {
+  opacity: 0;
+}
+.stp-bar {
+  transform: scaleX(0.06);
+}
+.stp-bar[data-kos] {
+  animation: cubukDol var(--sure, 4s) linear both;
+}
+.srp-dol {
+  animation: cubukDol var(--sure, 3.6s) linear both;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lt-pulse {
+    animation: ltNabiz 1.4s cubic-bezier(0, 0, 0.58, 1) infinite;
+  }
+  .omap-ring {
+    animation: omapHalka 2.1s cubic-bezier(0, 0, 0.58, 1) infinite;
+  }
+  .svx-dot {
+    animation:
+      svxKay 2.7s var(--gecik, 0s) infinite backwards,
+      svxSol 2.7s var(--gecik, 0s) infinite backwards;
+  }
+}

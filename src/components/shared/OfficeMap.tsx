@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "motion/react";
+import { motion } from "motion/react";
 import { MapPin, Minus, Plus } from "lucide-react";
 import { officeFor } from "@/lib/offices";
 import type { Country } from "@/lib/store";
@@ -32,14 +31,12 @@ const EASE = [0.22, 1, 0.36, 1] as const;
    lib/offices.ts'ten. KKTC'nin şehri kaynakta yazmıyor, etiket yalnız adresi
    basıyor. */
 export default function OfficeMap({ country = "dubai" }: { country?: Country }) {
-  /* 08.10.2026 · telefon hızı: nabız halkası her sayfanın alt bilgisinde ve
-     Motion onu JS ile sürdürüyor; harita ekranda değilken de her karede
-     çalışıyordu. Döngü yalnız harita görünürken. */
-  const kok = useRef<HTMLDivElement>(null);
-  const gorunur = useInView(kok);
+  /* 09.10.2026 · nabız halkası JS'ten CSS'e (globals.css · omapHalka). Motion
+     onu her karede JS ile sürüyordu; harita ekrandayken ana iş parçacığının
+     ~%40'ını tutuyordu (ölçüm: işlemci 4 kat yavaş). Aynı süre ve eğri. */
   const OFFICE = officeFor(country);
   return (
-    <div className="omap" ref={kok}>
+    <div className="omap">
       {/* `slice`: kutu artık kendi oranından uzun olabiliyor (globals.css ·
           .omap'in min-height'ı, iki sütunu eşitlemek için). Varsayılan `meet`
           o durumda çizimi ortalayıp altına ve üstüne boş zemin bırakırdı, yani
@@ -89,13 +86,7 @@ export default function OfficeMap({ country = "dubai" }: { country?: Country }) 
       </svg>
 
       {/* pin + label live outside the drawing so the Google embed can slot in */}
-      <motion.span
-        className="omap-ring"
-        aria-hidden="true"
-        initial={{ scale: 0.35, opacity: 0.55 }}
-        animate={gorunur ? { scale: 1.7, opacity: 0 } : { scale: 0.35, opacity: 0.55 }}
-        transition={gorunur ? { duration: 2.1, repeat: Infinity, ease: "easeOut" } : { duration: 0 }}
-      />
+      <span className="omap-ring" aria-hidden="true" />
       <motion.span
         className="omap-pin"
         initial={{ y: -22, opacity: 0 }}
