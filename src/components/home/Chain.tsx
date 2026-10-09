@@ -14,6 +14,10 @@ import {
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
 import { CHAIN } from "@/lib/brand";
+import { useCeviri } from "@/lib/i18n/useDil";
+import type { Dil } from "@/lib/i18n/diller";
+import { EN_CHAIN } from "@/lib/en/chain";
+import { EN_BRAND } from "@/lib/en/brand";
 
 /* ============================================================================
    §5 — "Kuruluş bir halka, zincir devam ediyor" · ad alanı .chn-
@@ -168,7 +172,24 @@ const pitchOf = (months: number) => (months / SPAN_MONTHS) * 100;
 
 /** Etiketin tek kaynağı `months`: rakam elle yazılmıyor, bölünerek çıkıyor.
  *  Yılda birden sık olan iş "Yılda N kez", daha seyrek olan "N yılda 1 …". */
-function cadenceOf(r: Rhythm): string {
+/* 10.10.2026 · /en: İngilizcede kelime sırası farklı ("12 times a year",
+   "1 renewal every 2 years"); rakam yine aynı `months` değerinden. */
+function cadenceEn(r: Rhythm): string {
+  switch (r.kind) {
+    case "once":
+      return "Once";
+    case "open":
+      return "Opening, then follow-up";
+    case "nonstop":
+      return "Continuous";
+    default: {
+      const perYear = 12 / r.months;
+      return perYear >= 1 ? `${perYear} times a year` : `1 renewal every ${r.months / 12} years`;
+    }
+  }
+}
+function cadenceOf(r: Rhythm, dil: Dil = "tr"): string {
+  if (dil === "en") return cadenceEn(r);
   switch (r.kind) {
     case "once":
       return "Bir kez";
@@ -186,6 +207,10 @@ function cadenceOf(r: Rhythm): string {
 }
 
 export default function Chain() {
+  /* 10.10.2026 · /en denemesi: başlıklar lib/en/chain, satır adları
+     (brand.ts · CHAIN) lib/en/brand sözlüğünden. Satırlar şimdilik Türkçe
+     Dubai sayfalarına gidiyor. */
+  const { dil, c: ce } = useCeviri(EN_CHAIN, EN_BRAND);
   const reduce = useReducedMotion();
 
   return (
@@ -194,13 +219,13 @@ export default function Chain() {
         <div className="sec-head">
           <SplitWords
             as="h2"
-            text="Bir şirketin bütün döngüsü, tek ekipte."
-            accent="tek ekipte."
+            text={ce("Bir şirketin bütün döngüsü, tek ekipte.")}
+            accent={ce("tek ekipte.")}
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Yıl boyu yürütülen işler, aynı ekipten.</p>
+            <p className="sec-lead">{ce("Yıl boyu yürütülen işler, aynı ekipten.")}</p>
           </FadeUp>
         </div>
 
@@ -217,9 +242,9 @@ export default function Chain() {
           <div className="chn-head" aria-hidden="true">
             <span />
             <span className="chn-axis">
-              <i className="chn-ax-a">Kuruluş anı</i>
-              <i className="chn-ax-y">1 yıl</i>
-              <i className="chn-ax-b">Süresiz devam ediyor</i>
+              <i className="chn-ax-a">{ce("Kuruluş anı")}</i>
+              <i className="chn-ax-y">{ce("1 yıl")}</i>
+              <i className="chn-ax-b">{ce("Süresiz devam ediyor")}</i>
             </span>
             <span />
           </div>
@@ -264,7 +289,7 @@ export default function Chain() {
                           strokeWidth={1.9}
                           aria-hidden="true"
                         />
-                        {c.label}
+                        {ce(c.label)}
                         <ArrowUpRight
                           className="chn-arrow"
                           size={15}
@@ -272,7 +297,7 @@ export default function Chain() {
                           aria-hidden="true"
                         />
                       </span>
-                      <span className="chn-l">{c.line}</span>
+                      <span className="chn-l">{ce(c.line)}</span>
                     </span>
 
                     {/* Çubuk ekran okuyucuya kapalı: taşıdığı bilgiyi sağdaki
@@ -294,7 +319,7 @@ export default function Chain() {
                     </span>
 
                     <span className="chn-cad" data-once={once || undefined}>
-                      {cadenceOf(rhythm)}
+                      {cadenceOf(rhythm, dil)}
                     </span>
                   </SmartLink>
                 </li>
@@ -305,7 +330,7 @@ export default function Chain() {
 
         <FadeUp delay={0.4}>
           <p className="chn-note">
-            Yükümlülükler kuruluşla bitmiyor. Ceza riski de kuruluş sonrasında doğuyor.
+            {ce("Yükümlülükler kuruluşla bitmiyor. Ceza riski de kuruluş sonrasında doğuyor.")}
           </p>
         </FadeUp>
       </div>

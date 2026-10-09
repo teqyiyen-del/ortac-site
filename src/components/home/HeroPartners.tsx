@@ -135,7 +135,9 @@ function Mark({ name }: { name: string }) {
 const SPRITE = "tkr-wm";
 const SPRITE_BRANDS = NAMES.map((n) => brandKeyForName(n)).filter((k): k is BrandKey => Boolean(k));
 
-export default function HeroPartners() {
+/* `dil`: yalnız ekran okuyucu cümlesi için (10.10.2026 · /en denemesi).
+   Şerit logo; çevrilecek başka yazı yok. */
+export default function HeroPartners({ dil = "tr" }: { dil?: "tr" | "en" } = {}) {
   return (
     <div className="tkr">
       <BrandSprite brands={SPRITE_BRANDS} onek={SPRITE} />
@@ -163,7 +165,11 @@ export default function HeroPartners() {
       {/* şeridin tamamı aria-hidden; ekran okuyucu listeyi bir kez, düz cümle
           olarak alıyor */}
       <p className="sr-only">
-        Çalıştığımız kurumlar ve kullandığımız altyapı: {NAMES.join(", ")}.
+        {dil === "en" ? (
+          <>Institutions we work with and the infrastructure we use: {NAMES.join(", ")}.</>
+        ) : (
+          <>Çalıştığımız kurumlar ve kullandığımız altyapı: {NAMES.join(", ")}.</>
+        )}
       </p>
     </div>
   );

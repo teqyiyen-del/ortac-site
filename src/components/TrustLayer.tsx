@@ -19,6 +19,9 @@ import SplitWords from "@/components/shared/SplitWords";
 import Authority from "@/components/shared/Authority";
 
 import Tel from "@/components/mobil/Tel";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { yerelAdres } from "@/lib/i18n/cevir";
+import { EN_TRUST } from "@/lib/en/trustLayer";
 /* A bento grid, not a third stepper. One wide tile carries the firm's own
    standing, three square tiles carry the other claims — each with its own
    small animation.
@@ -42,20 +45,23 @@ const VIEW = { once: true, margin: "0px 0px -15% 0px" } as const;
    yan yana gelince zımnen banka sonucu taahhüdü oluyordu. */
 const FIXES = ["Eksik yenileme", "Geciken beyan", "Eksik banka dosyası"];
 
+/* 10.10.2026 · /en denemesi: metin lib/en/trustLayer sözlüğünden. İngilizce
+   tarafta "Türkçe süreç" yok (okur küresel): başlık "One point of contact". */
 export default function TrustLayer() {
+  const { dil, c } = useCeviri(EN_TRUST);
   return (
     <section id="neden-ortac" className="sec-pad" style={{ background: "var(--paper)" }}>
       <div className="container-o">
         <div className="sec-head">
           <SplitWords
             as="h2"
-            text="Neden Ortac Global?"
+            text={c("Neden Ortac Global?")}
             accent="Ortac Global?"
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead"><Tel>Yalnızca doğrulanabilir olanı yazıyoruz.</Tel></p>
+            <p className="sec-lead"><Tel>{c("Yalnızca doğrulanabilir olanı yazıyoruz.")}</Tel></p>
           </FadeUp>
         </div>
 
@@ -88,13 +94,13 @@ export default function TrustLayer() {
             <span className="bn-ic">
               <UserRound size={18} strokeWidth={1.9} />
             </span>
-            <h3 className="bn-title">Tek muhatap, Türkçe süreç</h3>
-            <p className="bn-line"><Tel>İsimli bir danışman; kuruluş sonrası da aynı ekip.</Tel></p>
+            <h3 className="bn-title">{c("Tek muhatap, Türkçe süreç")}</h3>
+            <p className="bn-line"><Tel>{c("İsimli bir danışman; kuruluş sonrası da aynı ekip.")}</Tel></p>
             <LiveChat />
 
             <span className="bn-foot">
               <MessageSquare size={13} strokeWidth={2.2} />
-              Mesai içinde doğrudan erişim
+              {c("Mesai içinde doğrudan erişim")}
             </span>
           </motion.div>
 
@@ -109,8 +115,8 @@ export default function TrustLayer() {
             <span className="bn-ic">
               <ListChecks size={18} strokeWidth={1.9} />
             </span>
-            <h3 className="bn-title">Şeffaf süreç</h3>
-            <p className="bn-line"><Tel>Beklenmedik kalem çıkmıyor; her aşama panelde görünür.</Tel></p>
+            <h3 className="bn-title">{c("Şeffaf süreç")}</h3>
+            <p className="bn-line"><Tel>{c("Beklenmedik kalem çıkmıyor; her aşama panelde görünür.")}</Tel></p>
             <LiveTracker />
 
             {/* GÜN SAYILARI PANELDEN TAMAMEN KALKTI. Bir tur önce buraya
@@ -124,7 +130,7 @@ export default function TrustLayer() {
                 kötüdür. */}
             <span className="bn-foot">
               <Info size={13} strokeWidth={2.2} />
-              Buradaki akış örnektir; sıra ve içerik dosyaya göre değişir
+              {c("Buradaki akış örnektir; sıra ve içerik dosyaya göre değişir")}
             </span>
           </motion.div>
 
@@ -139,10 +145,9 @@ export default function TrustLayer() {
             <span className="bn-ic">
               <Wrench size={18} strokeWidth={1.9} />
             </span>
-            <h3 className="bn-title">Devralınan dosyalar</h3>
+            <h3 className="bn-title">{c("Devralınan dosyalar")}</h3>
             <p className="bn-line"><Tel>
-              Eksik kurulmuş şirketleri devralıp yenileme, beyan ve banka aşamasındaki
-              açıkları kapatıyoruz.
+              {c("Eksik kurulmuş şirketleri devralıp yenileme, beyan ve banka aşamasındaki açıkları kapatıyoruz.")}
             </Tel></p>
             <div className="bn-fixlist">
               {FIXES.map((f, i) => (
@@ -157,8 +162,8 @@ export default function TrustLayer() {
                   <i>
                     <Check size={11} strokeWidth={3.4} />
                   </i>
-                  {f}
-                  <b>kapatıldı</b>
+                  {c(f)}
+                  <b>{c("kapatıldı")}</b>
                 </motion.div>
               ))}
             </div>
@@ -166,7 +171,7 @@ export default function TrustLayer() {
             <div className="bn-repair">
               <span className="bn-node bn-node-warn">
                 <FileWarning size={17} strokeWidth={1.9} />
-                Eksik dosya
+                {c("Eksik dosya")}
               </span>
               <span className="bn-arrow" aria-hidden="true">
                 <motion.span
@@ -179,15 +184,15 @@ export default function TrustLayer() {
               </span>
               <span className="bn-node bn-node-ok">
                 <Check size={17} strokeWidth={2.6} />
-                Devralındı
+                {c("Devralındı")}
               </span>
             </div>
           </motion.div>
         </div>
 
         <FadeUp delay={0.3}>
-          <SmartLink href="/#surec" className="link-arrow">
-            Süreci gör
+          <SmartLink href={yerelAdres(dil, "/#surec")} className="link-arrow">
+            {c("Süreci gör")}
             <ArrowRight size={15} strokeWidth={2.1} />
           </SmartLink>
         </FadeUp>

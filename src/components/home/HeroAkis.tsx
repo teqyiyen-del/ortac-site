@@ -56,6 +56,9 @@ import FadeUp from "@/components/shared/FadeUp";
 import { gtm } from "@/lib/gtm";
 import { COUNTRY_PHOTO } from "@/lib/media";
 import HeroPartners from "@/components/home/HeroPartners";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { yerelAdres } from "@/lib/i18n/cevir";
+import { EN_HERO } from "@/lib/en/heroAkis";
 import "@/app/css/hero-akis.css";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -89,6 +92,9 @@ const KARE = [...new Set(OLAY.map((o) => o.foto))];
    bütün logo yolları hem HTML'e hem sayfanın veri yüküne giriyordu (ana
    sayfa HTML'i 54 → 72 KB sıkıştırılmış; ölçüldü, 03.10.2026). */
 export default function HeroAkis({ partners = true }: { partners?: boolean }) {
+  /* 10.10.2026 · İngilizce deneme (/en): metin lib/en/heroAkis sözlüğünden,
+     Türkçe sayfada `c` cümleyi aynen geri veriyor (lib/i18n/cevir). */
+  const { dil, c } = useCeviri(EN_HERO);
   const reduce = useReducedMotion();
   const kok = useRef<HTMLElement>(null);
   const gorunur = useInView(kok, { amount: 0.25 });
@@ -140,15 +146,24 @@ export default function HeroAkis({ partners = true }: { partners?: boolean }) {
             <p className="hak-ust">
               {/* telefonda yalnız "1996'dan beri" kalıyor (css/mobil-deneme.css):
                   Burak, 09.10.2026: "mobilde ana sayfa herosu kalabalık" */}
-              <b>1996</b>&apos;dan beri<span className="hak-ust-ek"> · Muhasebe · Vergi · Kurumsal danışmanlık</span>
+              {dil === "en" ? (
+                <>
+                  Since <b>1996</b>
+                  <span className="hak-ust-ek"> · Accounting · Tax · Corporate advisory</span>
+                </>
+              ) : (
+                <>
+                  <b>1996</b>&apos;dan beri<span className="hak-ust-ek"> · Muhasebe · Vergi · Kurumsal danışmanlık</span>
+                </>
+              )}
             </p>
           </FadeUp>
           {/* accent, metnin içinde birebir geçmek zorunda (SplitWords tuzağı:
               eşleşmezse vurgu sessizce basılmıyor) */}
           <SplitWords
             as="h1"
-            text="İş dünyası değişiyor. Sizi geleceğe hazırlıyoruz."
-            accent="Sizi geleceğe hazırlıyoruz."
+            text={c("İş dünyası değişiyor. Sizi geleceğe hazırlıyoruz.")}
+            accent={c("Sizi geleceğe hazırlıyoruz.")}
             accentColor="var(--blue-500)"
             base={0.12}
             className="hak-h1"
@@ -156,12 +171,12 @@ export default function HeroAkis({ partners = true }: { partners?: boolean }) {
             ilk
           />
           <FadeUp delay={0.3} ilk>
-            <p className="hak-alt">30 yıllık deneyim, Dubai, Londra ve KKTC&apos;de uluslararası uzmanlıkla.</p>
+            <p className="hak-alt">{c("30 yıllık deneyim, Dubai, Londra ve KKTC'de uluslararası uzmanlıkla.")}</p>
           </FadeUp>
           <FadeUp delay={0.38} ilk>
             <div className="hak-cta">
-              <SmartLink href="/#hizmetler" className="hak-btn hak-btn-mavi" onClick={() => gtm("hero_cta_click")}>
-                Uzmanlık alanlarımız
+              <SmartLink href={yerelAdres(dil, "/#hizmetler")} className="hak-btn hak-btn-mavi" onClick={() => gtm("hero_cta_click")}>
+                {c("Uzmanlık alanlarımız")}
                 <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
               </SmartLink>
               <SmartLink
@@ -169,7 +184,7 @@ export default function HeroAkis({ partners = true }: { partners?: boolean }) {
                 className="hak-btn hak-btn-cizgi"
                 onClick={() => gtm("cta_meeting_click", { placement: "hero" })}
               >
-                Bizimle iletişime geçin
+                {c("Bizimle iletişime geçin")}
               </SmartLink>
             </div>
           </FadeUp>
@@ -193,8 +208,8 @@ export default function HeroAkis({ partners = true }: { partners?: boolean }) {
                     <o.Icon size={18} strokeWidth={2} />
                   </span>
                   <span>
-                    <b>{o.t}</b>
-                    <em>{o.s}</em>
+                    <b>{c(o.t)}</b>
+                    <em>{c(o.s)}</em>
                   </span>
                   <span className="hak-tik">
                     <Check size={14} strokeWidth={2.4} />
@@ -206,7 +221,7 @@ export default function HeroAkis({ partners = true }: { partners?: boolean }) {
         </FadeUp>
       </div>
     </section>
-    {partners && <HeroPartners />}
+    {partners && <HeroPartners dil={dil} />}
     </>
   );
 }

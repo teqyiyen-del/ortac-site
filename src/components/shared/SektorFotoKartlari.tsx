@@ -40,14 +40,15 @@ const ICON: Record<string, LucideIcon> = {
 
 export type SektorKart = { slug: string; label: string; line: string };
 
-export default function SektorFotoKartlari({ items }: { items: SektorKart[] }) {
+/* `dil`: yalnız kartın ekran okuyucu etiketi için (10.10.2026 · /en denemesi) */
+export default function SektorFotoKartlari({ items, dil = "tr" }: { items: SektorKart[]; dil?: "tr" | "en" }) {
   return (
     <div className="skf-grid">
       {items.map((s, i) => {
         const Icon = ICON[s.slug];
         return (
           <FadeUp key={s.slug} delay={0.12 + i * 0.045}>
-            <SmartLink href={sectorHref(s.slug)} className="skf" aria-label={`${s.label}, detayları gör`}>
+            <SmartLink href={sectorHref(s.slug)} className="skf" aria-label={dil === "en" ? `${s.label}, view details` : `${s.label}, detayları gör`}>
               <span className="skf-foto" aria-hidden="true">
                 <Image
                   src={sectorPhoto(s.slug).work}

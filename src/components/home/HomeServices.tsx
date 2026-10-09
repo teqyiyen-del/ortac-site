@@ -20,6 +20,11 @@ import { COUNTRY_SLUGS, serviceHref, servicesFor, type ServiceSlug } from "@/lib
 import { COUNTRY_LABELS, type Country } from "@/lib/store";
 
 import Tel from "@/components/mobil/Tel";
+import { useCeviri } from "@/lib/i18n/useDil";
+import type { Cevir } from "@/lib/i18n/cevir";
+import type { Dil } from "@/lib/i18n/diller";
+import { EN_HOME_SERVICES } from "@/lib/en/homeServices";
+import { EN_BRAND } from "@/lib/en/brand";
 /* Verdiğimiz hizmetler.
  *
  * Bu tur iki şikâyet düzeltildi.
@@ -74,12 +79,13 @@ const countriesFor = (slug: ServiceSlug): Country[] =>
   COUNTRY_SLUGS.filter((c) => servicesFor(c).some((s) => s.slug === slug));
 
 /** "Yalnızca Dubai ve KKTC" — üç ülkede de varsa satır hiç yazılmıyor */
-function scopeNote(list: Country[]): string | null {
+function scopeNote(list: Country[], dil: Dil, c: Cevir): string | null {
   if (list.length >= COUNTRY_SLUGS.length) return null;
-  const names = list.map((c) => COUNTRY_LABELS[c]);
+  const names = list.map((k) => c(COUNTRY_LABELS[k]));
+  const ve = dil === "en" ? "and" : "ve";
   const joined =
-    names.length > 1 ? `${names.slice(0, -1).join(", ")} ve ${names.at(-1)}` : names[0];
-  return `Yalnızca ${joined}`;
+    names.length > 1 ? `${names.slice(0, -1).join(", ")} ${ve} ${names.at(-1)}` : names[0];
+  return dil === "en" ? `Only ${joined}` : `Yalnızca ${joined}`;
 }
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -172,6 +178,7 @@ function CountryOut({
   slug: ServiceSlug;
   list: Country[];
 }) {
+  const { dil, c } = useCeviri(EN_HOME_SERVICES, EN_BRAND);
   const reduce = useReducedMotion() ?? false;
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -184,7 +191,7 @@ function CountryOut({
      ediyoruz. Gerekçesi aşağıda, onClick'te. */
   const pointerKind = useRef("");
   const panelId = useId();
-  const note = scopeNote(list);
+  const note = scopeNote(list, dil, c);
 
   /* Dokunmatikte fare terk etme olayı yok: açık paneli kapatan tek şey dışarı
      dokunuş. Dinleyici yalnızca panel açıkken bağlanıyor. */
@@ -248,7 +255,7 @@ function CountryOut({
           aria-controls={panelId}
           /* Sayfada aynı metinli beş buton var; erişilebilir ad hangi hizmet
              olduğunu söylüyor. Görünen metin adın içinde geçiyor (WCAG 2.5.3). */
-          aria-label={`Ülkeye özel hizmeti görün: ${label}`}
+          aria-label={`${c("Ülkeye özel hizmeti görün")}: ${label}`}
           onPointerDown={(e) => {
             pointerKind.current = e.pointerType;
           }}
@@ -264,7 +271,7 @@ function CountryOut({
           }}
         >
           <Globe size={16} strokeWidth={2} className="hxq-ic" aria-hidden="true" />
-          <span>Ülkeye özel hizmeti görün</span>
+          <span>{c("Ülkeye özel hizmeti görün")}</span>
           <ChevronDown size={16} strokeWidth={2.2} className="hxq-caret" aria-hidden="true" />
         </button>
 
@@ -284,12 +291,12 @@ function CountryOut({
                 <SmartLink
                   href={serviceHref(country, slug)}
                   className="hxq-go"
-                  aria-label={`${COUNTRY_LABELS[country]}, ${label}`}
+                  aria-label={`${c(COUNTRY_LABELS[country])}, ${label}`}
                 >
                   <span className="hxq-f" aria-hidden="true">
                     <Flag country={country} />
                   </span>
-                  <b>{COUNTRY_LABELS[country]}</b>
+                  <b>{c(COUNTRY_LABELS[country])}</b>
                   <ArrowRight size={15} strokeWidth={2.2} className="hxq-arw" aria-hidden="true" />
                 </SmartLink>
               </motion.li>
@@ -303,40 +310,43 @@ function CountryOut({
 
 /* 25.09.2026 · Sahne artık kartın içinde bir kuyuda (Z1, /lab/sahne'de
    seçildi); kural css/sektor-foto.css · "GECE SAHNESİ · KUYU". */
+/* 10.10.2026 · /en denemesi: metin lib/en/homeServices sözlüğünden. Kartların
+   ülke bağlantıları İngilizce sayfada da ŞİMDİLİK Türkçe hizmet sayfalarına
+   gidiyor (İngilizce iç sayfalar yok; lib/i18n/cevir · yerelAdres notu). */
 export default function HomeServices() {
+  const { c } = useCeviri(EN_HOME_SERVICES);
   return (
     <section id="hizmetler" className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
         <div className="sec-head">
           <SplitWords
             as="h2"
-            text="Uzmanlık alanlarımız."
-            accent="alanlarımız."
+            text={c("Uzmanlık alanlarımız.")}
+            accent={c("alanlarımız.")}
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
             <p className="sec-lead"><Tel>
-              Muhasebe ve vergiden şirket kuruluşuna, bankadan uyuma; hepsi tek ekipte.
-              Kapsam ülkeye göre değiştiği için her alanda ülkeyi siz seçiyorsunuz.
+              {c("Muhasebe ve vergiden şirket kuruluşuna, bankadan uyuma; hepsi tek ekipte. Kapsam ülkeye göre değiştiği için her alanda ülkeyi siz seçiyorsunuz.")}
             </Tel></p>
           </FadeUp>
         </div>
 
         <div className="hx-grid">
-          {CARDS.map((c, i) => (
-            <FadeUp key={c.slug} delay={0.12 + i * 0.05} y={18} className="hx-cell hx-c4">
+          {CARDS.map((k, i) => (
+            <FadeUp key={k.slug} delay={0.12 + i * 0.05} y={18} className="hx-cell hx-c4">
               <article className="hx-card">
                 <div className="hx-stage" aria-hidden="true">
-                  <Ikili buyuk={<c.Scene />} mini={<MiniHizmet slug={c.slug} />} />
+                  <Ikili buyuk={<k.Scene />} mini={<MiniHizmet slug={k.slug} />} />
                 </div>
 
                 <div className="hx-body">
-                  <h3 className="hx-t">{c.ad}</h3>
-                  <p className="hx-l">{c.satir}</p>
+                  <h3 className="hx-t">{c(k.ad)}</h3>
+                  <p className="hx-l">{c(k.satir)}</p>
                 </div>
 
-                <CountryOut label={c.ad} slug={c.slug} list={countriesFor(c.slug)} />
+                <CountryOut label={c(k.ad)} slug={k.slug} list={countriesFor(k.slug)} />
               </article>
             </FadeUp>
           ))}

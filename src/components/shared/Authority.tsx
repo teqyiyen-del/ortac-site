@@ -6,6 +6,9 @@ import { Flag } from "@/components/shared/CountryPicker";
 import type { Country } from "@/lib/store";
 
 import Tel from "@/components/mobil/Tel";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { EN_AUTHORITY } from "@/lib/en/authority";
+import { EN_BRAND } from "@/lib/en/brand";
 /* "Neden Ortac Global?" bölümünün GENİŞ KAROSUNUN İÇİ — iki sütun birden.
  *
  * Bileşen bir fragment döndürüyor, kabuk döndürmüyor: dış kutu
@@ -126,6 +129,8 @@ const LATS = [-56, 0, 56].map((dy) => {
 const MERIDIANS = [32, 66];
 
 export default function Authority() {
+  /* 10.10.2026 · /en denemesi (lib/en/authority) */
+  const { c: ce } = useCeviri(EN_AUTHORITY, EN_BRAND);
   const reduce = useReducedMotion();
 
   /* Çizgiler pathLength="1" ile normalize ediliyor, böylece kesikli çizgi
@@ -164,7 +169,7 @@ export default function Authority() {
               müşterinin kendi beyanı; buradan bir kuruluş yılı türetilmedi
               (gerekçe lib/about.ts · SWAP:FOUNDED). Aynı cümle
               lib/about.ts · BASIS.cards içinde de var ve aynı turda değişti. */}
-          30 yıllık kurumsal geçmiş
+          {ce("30 yıllık kurumsal geçmiş")}
         </motion.h3>
 
         {/* Bu cümle KAPSAMI anlatıyor, aşağıdaki üç madde ise YETKİYİ. İkisini
@@ -178,8 +183,7 @@ export default function Authority() {
           viewport={VIEW}
           transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : 0.08, ease: EASE }}
         ><Tel>
-          1996&apos;dan beri muhasebe, vergi, şirket kuruluşu ve kurumsal danışmanlık:
-          hepsi aynı çatı altında yürüyor.
+          {ce("1996'dan beri muhasebe, vergi, şirket kuruluşu ve kurumsal danışmanlık: hepsi aynı çatı altında yürüyor.")}
         </Tel></motion.p>
 
         <ul className="aut-creds">
@@ -198,7 +202,7 @@ export default function Authority() {
               <span className="aut-ic" aria-hidden="true">
                 <Icon size={15} strokeWidth={2.1} />
               </span>
-              {t}
+              {ce(t)}
             </motion.li>
           ))}
         </ul>
@@ -209,7 +213,7 @@ export default function Authority() {
         {/* Kürenin ne anlattığını tek başına bayraklar da söylüyor ama bu üç
             kelime hem ekran okuyucuya hem de aceleyle kaydıran göze bağlamı
             bedavaya veriyor. */}
-        <span className="aut-tag">Üç ülkede operasyon</span>
+        <span className="aut-tag">{ce("Üç ülkede operasyon")}</span>
 
         {/* Küre ve işaretler AYNI kare kutunun içinde; kutu sahneden büyük,
             alt kenardan taşıyor ve kırpılıyor. Kırpma artık yer kazanmak için
@@ -288,7 +292,7 @@ export default function Authority() {
                          kalıptan biri. `reduce` render ağacına asla girmemeli,
                          yalnızca SÜRE değiştirmeli (aşağıdaki transition gibi). */}
                 </span>
-                {label}
+                {ce(label)}
               </motion.span>
             </span>
           ))}

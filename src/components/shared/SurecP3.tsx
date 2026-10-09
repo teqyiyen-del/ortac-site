@@ -56,6 +56,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { SceneKind } from "@/components/scenes/SetupScenes";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { EN_SUREC } from "@/lib/en/surecP3";
 
 export type SurecKim = "siz" | "ortac" | "otorite" | "banka" | "birlikte";
 export type SurecAdim = {
@@ -120,6 +122,9 @@ export default function SurecP3({
   /** çubukların altı, arada boşlukla: dipnot, çıkış bağlantısı, ülke seçici */
   foot?: ReactNode;
 }) {
+  /* 10.10.2026 · /en denemesi: bu kalıbın kendi yazıları ("Sizde", "Birlikte",
+     çubukların etiketi) lib/en/surecP3 sözlüğünden; adım metni çağırandan. */
+  const { c: ce } = useCeviri(EN_SUREC);
   const hostRef = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const [active, setActive] = useState(0);
@@ -182,7 +187,7 @@ export default function SurecP3({
                       <p className="srp-m">
                         <span className="srp-who" data-ton={k.ton}>
                           <Icon size={14} strokeWidth={2.2} aria-hidden="true" />
-                          {k.label}
+                          {ce(k.label)}
                         </span>
                         {s.timing && <span className="srp-time">{s.timing}</span>}
                       </p>
@@ -194,7 +199,7 @@ export default function SurecP3({
               <div
                 className="srp-bars"
                 role="group"
-                aria-label="Süreç adımları"
+                aria-label={ce("Süreç adımları")}
                 style={{ gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))` }}
               >
                 {steps.map((s, i) => {

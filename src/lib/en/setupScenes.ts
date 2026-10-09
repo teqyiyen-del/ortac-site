@@ -1,0 +1,53 @@
+/* kaynak: src/components/scenes/SetupScenes.tsx · ozet: 26ee2573 */
+/* Süreç bölümündeki beş genel çizimin (form, isim, lisans, banka, teslim)
+   içindeki yazılar (anahtar Türkçe yazı). Türe bağlı dört sahne (faaliyet,
+   kuruluş tipi, kimlik, kayıtlar) yalnız ülke sayfalarında; henüz çevrilmedi.
+   FARK: örnek formdaki kişi ve ülke küresel okura göre ("Alex Morgan",
+   "Germany"); ikisi de temsilî, gerçek kişi değil. Alan kutuları dar:
+   değerler Türkçesinden uzun olmamalı (yazı soldan sağa kırpılarak açılıyor). */
+import type { Sozluk } from "@/lib/i18n/cevir";
+
+export const EN_SETUP_SCENES: Sozluk = {
+  "Başvuru formu örnek değerlerle dolduruluyor": "Application form being filled in with sample values",
+  "Başvuru formu": "Application form",
+  "Örnek doldurma": "Sample entry",
+  "Ad Soyad": "Full name",
+  "Mert Kayacan": "Alex Morgan",
+  "Pasaport no": "Passport no.",
+  Faaliyet: "Activity",
+  "E-ticaret": "Trading",
+  Ülke: "Country",
+  Türkiye: "Germany",
+  "Form ve belgeler tek yerden toplanır.": "Form and documents are collected in one place.",
+  "İsim onayı": "Name approval",
+  "Aday şirket adı": "Proposed company name",
+  Uygun: "Available",
+  "Tescil otoritesi": "Registration authority",
+  "Ön başvuru iletildi": "Pre-application sent",
+  "Tescil ve lisans özeti, şematik": "Registration and licence summary, schematic",
+  "Tescil ve lisans": "Registration and licence",
+  "Şematik özet": "Schematic summary",
+  "Lisans no": "Licence no.",
+  "Faaliyet sınıfı": "Activity class",
+  "Ticari / Teknoloji": "Commercial / Technology",
+  Geçerlilik: "Validity",
+  "1 yıl": "1 year",
+  Durum: "Status",
+  Onayda: "In review",
+  Onaylandı: "Approved",
+  "kayıt tamamlandı": "record completed",
+  "Banka hesabı açılışı": "Bank account opening",
+  "İş hesabı": "Business account",
+  "Çoklu para birimi": "Multi-currency",
+  "Banka dosyası": "Bank file",
+  Hazırlandı: "Prepared",
+  "Hesap açılışı": "Account opening",
+  Tamamlandı: "Completed",
+  "Belge teslimi": "Document handover",
+  Paneliniz: "Your portal",
+  "Tescil belgesi": "Certificate",
+  "Vergi kaydı": "Tax registration",
+  "Ana sözleşme": "Articles",
+  "Teslim edildi": "Handed over",
+  "Kuruluş dosyası": "Formation file",
+};

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { Check } from "lucide-react";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { EN_LIVE_TRACKER } from "@/lib/en/liveTracker";
 
 /* The transparency tile walks its own process: one row completes at a time,
    the bar fills, and when it reaches the end it restarts. Nothing here is a
@@ -33,6 +35,8 @@ const STAGES = ["Evrak alındı", "Başvuru verildi", "Lisans dosyası kurumda",
 const TICK = 1700;
 
 export default function LiveTracker() {
+  /* 10.10.2026 · /en denemesi (lib/en/liveTracker) */
+  const { c } = useCeviri(EN_LIVE_TRACKER);
   const reduced = useReducedMotion();
   const hostRef = useRef<HTMLDivElement>(null);
   const inView = useInView(hostRef, { margin: "0px 0px -15% 0px" });
@@ -49,7 +53,7 @@ export default function LiveTracker() {
   return (
     <div className="lt" ref={hostRef}>
       <div className="lt-head">
-        <span>Canlı durum</span>
+        <span>{c("Canlı durum")}</span>
         <b>{pct}%</b>
       </div>
       <span className="lt-bar" aria-hidden="true">
@@ -76,8 +80,8 @@ export default function LiveTracker() {
                   <span className="lt-pulse" />
                 ) : null}
               </span>
-              <span className="lt-label">{label}</span>
-              <span className="lt-meta">{done ? "Tamam" : active ? "İşlemde" : "Sırada"}</span>
+              <span className="lt-label">{c(label)}</span>
+              <span className="lt-meta">{c(done ? "Tamam" : active ? "İşlemde" : "Sırada")}</span>
             </div>
           );
         })}

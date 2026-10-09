@@ -13,6 +13,12 @@ import { GUIDE_CATEGORY, categoryHashHref } from "@/lib/blogTemel";
 import { TOOL_BY_ID } from "@/lib/tools/catalog";
 import { isLiveChannel, officeFor } from "@/lib/offices";
 import { gtm } from "@/lib/gtm";
+import { isLive } from "@/lib/routes";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { yerelAdres } from "@/lib/i18n/cevir";
+import { EN_FOOTER } from "@/lib/en/footer";
+import { EN_BRAND } from "@/lib/en/brand";
+import { EN_TOOLS } from "@/lib/en/araclar";
 
 /* KÜNYE SATIRLARI ARTIK KAYIT DEFTERİNDEN OKUNUYOR (bkz. .ft2-brand).
    Footer her sayfanın altında basıldığı için buradaki iki satır sitenin en çok
@@ -238,6 +244,9 @@ const VARSAYILAN_KAPANIS: Required<KapanisMetni> = {
    çapaya bakmıyor; kapanış düğmelerinin ikisi de çapasız adres. */
 export function Ft2Cta({ placement = "footer", kapanis }: { placement?: string; kapanis?: KapanisMetni }) {
   const metin = { ...VARSAYILAN_KAPANIS, ...kapanis, cta: kapanis?.cta ?? VARSAYILAN_KAPANIS.cta };
+  /* 10.10.2026 · /en denemesi: kapanışın kendi yazıları lib/en/footer
+     sözlüğünden; başlık ve düğme sayfadan geliyor (app/en/page.tsx). */
+  const { dil, c } = useCeviri(EN_FOOTER);
   const yol = usePathname();
   const buradayiz = (href: string) => {
     const h = href.split("#")[0].split("?")[0].replace(/\/$/, "");
@@ -271,7 +280,7 @@ export function Ft2Cta({ placement = "footer", kapanis }: { placement?: string; 
             <FadeUp>
               <span className="kcta-rozet">
                 <span className="kcta-nokta" />
-                Tek ekip, tek muhatap
+                {c("Tek ekip, tek muhatap")}
               </span>
             </FadeUp>
 
@@ -287,7 +296,7 @@ export function Ft2Cta({ placement = "footer", kapanis }: { placement?: string; 
               <div className="kcta-eylem">
                 {!buradayiz(metin.cta.href) && (
                   <SmartLink
-                    href={metin.cta.href}
+                    href={yerelAdres(dil, metin.cta.href)}
                     className="btn btn-primary"
                     onClick={() => gtm("cta_start_click", { placement })}
                   >
@@ -324,7 +333,7 @@ export function Ft2Cta({ placement = "footer", kapanis }: { placement?: string; 
                     className="btn btn-ghost"
                     onClick={() => gtm("cta_meeting_click", { placement })}
                   >
-                    İletişime Geç
+                    {c("İletişime Geç")}
                   </SmartLink>
                 )}
               </div>
@@ -352,14 +361,18 @@ export function Ft2Directory({
   cols?: typeof FT2_COLS;
   hashClick?: (href: string) => ((e: React.MouseEvent) => void) | undefined;
 }) {
+  /* 10.10.2026 · /en denemesi. Dizinin bağlantıları İngilizce sayfada da
+     şimdilik Türkçe sayfalara gidiyor. İngilizce dizinde yalnız YAYINDA olan
+     hizmetler var: kapalı sayfanın sönük satırı SmartLink'te Türkçe ipucu
+     taşıyor ve İngilizce okura "yakında" demenin anlamı yok. */
+  const { dil, c: ce } = useCeviri(EN_FOOTER, EN_BRAND, EN_TOOLS);
   return (
     <>
       <div className="container-o ft2-grid">
         <div className="ft2-brand">
           <Logo height={22} />
           <p>
-            Dubai, İngiltere ve KKTC&apos;de kuruluş, banka, tahsilat ve muhasebe. Tek elden,
-            tek muhatapla.
+            {ce("Dubai, İngiltere ve KKTC'de kuruluş, banka, tahsilat ve muhasebe. Tek elden, tek muhatapla.")}
           </p>
           {/* İkisi de KOŞULLU: offices.ts bir alanı boşaltırsa satır hiç
               basılmıyor. Yarım bir künye (ikon var, değer yok) hiç olmayandan
@@ -380,7 +393,7 @@ export function Ft2Directory({
             </span>
           )}
           {/* 09.10.2026 · eski sitedeki beş hesap (Burak: "hepsini bağla, footer'a koy") */}
-          <nav className="ft2-sosyal" aria-label="Sosyal medya">
+          <nav className="ft2-sosyal" aria-label={ce("Sosyal medya")}>
             {SOSYAL.map((h) => (
               <a key={h.ad} href={h.href} target="_blank" rel="noopener noreferrer">
                 {h.ad}
@@ -392,9 +405,9 @@ export function Ft2Directory({
         <div className="ft2-nav">
           {COUNTRY_ORDER.map((c) => (
             <FtKol key={c} baslik={COUNTRY_NAME[c]}>
-              {COUNTRY_SERVICES[c].map((s) => (
+              {COUNTRY_SERVICES[c].filter((s) => dil !== "en" || isLive(s.href)).map((s) => (
                 <SmartLink key={s.key} href={s.href}>
-                  {s.label}
+                  {ce(s.label)}
                 </SmartLink>
               ))}
             </FtKol>
@@ -404,7 +417,7 @@ export function Ft2Directory({
             <FtKol key={col.head} baslik={col.head}>
               {col.links.map((l) => (
                 <SmartLink key={l.label} href={l.href} onClick={hashClick?.(l.href)}>
-                  {l.label}
+                  {ce(l.label)}
                 </SmartLink>
               ))}
             </FtKol>
@@ -413,10 +426,9 @@ export function Ft2Directory({
       </div>
 
       <div className="container-o ft2-base">
-        <p>© 2026 Ortac Global. Tüm hakları saklıdır.</p>
+        <p>{ce("© 2026 Ortac Global. Tüm hakları saklıdır.")}</p>
         <p className="ft2-legal">
-          Bu sitedeki bilgiler genel bilgilendirme amaçlıdır; mali, hukuki veya vergi
-          danışmanlığı yerine geçmez.
+          {ce("Bu sitedeki bilgiler genel bilgilendirme amaçlıdır; mali, hukuki veya vergi danışmanlığı yerine geçmez.")}
         </p>
       </div>
     </>
@@ -444,14 +456,16 @@ const SOSYAL = [
 
 function FtKol({ baslik, children }: { baslik: string; children: React.ReactNode }) {
   const [acik, setAcik] = useState(false);
+  const { c } = useCeviri(EN_FOOTER, EN_BRAND);
+  const ad = c(baslik);
   return (
-    <nav className="ft2-col" aria-label={baslik} data-acik={acik || undefined}>
-      <span className="ft2-h">{baslik}</span>
+    <nav className="ft2-col" aria-label={ad} data-acik={acik || undefined}>
+      <span className="ft2-h">{ad}</span>
       <button
         type="button"
         className="ft2-ac"
         aria-expanded={acik}
-        aria-label={`${baslik} bağlantıları`}
+        aria-label={`${ad} ${c("bağlantıları")}`}
         onClick={() => setAcik((v) => !v)}
       />
       {children}

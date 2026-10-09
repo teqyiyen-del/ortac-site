@@ -150,10 +150,16 @@ const nextConfig: NextConfig = {
       { source: "/tesekkurler", destination: "/", permanent: false },
       /* ESKİ İNGİLİZCE ADRESLER · GEÇİCİ. İngilizce sürüm yeni İngilizce
          adreslerle kurulacak; o güne kadar /en/x Türkçe karşılığına (/x)
-         gidiyor, oradan yukarıdaki kurallar devralıyor. Geçici (307): İngilizce
-         açıldığında bu iki satır silinir ve kalıcı eşleştirme yazılır. */
-      { source: "/en", destination: "/", permanent: false },
-      { source: "/en/:rest*", destination: "/:rest*", permanent: false },
+         gidiyor, oradan yukarıdaki kurallar devralıyor. Geçici (307).
+         10.10.2026 · /en ARTIK GERÇEK SAYFA (ana sayfanın İngilizce denemesi,
+         app/en/page.tsx): `{ source: "/en", destination: "/" }` satırı kalktı.
+         Alt adresler (/en/dubai …) hâlâ Türkçe karşılığına gidiyor; her
+         İngilizce sayfa açıldıkça bu kural o adres için daraltılır ve
+         sonunda kalıcı eşleştirme yazılır.
+         `:rest*` → `:rest+`: yıldız SIFIR parçayı da eşliyor, yani "/en"in
+         kendisini de yakalayıp ana sayfaya atıyordu (denendi, 307 döndü).
+         Artı en az bir parça istiyor. */
+      { source: "/en/:rest+", destination: "/:rest+", permanent: false },
       { source: "/privacy-policy", destination: "/kvkk", permanent: true },
       { source: "/legal/:rest*", destination: "/kvkk", permanent: true },
       { source: "/ulke/:slug", destination: "/:slug", permanent: true },

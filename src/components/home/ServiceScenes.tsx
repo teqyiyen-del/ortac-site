@@ -1,5 +1,10 @@
 "use client";
 
+/* 10.10.2026 · çizimlerin içindeki yazılar /en'de İngilizce (lib/en/serviceScenes;
+   Türkçe sayfada `ce` cümleyi aynen geri veriyor). */
+import { useCeviri } from "@/lib/i18n/useDil";
+import { EN_SERVICE_SCENES } from "@/lib/en/serviceScenes";
+
 import { motion, useReducedMotion } from "motion/react";
 import {
   Check,
@@ -81,6 +86,7 @@ function Pulse({
 /* ---------------------------------------------------------------- kuruluş --
    Üç evrak sicile giriyor, karşılığında mühürlü tescil çıkıyor.            */
 export function SceneFormation() {
+  const { c: ce } = useCeviri(EN_SERVICE_SCENES);
   const reduce = useReducedMotion();
   const docs = [30, 74, 118];
   return (
@@ -106,7 +112,7 @@ export function SceneFormation() {
       <rect x="120" y="26" width="192" height="128" rx="16" className="svx-box" />
       <ScrollText x={136} y={42} width={15} height={15} strokeWidth={2.1} className="svx-ic-b" />
       <text x="159" y="54" className="svx-t svx-tb">
-        Tescil dosyası
+        {ce("Tescil dosyası")}
       </text>
       <path d="M132 68 H300" className="svx-line" />
 
@@ -160,6 +166,7 @@ export function SceneFormation() {
    bağlandığı yazıyor. Hesap kutusundaki iki plaka da aynı mantıkla: Dubai
    tarafında çalıştığımız bankalar.                                          */
 export function SceneBanking() {
+  const { c: ce } = useCeviri(EN_SERVICE_SCENES);
   const reduce = useReducedMotion();
   const rails: { y: number; brand: BrandKey }[] = [
     { y: 36, brand: "stripe" },
@@ -177,7 +184,7 @@ export function SceneBanking() {
         <rect x="8" y="40" width="108" height="100" rx="14" className="svx-box-b" />
         <Landmark x={24} y={54} width={15} height={15} strokeWidth={2.1} className="svx-ic-b" />
         <text x="24" y="86" className="svx-t svx-tb">
-          Kurumsal
+          {ce("Kurumsal")}
         </text>
         <BrandBadge brand="wio" x={24} y={94} size={22} radius={7} />
         <BrandBadge brand="mashreq" x={52} y={94} size={22} radius={7} />
@@ -209,6 +216,7 @@ export function SceneBanking() {
 /* -------------------------------------------------------------- muhasebe --
    Dönem dönem dolan defter ve zamanında verilen beyan.                     */
 export function SceneAccounting() {
+  const { c: ce } = useCeviri(EN_SERVICE_SCENES);
   const reduce = useReducedMotion();
   /* 18.09.2026 · ÇUBUKLAR KISALDI. Eski dizide en yüksek çubuk 96 idi: taban
      y=132 olduğu için tepesi y=36'ya çıkıyor ve "beyan verildi" rozetinin
@@ -222,7 +230,7 @@ export function SceneAccounting() {
       <rect x="8" y="14" width="304" height="152" rx="16" className="svx-box" />
 
       <text x="26" y="42" className="svx-t">
-        Dönem
+        {ce("Dönem")}
       </text>
       <motion.g
         initial={{ opacity: 0, x: 10 }}
@@ -244,7 +252,7 @@ export function SceneAccounting() {
         <rect x="184" y="26" width="110" height="24" rx="12" className="svx-chip-ok" />
         <Check x={194} y={32} width={11} height={11} strokeWidth={3.2} className="svx-ic-ok" />
         <text x="211" y="42" className="svx-t svx-tok">
-          Beyan verildi
+          {ce("Beyan verildi")}
         </text>
       </motion.g>
 
@@ -268,10 +276,10 @@ export function SceneAccounting() {
       ))}
 
       <text x="26" y="152" className="svx-t">
-        Defter
+        {ce("Defter")}
       </text>
       <text x="294" y="152" textAnchor="end" className="svx-t">
-        Rapor
+        {ce("Rapor")}
       </text>
     </Scene>
   );
@@ -283,6 +291,7 @@ export function SceneAccounting() {
 /* ------------------------------------------------------------------- vize --
    Elinizde kalan şey: kimlik kartı. Biyometri adımı bize ait değil.        */
 export function SceneVisa() {
+  const { c: ce } = useCeviri(EN_SERVICE_SCENES);
   const reduce = useReducedMotion();
   return (
     <Scene>
@@ -358,7 +367,7 @@ export function SceneVisa() {
       </motion.g>
 
       <text x="122" y="128" className="svx-t">
-        Kimlik kartı
+        {ce("Kimlik kartı")}
       </text>
     </Scene>
   );
@@ -372,12 +381,13 @@ export function SceneVisa() {
 
 /* Vergi: solda beyan satırları (işaretli), sağda yüzde halkası. */
 export function SceneTax() {
+  const { c: ce } = useCeviri(EN_SERVICE_SCENES);
   const reduce = useReducedMotion();
   return (
     <Scene>
       <rect x="8" y="14" width="304" height="152" rx="16" className="svx-box" />
       <text x="26" y="42" className="svx-t">
-        Beyan
+        {ce("Beyan")}
       </text>
       {[0, 1, 2].map((i) => (
         <motion.g

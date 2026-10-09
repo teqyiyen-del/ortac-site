@@ -4,6 +4,8 @@ import SplitWords from "@/components/shared/SplitWords";
 import { sssDugumu } from "@/lib/seo";
 import FadeUp from "@/components/shared/FadeUp";
 import SssAkordeon, { type SssItem } from "@/components/shared/SssAkordeon";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { EN_FAQ } from "@/lib/en/homeFaq";
 
 /* §14, altı soru: satın almayı fiilen durduran başlıklar.
 
@@ -68,29 +70,34 @@ const FAQ: SssItem[] = [
   },
 ];
 
+/* 10.10.2026 · /en denemesi: sorular ve cevaplar lib/en/homeFaq sözlüğünden
+   (sayfaya basılan veri de aynı dilde). Cevapların altındaki bağlantılar
+   şimdilik Türkçe sayfalara gidiyor. */
 export default function HomeFaq() {
+  const { c } = useCeviri(EN_FAQ);
+  const items = FAQ.map((f) => ({ ...f, q: c(f.q), a: c(f.a), toLabel: f.toLabel ? c(f.toLabel) : undefined }));
   return (
     <section id="sss" className="sec-pad" style={{ background: "var(--white)" }}>
       {/* SSS veri olarak da basılıyor (09.10.2026 · SEO rehberi denetimi) */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...sssDugumu(FAQ) }) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", ...sssDugumu(items) }) }} />
       <div className="container-o">
         <div className="sec-head">
           <SplitWords
             as="h2"
-            text="Sık sorulanlar."
-            accent="sorulanlar."
+            text={c("Sık sorulanlar.")}
+            accent={c("sorulanlar.")}
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Karar öncesinde en çok sorulan altı başlık.</p>
+            <p className="sec-lead">{c("Karar öncesinde en çok sorulan altı başlık.")}</p>
           </FadeUp>
         </div>
 
         {/* Çıkış yazısı eskisi gibi "Sorularınızı sorun"; ülke sayfalarında
             "Görüşme planlayın". 23.09.2026 · "ücretsiz danışmanlık" hiçbir
             yerde yok (Burak). */}
-        <SssAkordeon items={FAQ} placement="sss" cta="Sorularınızı sorun" />
+        <SssAkordeon items={items} placement="sss" cta={c("Sorularınızı sorun")} />
       </div>
     </section>
   );

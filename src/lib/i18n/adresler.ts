@@ -74,14 +74,25 @@ export function trAdres(enYol: string): string | null {
   return null;
 }
 
-/** aynı sayfanın öteki dildeki adresi; yoksa o dilin ana sayfası */
+/* YAYINDA OLAN İNGİLİZCE SAYFALAR (10.10.2026). enAdres bir adresin İngilizce
+   ADINI veriyor; o sayfanın yazılmış olduğunu söylemiyor. Bugün yalnız ana
+   sayfa var (app/en/page.tsx, deneme). Dil seçici bu listeye bakıyor: listede
+   olmayan karşılık yerine İngilizce ana sayfaya gidiyor (yoksa /en/dubai
+   next.config'teki geçici kuralla Türkçe sayfaya geri dönerdi ve düğme
+   çalışmıyor gibi görünürdü). Yeni İngilizce sayfa açılınca buraya satır. */
+export const EN_YAYINDA: ReadonlySet<string> = new Set(["/en"]);
+
+/** aynı sayfanın öteki dildeki adresi; yoksa (ya da henüz yazılmadıysa) o dilin ana sayfası */
 export function karsiAdres(yol: string, hedef: Dil): string {
-  if (hedef === "en") return enAdres(yol) ?? "/en";
+  if (hedef === "en") {
+    const en = enAdres(yol);
+    return en && EN_YAYINDA.has(en) ? en : "/en";
+  }
   return trAdres(yol) ?? "/";
 }
 
 /** metadata.alternates.languages için; İngilizce sayfa YAYINDA değilse çağrılmaz */
 export function dilAlternatifleri(trYol: string): Record<string, string> | undefined {
   const en = enAdres(trYol);
-  return en ? { tr: trYol, en, "x-default": trYol } : undefined;
+  return en && EN_YAYINDA.has(en) ? { tr: trYol, en, "x-default": trYol } : undefined;
 }

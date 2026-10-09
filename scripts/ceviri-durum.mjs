@@ -74,6 +74,15 @@ const kaynaklar = [
   ...readdirSync(join(kokYol, "src/lib")).filter((f) => ICERIK.test(f)).map((f) => `src/lib/${f}`),
   ...readdirSync(join(kokYol, "src/lib/blogYazilar")).filter((f) => f.endsWith(".ts") && f !== "index.ts").map((f) => `src/lib/blogYazilar/${f}`),
 ];
+/* 10.10.2026 · ana sayfanın İngilizce denemesi: İngilizce dosyaların kaynağı
+   artık yalnız src/lib değil. Metni kendi içinde taşıyan bileşenlerin
+   (home/HeroAkis, NavIstemci, Footer …) sözlükleri de src/lib/en altında ve
+   kaynak olarak bileşen dosyasını gösteriyor. Yukarıdaki döngü yolu ne olursa
+   olsun özeti karşılaştırıyor; burada yalnız sayım düzeliyor: çevrilmiş bir
+   bileşen kaynağı "içerik dosyası" sayısına giriyor ki toplam tutsun.
+   Çevrilmemiş bileşenler listelenmiyor (hangi bileşenin metin taşıdığını
+   betik bilemez); onlar sayfa İngilizceye geçerken elle eklenir. */
+for (const k of cevrilen.keys()) if (!kaynaklar.includes(k) && existsSync(join(kokYol, k))) kaynaklar.push(k);
 const eksik = kaynaklar.filter((k) => !cevrilen.has(k));
 console.log(`\nİngilizce dosya: ${enDosyalar.length} · eskiyen: ${eski} · çevirisi olmayan içerik dosyası: ${eksik.length} / ${kaynaklar.length}`);
 if (arg[0] === "--eksik") for (const k of eksik) console.log(`  yok  ${k}`);

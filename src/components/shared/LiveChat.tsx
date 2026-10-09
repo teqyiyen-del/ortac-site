@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { EN_LIVE_CHAT } from "@/lib/en/liveChat";
 
 /* A conversation that keeps running: messages arrive one after another, the
    window keeps the last few, and after the script ends it starts over.
@@ -29,6 +31,8 @@ const WINDOW = 3;
 const TICK = 2200;
 
 export default function LiveChat() {
+  /* 10.10.2026 · /en denemesi (lib/en/liveChat) */
+  const { c } = useCeviri(EN_LIVE_CHAT);
   const reduced = useReducedMotion();
   const hostRef = useRef<HTMLDivElement>(null);
   const inView = useInView(hostRef, { margin: "0px 0px -15% 0px" });
@@ -53,8 +57,8 @@ export default function LiveChat() {
         <span className="bn-avatar" aria-hidden="true">
           ME
         </span>
-        <b>Merve · danışmanınız</b>
-        <i>Çevrim içi</i>
+        <b>{c("Merve · danışmanınız")}</b>
+        <i>{c("Çevrim içi")}</i>
       </span>
 
       {/* data-yaricap="serbest": sohbet mokapı bir çizim. Balonun bir köşesi
@@ -72,7 +76,7 @@ export default function LiveChat() {
               exit={{ opacity: 0, y: -10, scale: 0.98 }}
               transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
             >
-              {m.t}
+              {c(m.t)}
             </motion.span>
           ))}
         </AnimatePresence>

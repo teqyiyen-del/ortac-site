@@ -3,6 +3,8 @@
 import { useId, type ReactElement } from "react";
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { EN_SETUP_SCENES } from "@/lib/en/setupScenes";
 
 /* Kuruluş adımları, çizilmiş hâlleriyle. Bunlar gece ekranında duruyor, yani
    buradaki her dolgu koyu yüzey değeri — soldaki ray zaten kelimeleri taşıyor,
@@ -36,6 +38,10 @@ import { Check } from "lucide-react";
    lisans, banka, teslim) üç ülkede birden çıktığı için hâlâ hiçbir ülke,
    otorite veya banka adı taşımıyor. */
 
+/* 10.10.2026 · /en denemesi: ana sayfanın beş genel sahnesinin (form, isim,
+   lisans, banka, teslim) içindeki yazılar lib/en/setupScenes sözlüğünden.
+   Türe bağlı dört sahne (faaliyet, kuruluş tipi, kimlik, kayıtlar) yalnız
+   ülke sayfalarında çıkıyor; onlar ülke sayfaları İngilizceye geçerken. */
 const EASE = [0.22, 1, 0.36, 1] as const;
 const W = 560;
 const H = 330;
@@ -56,6 +62,7 @@ const FORM_FIELDS = [
 ];
 
 export function SceneForm() {
+  const { c } = useCeviri(EN_SETUP_SCENES);
   /* clip ids have to be unique per instance and safe inside url(#…) — React's
      generated id carries punctuation, so strip everything that is not a plain
      id character and keep a letter in front */
@@ -66,7 +73,7 @@ export function SceneForm() {
       viewBox={`0 0 ${W} ${H}`}
       className="sv sv-dark"
       role="img"
-      aria-label="Başvuru formu örnek değerlerle dolduruluyor"
+      aria-label={c("Başvuru formu örnek değerlerle dolduruluyor")}
     >
       <defs>
         {FORM_FIELDS.map((f, i) => (
@@ -85,16 +92,16 @@ export function SceneForm() {
 
       <rect x="40" y="24" width="480" height="282" rx="20" className="dv-card" />
       <text x="68" y="60" className="dv-h">
-        Başvuru formu
+        {c("Başvuru formu")}
       </text>
       <text x="492" y="60" className="dv-lbl dv-ust" textAnchor="end">
-        Örnek doldurma
+        {c("Örnek doldurma")}
       </text>
 
       {FORM_FIELDS.map((f, i) => (
         <g key={f.label}>
           <text x={f.x} y={100 + f.row * 76} className="dv-lbl">
-            {f.label}
+            {c(f.label)}
           </text>
           <rect
             x={f.x}
@@ -111,7 +118,7 @@ export function SceneForm() {
             className="pr2-dv-val"
             clipPath={`url(#${uid}-f${i})`}
           >
-            {f.value}
+            {c(f.value)}
           </text>
           <motion.rect
             y={118 + f.row * 76}
@@ -153,7 +160,7 @@ export function SceneForm() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 1.5 }}
       >
-        Form ve belgeler tek yerden toplanır.
+        {c("Form ve belgeler tek yerden toplanır.")}
       </motion.text>
 
       <motion.rect
@@ -183,6 +190,7 @@ export function SceneForm() {
 
 /* ---------- 2 · the name is checked, then filed ---------- */
 export function SceneName() {
+  const { c } = useCeviri(EN_SETUP_SCENES);
   /* 18.09.2026 · SABİT id KALKTI. Ok ucu marker'ı `id="dv-head"` yazıyordu;
      sahne sayfada birden fazla kez basıldığı için (kaydırmalı şeritte ölçü
      kopyası + görünen kopya) belgede iki `dv-head` oluşuyordu — /dubai ve
@@ -194,10 +202,10 @@ export function SceneName() {
   const uid = `n${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="sv sv-dark" role="img" aria-label="İsim onayı">
+    <svg viewBox={`0 0 ${W} ${H}`} className="sv sv-dark" role="img" aria-label={c("İsim onayı")}>
       <rect x="40" y="52" width="480" height="112" rx="18" className="dv-card" />
       <text x="68" y="90" className="dv-lbl">
-        Aday şirket adı
+        {c("Aday şirket adı")}
       </text>
       <text x="68" y="130" className="dv-name">
         {SAMPLE_CO}
@@ -223,7 +231,7 @@ export function SceneName() {
         <rect x="366" y="90" width="128" height="36" rx="18" className="dv-pill-ok" />
         <Check x={382} y={100} width={16} height={16} strokeWidth={3} className="dv-ok-ic" />
         <text x="406" y="113" className="dv-pill-t">
-          Uygun
+          {c("Uygun")}
         </text>
       </motion.g>
 
@@ -248,10 +256,10 @@ export function SceneName() {
       >
         <rect x="150" y="232" width="260" height="56" rx="16" className="dv-node" />
         <text x="280" y="257" className="dv-t" textAnchor="middle">
-          Tescil otoritesi
+          {c("Tescil otoritesi")}
         </text>
         <text x="280" y="276" className="dv-s" textAnchor="middle">
-          Ön başvuru iletildi
+          {c("Ön başvuru iletildi")}
         </text>
       </motion.g>
     </svg>
@@ -267,12 +275,13 @@ const LICENCE_ROWS = [
 ];
 
 export function SceneLicence() {
+  const { c } = useCeviri(EN_SETUP_SCENES);
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
       className="sv sv-dark"
       role="img"
-      aria-label="Tescil ve lisans özeti, şematik"
+      aria-label={c("Tescil ve lisans özeti, şematik")}
     >
       <motion.g
         initial={{ opacity: 0, y: 14 }}
@@ -281,10 +290,10 @@ export function SceneLicence() {
       >
         <rect x="76" y="26" width="344" height="278" rx="16" className="dv-doc" />
         <text x="104" y="64" className="dv-h">
-          Tescil ve lisans
+          {c("Tescil ve lisans")}
         </text>
         <text x="104" y="86" className="dv-lbl dv-ust">
-          Şematik özet
+          {c("Şematik özet")}
         </text>
         <rect x="104" y="102" width="288" height="1" className="dv-ln" />
       </motion.g>
@@ -297,16 +306,16 @@ export function SceneLicence() {
           transition={{ duration: 0.4, delay: 0.5 + i * 0.16, ease: EASE }}
         >
           <text x="104" y={134 + i * 38} className="dv-lbl">
-            {r.label}
+            {c(r.label)}
           </text>
           <text x="392" y={134 + i * 38} className="pr2-dv-val" textAnchor="end">
-            {r.value}
+            {c(r.value)}
           </text>
         </motion.g>
       ))}
 
       <text x="104" y="258" className="dv-lbl">
-        Durum
+        {c("Durum")}
       </text>
       {/* pending, then approved — same slot, one hands over to the other */}
       <motion.g
@@ -317,7 +326,7 @@ export function SceneLicence() {
         {/* 25.09.2026 · bekleme amber (renk kuralı: şart/dikkat, henüz açık iş) */}
         <rect x="288" y="242" width="104" height="26" rx="13" className="dv-node dv-bekle" />
         <text x="340" y="259" className="pr2-dv-wait-t dv-bekle-t" textAnchor="middle">
-          Onayda
+          {c("Onayda")}
         </text>
       </motion.g>
       <motion.g
@@ -328,7 +337,7 @@ export function SceneLicence() {
       >
         <rect x="288" y="242" width="104" height="26" rx="13" className="dv-pill-ok" />
         <text x="340" y="259" className="dv-pill-t" textAnchor="middle">
-          Onaylandı
+          {c("Onaylandı")}
         </text>
       </motion.g>
 
@@ -352,7 +361,7 @@ export function SceneLicence() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.35, delay: 2 }}
       >
-        kayıt tamamlandı
+        {c("kayıt tamamlandı")}
       </motion.text>
     </svg>
   );
@@ -365,8 +374,9 @@ const BANK_ROWS = [
 ];
 
 export function SceneBank() {
+  const { c } = useCeviri(EN_SETUP_SCENES);
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="sv sv-dark" role="img" aria-label="Banka hesabı açılışı">
+    <svg viewBox={`0 0 ${W} ${H}`} className="sv sv-dark" role="img" aria-label={c("Banka hesabı açılışı")}>
       <motion.g
         initial={{ opacity: 0, y: -18, rotate: -4 }}
         animate={{ opacity: 1, y: 0, rotate: -2 }}
@@ -377,7 +387,7 @@ export function SceneBank() {
         {/* 25.09.2026 · kart çipi altın, avantaj kartlarındaki gibi (gerçek nesnenin rengi) */}
       <rect x="150" y="62" width="36" height="26" rx="5" className="dv-chip dv-cip" />
         <text x="404" y="80" className="dv-s" textAnchor="end">
-          İş hesabı
+          {c("İş hesabı")}
         </text>
         <text x="150" y="130" className="dv-iban">
           •••• •••• •••• ••••
@@ -386,7 +396,7 @@ export function SceneBank() {
           {SAMPLE_CO}
         </text>
         <text x="404" y="156" className="dv-s" textAnchor="end">
-          Çoklu para birimi
+          {c("Çoklu para birimi")}
         </text>
       </motion.g>
 
@@ -399,7 +409,7 @@ export function SceneBank() {
         >
           <rect x="122" y={b.y} width="316" height="40" rx="12" className="dv-row" />
           <text x="142" y={b.y + 25} className="dv-t">
-            {b.name}
+            {c(b.name)}
           </text>
           <motion.g
             initial={{ scale: 0 }}
@@ -409,7 +419,7 @@ export function SceneBank() {
           >
             <rect x="322" y={b.y + 8} width="98" height="24" rx="12" className="dv-pill-ok" />
             <text x="371" y={b.y + 24} className="dv-pill-t" textAnchor="middle">
-              {b.state}
+              {c(b.state)}
             </text>
           </motion.g>
         </motion.g>
@@ -422,11 +432,12 @@ export function SceneBank() {
 const DOCS = ["Tescil belgesi", "Vergi kaydı", "Ana sözleşme"];
 
 export function SceneHandover() {
+  const { c } = useCeviri(EN_SETUP_SCENES);
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="sv sv-dark" role="img" aria-label="Belge teslimi">
+    <svg viewBox={`0 0 ${W} ${H}`} className="sv sv-dark" role="img" aria-label={c("Belge teslimi")}>
       <rect x="300" y="42" width="220" height="246" rx="18" className="dv-card" />
       <text x="410" y="76" className="dv-h" textAnchor="middle">
-        Paneliniz
+        {c("Paneliniz")}
       </text>
 
       {DOCS.map((d, i) => (
@@ -439,7 +450,7 @@ export function SceneHandover() {
           <rect x="324" y={98 + i * 52} width="172" height="40" rx="11" className="dv-row" />
           <rect x="340" y={112 + i * 52} width="12" height="12" rx="3" className="dv-fill-sq" />
           <text x="362" y={123 + i * 52} className="dv-t">
-            {d}
+            {c(d)}
           </text>
         </motion.g>
       ))}
@@ -453,7 +464,7 @@ export function SceneHandover() {
         <rect x="324" y="244" width="172" height="34" rx="17" className="dv-pill-ok" />
         <Check x={342} y={253} width={16} height={16} strokeWidth={3} className="dv-ok-ic" />
         <text x="366" y="266" className="dv-pill-t">
-          Teslim edildi
+          {c("Teslim edildi")}
         </text>
       </motion.g>
 
@@ -468,7 +479,7 @@ export function SceneHandover() {
           className="dv-folder"
         />
         <text x="120" y="266" className="dv-s" textAnchor="middle">
-          Kuruluş dosyası
+          {c("Kuruluş dosyası")}
         </text>
       </motion.g>
     </svg>

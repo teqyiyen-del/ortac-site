@@ -11,6 +11,9 @@ import SurecP3, { ADIM_IKON, type SurecAdim } from "@/components/shared/SurecP3"
 import { COUNTRY_NAME, COUNTRY_ORDER } from "@/lib/brand";
 
 import Tel from "@/components/mobil/Tel";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { EN_PROCESS } from "@/lib/en/processScroll";
+import { EN_BRAND } from "@/lib/en/brand";
 /* 25.09.2026 · BÖLÜM P3'E GEÇTİ (components/shared/SurecP3, ülke
    sayfalarıyla aynı kalıp). Solda alt alta beş satırlık ray ve sağdaki kartın
    başlığı ("Kuruluş dosyası · Sizden bir kez evrak, gerisi bizde · 3/5")
@@ -89,6 +92,10 @@ const STEPS: SurecAdim[] = [
 ];
 
 export default function ProcessScroll() {
+  /* 10.10.2026 · /en denemesi: metin lib/en/processScroll sözlüğünden;
+     çizimlerin içi lib/en/setupScenes. Ülke bağlantıları şimdilik Türkçe
+     ülke sayfalarının süreç bölümüne gidiyor. */
+  const { c: ce } = useCeviri(EN_PROCESS, EN_BRAND);
   const pickerRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -112,8 +119,8 @@ export default function ProcessScroll() {
         <div className="sec-head">
           <SplitWords
             as="h2"
-            text="Kuruluşta nasıl çalışıyoruz."
-            accent="nasıl çalışıyoruz."
+            text={ce("Kuruluşta nasıl çalışıyoruz.")}
+            accent={ce("nasıl çalışıyoruz.")}
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
@@ -121,13 +128,12 @@ export default function ProcessScroll() {
             {/* 23.09.2026: "üç ülkede de aynı beş adım" kalktı (Burak
                 beğenmedi), yerine çalışma biçimi. */}
             <p className="sec-lead"><Tel>
-              Kurum ve süre ülkeye göre değişiyor, çalışma biçimimiz değişmiyor: evrakı bir kez
-              veriyorsunuz, gerisini biz yürütüyoruz.
+              {ce("Kurum ve süre ülkeye göre değişiyor, çalışma biçimimiz değişmiyor: evrakı bir kez veriyorsunuz, gerisini biz yürütüyoruz.")}
             </Tel></p>
           </FadeUp>
         </div>
       }
-      steps={STEPS}
+      steps={STEPS.map((s) => ({ ...s, title: ce(s.title), short: ce(s.short), aria: ce(s.aria) }))}
       scenes={SETUP_SCENES}
       sizer={SETUP_SCENES}
       foot={
@@ -135,7 +141,7 @@ export default function ProcessScroll() {
           {/* the one line that has to stay: the panel walks to "teslim
               edildi" on its own, so the non-guarantee is said in words */}
           <p className="srp-note">
-            Kurum ve banka kararları ilgili kuruluşlara aittir; sonuç ve süre garanti edilmez.
+            {ce("Kurum ve banka kararları ilgili kuruluşlara aittir; sonuç ve süre garanti edilmez.")}
           </p>
           {/* Ülke seçici artık paneli yeniden yazmıyor.
               It used to rewrite the panel in place, which loaded this section
@@ -159,7 +165,7 @@ export default function ProcessScroll() {
               onClick={() => setPickerOpen((v) => !v)}
               onFocus={() => setPickerOpen(true)}
             >
-              <span className="pr5-ctry-lbl">Ülkeye özel süreci gör</span>
+              <span className="pr5-ctry-lbl">{ce("Ülkeye özel süreci gör")}</span>
               <ChevronDown
                 size={15}
                 strokeWidth={2.2}
@@ -184,7 +190,7 @@ export default function ProcessScroll() {
                       className="pr5-ctry-opt"
                       onClick={() => setPickerOpen(false)}
                     >
-                      {COUNTRY_NAME[c]}
+                      {ce(COUNTRY_NAME[c])}
                     </SmartLink>
                   ))}
                 </motion.div>

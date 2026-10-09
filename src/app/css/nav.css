@@ -350,7 +350,16 @@
   transition: border-color 160ms linear;
 }
 
-.onv-lang button {
+/* 10.10.2026 · dil seçici çalışır oldu: öteki dil artık bağlantı (<a>),
+   düğmeyle aynı kutu. Sönük "yakında" hâli (aria-disabled) kullanılmıyor,
+   kuralı aşağıda duruyor. */
+.onv-lang a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.onv-lang button,
+.onv-lang a {
   height: 26px;
   padding-inline: 8px;
   border: 0;
@@ -1604,6 +1613,7 @@ span.onv-brief .onv-brief-uzeri em {
 .onv:not([data-solid="true"]) .onv-burger:focus-visible,
 .onv:not([data-solid="true"]) .onv-logo:focus-visible,
 .onv:not([data-solid="true"]) .onv-lang button:focus-visible,
+.onv:not([data-solid="true"]) .onv-lang a:focus-visible,
 .onv-brief :focus-visible {
   outline-color: #ffffff;
 }

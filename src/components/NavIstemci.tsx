@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
@@ -42,6 +43,13 @@ import { COUNTRY_PHOTO, PHOTO } from "@/lib/media";
 /* Kaynaklar panelindeki "son yazı" kartı için: künye elle yazılmıyor,
    yazının kendi kaydından okunuyor (bkz. RESOURCES bloğunun altı). */
 import { GUIDE_CATEGORY, blogHref, categoryHashHref } from "@/lib/blogTemel";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { yerelAdres } from "@/lib/i18n/cevir";
+import { karsiAdres } from "@/lib/i18n/adresler";
+import { EN_MENU } from "@/lib/en/menu";
+import { EN_BRAND } from "@/lib/en/brand";
+import { EN_SERVICES } from "@/lib/en/services";
+import { EN_TOOLS } from "@/lib/en/araclar";
 
 /* ============================================================================
    CANLI NAVBAR — "KOYU ÜLKE KARTI, AÇIK ŞERİT"        (stil: app/css/nav.css)
@@ -456,6 +464,25 @@ const TAIL_ITEMS: Record<string, Tile[]> = {
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+/* MENÜNÜN DİLİ (10.10.2026 · ana sayfanın İngilizce denemesi, /en).
+   Dil yoldan okunuyor (lib/i18n/useDil): menü 28 sayfadan çağrılıyor, hiçbirine
+   prop eklenmedi. Türkçe sayfada `ce` cümleyi aynen geri veriyor; İngilizce
+   sayfada dört sözlüğe bakıyor (menünün kendi yazıları, ülke adları, hizmet
+   adları, araç adları). Menüdeki bütün bağlantılar İngilizce sayfada da
+   ŞİMDİLİK Türkçe sayfalara gidiyor: İngilizce iç sayfa yok (lib/i18n/cevir ·
+   yerelAdres notu). Yalnız logo İngilizce ana sayfaya dönüyor. */
+/* İngilizce menüde "son yazı" kartının yerine geçen kart (yazılar Türkçe) */
+const EN_BLOG_KART = {
+  ust: "Blog",
+  baslik: "Guides and articles",
+  dugme: "Open the blog (in Turkish)",
+  label: "Blog: guides and articles, currently in Turkish",
+};
+function useNavCeviri() {
+  const { dil, c } = useCeviri(EN_MENU, EN_BRAND, EN_SERVICES, EN_TOOLS);
+  return { dil, ce: c };
+}
+
 /* ------------------------------------------------------------------- parça */
 /* Eski navbar'ın .nv2-card kalıbı, aday turu üzerinden buraya geldi: çerçeveli
    beyaz kart + çerçeveli kare ikon kutusu; hover'da ikisi birden maviye
@@ -495,21 +522,22 @@ function UlkeIsareti({ ulke }: { ulke: CountrySlug | "hepsi" | null }) {
 }
 
 function CardLink({ t, onGo }: { t: Tile; onGo: () => void }) {
+  const { ce } = useNavCeviri();
   const arac = t.ulke !== undefined;
   return (
     <SmartLink
       href={t.href}
       className="onv-card"
-      aria-label={`${t.label}, ${t.hint}`}
+      aria-label={`${ce(t.label)}, ${ce(t.hint)}`}
       onClick={onGo}
     >
       <span className="onv-ic" aria-hidden="true">
         <t.icon size={18} strokeWidth={1.9} />
       </span>
       <span className="onv-card-tx">
-        <b>{t.label}</b>
+        <b>{ce(t.label)}</b>
         {/* bayraklar künyenin yerinde: tek satırlık kartta sağa yaslı */}
-        {arac ? <UlkeIsareti ulke={t.ulke ?? null} /> : <em>{t.hint}</em>}
+        {arac ? <UlkeIsareti ulke={t.ulke ?? null} /> : <em>{ce(t.hint)}</em>}
       </span>
     </SmartLink>
   );
@@ -533,6 +561,7 @@ function ServicesPanel({
   onPick: (c: CountrySlug) => void;
   onGo: () => void;
 }) {
+  const { dil, ce } = useNavCeviri();
   const tabs = useRef<Partial<Record<CountrySlug, HTMLButtonElement | null>>>({});
   const own = new Map(servicesFor(c).map((s) => [s.slug, s]));
 
@@ -575,7 +604,7 @@ function ServicesPanel({
             düğümü silip bırakmak sekme listesini ADSIZ yapardı. Görsel olarak
             gizli bir <span> de çözüm değil (tuzak G: ağaca çıkmayabiliyor),
             o yüzden ad doğrudan `aria-label` ile veriliyor. */}
-        <div className="onv-rail" role="tablist" aria-label="Önce ülke">
+        <div className="onv-rail" role="tablist" aria-label={ce("Önce ülke")}>
           {COUNTRY_ORDER.map((k) => (
             <button
               key={k}
@@ -611,13 +640,13 @@ function ServicesPanel({
               <span className="onv-ctry-flag" aria-hidden="true">
                 <Flag country={k} />
               </span>
-              <span className="onv-ctry-n">{COUNTRY_NAME[k]}</span>
-              {here === k && <span className="onv-sr"> (şu an bu ülkedesiniz)</span>}
+              <span className="onv-ctry-n">{ce(COUNTRY_NAME[k])}</span>
+              {here === k && <span className="onv-sr"> {ce("(şu an bu ülkedesiniz)")}</span>}
             </button>
           ))}
         </div>
 
-        <span className="onv-axis-note">Aşağıdaki başlıklar seçtiğiniz ülkeye göre değişiyor</span>
+        <span className="onv-axis-note">{ce("Aşağıdaki başlıklar seçtiğiniz ülkeye göre değişiyor")}</span>
       </div>
 
       <div className="onv-body" id="onv-cty-panel" role="tabpanel" aria-labelledby={`onv-tab-${c}`}>
@@ -688,16 +717,16 @@ function ServicesPanel({
                 <span className="onv-brief-flag" aria-hidden="true">
                   <Flag country={c} />
                 </span>
-                <b>{COUNTRY_NAME[c]}</b>
+                <b>{ce(COUNTRY_NAME[c])}</b>
               </span>
-              <em>{COUNTRY_LINE[c]}</em>
+              <em>{ce(COUNTRY_LINE[c])}</em>
 
               {/* Koyu kartın tek eylemi, beyaz dolgulu. Burak: "oraya ülke
                   sayfasını gör yazma, TÜM HİZMETLERİ GÖR yaz." Hedef
                   değişmedi — ülke sayfası zaten o ülkenin bütün hizmetlerini
                   taşıyor; değişen, düğmenin ne vaat ettiği. */}
               <SmartLink href={`/${c}`} className="onv-brief-go" onClick={onGo}>
-                Tüm hizmetleri gör
+                {ce("Tüm hizmetleri gör")}
                 <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
               </SmartLink>
             </div>
@@ -711,7 +740,7 @@ function ServicesPanel({
               Bölümün TEK adı oydu, o yüzden ad `role="group"` + `aria-label`
               ile duruyor: rolsüz bir <div>'e yazılan `aria-label` ağaca
               çıkmaz, bu depoda üç kez yaşandı (tuzak G). */}
-          <div className="onv-svc" role="group" aria-label={`${COUNTRY_NAME[c]} için yürüttüğümüz hizmetler`}>
+          <div className="onv-svc" role="group" aria-label={dil === "en" ? `Services we run for ${ce(COUNTRY_NAME[c])}` : `${COUNTRY_NAME[c]} için yürüttüğümüz hizmetler`}>
             <div className="onv-grid" data-cols={2}>
               {SERVICE_UNIVERSE.map((u) => {
                 const s = own.get(u.slug);
@@ -741,8 +770,8 @@ function ServicesPanel({
                       <Icon size={18} strokeWidth={1.9} />
                     </span>
                     <span className="onv-card-tx">
-                      <b>{s.title}</b>
-                      <em>{hintOf(s)}</em>
+                      <b>{ce(s.title)}</b>
+                      <em>{ce(hintOf(s))}</em>
                     </span>
                   </SmartLink>
                 );
@@ -764,14 +793,14 @@ function ServicesPanel({
         <div className="onv-foot">
           <span className="onv-foot-q">
             <Compass size={15} strokeWidth={2} aria-hidden="true" />
-            Hangi ülkenin uygun olduğundan emin değilseniz
+            {ce("Hangi ülkenin uygun olduğundan emin değilseniz")}
           </span>
           <span className="onv-foot-a">
             <SmartLink href="/ulkeler" className="onv-foot-l" onClick={onGo}>
-              Üçünü yan yana görün
+              {ce("Üçünü yan yana görün")}
             </SmartLink>
             <SmartLink href="/uygunluk-testi" className="onv-foot-l" data-strong="" onClick={onGo}>
-              Uygunluk testi
+              {ce("Uygunluk testi")}
               <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
             </SmartLink>
           </span>
@@ -863,6 +892,7 @@ function FotoKart({
    taşıyor. Koyu künye kartı bu panellerde YOK — koyu, seçili ülkenin işareti;
    ülkesi olmayan panelde bulunması rengi anlamsızlaştırırdı. */
 function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi: SonYazi | null }) {
+  const { dil, ce } = useNavCeviri();
   /* ARAÇLAR — eski navbar'ın en beğenilen düzeni: tek sırada dört kart, panel
      genişliğinde. Bölünmüş kolon ve öne çıkan koyu kart yok; dört araç eşit
      ağırlıkta ve hangisinin yayında olduğunu sönüklük söylüyor. */
@@ -919,7 +949,7 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
             aynı ağırlıkta okunuyordu. */}
         <div className="onv-foot">
           <span className="onv-foot-q">
-            Araçların çıktısı bir ön değerlendirmedir, teklif değildir.
+            {ce("Araçların çıktısı bir ön değerlendirmedir, teklif değildir.")}
           </span>
           <span className="onv-foot-a">
             {/* "Tüm araçlar" buradan ÇIKTI: ızgaranın sekizinci kutusu oldu
@@ -929,7 +959,7 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
                 oraya tüm araçlar butonunu koy; kart olarak durmasına gerek
                 yok." Izgaradaki "Tüm araçlar" kartı kalktı, çıkış burada. */}
             <SmartLink href="/araclar" className="onv-foot-l" data-strong="" onClick={onGo}>
-              Tüm araçlar
+              {ce("Tüm araçlar")}
               <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
             </SmartLink>
           </span>
@@ -948,7 +978,7 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
             indirilebilir kaynaklar"). Panelin adı zaten menüdeki "Kaynaklar"
             düğmesi; dört şeridin her biri de ne olduğunu kendi başlığında
             söylüyor. Ad `role="group"` + `aria-label` ile ağaçta kalıyor. */}
-        <div role="group" aria-label="Okumalık ve indirilebilir kaynaklar">
+        <div role="group" aria-label={ce("Okumalık ve indirilebilir kaynaklar")}>
           {/* TEK KOLON, TAM GENİŞLİK: müşterinin bu turdaki açık isteği
               ("navbarda kaynaklar ve kurumsal kısmındaki butonları alt alta
               sırala ve genişliklerini fulleyebilirsin").
@@ -980,7 +1010,22 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
             olan bir bağlantı. Yazı yoksa sütun boş kalır; bugün öyle bir
             durum yok, ölü kart basmamak için koşul duruyor. */}
         <div>
-          {sonYazi && (
+          {/* İngilizce menüde "son yazı" kartı yok: yazılar Türkçe, başlığı
+              İngilizce menüye basmak sayfayı yarı Türkçe yapardı. Yerinde
+              aynı kalıpta, blogun Türkçe olduğunu açıkça söyleyen kart var. */}
+          {dil === "en" ? (
+            <FotoKart
+              href="/blog"
+              foto={sonYazi?.cover ?? PHOTO.formation}
+              ust={EN_BLOG_KART.ust}
+              baslik={EN_BLOG_KART.baslik}
+              dugme={EN_BLOG_KART.dugme}
+              label={EN_BLOG_KART.label}
+              uzun
+              onGo={onGo}
+            />
+          ) : (
+            sonYazi && (
             <FotoKart
               href={blogHref(sonYazi.slug)}
               foto={sonYazi.cover}
@@ -991,6 +1036,7 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
               uzun
               onGo={onGo}
             />
+            )
           )}
         </div>
       </div>
@@ -1034,7 +1080,7 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
       {/* "KURUMSAL" ETİKETİ SİLİNDİ (müşteri tek tek saydı). Paneli açan
           düğmenin adı zaten "Kurumsal"; etiket, açtığınız kapının adını
           kapının içinde bir kez daha yazıyordu. Ad ağaçta duruyor. */}
-      <div role="group" aria-label="Kurumsal">
+      <div role="group" aria-label={ce("Kurumsal")}>
         {/* Ölçü ve gerekçe Kaynaklar paneliyle aynı, orada yazılı. Değişen tek
             şey hücre sayısı: dört kart alt alta dört şerit. Resmî ortak
             şeridi bu sütundan kalktığı için altta boşluk kalmıyor, şeritler
@@ -1076,10 +1122,10 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
         <FotoKart
           href="/iletisim"
           foto={PHOTO.formation}
-          baslik="İletişim"
-          satir="Üç ülkede ofis, tek muhatap"
-          dugme="İletişim sayfasına gidin"
-          label="İletişim: üç ülkede ofis, tek muhatap"
+          baslik={ce("İletişim")}
+          satir={ce("Üç ülkede ofis, tek muhatap")}
+          dugme={ce("İletişim sayfasına gidin")}
+          label={ce("İletişim: üç ülkede ofis, tek muhatap")}
           on={
             <span className="onv-brief-flags" aria-hidden="true">
               {OFFICE_ORDER.map((c) => (
@@ -1100,6 +1146,7 @@ function TailPanel({ k, onGo, sonYazi }: { k: TopKey; onGo: () => void; sonYazi:
 export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
   const lenis = useLenis();
   const pathname = usePathname();
+  const { dil, ce } = useNavCeviri();
   const reduce = useReducedMotion() ?? false;
 
   /* hangi ülkedeyiz — panelin açılış ülkesi ve "buradasınız" işareti için */
@@ -1471,11 +1518,11 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
       }}
     >
       <div className="container-o onv-bar">
-        <SmartLink href="/" aria-label="Ortac Global" className="onv-logo" onClick={closeAll}>
+        <SmartLink href={yerelAdres(dil, "/")} aria-label="Ortac Global" className="onv-logo" onClick={closeAll}>
           <Logo height={24} />
         </SmartLink>
 
-        <nav className="onv-nav" aria-label="Ana menü">
+        <nav className="onv-nav" aria-label={ce("Ana menü")}>
           {TOP.map((k) => {
             /* Ülke adları çubukta değil (müşteri dört kategori istedi), ama
                "buradasınız" bilgisi kaybolmasın: bir ülke sayfasındaysanız
@@ -1502,7 +1549,7 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                   if (suppress.current === k) suppress.current = null;
                 }}
               >
-                {TOP_LABEL[k]}
+                {ce(TOP_LABEL[k])}
                 {marked && here && (
                   <>
                     <span className="onv-top-flag" aria-hidden="true">
@@ -1553,13 +1600,32 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
         </AnimatePresence>
 
         <div className="onv-right">
-          <span className="onv-lang" role="group" aria-label="Dil">
-            <button type="button" data-on="" aria-pressed="true">
-              TR
-            </button>
-            <button type="button" aria-pressed="false" aria-disabled="true" title="Yakında">
-              EN
-            </button>
+          {/* DİL SEÇİCİ · 10.10.2026. Önce süs olarak duruyordu: TR basılı, EN
+              sönük ve "Yakında". Artık çalışıyor: o anki dil basılı düğme,
+              öteki dil aynı sayfanın karşılığına giden bağlantı
+              (lib/i18n/adresler · karsiAdres). Karşılığı olmayan sayfada
+              (bugün ana sayfa dışındaki her sayfa) İngilizce ana sayfaya
+              düşüyor. /en bir deneme ve dizin dışı (app/en/page.tsx).
+              Türkçe sayfalarda görünen tek fark: EN artık sönük değil. */}
+          <span className="onv-lang" role="group" aria-label={ce("Dil")}>
+            {dil === "tr" ? (
+              <button type="button" data-on="" aria-pressed="true">
+                TR
+              </button>
+            ) : (
+              <Link href={karsiAdres(pathname ?? "/en", "tr")} hrefLang="tr" lang="tr" aria-label="Türkçe">
+                TR
+              </Link>
+            )}
+            {dil === "en" ? (
+              <button type="button" data-on="" aria-pressed="true">
+                EN
+              </button>
+            ) : (
+              <Link href={karsiAdres(pathname ?? "/", "en")} hrefLang="en" lang="en" aria-label="English">
+                EN
+              </Link>
+            )}
           </span>
           {/* /panel'in rotası HENÜZ YAZILMADI (src/app altında karşılığı yok,
               lib/routes.ts'te de yok), o yüzden SmartLink burayı <span
@@ -1569,10 +1635,12 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
               aynı hedefin iki adı olması iki ayrı sayfa varmış gibi
               okunuyordu. */}
           <SmartLink href="/panel" className="onv-ghost">
-            Panel girişi
+            {ce("Panel girişi")}
           </SmartLink>
-          <SmartLink href="/basla" className="onv-cta" onClick={() => gtm("nav_cta_click")}>
-            Kurulumu Başlat
+          {/* data-tam-sayfa: İngilizce sayfada /basla penceresi (Türkçe) sayfanın
+              üstünde açılmasın, bağlantı Türkçe sayfaya gitsin (BaslaKatmani) */}
+          <SmartLink href="/basla" className="onv-cta" data-tam-sayfa={dil === "en" ? "" : undefined} onClick={() => gtm("nav_cta_click")}>
+            {ce("Kurulumu Başlat")}
             <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
           </SmartLink>
         </div>
@@ -1587,12 +1655,13 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
         <SmartLink
           href="/basla"
           className="onv-cta onv-cta-m"
+          data-tam-sayfa={dil === "en" ? "" : undefined}
           onClick={() => {
             gtm("nav_cta_click");
             closeAll();
           }}
         >
-          Başlat
+          {ce("Başlat")}
           <ArrowRight size={15} strokeWidth={2.2} aria-hidden="true" />
         </SmartLink>
 
@@ -1600,7 +1669,7 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
           type="button"
           ref={burgerRef}
           className="onv-burger"
-          aria-label={sheet ? "Menüyü kapat" : "Menüyü aç"}
+          aria-label={ce(sheet ? "Menüyü kapat" : "Menüyü aç")}
           aria-expanded={sheet}
           aria-controls={sheet ? "onv-sheet" : undefined}
           onClick={() => setSheet((v) => !v)}
@@ -1626,7 +1695,7 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
               {/* Dört başlık dört sekme: akordeon yok, her sekme kendi
                   listesini açıyor. Sekmenin durumu eski akordeonun
                   durumuyla aynı değişken (sheetSec); boşken Hizmetler. */}
-              <div className="onv-mt" role="tablist" aria-label="Menü">
+              <div className="onv-mt" role="tablist" aria-label={ce("Menü")}>
                 {TOP.map((k) => (
                   <button
                     key={k}
@@ -1637,7 +1706,7 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                     className="onv-mt-b"
                     onClick={() => setSheetSec(k)}
                   >
-                    {TOP_LABEL[k]}
+                    {ce(TOP_LABEL[k])}
                   </button>
                 ))}
               </div>
@@ -1647,7 +1716,7 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
               <>
               <div className="onv-axis onv-axis-m">
                 <span className="onv-axis-tag" id="onv-seg-lbl">
-                  Hizmetler · önce ülke
+                  {ce("Hizmetler · önce ülke")}
                 </span>
 
                 <div className="onv-rail onv-rail-m" role="tablist" aria-labelledby="onv-seg-lbl">
@@ -1679,8 +1748,9 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                       <span className="onv-ctry-flag" aria-hidden="true">
                         <Flag country={c} />
                       </span>
-                      <span className="onv-ctry-n">{COUNTRY_NAME[c]}</span>
-                      {here === c && <span className="onv-sr"> (şu an bu ülkedesiniz)</span>}
+                      {/* telefonda üç sekme tek satıra sığsın: İngilizcede "N. Cyprus" */}
+                      <span className="onv-ctry-n">{dil === "en" && c === "kktc" ? "N. Cyprus" : ce(COUNTRY_NAME[c])}</span>
+                      {here === c && <span className="onv-sr"> {ce("(şu an bu ülkedesiniz)")}</span>}
                     </button>
                   ))}
                 </div>
@@ -1698,8 +1768,8 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                     aynı. Çarşaftaki tek koyu yüzey bu satır. */}
                 <SmartLink href={`/${sheetCountry}`} className="onv-m-country" onClick={closeAll}>
                   <span>
-                    <b>{COUNTRY_NAME[sheetCountry]} ülke sayfası</b>
-                    <em>{FACTS[sheetCountry].structure}</em>
+                    <b>{dil === "en" ? `${ce(COUNTRY_NAME[sheetCountry])} country page` : `${COUNTRY_NAME[sheetCountry]} ülke sayfası`}</b>
+                    <em>{ce(FACTS[sheetCountry].structure)}</em>
                   </span>
                   <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
                 </SmartLink>
@@ -1727,7 +1797,7 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                       >
                         <Icon size={16} strokeWidth={2} />
                       </span>
-                      {s.title}
+                      {ce(s.title)}
                       <ChevronRight className="onv-m-ok" size={16} strokeWidth={2} aria-hidden="true" />
                     </SmartLink>
                   );
@@ -1736,7 +1806,7 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
 
               <SmartLink href="/uygunluk-testi" className="onv-m-unsure" onClick={closeAll}>
                 <Compass size={15} strokeWidth={2} aria-hidden="true" />
-                Emin değilim, bana uygun olanı bulun
+                {ce("Emin değilim, bana uygun olanı bulun")}
                 <ArrowRight size={14} strokeWidth={2.2} aria-hidden="true" />
               </SmartLink>
 
@@ -1751,7 +1821,7 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                       <span className="onv-m-ic" aria-hidden="true">
                         <t.icon size={16} strokeWidth={2} />
                       </span>
-                      {t.label}
+                      {ce(t.label)}
                       {t.ulke !== undefined ? (
                         <span className="onv-m-ok">
                           <UlkeIsareti ulke={t.ulke} />
@@ -1765,7 +1835,20 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                       gösterebiliriz, yatay bir görsel olarak küçük; diğer
                       butonlar gibi olunca sıkıcı oluyor." Masaüstü panelindeki
                       iki fotoğraflı kartın alçak hâli, listenin altında. */}
-                  {sheetSec === "kaynaklar" && sonYazi && (
+                  {sheetSec === "kaynaklar" && dil === "en" && (
+                    <FotoKart
+                      kisa
+                      uzun
+                      href="/blog"
+                      foto={sonYazi?.cover ?? PHOTO.formation}
+                      ust={EN_BLOG_KART.ust}
+                      baslik={EN_BLOG_KART.baslik}
+                      dugme={EN_BLOG_KART.dugme}
+                      label={EN_BLOG_KART.label}
+                      onGo={closeAll}
+                    />
+                  )}
+                  {sheetSec === "kaynaklar" && dil !== "en" && sonYazi && (
                     <FotoKart
                       kisa
                       uzun
@@ -1783,10 +1866,10 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                       kisa
                       href="/iletisim"
                       foto={PHOTO.formation}
-                      baslik="İletişim"
-                      satir="Üç ülkede ofis, tek muhatap"
-                      dugme="İletişim sayfasına gidin"
-                      label="İletişim: üç ülkede ofis, tek muhatap"
+                      baslik={ce("İletişim")}
+                      satir={ce("Üç ülkede ofis, tek muhatap")}
+                      dugme={ce("İletişim sayfasına gidin")}
+                      label={ce("İletişim: üç ülkede ofis, tek muhatap")}
                       onGo={closeAll}
                     />
                   )}
@@ -1799,8 +1882,16 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                     Aynı girdi, aynı ad, aynı sönük durum (bkz. çubuktaki
                     kopya): rota yazılana kadar tıklanamaz. */}
                 <SmartLink href="/panel" className="onv-ghost onv-ghost-full" onClick={closeAll}>
-                  Panel girişi
+                  {ce("Panel girişi")}
                 </SmartLink>
+                {/* Telefonda dil seçici çubukta yok (yer yok). İngilizce sayfada
+                    Türkçeye dönüş buradan. Türkçe telefon menüsüne EN girişi
+                    BİLEREK eklenmedi: Türkçe çıktı değişmesin; karar Burak'ta. */}
+                {dil === "en" && (
+                  <Link href={karsiAdres(pathname ?? "/en", "tr")} hrefLang="tr" lang="tr" className="onv-ghost onv-ghost-full" onClick={closeAll}>
+                    Türkçe
+                  </Link>
+                )}
               </div>
             </div>
           </motion.div>

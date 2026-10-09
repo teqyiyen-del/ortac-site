@@ -43,6 +43,8 @@ import {
 import SmartLink from "@/components/shared/SmartLink";
 import FadeUp from "@/components/shared/FadeUp";
 import { gtm } from "@/lib/gtm";
+import { useCeviri } from "@/lib/i18n/useDil";
+import { EN_SSS } from "@/lib/en/sssAkordeon";
 
 export type SssKonu = "vergi" | "banka" | "odeme" | "maliyet" | "oturum" | "kurulus";
 export type SssItem = { q: string; a: string; topic?: SssKonu; to?: string; toLabel?: string };
@@ -98,6 +100,8 @@ export default function SssAkordeon({
      ona gerek yok, hepsi kapalı dursun"). Cevaplar yine DOM'da. */
   const [open, setOpen] = useState(-1);
   const base = useId();
+  /* 10.10.2026 · /en denemesi: çıkış kutusunun iki cümlesi (lib/en/sssAkordeon) */
+  const { c } = useCeviri(EN_SSS);
   if (items.length === 0) return null;
 
   return (
@@ -148,8 +152,8 @@ export default function SssAkordeon({
             <CircleHelp size={20} strokeWidth={2} />
           </span>
           <div className="sssa-ask-t">
-            <b>Sorunuz listede yok mu?</b>
-            <span>Kendi durumunuzu görüşmede sorabilirsiniz.</span>
+            <b>{c("Sorunuz listede yok mu?")}</b>
+            <span>{c("Kendi durumunuzu görüşmede sorabilirsiniz.")}</span>
           </div>
           {/* 09.10.2026 · teslim öncesi akış denetimi: hedef /basla idi (kuruluş penceresi); soru iletişime gider */}
           <SmartLink

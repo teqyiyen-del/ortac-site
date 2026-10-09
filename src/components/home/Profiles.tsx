@@ -5,6 +5,9 @@ import SplitWords from "@/components/shared/SplitWords";
 import SektorFotoKartlari from "@/components/shared/SektorFotoKartlari";
 
 import Tel from "@/components/mobil/Tel";
+import { cevirici } from "@/lib/i18n/cevir";
+import type { Dil } from "@/lib/i18n/diller";
+import { EN_PROFILES } from "@/lib/en/profiles";
 /* §9 · beyaz zeminde altı sektör. Başlık "Hizmet verdiğimiz sektörler":
    soru olarak sorulduğunda ("kimler için?") liste eksik görünüyordu, sektör
    listesi olarak okununca kapalı bir küme gibi duruyor.
@@ -65,7 +68,12 @@ const PROFILES: { t: string; s: string; l: string }[] = [
   },
 ];
 
-export default function Profiles() {
+/* `dil` (10.10.2026 · /en denemesi): bu bileşen sunucuda çalışıyor, dili
+   yoldan okuyamıyor; sayfa veriyor. Varsayılan Türkçe ve Türkçe dalda `c`
+   cümleyi aynen geri veriyor. Sektör sayfaları İngilizcede yok: kartlar
+   şimdilik Türkçe sektör sayfasına gidiyor. */
+export default function Profiles({ dil = "tr" }: { dil?: Dil } = {}) {
+  const c = cevirici(dil, EN_PROFILES);
   return (
     <section className="sec-pad" style={{ background: "var(--white)" }}>
       <div className="container-o">
@@ -75,17 +83,17 @@ export default function Profiles() {
               "çalışıyoruz?" fiiliydi ve başlıkta fiil kalmadı. */}
           <SplitWords
             as="h2"
-            text="Hizmet verdiğimiz sektörler."
-            accent="sektörler"
+            text={c("Hizmet verdiğimiz sektörler.")}
+            accent={c("sektörler")}
             className="h2"
             style={{ color: "var(--text-900)" }}
           />
           <FadeUp delay={0.2}>
-            <p className="sec-lead">Kurgu, sektöre göre değişiyor.</p>
+            <p className="sec-lead">{c("Kurgu, sektöre göre değişiyor.")}</p>
           </FadeUp>
         </div>
 
-        <SektorFotoKartlari items={PROFILES.map((p) => ({ slug: p.s, label: p.t, line: p.l }))} />
+        <SektorFotoKartlari dil={dil} items={PROFILES.map((p) => ({ slug: p.s, label: c(p.t), line: c(p.l) }))} />
 
         <FadeUp delay={0.42}>
           <div className="pf2-move">
@@ -93,16 +101,15 @@ export default function Profiles() {
               <Repeat size={22} strokeWidth={1.9} />
             </span>
             <div>
-              <h3>Mevcut şirketinizi Ortac&apos;a taşıyın.</h3>
+              <h3>{c("Mevcut şirketinizi Ortac'a taşıyın.")}</h3>
               <p><Tel>
-                Mevcut kaydınızı, beyanlarınızı ve banka hareketlerinizi inceleyip geçiş planı
-                çıkarıyoruz. Eksik varsa önce tamamlıyoruz.
+                {c("Mevcut kaydınızı, beyanlarınızı ve banka hareketlerinizi inceleyip geçiş planı çıkarıyoruz. Eksik varsa önce tamamlıyoruz.")}
               </Tel></p>
             </div>
             {/* 09.10.2026 · /sirket-tasima yayında değil, düğme soluk ve tıklanmaz
                 duruyordu. Sayfa açılana kadar hedef iletişim. */}
             <SmartLink href="/iletisim" className="btn btn-primary">
-              Şirketimi taşı
+              {c("Şirketimi taşı")}
               <ArrowRight size={15} strokeWidth={2.1} />
             </SmartLink>
           </div>

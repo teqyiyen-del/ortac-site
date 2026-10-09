@@ -405,6 +405,11 @@ export function isLive(href: string): boolean {
 
   /* "/#surec" — ana sayfanın kendisi açık, çapanın karşılığı var mı ona bakılır */
   if (path === "" || path === "/") return !hash || HOME_ANCHORS.has(hash);
+  /* 10.10.2026 · İngilizce ana sayfa (deneme, app/en/page.tsx). Dolaşım
+     defterine (LIVE) BİLEREK girmedi: site haritası o defterden çıkıyor ve
+     /en şimdilik dizin dışı. Burada yalnız kendi çapaları ("/en#hizmetler")
+     sönük basılmasın diye tanınıyor. */
+  if (path === "/en") return !hash || HOME_ANCHORS.has(hash);
 
   /* /lab ve altındaki her şey iç alan: dolaşım kararının dışında, hep açık.
      Kapalı sayfalara giden arka kapı da orada yaşıyor. */

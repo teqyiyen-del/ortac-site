@@ -60,6 +60,9 @@ export default function BaslaKatmani() {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const a = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
       if (!a || a.target === "_blank") return;
+      /* 10.10.2026 · /en denemesi: pencere Türkçe; İngilizce sayfadaki düğme
+         `data-tam-sayfa` taşıyor ve pencere açılmadan /basla sayfasına gidiyor */
+      if (a.dataset.tamSayfa !== undefined) return;
       const url = new URL(a.href, window.location.href);
       if (url.origin !== window.location.origin || url.pathname !== "/basla") return;
       /* /basla sayfasının kendisindeyken karışma: orada pencere zaten açık */
