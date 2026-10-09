@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight, ArrowUpRight, Info, Quote, TriangleAlert } from "lucide-react";
+import { ArrowRight, Info, Quote, TriangleAlert } from "lucide-react";
 import Icindekiler from "@/components/blog/Icindekiler";
 import { COUNTRY_PHOTO } from "@/lib/media";
 import Nav from "@/components/Nav";
@@ -659,21 +659,6 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                       Metin sitede doğrulanmış bilgiden (lib/about: yönetici
                       ortak, Certified Accountant; firma 1996'dan beri). Fotoğraf yok: elimizde
                       gerçek bir portre yok, stok yüz konmuyor. */}
-                  {hizmet && (
-                    <SmartLink href={hizmet.href} className="bp-serit">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={gorsel} alt="" loading="lazy" width={120} height={120} />
-                      <span className="bp-serit-m">
-                        <i>Ortac Global&apos;de</i>
-                        <b>{hizmet.label}</b>
-                        <span>{hizmet.line}</span>
-                      </span>
-                      <span className="bp-serit-a">
-                        Hizmeti inceleyin
-                        <ArrowUpRight size={16} strokeWidth={2.2} aria-hidden="true" />
-                      </span>
-                    </SmartLink>
-                  )}
                   {post.author !== "Ortac Global" && (
                     <aside className="bp-yazar" aria-label="Yazar">
                       {YAZAR_FOTO ? (
@@ -692,9 +677,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                           {post.author} <span>· Yönetici ortak</span>
                         </p>
                         <p className="bp-yazar-s">
-                          Murat Ortaç, Ortac Global&apos;in yönetici ortağı ve Certified Accountant. Ortac Global
-                          1996&apos;dan beri muhasebe, vergi ve şirket kuruluşu alanında çalışıyor; Dubai, İngiltere ve
-                          KKTC&apos;de kendi ofisleri var.
+                          Certified Accountant, Ortac Global
                         </p>
                         <SmartLink href="/blog" className="bp-yazar-l">
                           Bütün yazıları
@@ -725,35 +708,35 @@ export default async function BlogPostPage({ params }: { params: Params }) {
         {/* 09.10.2026 · Burak: "bloglara daha güzel CTA yapabilirsin; siyah
             üstüne olmasın." Koyu bölüm kalktı: kırık beyaz zeminde beyaz
             çerçeveli panel, solda başlık ve mavi düğme, sağda üç çıkış kartı. */}
-        {/* KAPANIŞ · DÖRDÜNCÜ HÂL (09.10.2026). Burak üçüncü hâli de beğenmedi
-            ("daha görselli güzel bir şey yapabiliriz") ve Piktram'ın blogundaki
-            paneli örnek verdi: solda küçük etiket, büyük başlık, iki satır,
-            düğme ve hizmet bağlantısı; sağda hafif eğik bir görsel. Üç çıkış
-            kartı kalktı; hizmet bağlantısı düğmenin yanında tek satır. */}
-        <section className="sec-pad bp-exit-sec">
+        {/* KAPANIŞ · BEŞİNCİ HÂL (09.10.2026). Dördüncü hâl Piktram'ın
+            panelinin kopyası olmuştu (eğik, beyaz çerçeveli görsel, altı çizili
+            bağlantı, "Bu konuda konuşalım"). Burak: "aynısını niye çaldın;
+            Ortac'ın öyle bir tarzı yok, sadece mantık olarak atmıştım. Yana
+            görsel koyabilirsin ama döndürme, beyaz kontür atma; arkası krem
+            olmasın, belki direkt siyah." Şimdi sitenin kendi kalıbı: beyaz
+            zeminde büyük GECE KART, solda yazının kendi kapanış başlığı ve
+            sitenin beyaz düğmesi, sağda kartın kenarına oturan düz fotoğraf. */}
+        <section className="sec-pad" style={{ background: "var(--white)" }}>
           <div className="container-o">
             <div className="bp-exit">
               <div className="bp-exit-l">
-                <p className="bp-exit-k">{hizmet ? hizmet.label : meta.label}</p>
-                <h2 className="bp-exit-h">
-                  Bu konuda <span>konuşalım.</span>
-                </h2>
+                <h2 className="bp-exit-h">{post.closing.title}</h2>
                 <p className="bp-exit-p">{post.closing.line}</p>
                 <div className="bp-exit-d">
-                  <SmartLink href="/iletisim" className="btn btn-solid bp-exit-btn">
+                  <SmartLink href="/iletisim" className="btn btn-primary">
                     {post.closing.cta}
-                    <ArrowRight size={16} strokeWidth={2.1} aria-hidden="true" />
+                    <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
                   </SmartLink>
                   {hizmet && (
                     <SmartLink href={hizmet.href} className="bp-exit-a">
                       {hizmet.label}
-                      <ArrowUpRight size={16} strokeWidth={2.2} aria-hidden="true" />
+                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
                     </SmartLink>
                   )}
                 </div>
               </div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="bp-exit-g" src={gorsel} alt="" loading="lazy" width={360} height={360} />
+              <img className="bp-exit-g" src={gorsel} alt="" loading="lazy" width={480} height={360} />
             </div>
           </div>
         </section>
@@ -765,7 +748,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
         {others.length > 0 && (
           <section className="sec-pad" style={{ background: "var(--white)" }}>
             <div className="container-o">
-              <h2 className="bp-more-h">Benzer yazılar</h2>
+              <h2 className="bp-more-h">Diğer yazılar</h2>
               <div className="bp-more">
                 {others.slice(0, 3).map((o, i) => (
                   <FadeUp key={o.slug} delay={0.1 + i * 0.06}>
@@ -774,13 +757,10 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                         altında kategori, başlık ve tek cümle; tarih ve ok kalktı. */}
                     <SmartLink href={demoHref(o)} className="bp-more-c">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img className="bp-more-g" src={o.cover} alt="" loading="lazy" width={450} height={281} />
+                      <img className="bp-more-g" src={o.cover} alt="" loading="lazy" width={450} height={253} />
                       <span className="bp-more-k">{CATEGORY[o.category].label}</span>
                       <b className="bp-more-t">{o.title}</b>
                       <i className="bp-more-s">{o.summary}</i>
-                      <span className="bp-more-f">
-                        {formatDate(o.publishedAt)} · {readingMinutes(o)} dk okuma
-                      </span>
                     </SmartLink>
                   </FadeUp>
                 ))}
