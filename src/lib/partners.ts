@@ -1,402 +1,394 @@
 /* ============================================================================
    İŞ ORTAKLIĞI — /is-ortakligi sayfasının bütün metni burada.
+   Sayfa: app/is-ortakligi/page.tsx · Biçim: css/is-ortakligi.css (.iob-)
 
-   Sayfa şablonu (app/is-ortakligi/page.tsx) tek cümle taşımıyor; ekranda
-   görünen her kelime bu dosyada duruyor. Sebebi pratik: bu sayfanın metni
-   müşteri onayına en açık metin. Bir cümle değişeceği zaman JSX'in içinde
-   aranmasın, tek dosyada dursun.
+   09.10.2026 · SAYFA BUGÜNKÜ DİLLE YENİDEN YAZILDI. Eski hâl eski dilde
+   kalmıştı: yazı yığını, rakam yerine tire basan boş "Ticari şartlar"
+   tablosu, tam siyah bölüm, hiç görsel yok. Örnek alınan iki sayfa
+   kurumsal danışmanlık ve AML (KurumsalSayfa.tsx · AmlSayfa.tsx): az yazı,
+   her bölümde gerçek içerikli çizim, beyaz ve kırık beyaz zemin sırayla,
+   arada büyük gece KART.
+
+   MÜŞTERİNİN TARİFİ (Murat Bey): "İş ortaklığı sayfasını kullanacağız. Doğru
+   kurgulayıp yaparsak yurt dışındaki danışmanlık firmalarına B2B partner
+   portalı vermeliyiz; adam başvurusunu verdiğinde oradan süreci takip
+   edebilmeli ve müşterisiyle ilgili bizim belirleyeceğimiz yetkilerde her
+   adımı, her işlemi görmeli."
+   Sayfanın ana fikri buradan: müşterinizi yönlendirin, kuruluşu ve sonrasını
+   biz yürütelim, siz her adımı izleyin. Okur müşteri değil, müşteriyi
+   yönlendiren danışmanlık firması, mali müşavir, hukuk bürosu ya da ajans
+   (Türkiye'de ve yurt dışında).
 
    ---------------------------------------------------------------- İDDİA SINIRI
 
-   Bu sayfa iki tür bilgiyi ayırıyor ve karıştırmıyor:
+   1) ORTAK PANELİ HENÜZ YOK. Sayfa onu var gibi anlatmıyor: "hazırlanıyor"
+      diyor ve bugün olanı ayrı söylüyor (adımlar başvuruyla birlikte ortakla
+      paylaşılıyor; müşterinin kendi paneli var). Panelin marka adı hiçbir
+      yerde geçmiyor (docs/tuzaklar.md · kural 7), adı "müşteri paneli".
 
-   1) YAPISAL BİLGİ — ortaklığın nasıl kurgulandığı. "Referans" ve "white-label"
-      iki farklı çalışma biçimi; hangisinin seçileceği ticari bir pazarlık değil,
-      operasyonun nasıl kurulacağı sorusu. Bunlar yazılabiliyor.
+   2) TİCARİ ŞART YOK. Komisyon oranı, ödeme koşulu, asgari adet
+      kararlaştırılmadı. Eski sayfa dört satırlık boş bir tablo basıyordu;
+      tablo kalktı, yerine tek cümle geldi: "Şartları ilk görüşmede birlikte
+      belirliyoruz." (adımlarda ve SSS'te).
 
-   2) TİCARİ ŞART — komisyon oranı, ödeme koşulu, asgari yönlendirme adedi,
-      white-label kullanım bedeli. Bunların hiçbiri kararlaştırılmadı. Referans
-      aldığımız sitede "$50–$1.500 arası komisyon" gibi rakamlar var; bizim
-      böyle bir kararımız YOK ve olmayan bir rakamı siteye yazmak, ortaklık
-      görüşmesine yalanla başlamak olurdu. Hepsi PARTNER_TERMS içinde null
-      duruyor (SWAP:PARTNER_TERMS) ve sayfa null gördüğü sürece rakam basmıyor.
+   3) İKİ MODEL (referans · white-label) ÇIKARILDI. Eski sayfa bunu "yapısal
+      bilgi" diye yazıyordu ama müşterinin tarifinde white-label yok; teyit
+      edilmemiş bir çalışma biçimini satış sayfasında tutmak yerine soru
+      olarak Murat Bey'e bırakıldı (rapor: docs/durum.md'ye geçecek).
 
-   Firmaya dair her iddia doğrulanmış listeden geliyor: üç ülke
-   (Dubai · İngiltere · KKTC), kendi muhasebe lisansı, IFZA resmî iş ortaklığı,
-   Wio Business / Mashreq NeoBiz / PayPal / wamo, üç ülkede de kendi ofis, tek
-   panelden takip, Türkçe tek muhatap. Bunların dışında firma hakkında yeni
-   iddia üretilmedi: kuruluş yılı, ortak sayısı, müşteri sayısı, "en hızlı",
-   "lider" gibi hiçbir şey bu dosyada geçmiyor.
+   4) FİRMA OLGULARI yalnız teyitli listeden: 1996'dan beri (30 yıl); üç
+      ülkede kendi ofis (Dubai, Londra, Lefkoşa); IFZA, Meydan ve DWTC iş
+      ortağı; 700'den fazla şirket kuruluşu; 300 civarı aktif muhasebe
+      müşterisi; muhasebe Dubai ve KKTC'de kendi ekibiyle, İngiltere'de
+      anlaşmalı ofisle; banka hesabı açılışı garanti edilmez; kişiye özel
+      vergi görüşü siteden verilmez. Banka ve ödeme kuruluşu ADI yazılmadı
+      (eski metindeki dört ad da çıktı). Ortak sayısı, "en hızlı", "lider"
+      gibi hiçbir şey yok.
 
-   brand.ts'teki STANCE_LIMITS ve CHAIN bu dosyaya KOPYALANMADI; sayfa onları
-   doğrudan brand.ts'ten okuyor. Aynı politika cümlesinin iki dosyada iki
-   kopyası olsaydı biri güncellenip diğeri kalırdı.
+   Metin kuralları: açıklama en çok iki satır, uzun tire yok, "bölge" değil
+   "ülke" ("serbest bölge" terim), sayfaya dipnot düşülmüyor.
    ========================================================================= */
 
-/* İkon adı string taşınıyor, bileşen değil: bu dosya bir veri modülü ve
-   lucide-react'i import etmesi onu istemci tarafına çekerdi. Eşleme sayfada
-   (sectors.ts'te de aynı kalıp var). */
+/* İkon adı string taşınıyor, bileşen değil: bu dosya saf veri. Eşleme
+   sayfada (kurumsalDubai.ts · KurumsalIkon ile aynı kalıp). */
 export type PartnerIcon =
-  | "globe"
-  | "stamp"
-  | "badge"
-  | "office"
+  | "yonlendir"
+  | "yurut"
+  | "izle"
+  | "paylas"
   | "panel"
-  | "people"
-  | "scale"
-  | "calculator"
-  | "briefcase"
-  | "school";
+  | "ortakPanel"
+  | "danisman"
+  | "musavir"
+  | "hukuk"
+  | "ajans";
 
-/* -------------------------------------------------------------------- SEO */
+type Bas = { id: string; heading: string; accent: string; lead: string };
 
+/* -------------------------------------------------------------------- SEO
+   Başlık 60, açıklama 155 karakterin altında (09.10.2026'da sayıldı: 50 · 155). */
 export const PARTNER_SEO = {
-  title: "İş Ortaklığı — Danışman ve Acente Kanalı | Ortac Global",
+  title: "İş Ortaklığı: Danışmanlık Firmaları | Ortac Global",
   description:
-    "Müvekkilinizi, danışanınızı ya da öğrencinizi Dubai, İngiltere veya KKTC'ye yönlendirin; kuruluş, banka başvurusu ve muhasebeyi kendi ekibimiz yürütür. Referans ve white-label modeli.",
-  /** kanonik adres mutlak yazılıyor — layout.tsx'te metadataBase tanımlı değil */
+    "Müşterinizi Dubai, İngiltere veya KKTC'ye yönlendirin; şirket kuruluşunu ve sonrasını Ortac Global yürütsün, siz her adımı izleyin. İş ortaklığı başvurusu.",
   path: "/is-ortakligi",
 };
 
-/* ------------------------------------------------------------------- hero */
-
+/* ------------------------------------------------------------------- giriş
+   Foto giriş (shared/FotoGiris; hizmet sayfalarıyla aynı). Başlık önceki
+   turdan: konu başlıkta CÜMLE İÇİNDE geçsin ("İş ortağımız olun"), cümlenin
+   iyi yarısı ("süreci biz yürütelim") mavi. `accent` başlığın SONU. */
 export const PARTNER_HERO = {
   crumb: "İş ortaklığı",
-  /* accent, başlığın SONU olmak zorunda: PageHero'nun kompakt varyantı
-     title.endsWith(accent) ile ayırıyor. */
-  /* Başlık "Siz yönlendirin, süreci biz yürütelim." idi ve modeli doğru
-     anlatıyordu; eksik olan tek şey sayfanın konusunun adıydı. Müşterinin
-     ölçüsü: konu başlıkta CÜMLE İÇİNDE geçsin. Cümlenin iyi olan yarısı
-     ("süreci biz yürütelim") aksan olarak zaten korunuyordu, o yüzden yalnız
-     ilk yarı değişti. */
   title: "İş ortağımız olun, süreci biz yürütelim.",
   accent: "süreci biz yürütelim.",
-  lead:
-    "Müvekkiliniz, danışanınız ya da öğrenciniz yurt dışında şirket kurmak istediğinde işi tanımadığınız birine devretmek zorunda değilsiniz. Dubai, İngiltere ve KKTC tarafında kuruluş, banka başvurusu, muhasebe ve uyum aynı ekipte yürüyor.",
-};
-
-/* --------------------------------------------------------- ortaklık modeli */
-
-export type PartnerModel = {
-  key: "referans" | "white-label";
-  name: string;
-  /** kartın tek cümlelik özeti — kalabalık istemiyoruz, ayrıntı maddelerde */
-  line: string;
-  points: string[];
-  /** "kime uyar" satırı: model seçimini meslek değil, iş hacmi belirliyor */
-  forWhom: string;
-};
-
-/* İki model de AYNI operasyona bağlanıyor; aradaki fark müşterinin kiminle
-   muhatap olduğu. Bu cümle bilerek üç yerde birden geçiyor (bölüm lead'i,
-   kartlar, SSS) çünkü sayfanın anlaşılması gereken tek yapısal ayrımı bu. */
-export const PARTNER_MODELS: PartnerModel[] = [
-  {
-    key: "referans",
-    name: "Referans ortaklığı",
-    line: "Müşteriyi bize tanıtırsınız, süreci Ortac adına biz yürütürüz.",
-    points: [
-      "Müşteri baştan Ortac ile konuşur.",
-      "Evrak, otorite ve banka trafiği tamamen bizde.",
-      "Sizin tarafınızda operasyon yükü kalmaz.",
-    ],
-    forWhom: "Yurt dışı kuruluş, müşterinizin ara sıra sorduğu bir başlıksa.",
-  },
-  {
-    key: "white-label",
-    name: "White-label",
-    line: "Hizmet sizin markanızla sunulur, arkasında biz dururuz.",
-    points: [
-      "Müşteri ilişkisi sizde kalır.",
-      "Kapsam, evrak listesi ve süreç akışı bizden gelir.",
-      "Sizin adınıza çalışan bir back-office gibi kurgulanır.",
-    ],
-    forWhom: "Yurt dışı kuruluş, sizin hizmet menünüzün kalıcı bir parçasıysa.",
-  },
-];
-
-/* --------------------------------------------------------- ticari şartlar
-   SWAP:PARTNER_TERMS — DÖRT ALAN DA KARARLAŞTIRILMADI.
-
-   Alanlar null olduğu sürece sayfa hiçbir rakam basmıyor: satırın değeri "—"
-   çıkıyor ve altında notPublished cümlesi duruyor. Müşteri karar verdiğinde
-   YALNIZCA bu blok değişiyor — sayfada başka hiçbir yere dokunmak gerekmiyor,
-   şablon dolu değeri gördüğü an satırı normal bir künye satırı gibi basıyor.
-
-   Not: tipi açıkça `string | null` yazıldı. Boş string yazılsaydı TypeScript
-   alanı `string` olarak daraltır, doldurulmuş hâlle karışırdı. */
-export const PARTNER_TERMS: {
-  rows: { label: string; value: string | null }[];
-  notPublished: string;
-} = {
-  rows: [
-    { label: "Komisyon oranı", value: null },
-    { label: "Ödeme koşulu", value: null },
-    { label: "Asgari yönlendirme şartı", value: null },
-    { label: "White-label kullanım bedeli", value: null },
+  lead: "Müşterinizi Dubai, İngiltere ya da KKTC'ye yönlendirin. Kuruluşu ve sonrasını biz yürütelim, siz her adımı izleyin.",
+  cta: { label: "Başvuru yapın", href: "#basvuru" },
+  ikinci: { label: "Nasıl çalışır", href: "#nasil" },
+  /* fotoğrafın dibindeki belge kartı: işin sonunda ortağın önünde duran şey */
+  belge: { ad: "Müşteri dosyası", cip: "Adım adım" },
+  /* üç rozet, üçü de teyitli olgu; `b` kalın basılan parça */
+  rozetler: [
+    { b: "1996'dan", s: " beri" },
+    { b: "Üç ülkede", s: " kendi ofis" },
+    { b: "IFZA, Meydan, DWTC", s: " iş ortağı" },
   ],
-  notPublished:
-    "Bu dört başlık şu an sayfada yayımlanmıyor. Kararlaşmamış bir rakamı buraya yazmak yerine boş bırakıyoruz; şartları ortaklık görüşmesinde konuşuyoruz.",
 };
 
-/* ------------------------------------------ ortağın müşterisine götürdükleri
-   Altı madde de doğrulanmış listeden. Her maddenin ikinci cümlesi <details>
-   içinde kapalı: bölüm altı kısa satır olarak okunuyor, ayrıntı isteyen
-   açıyor ("özet önde, detay talep üzerine"). */
-
-export type PartnerValue = {
-  icon: PartnerIcon;
-  title: string;
-  line: string;
-  detail: string;
+/* ------------------------------------------------------ 1 · nasıl çalışır
+   ÇİZİM 1 · akış: Siz → Ortac → Müşteriniz, altta geri dönen bilgi hattı.
+   Üç kart çizimdeki üç hareketi birer cümleyle söylüyor. */
+export const PARTNER_AKIS: Bas & {
+  duraklar: { ad: string; alt: string }[];
+  donus: string;
+  items: { icon: PartnerIcon; title: string; line: string }[];
+} = {
+  id: "nasil",
+  heading: "Siz yönlendirin, gerisi bizde.",
+  accent: "gerisi bizde.",
+  lead: "Üç hareketten oluşan bir iş birliği: yönlendirme, yürütme, izleme.",
+  duraklar: [
+    { ad: "Siz", alt: "Müşteriyi yönlendirirsiniz" },
+    { ad: "Ortac", alt: "Kuruluş ve sonrası" },
+    { ad: "Müşteriniz", alt: "Şirketi kurulur" },
+  ],
+  donus: "Her adımın bilgisi size döner",
+  items: [
+    {
+      icon: "yonlendir",
+      title: "Müşterinizi yönlendirirsiniz",
+      line: "İhtiyacı ve ülkeyi birlikte netleştiririz; dosyayı biz açarız.",
+    },
+    {
+      icon: "yurut",
+      title: "Süreci biz yürütürüz",
+      line: "Kuruluş, banka, muhasebe ve vergi aynı ekipte ilerler.",
+    },
+    {
+      icon: "izle",
+      title: "Siz her adımı izlersiniz",
+      line: "Hangi adım tamamlandı, sırada ne var; bilgisi size ulaşır.",
+    },
+  ],
 };
 
-export const PARTNER_VALUE: PartnerValue[] = [
-  {
-    icon: "globe",
-    title: "Üç ülke, tek muhatap",
-    line: "Dubai, İngiltere ve KKTC aynı ekipte yürüyor.",
-    detail:
-      "Müşterinizin işine hangi ülke uygunsa ona yönlendirebiliyorsunuz; üç ülke için üç ayrı tedarikçiyle anlaşmanız gerekmiyor. Hangisinin uygun olduğu faaliyete, tahsilat kanalına ve oturum ihtiyacına göre değişiyor.",
-  },
-  {
-    icon: "stamp",
-    title: "Kendi muhasebe lisansımız",
-    line: "Defter ve beyan taşerona gitmiyor.",
-    detail:
-      "Kuruluşu yapan ekiple muhasebeyi yapan ekip aynı. Müşteriniz kuruluştan sonra üçüncü bir ofise devredilmiyor, yani yönlendirdiğiniz kişi birkaç ay sonra tanımadığı biriyle muhatap olmuyor.",
-  },
-  {
-    icon: "badge",
-    title: "Resmî iş ortaklıkları",
-    line: "IFZA, Meydan ve DWTC iş ortağıyız.",
-    detail:
-      "Serbest bölge başvurusu bir aracı üzerinden değil, doğrudan yürüyor. Banka ve tahsilat tarafında Wio Business, Mashreq NeoBiz, PayPal ve wamo ile çalışıyoruz.",
-  },
-  {
-    icon: "office",
-    /* "Dubai'de kendi ofisimiz" İDİ. Olgu yanlıştı: firmanın üç ülkede de
-       kendi ofisi var ve süreçlerin hepsini kendisi yürütüyor. Tek ülkeyi
-       saymak hem yanlış hem de kapsamı olduğundan dar gösteriyordu. */
-    title: "Üç ülkede kendi ofisimiz",
-    line: "Evrak ve otorite trafiği yerinden yürüyor.",
-    detail:
-      "Hiçbir ülkede yerel işlemler uzaktaki bir aracıya devredilmiyor; başvuru, imza ve banka görüşmeleri kendi ofislerimizden yürütülüyor. Müşteriniz için bu, sürecin kimin elinde olduğunu bilmek demek.",
-  },
-  {
-    icon: "panel",
-    /* BAŞLIKTA ÜRÜN ADI YOKTU DEĞİL, ÇIKARILDI. Eskiden panelin marka adı
-       başlıktaydı. Müşteri kaldırttı: "iş ortağımız vb değil, sadece panel
-       olarak kullanıyoruz, ekstra adını geçirmemize gereken bir durum yok."
-       Ortağa söylenen şey değişmedi (tek yerden yürüyen bir dosya akışı var),
-       yalnızca hangi yazılım olduğu söylenmiyor. Kalıp about.ts · BASIS.how
-       ile aynı; geri eklemeyin. */
-    title: "Tek panelden takip",
-    line: "Dosya, talep ve imza akışı tek yerde.",
-    detail:
-      "Müşterinizin evrak alışverişi bir e-posta zincirinde kaybolmuyor; süreç panel üzerinde yürüyor ve hangi belgenin beklendiği ortada duruyor.",
-  },
-  {
-    icon: "people",
-    title: "Türkçe tek muhatap",
-    line: "İsimli bir danışman, mesai içinde doğrudan erişim.",
-    detail:
-      "Müşteriniz her aşamada aynı kişiyle konuşuyor; anlattıklarını ikinci kez anlatmak zorunda kalmıyor. Yönlendirdiğiniz kişinin geri dönüp şikâyet etmesinin en sık sebebi budur.",
-  },
-];
-
-/* Koyu bölümün kapanışı. Başlık bilerek ikinci tekil: ortak da bu sınırların
-   içinde konuşacak. Maddeler brand.ts'teki STANCE_LIMITS'ten okunuyor. */
-export const PARTNER_LIMITS_HEAD = {
-  title: "Ortağımız olarak da veremeyeceğiniz sözler",
-  lead:
-    "Bunlar pazarlama tercihi değil, firmanın politikası. Müşteriye bu üç konuda söz veren bir kanal, ilk olumsuz sonuçta hem bizi hem sizi zor durumda bırakır.",
+/* ---------------------------------------------------------- 2 · izleme
+   ÇİZİM 2 · gece kartta örnek dosya çizelgesi. Çizim TEMSİLÎ ve bunu kendi
+   içinde söylüyor ("Örnek" çipi); sağdaki üç satır neyin BUGÜN var olduğunu,
+   neyin hazırlandığını ayırıyor. Üçüncü satır amber: "hazırlanıyor" bir not.
+   Adım adları bilerek ülkeden bağımsız (lisans, Companies House gibi ülkeye
+   özel ad yok): çizim üç ülke için de doğru kalsın. */
+export const PARTNER_IZLEME: Bas & {
+  dosya: { ad: string; cip: string; gorunum: string };
+  adimlar: { ad: string; durum: "tamam" | "suruyor" | "sirada" }[];
+  durumAd: Record<"tamam" | "suruyor" | "sirada", string>;
+  items: { icon: PartnerIcon; title: string; line: string; cip: string; ton?: "amber" }[];
+} = {
+  id: "izleme",
+  heading: "Dosyanın her adımı önünüzde.",
+  accent: "önünüzde.",
+  lead: "Müşterinizin dosyası hangi adımda, sırada ne var; bunu sizinle paylaşıyoruz.",
+  dosya: { ad: "Müşteri dosyası", cip: "Örnek", gorunum: "Ortak görünümü" },
+  adimlar: [
+    { ad: "Evrak", durum: "tamam" },
+    { ad: "Kuruluş başvurusu", durum: "tamam" },
+    { ad: "Şirket tescili", durum: "tamam" },
+    { ad: "Banka başvurusu", durum: "suruyor" },
+    { ad: "Muhasebe", durum: "sirada" },
+  ],
+  durumAd: { tamam: "Tamamlandı", suruyor: "Sürüyor", sirada: "Sırada" },
+  items: [
+    {
+      icon: "paylas",
+      title: "Adım bilgisi",
+      line: "Başvurunuzla birlikte süreç adımlarını sizinle paylaşıyoruz.",
+      cip: "Bugün",
+    },
+    {
+      icon: "panel",
+      title: "Müşteri paneli",
+      line: "Müşterinizin evrak, talep ve imza akışı tek panelde yürüyor.",
+      cip: "Bugün",
+    },
+    {
+      icon: "ortakPanel",
+      title: "Ortak paneli",
+      line: "Yönlendirdiğiniz dosyaları yetkinizle tek ekrandan izleyeceksiniz.",
+      cip: "Hazırlanıyor",
+      ton: "amber",
+    },
+  ],
 };
 
-/* --------------------------------------------------------- hizmet zinciri */
-
-export const PARTNER_CHAIN = {
-  title: "Müşteriniz kuruluşta bırakılmıyor.",
-  accent: "kuruluşta bırakılmıyor.",
-  lead:
-    "Yükümlülükler kuruluşla bitmiyor; ceza riski de kuruluş sonrasında doğuyor. Yönlendirdiğiniz müşteri kuruluştan sonra da aynı ekiple çalışmaya devam ediyor.",
-  /* Halka adları ve açıklamaları brand.ts · CHAIN'den geliyor, burada yalnızca
-     bölümün kendi cümleleri var. */
-  note: "Her halka ayrı bir hizmet; müşteri hangisine ihtiyaç duyarsa o devreye giriyor. Hepsini birden almak zorunda değil.",
+/* ------------------------------------------------------------ 3 · ekip
+   ÇİZİM 3 · zaman çizgisi (1996'dan bugüne) ve üç sayı. Sayıların dördü de
+   teyitli (dosya başı · madde 4). "300" teyitte "300 civarı"; etiket bunu
+   "civarında" diye söylüyor.
+   Altındaki amber kutu ortağın müşterisine veremeyeceği üç söz: brand.ts ·
+   STANCE_LIMITS'in ortak diline çevrilmiş kısa hâli (amber = şart ve risk). */
+export const PARTNER_EKIP: Bas & {
+  cizgi: { bas: string; son: string; orta: string; alt: string };
+  sayilar: { sayi: string; ad: string }[];
+  sinir: { title: string; maddeler: string[] };
+} = {
+  id: "ekip",
+  heading: "Müşterinizi emanet ettiğiniz ekip.",
+  accent: "emanet ettiğiniz ekip.",
+  lead: "1996'dan beri muhasebe, vergi ve kurumsal danışmanlık alanındayız.",
+  cizgi: { bas: "1996", son: "Bugün", orta: "30 yıl", alt: "aynı alanda" },
+  sayilar: [
+    { sayi: "3", ad: "ülkede kendi ofis" },
+    { sayi: "700+", ad: "şirket kuruluşu" },
+    { sayi: "300", ad: "civarında aktif muhasebe müşterisi" },
+  ],
+  sinir: {
+    title: "Müşterinize veremeyeceğiniz sözler",
+    maddeler: [
+      "Banka hesabı garantisi. Kararı banka verir.",
+      "Kesin tarih. Süreler tipik aralıktır.",
+      "Kişiye özel vergi görüşü. Siteden verilmez.",
+    ],
+  },
 };
 
-/* --------------------------------------------------- kimler ortak olabilir */
-
-export type PartnerWho = {
-  icon: PartnerIcon;
-  title: string;
-  line: string;
+/* ---------------------------------------------------------- 4 · üç ülke
+   Fotoğraflı üç kart (hafıza: foto üstüne yazı kartları beğenildi). Ofis
+   şehirleri teyitli. Muhasebe satırı teyit cevabından: Dubai ve KKTC'de
+   kendi ekip, İngiltere'de anlaşmalı ofis. Vize yalnız Dubai'de (sitede
+   /dubai/oturum-vize var, öteki iki ülkede yok). KKTC için banka adı yok. */
+export const PARTNER_ULKELER: Bas & {
+  items: { slug: "dubai" | "ingiltere" | "kktc"; ad: string; ofis: string; line: string; href: string }[];
+} = {
+  id: "ulkeler",
+  heading: "Üç ülke, kendi ofislerimiz.",
+  accent: "kendi ofislerimiz.",
+  lead: "Müşterinizin işine hangi ülke uygunsa oraya yönlendirirsiniz.",
+  items: [
+    {
+      slug: "dubai",
+      ad: "Dubai",
+      ofis: "Dubai ofisi",
+      line: "Serbest bölge şirketi, vize ve muhasebe kendi ekibimizde.",
+      href: "/dubai",
+    },
+    {
+      slug: "ingiltere",
+      ad: "İngiltere",
+      ofis: "Londra ofisi",
+      line: "Limited şirket kuruluşu; muhasebe anlaşmalı ofisle yürür.",
+      href: "/ingiltere",
+    },
+    {
+      slug: "kktc",
+      ad: "KKTC",
+      ofis: "Lefkoşa ofisi",
+      line: "Serbest Liman şirketi ve muhasebe kendi ekibimizde.",
+      href: "/kktc",
+    },
+  ],
 };
 
-/* Ortak payda meslek unvanı değil, müşterinin sorduğu soru. Dördü de "bu soru
-   zaten size geliyor" mantığıyla yazıldı. Hiçbiri "şu anda çalıştığımız
-   ortaklar" değil — öyle bir liste doğrulanmadı, o yüzden sayfa "kimler ortak
-   OLABİLİR" diyor. */
-export const PARTNER_WHO: PartnerWho[] = [
-  {
-    icon: "scale",
-    title: "Avukat ve hukuk büroları",
-    line: "Müvekkilin yapı sorusu zaten size geliyor; kuruluşu ve sonrasını biz yürütürüz.",
-  },
-  {
-    icon: "calculator",
-    title: "Mali müşavir ve muhasebe ofisleri",
-    line: "Yurt dışı ayağı için ikinci bir ofis aramak yerine tek kanal.",
-  },
-  {
-    icon: "briefcase",
-    title: "İş geliştirme danışmanları ve ajanslar",
-    line: "E-ticaret, yazılım ve ihracat müşterilerine ülke seçimi ve kuruluş.",
-  },
-  {
-    icon: "school",
-    title: "Eğitmen ve topluluk sahipleri",
-    line: "Kitlesi yurt dışı yapı soruyorsa, soruyu cevaplayan bir muhatap.",
-  },
-];
+/* ------------------------------------------------- 5 · kimler ortak olur
+   Gece pano, dört kart. "Çalıştığımız ortaklar" DEĞİL (öyle bir liste teyit
+   edilmedi), o yüzden başlık "olabilir". Dört meslek müşterinin tarifinden. */
+export const PARTNER_KIMLER: Bas & { items: { icon: PartnerIcon; title: string; line: string }[] } = {
+  id: "kimler",
+  heading: "Kimler iş ortağı olabilir.",
+  accent: "iş ortağı olabilir.",
+  lead: "Müşterisi yurt dışında şirket kurmayı soran her meslek.",
+  items: [
+    {
+      icon: "danisman",
+      title: "Danışmanlık firmaları",
+      line: "Türkiye'de ya da yurt dışında; müşterinize üç ülkede tek ekip.",
+    },
+    {
+      icon: "musavir",
+      title: "Mali müşavirler",
+      line: "Yurt dışı ayağı için ikinci bir ofis aramazsınız.",
+    },
+    {
+      icon: "hukuk",
+      title: "Hukuk büroları",
+      line: "Müvekkilinizin kuruluşunu ve sonrasını biz yürütürüz.",
+    },
+    {
+      icon: "ajans",
+      title: "Ajanslar",
+      line: "Müşterilerinize kuruluş ve ödeme altyapısı.",
+    },
+  ],
+};
 
-export const PARTNER_WHO_NOTE =
-  "Listede kendinizi göremediyseniz kanal kapalı değil: ölçü meslek adı değil, müşterinizin size bu soruyu sorup sormadığı.";
+/* --------------------------------------------------------- 6 · başvuru
+   Dört adım yatay RAY (çubuk + sayı; hafıza: "liste + sağda kart" kalıbı
+   süreçte yasak, o yüzden adımlar formun yanında değil ÜSTÜNDE). Süre
+   taahhüdü yok. Ticari şart cümlesi ikinci adımda.
 
-/* --------------------------------------------------------- başvuru adımları
-   Süre taahhüdü YOK: hiçbir adımda "24 saat içinde dönüş" gibi bir söz
-   verilmiyor, çünkü öyle bir hizmet seviyesi kararlaştırılmadı. */
-
-export const PARTNER_STEPS = [
-  { t: "Başvuru", s: "Formu doldurun ya da doğrudan bize yazın." },
-  { t: "Tanışma", s: "Hangi müşteri, hangi ülke, hangi hizmet." },
-  { t: "Model ve kapsam", s: "Referans mı, white-label mı; hangi hizmetler kapsamda." },
-  { t: "İlk yönlendirme", s: "Müşteriyi tanıtırsınız, süreci biz devralırız." },
-];
-
-/* ------------------------------------------------------------------- form
-   SWAP:PARTNER_FORM — GÖNDERİM UCU YOK.
-
-   Formun görselini kuruyoruz ama çalışan bir uç noktamız yok: ne bir API
-   rotası, ne bir form servisi, ne bir e-posta adresi doğrulandı. Bu yüzden
-   şablon alanları <fieldset disabled> içinde basıyor, <form> hiçbir yere
-   action vermiyor ve gönder butonu devre dışı. Sahte bir "başvurunuz alındı"
-   ekranı GÖSTERİLMİYOR — gönderilmemiş bir başvuruyu alınmış gibi göstermek,
-   sayfanın anlattığı dürüstlüğün tam tersi olurdu. Çalışan tek çıkış AskCta.
-
-   Uç nokta geldiğinde: alanlar zaten burada tanımlı, yapılacak iş fieldset'in
-   disabled'ını kaldırmak ve forma bir action/onSubmit vermek. */
-
+   FORM ÇALIŞIYOR (shared/FormBagla → lib/formGonder → /api/form; sunucu
+   gönderemezse ziyaretçinin e-posta uygulamasında web@ortacglobal.com'a
+   adresli, alanları dolu bir ileti açılır). Alanlar sadeleşti: "web sitesi"
+   ve "hangi model" çıktı, "firma" ve "hangi ülke" geldi. Zorunlu iki alan
+   aynı: ad ve e-posta. */
 export type PartnerField = {
   name: string;
   label: string;
-  /* "secenek" ADI BİLEREK "select" DEĞİL. Alan bir tur boyunca "select"
-     deniyordu ve sayfa da onu bire bir <select> olarak basıyordu; oysa
-     docs/tuzaklar.md · değişmez kural 9 açılır kutuyu yasaklıyor. Tipin adı
-     HTML etiketini söylerse bir sonraki tur yine o etiketi yazar. Ad artık
-     alanın İŞİNİ söylüyor: kapalı bir listeden bir seçenek. Ekrandaki
-     karşılığı görünür çip + gizli native radio (app/is-ortakligi/page.tsx). */
-  type: "text" | "email" | "tel" | "url" | "secenek";
+  /* "secenek" ADI BİLEREK "select" DEĞİL (docs/tuzaklar.md · kural 9: açılır
+     kutu yasak). Ekrandaki karşılığı görünür çip + gizli native radio. */
+  type: "text" | "email" | "tel" | "secenek";
   placeholder?: string;
-  optional?: boolean;
+  autoComplete?: string;
   options?: string[];
   /** iki sütunlu ızgarada tam satırı kaplasın mı */
   wide?: boolean;
 };
 
-export const PARTNER_FORM = {
-  title: "Ortaklık başvurusu.",
+export const PARTNER_BASVURU: Bas & {
+  adimlar: { t: string; s: string }[];
+  formBaslik: string;
+  fields: PartnerField[];
+  zorunlu: string[];
+  submitLabel: string;
+  note: string;
+  askLabel: string;
+} = {
+  id: "basvuru",
+  heading: "Ortaklık başvurusu.",
   accent: "başvurusu.",
-  lead:
-    "Önce kim olduğunuzu ve hangi müşteriye hangi ülkeyi götürdüğünüzü anlamak istiyoruz. Dört adım, uzun bir form değil.",
-  /* Kısa tutuldu. Referans sitede dört alan var; bizde beş, çünkü faaliyet
-     alanı ve model tercihi ilk görüşmenin konusunu baştan belirliyor. */
+  lead: "Kısa bir form. Şartları ilk görüşmede birlikte belirliyoruz.",
+  adimlar: [
+    { t: "Başvuru", s: "Formu doldurursunuz." },
+    { t: "İlk görüşme", s: "Şartları birlikte belirleriz." },
+    { t: "İlk yönlendirme", s: "Müşterinizin dosyasını açarız." },
+    { t: "İzleme", s: "Adımları sizinle paylaşırız." },
+  ],
+  formBaslik: "Başvuru formu",
   fields: [
-    { name: "ad", label: "Ad Soyad", type: "text", placeholder: "Adınız ve soyadınız" },
-    { name: "eposta", label: "E-posta", type: "email", placeholder: "ornek@firma.com" },
-    { name: "telefon", label: "Telefon", type: "tel", placeholder: "+90 5xx xxx xx xx" },
-    {
-      name: "site",
-      label: "Web sitesi veya LinkedIn",
-      type: "url",
-      placeholder: "https://",
-      optional: true,
-    },
+    { name: "ad", label: "Ad Soyad", type: "text", placeholder: "Adınız ve soyadınız", autoComplete: "name" },
+    { name: "firma", label: "Firma", type: "text", placeholder: "Firmanızın adı", autoComplete: "organization" },
+    { name: "eposta", label: "E-posta", type: "email", placeholder: "ornek@firma.com", autoComplete: "email" },
+    { name: "telefon", label: "Telefon", type: "tel", placeholder: "+90 5xx xxx xx xx", autoComplete: "tel" },
     {
       name: "alan",
       label: "Faaliyet alanınız",
       type: "secenek",
-      options: [
-        "Hukuk",
-        "Mali müşavirlik ve muhasebe",
-        "Danışmanlık veya ajans",
-        "Eğitim ve topluluk",
-        "Diğer",
-      ],
-    },
-    {
-      name: "model",
-      label: "Hangi model ilginizi çekiyor?",
-      type: "secenek",
-      options: ["Referans ortaklığı", "White-label", "Henüz emin değilim"],
+      options: ["Danışmanlık firması", "Mali müşavirlik", "Hukuk bürosu", "Ajans", "Diğer"],
       wide: true,
     },
-  ] as PartnerField[],
+    {
+      name: "ulke",
+      label: "Müşterileriniz en çok hangi ülkeyi soruyor?",
+      type: "secenek",
+      options: ["Dubai", "İngiltere", "KKTC", "Henüz belli değil"],
+      wide: true,
+    },
+  ],
+  zorunlu: ["ad", "eposta"],
   submitLabel: "Başvuruyu gönder",
-  /** formun kapalı olduğunu söyleyen rozet ve açıklama — gizlenmiyor */
-  /* 09.10.2026 · form açıldı (shared/FormBagla, lib/formGonder). Eski hâl:
-     rozet "Form henüz açılmadı", not "Bu formun gönderim ucu henüz
-     bağlanmadı…". Rozet artık basılmıyor. */
-  badge: "",
   note: "Başvurunuz ekibimize iletilir; ilk görüşme için size dönüş yapıyoruz.",
   askLabel: "Ortaklık için bize yazın",
 };
 
 /* -------------------------------------------------------------------- SSS
-   Sekiz soru. Hiçbirinin cevabı uydurulmadı: ilki ticari şartların
-   yayımlanmadığını söylüyor, üçü brand.ts'teki politikanın (banka onayı, süre,
-   kişiye özel vergi görüşü) ortak diline çevrilmiş hâli, kalan dördü de
-   doğrulanmış operasyon bilgisi.
-
-   Referanstaki "ortaklık ücretsiz mi" ve "ödeme ne zaman yapılır" soruları
-   BİLEREK yazılmadı: ikisinin de cevabı kararlaştırılmamış bir ticari şart.
-   Cevabı olmayan soruyu sormak, sayfada boş bir vaat bırakmak olurdu; bunun
-   yerine tek ve dürüst bir soru var. */
+   Yedi soru; CountryFaq'ı ve FAQPage şemasını AYNI liste besliyor. Eski
+   sayfada şema bilerek yoktu, çünkü ilk cevap "bu bilgi henüz yok" diyordu;
+   artık her cevap bir şey söylüyor. Ticari şart cevabı tek cümle ve rakamsız.
+   Banka ve vergi cevapları brand.ts · STANCE_LIMITS politikasının ortak
+   diline çevrilmiş hâli. Panelin adı geçmiyor (kural 7). */
+export const PARTNER_FAQ_BAS: Bas = {
+  id: "sss",
+  heading: "Ortaklıkta sık sorulanlar.",
+  accent: "sık sorulanlar.",
+  lead: "Başvurmadan önce en çok sorulan yedi başlık.",
+};
 
 export const PARTNER_FAQ: { q: string; a: string }[] = [
   {
-    q: "Komisyon oranı ve ödeme koşulu nedir?",
-    a: "Bu sayfada oran, ödeme koşulu ve asgari yönlendirme şartı yayımlanmıyor. Henüz kararlaşmamış bir rakamı siteye yazmak istemiyoruz; şartları ortaklık görüşmesinde birlikte netleştiriyoruz.",
+    q: "Komisyon ve ödeme şartları nedir?",
+    a: "Şartları ilk görüşmede birlikte belirliyoruz. Bu sayfada oran yayımlamıyoruz.",
   },
   {
-    q: "Referans ile white-label arasındaki fark ne?",
-    a: "Referansta müşteri baştan Ortac ile konuşur, operasyonun tamamı bizdedir. White-label'da hizmet sizin markanızla sunulur, müşteri ilişkisi sizde kalır, arkadaki işi biz yürütürüz. İkisi de aynı operasyona bağlanıyor; fark, müşterinin kiminle muhatap olduğunda.",
+    q: "Müşterimin sürecini nasıl takip ederim?",
+    a: "Başvurunuzla birlikte süreç adımlarını sizinle paylaşıyoruz. Yönlendirdiğiniz dosyaları tanımlanan yetkiyle tek ekrandan izleyeceğiniz ortak paneli hazırlanıyor.",
   },
   {
     q: "Müşterimi hangi ülkelere yönlendirebilirim?",
-    a: "Dubai, İngiltere ve KKTC. Üçü de aynı ekipte yürüyor. Hangisinin uygun olduğu müşterinin faaliyetine, tahsilat kanalına ve oturum ihtiyacına göre değişiyor; kartla tahsilat ana kanalsa ülke seçimi buradan değişebiliyor.",
+    a: "Dubai, İngiltere ve KKTC. Üç ülkede de kendi ofisimiz var; hangisinin uygun olduğu müşterinizin faaliyetine ve ihtiyacına göre değişir.",
   },
   {
     q: "Kuruluştan sonra müşteriye kim bakıyor?",
-    a: "Aynı ekip. Muhasebe ve beyan tarafında kendi lisansımız var, iş üçüncü bir ofise devredilmiyor. Kuruluş, banka ve ödeme, muhasebe ve vergi, uyum, oturum ve vize aynı zincirin halkaları.",
+    a: "Aynı ekip. Muhasebe Dubai ve KKTC'de kendi ekibimizle, İngiltere'de anlaşmalı ofisle yürür. Vergi, banka başvurusu ve uyum işleri de bizde kalır.",
   },
   {
     q: "Müşterime banka hesabının açılacağını söyleyebilir miyim?",
-    a: "Hayır. Hesabı banka açar ve karar bankanındır. Biz dosyayı bankanın istediği formatta hazırlar, görüşmeleri yürütür ve reddedilirse ikinci kuruma yeniden başvururuz. Ortağımız olarak siz de bu sözü vermeyin.",
+    a: "Hayır. Hesabı banka açar ve karar bankanındır. Biz dosyayı hazırlar ve başvuruyu yürütürüz.",
   },
   {
-    q: "Süre taahhüdü verebilir miyim?",
-    a: "Hayır. Sitedeki bütün süreler tipik aralıktır; otoritenin ve bankanın takvimi bizim kontrolümüzde değil. Müşterinize aralık söyleyin, tarih vermeyin.",
+    q: "Müşterime vergi konusunda ne söyleyebilirim?",
+    a: "Genel çerçeveyi. Şirket kurmak tek başına vergi avantajı getirmez; sonuç müşterinin faaliyetine ve mukimliğine bağlıdır. Kişiye özel görüş siteden verilmez, durum ayrıca konuşulur.",
   },
   {
-    q: "Müşteriye kişiye özel vergi görüşü verebiliyor muyuz?",
-    a: "Siteden verilmiyor. Buradaki başlıklar genel çerçeve: şirket kurmak tek başına otomatik vergi avantajı getirmiyor, avantaj gerçek faaliyete, yönetime, mukimliğe, gelir türüne ve ilgili ülke kurallarına bağlı. Müşterinin kendi durumu ayrıca konuşuluyor.",
-  },
-  {
-    q: "Süreci nereden takip ediyoruz?",
-    /* Cevap panelin ADINI söylemiyor, bilerek: müşteri kararı (bkz. yukarıda
-       PARTNER_WHY'daki panel maddesi). Sorulan zaten "hangi yazılım" değil,
-       "nereden takip ediyoruz". */
-    a: "Müşteri dosyası tek bir panel üzerinde yürüyor: evrak alışverişi, talepler ve imza akışı aynı yerde duruyor, hangi belgenin beklendiği ortada.",
+    q: "Yurt dışındaki bir danışmanlık firması da başvurabilir mi?",
+    a: "Evet. Türkiye'deki ve yurt dışındaki danışmanlık firmaları, mali müşavirler, hukuk büroları ve ajanslar başvurabilir.",
   },
 ];

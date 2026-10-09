@@ -5578,3 +5578,13 @@ AÇIK KALANLAR (Murat Bey "aşağıya yazıyorum" dedi, yazmadı ya da boş bır
 - 22: iş ortaklığı için B2B partner portalı fikri (ayrı iş, sitede yalnız sayfa var)
 - Dubai çok yıllı indirimde bazın tamamı mı lisans, yoksa içinde indirime girmeyen kuruluş payı var mı
 - "Yalnız Türkçe" algısı: iki hero satırı "Türkçe ve İngilizce" oldu; "Türkçe tek muhatap" (6 yer) ve blog kapanışları duruyor
+
+## 09.10.2026 (4) · GECE: ARAŞTIRMA, SEO DENETİMİ, İŞ ORTAKLIĞI, DİL İSKELETİ
+
+- Rakip ve sayfa fikirleri: `docs/teslim/rakip-ve-sayfa-fikirleri.md` (19 firma, 46 sayfa önerisi, 32 blog konusu). Hiçbiri yapılmadı; Burak seçecek.
+- SEO rehberi denetimi: `docs/teslim/seo-rehber-denetim.md`. Güvenli 11 madde uygulandı; karar gerektirenler (tek stil dosyası 527 KB, ortak betik yükü, yazar sayfası, uzun başlıklar, hizmet sayfalarından bloga bağlantı) duruyor.
+- `/is-ortakligi` yeniden kuruldu (`css/is-ortakligi.css`, `.iob-`). Ortak paneli "Hazırlanıyor" diye yazılı, komisyon rakamı yok. Eski `css/partnerlik.css` artık kullanılmıyor, silinebilir. Formda tuzak (honeypot) alanı yok: `FormBagla` değeri geçirmiyor.
+- Dil iskeleti: `docs/dil-altyapisi.md`. Yayında değişiklik yok.
+- Telefonda ana sayfa girişi sadeleşti. Dubai geç beyan cezası kalktı. KKTC harç kaynağı zaten hiçbir sayfada basılmıyor.
+
+MURAT BEY'E YENİ SORULAR: 5.120'nin tamamı lisans bedeli mi (çok yıllı indirim hesabı); iş ortaklığında white-label var mı; ortak panelinde ortak neyi görecek; süreç adımları bugün ortakla hangi kanaldan paylaşılıyor; AML sayfasında neyi sevmedi.

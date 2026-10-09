@@ -1,158 +1,288 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import {
   ArrowRight,
+  ArrowUpRight,
   BadgeCheck,
   Briefcase,
   Building2,
-  CalendarCheck,
   Calculator,
-  GraduationCap,
-  Globe,
-  IdCard,
-  Landmark,
+  CalendarClock,
+  Check,
+  ChevronRight,
+  ChevronUp,
+  Eye,
+  FolderOpen,
+  Handshake,
   LayoutDashboard,
-  Lock,
+  MapPin,
+  Megaphone,
+  Minus,
+  MonitorCheck,
   Scale,
-  ShieldCheck,
-  Stamp,
-  TriangleAlert,
-  UsersRound,
+  Send,
+  Share2,
+  UserRound,
+  Workflow,
   type LucideIcon,
 } from "lucide-react";
+
 import Nav from "@/components/Nav";
-import PageHero from "@/components/shared/PageHero";
+import FotoGiris from "@/components/shared/FotoGiris";
 import FadeUp from "@/components/shared/FadeUp";
 import SplitWords from "@/components/shared/SplitWords";
+import SmartLink from "@/components/shared/SmartLink";
 import AskCta from "@/components/shared/AskCta";
+import FormBagla from "@/components/shared/FormBagla";
+import { Flag } from "@/components/shared/CountryPicker";
 import CountryFaq from "@/components/CountryFaq";
 import FinalCta from "@/components/FinalCta";
-import { CHAIN, STANCE_LIMITS } from "@/lib/brand";
+import { COUNTRY_PHOTO, SECTOR_PHOTO } from "@/lib/media";
+import { sayfaKunye } from "@/lib/seo";
 import {
-  PARTNER_CHAIN,
+  PARTNER_AKIS,
+  PARTNER_BASVURU,
+  PARTNER_EKIP,
   PARTNER_FAQ,
-  PARTNER_FORM,
+  PARTNER_FAQ_BAS,
   PARTNER_HERO,
-  PARTNER_LIMITS_HEAD,
-  PARTNER_MODELS,
+  PARTNER_IZLEME,
+  PARTNER_KIMLER,
   PARTNER_SEO,
-  PARTNER_STEPS,
-  PARTNER_TERMS,
-  PARTNER_VALUE,
-  PARTNER_WHO,
-  PARTNER_WHO_NOTE,
+  PARTNER_ULKELER,
   type PartnerIcon,
 } from "@/lib/partners";
 
-import { OG_GORSEL } from "@/lib/seo";
-import FormBagla from "@/components/shared/FormBagla";
+/* Stil dosyası globals.css'in @import listesine değil BURAYA bağlı
+   (KurumsalSayfa.tsx'in css/svc-kurumsal.css'i bağladığı gibi; tuzak P:
+   ortak @import bloğuna satır eklemek başka turlarla çakışıyor). */
+import "@/app/css/is-ortakligi.css";
+
 /* ============================================================================
-   İŞ ORTAKLIĞI — /is-ortakligi
+   İŞ ORTAKLIĞI — /is-ortakligi   (09.10.2026 · bugünkü dille yeniden kuruldu)
+   Metin: lib/partners.ts (gerekçeler ve iddia sınırı orada) ·
+   Biçim: css/is-ortakligi.css (.iob-)
 
-   Sayfanın okuru müşteri değil, müşteriyi getirecek olan kişi: avukat, mali
-   müşavir, danışman, eğitmen. Bu yüzden sıralama satış sayfası sıralaması
-   değil. Bir ortak şu sırayla karar veriyor ve bölümler tam o sırada:
+   OKUR müşteri değil, müşterisini Dubai, İngiltere ya da KKTC'ye yönlendiren
+   danışmanlık firması, mali müşavir, hukuk bürosu ya da ajans. Ana fikir
+   (Murat Bey'in tarifi): müşterinizi yönlendirin, kuruluşu ve sonrasını biz
+   yürütelim, siz her adımı izleyin.
 
-     1. Nasıl çalışacağız?      → iki model (referans / white-label)
-     2. Ne kazanacağım?         → TİCARİ ŞARTLAR — ve burada duruyoruz, bkz. aşağısı
-     3. Müşteriye ne götürüyorum? → doğrulanmış altı koz
-     4. Neyi söz veremem?       → brand.ts · STANCE_LIMITS
-     5. Müşteri sonra ne olacak? → brand.ts · CHAIN
-     6. Ben bu tarife uyuyor muyum? → dört profil
-     7. Nasıl başlıyorum?       → dört adım + form
-     8. Aklımda kalanlar        → sekiz soru
+   ESKİ SAYFADAN NE GİTTİ: iki model kartı (referans · white-label; teyitsiz),
+   rakam yerine tire basan "Ticari şartlar" tablosu, tam siyah "ne
+   götürüyorsunuz" bölümü ve <details> kartları, hizmet zinciri rayı. Eski
+   biçim dosyası css/partnerlik.css (.pt-) artık bu sayfadan çağrılmıyor.
 
-   ------------------------------------------------------- İKİ KASITLI BOŞLUK
+   DURAKLAR, zemin beyaz ve kırık beyaz sırayla; siyah yalnız iki büyük gece
+   kartta ("iki beyaz bir siyah" ritmi, KurumsalSayfa'daki karar):
+     giriş      foto giriş (FotoGiris; hizmet sayfalarının girişi)
+     nasıl      ÇİZİM 1 akış (Siz → Ortac → Müşteriniz) + üç kart     beyaz
+     izleme     ÇİZİM 2 dosya çizelgesi, GECE kartta + üç satır       kırık beyaz
+     ekip       ÇİZİM 3 zaman çizgisi + üç sayı + amber sınır kutusu  beyaz
+     ülkeler    üç fotoğraflı ülke kartı                              kırık beyaz
+     kimler     dört meslek, GECE panoda                              beyaz
+     başvuru    dört adımlı ray + ÇALIŞAN form                        kırık beyaz
+     SSS        CountryFaq                                            beyaz
+     kapanış    FinalCta
 
-   (a) TİCARİ ŞART YOK. Referans aldığımız sayfada komisyon aralığı rakamla
-       yazılı; bizde böyle bir karar yok. Sayfa oran uydurmak yerine dört
-       satırı "—" bırakıyor ve neden boş olduğunu açıkça yazıyor
-       (lib/partners.ts · PARTNER_TERMS, SWAP:PARTNER_TERMS). Boş satır bir
-       eksiklik gibi duruyor — öyle de olmalı, çünkü gerçekten eksik.
+   ORTAK PANELİ HENÜZ YOK ve sayfa onu var gibi göstermiyor: ÇİZİM 2 "Örnek"
+   çipi taşıyor, yanındaki satırlar "Bugün" ile "Hazırlanıyor"u ayırıyor.
 
-   (b) FORM GÖNDERMİYOR. Çalışan bir uç noktamız yok. Alanlar <fieldset
-       disabled> içinde, <form> hiçbir yere action vermiyor, buton devre dışı
-       ve durum rozetle açıkça söyleniyor (SWAP:PARTNER_FORM). Gönderilmemiş
-       bir başvuruyu "alındı" diye göstermek, sayfanın bütün argümanını
-       çürütürdü. Çalışan tek çıkış AskCta.
+   NEDEN SUNUCU BİLEŞENİ: künye (generateMetadata) sunucuda çalışıyor ve
+   sayfada durum tutan tek şey SSS; o da hazır istemci bileşeni (CountryFaq).
+   Form düz HTML, gönderimi içine konan FormBagla yakalıyor.
 
-   ------------------------------------------------------------ NEDEN SUNUCU
+   ÇİZİMLERİN ÜÇÜ DE aria-hidden: iddia başlıkta, kartlarda ve satırlarda
+   yazılı, çizim aynı şeyi gösteriyor. Hareketin tamamı CSS'te ve
+   prefers-reduced-motion: no-preference kapısında (tuzak A). Ekran dışında
+   durdurma layout'taki EkranDisiDurdur'dan geliyor.
 
-   Dosya istemci bileşeni DEĞİL: generateMetadata yalnızca sunucu
-   bileşenlerinden çalışıyor ve bu sayfanın SEO'su iş kanalı için önemli.
-   Sayfadaki tek durum ihtiyacı SSS akordiyonu; onu yeniden yazmak yerine
-   sitenin hazır SSS bileşeni (CountryFaq) kullanılıyor — HomeFaq ile birebir
-   aynı .sss kalıbı, aynı klavye davranışı, {q,a} dizisi alıyor. Kalan her şey
-   (model kartları, altı koz, form) statik işaretleme; <details> yerli olduğu
-   için açılıp kapanması da JavaScript istemiyor.
-
-   HAREKET — sayfada JS ile hareket eden hiçbir şey yok. FadeUp ve SplitWords
-   motion/react kullanıyor ve Providers'taki MotionConfig reducedMotion="user"
-   ile kullanıcının tercihine uyuyor. Tek CSS animasyonu <details> açılırken
-   paragrafın belirmesi; partnerlik.css onu prefers-reduced-motion altında
-   kapatıyor.
+   RENK: ağırlık mavide; amber yalnız not ve sınır ("Hazırlanıyor", verilemeyen
+   sözler). Yeşil yok, çünkü sayfada para yok.
    ========================================================================= */
+
+export function generateMetadata(): Metadata {
+  return sayfaKunye({ title: PARTNER_SEO.title, description: PARTNER_SEO.description, yol: PARTNER_SEO.path });
+}
 
 const SITE = "https://ortacglobal.com";
 
-export function generateMetadata(): Metadata {
-  const url = `${SITE}${PARTNER_SEO.path}`;
-  return {
-    title: PARTNER_SEO.title,
-    description: PARTNER_SEO.description,
-    alternates: { canonical: url },
-    openGraph: {
-      images: [OG_GORSEL],
-      type: "website",
-      locale: "tr_TR",
-      siteName: "Ortac Global",
-      url,
-      title: PARTNER_SEO.title,
-      description: PARTNER_SEO.description,
-    },
-  };
+const IKON: Record<PartnerIcon, LucideIcon> = {
+  yonlendir: Send,
+  yurut: Workflow,
+  izle: Eye,
+  paylas: Share2,
+  panel: LayoutDashboard,
+  ortakPanel: MonitorCheck,
+  danisman: Briefcase,
+  musavir: Calculator,
+  hukuk: Scale,
+  ajans: Megaphone,
+};
+
+function Kuyu({ icon, ton, boy = 20 }: { icon: PartnerIcon; ton?: "amber"; boy?: number }) {
+  const I = IKON[icon];
+  return (
+    <span className="iob-ic" data-ton={ton} aria-hidden="true">
+      <I size={boy} strokeWidth={1.9} />
+    </span>
+  );
 }
 
-/* partners.ts ikon adını string taşıyor (bkz. oradaki gerekçe); eşleme burada */
-const ICON: Record<PartnerIcon, LucideIcon> = {
-  globe: Globe,
-  stamp: Stamp,
-  badge: BadgeCheck,
-  office: Building2,
-  panel: LayoutDashboard,
-  people: UsersRound,
-  scale: Scale,
-  calculator: Calculator,
-  briefcase: Briefcase,
-  school: GraduationCap,
-};
+function Bas({ b }: { b: { heading: string; accent: string; lead: string } }) {
+  return (
+    <div className="sec-head">
+      <SplitWords as="h2" text={b.heading} accent={b.accent} className="h2" />
+      <FadeUp delay={0.2}>
+        <p className="sec-lead">{b.lead}</p>
+      </FadeUp>
+    </div>
+  );
+}
 
-/* CHAIN brand.ts'te ikon taşımıyor — o dosya saf veri. Ana sayfadaki Chain
-   bölümüyle aynı eşleme, aynı anahtarlar: ziyaretçi iki yerde aynı halkayı
-   aynı simgeyle görüyor. */
-const CHAIN_ICON: Record<string, LucideIcon> = {
-  kurulus: Building2,
-  banka: Landmark,
-  muhasebe: CalendarCheck,
-  uyum: ShieldCheck,
-  oturum: IdCard,
-};
+/* ------------------------------------------------------------------ ÇİZİM 1
+   AKIŞ. Üç durak yan yana: Siz, Ortac, Müşteriniz. Durakların arkasından
+   geçen hat ileri akıyor (müşteri size, sizden bize, bizden kuruluşa);
+   altta Ortac'tan size dönen kesik hat "her adımın bilgisi"ni taşıyor.
+   Hatlar kutu genişliğine gerilen iki SVG (preserveAspectRatio none; çizgi
+   kalınlığı vector-effect ile sabit). Sütun merkezleri 50 · 150 · 250.
+   Ortadaki durak dolu mavi: işi yürüten o. */
+const DURAK_IKON = [Handshake, Building2, UserRound];
+function SahneAkis() {
+  const A = PARTNER_AKIS;
+  return (
+    <div className="iob-akis" data-yaricap="serbest">
+      <svg className="iob-akis-hat" viewBox="0 0 300 10" preserveAspectRatio="none" focusable="false">
+        <path className="iob-hat" d="M50 5 H250" />
+        <path className="iob-hat-akan" d="M50 5 H250" />
+      </svg>
+      <ol className="iob-akis-l">
+        {A.duraklar.map((d, k) => {
+          const I = DURAK_IKON[k];
+          return (
+            <li key={d.ad} className="iob-akis-d" data-orta={k === 1 ? "" : undefined}>
+              <span className="iob-akis-ic">
+                <I size={24} strokeWidth={1.9} />
+              </span>
+              <b>{d.ad}</b>
+              <small>{d.alt}</small>
+              {k < 2 ? (
+                <span className="iob-akis-ok">
+                  <ChevronRight size={16} strokeWidth={2.4} />
+                </span>
+              ) : null}
+            </li>
+          );
+        })}
+      </ol>
+      <div className="iob-donus">
+        <svg className="iob-donus-hat" viewBox="0 0 300 30" preserveAspectRatio="none" focusable="false">
+          <path className="iob-hat" data-kesik="" d="M150 0 V28 H50 V0" />
+          <path className="iob-donus-akan" d="M150 0 V28 H50 V0" />
+        </svg>
+        <span className="iob-donus-uc">
+          <ChevronUp size={16} strokeWidth={2.4} />
+        </span>
+        <span className="iob-donus-cip">
+          <Eye size={15} strokeWidth={2} />
+          {A.donus}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ ÇİZİM 2
+   DOSYA ÇİZELGESİ. Gece kartın içinde bir dosya kartı: üstte ad ve "Örnek"
+   çipi, ortada beş adım (üçü tamam, biri sürüyor, biri sırada), altta "Ortak
+   görünümü" satırı. Ortak paneli henüz yok; çizim onun ekranı değil, ortağın
+   bugün de aldığı bilginin resmi (hangi adım tamam, hangisi sürüyor).
+   Hareket: süren adımın noktası yanıp sönüyor (iobNabiz). */
+function SahneDosya() {
+  const Z = PARTNER_IZLEME;
+  return (
+    <div className="iob-dosya" data-yaricap="serbest">
+      <div className="iob-dosya-ust">
+        <span className="iob-dosya-ic">
+          <FolderOpen size={18} strokeWidth={1.9} />
+        </span>
+        <b>{Z.dosya.ad}</b>
+        <span className="iob-dosya-cip">{Z.dosya.cip}</span>
+      </div>
+      <ol className="iob-dosya-l">
+        {Z.adimlar.map((a) => (
+          <li key={a.ad} className="iob-dosya-a" data-durum={a.durum}>
+            <span className="iob-dosya-n">{a.durum === "tamam" ? <Check size={13} strokeWidth={3} /> : <i />}</span>
+            <b>{a.ad}</b>
+            <span className="iob-dosya-d">{Z.durumAd[a.durum]}</span>
+          </li>
+        ))}
+      </ol>
+      <div className="iob-dosya-alt">
+        <Eye size={15} strokeWidth={2} />
+        {Z.dosya.gorunum}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ ÇİZİM 3
+   ZAMAN ÇİZGİSİ. Solda 1996, sağda Bugün; arada otuz bir çentikli hat (her
+   çentik bir yıl) ve ortasında "30 yıl". Hat tek SVG (300 x 24, genişliğe
+   geriliyor); çentiklerin x'i 0'dan 300'e eşit otuz aralık. Hareket: hattın
+   üstünde soldan sağa yürüyen nokta (iobYuru; yolu kabın genişliği, cqw). */
+function SahneCizgi() {
+  const C = PARTNER_EKIP.cizgi;
+  return (
+    <div className="iob-cizgi" data-yaricap="serbest">
+      <p className="iob-cizgi-orta">
+        <b>{C.orta}</b>
+        <small>{C.alt}</small>
+      </p>
+      <div className="iob-cizgi-sira">
+        <span className="iob-cizgi-uc">{C.bas}</span>
+        <span className="iob-cizgi-yol">
+          <svg viewBox="0 0 300 24" preserveAspectRatio="none" focusable="false">
+            <path className="iob-cizgi-hat" d="M0 12 H300" />
+            {Array.from({ length: 31 }, (_, i) => (
+              <path key={i} className="iob-cizgi-centik" data-bes={i % 5 === 0 ? "" : undefined} d={`M${i * 10} ${i % 5 === 0 ? 4 : 8} V${i % 5 === 0 ? 20 : 16}`} />
+            ))}
+          </svg>
+          <i className="iob-cizgi-nokta" />
+        </span>
+        <span className="iob-cizgi-uc" data-son="">
+          {C.son}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export default function PartnershipPage() {
-  /* Breadcrumb dışında yapılandırılmış veri YOK. Organization ve Service
-     zaten layout.tsx'te global olarak basılıyor; burada tekrarlamak aynı
-     iddiayı iki kez işaretlemek olurdu. FAQPage şeması da bilerek yok: sekiz
-     cevaptan birincisi "bu bilgi henüz yok" diyor ve onu arama sonucunda zengin
-     sonuç olarak göstermek yanlış yerde durur. */
+  const H = PARTNER_HERO;
+  const B = PARTNER_BASVURU;
+
+  /* Yapılandırılmış veri: kırıntı ve SSS. Organization ve Service layout'ta
+     global basılıyor, burada tekrarlanmıyor. FAQPage ekrandaki yedi soruyla
+     AYNI listeden (CountryFaq yalnız seçili cevabı DOM'a basıyor; metinlerin
+     tamamı bileşenin sunucu yükünde ve şemada). */
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Ana sayfa", item: `${SITE}/` },
+    "@graph": [
       {
-        "@type": "ListItem",
-        position: 2,
-        name: PARTNER_HERO.crumb,
-        item: `${SITE}${PARTNER_SEO.path}`,
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Ana sayfa", item: `${SITE}/` },
+          { "@type": "ListItem", position: 2, name: H.crumb, item: `${SITE}${PARTNER_SEO.path}` },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: PARTNER_FAQ.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
       },
     ],
   };
@@ -160,413 +290,283 @@ export default function PartnershipPage() {
   return (
     <>
       <Nav />
-      <main>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      <main id="icerik" className="iob">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
+        {/* ------------------------------------------------------------ GİRİŞ
+            Foto giriş doğrudan çağrılıyor (PageHero üzerinden değil): PageHero
+            bu dalda fotoğrafı kırıntıdaki ülke adından seçiyor ve ülkesiz
+            sayfada Dubai siluetine düşüyor; bu sayfanın iddiası üç ülke.
+            Fotoğraf: tepeden çalışma masası, yüz yok (media.ts · danışmanlık
+            karesi). Düğmeler sayfa içi çapa: başvuru formu ve akış bölümü. */}
+        <FotoGiris
+          iz={H.crumb}
+          baslik={H.title}
+          vurgu={H.accent}
+          lead={H.lead}
+          foto={SECTOR_PHOTO.danismanlik.band}
+          belge={H.belge}
+          rozetler={H.rozetler.map((r, i) => {
+            const I = [CalendarClock, MapPin, BadgeCheck][i];
+            return {
+              icon: <I size={18} strokeWidth={2} />,
+              metin: (
+                <>
+                  <b>{r.b}</b>
+                  {r.s}
+                </>
+              ),
+            };
+          })}
+          dugmeler={
+            <>
+              <a href={H.cta.href} className="dhr-btn dhr-btn-mavi">
+                {H.cta.label}
+                <ArrowRight size={16} strokeWidth={2.2} aria-hidden="true" />
+              </a>
+              <a href={H.ikinci.href} className="dhr-btn dhr-btn-cizgi">
+                {H.ikinci.label}
+              </a>
+            </>
+          }
         />
 
-        {/* country VERİLMİYOR: PageHero kompakt başlık bloğunu basıyor. İki
-            sütunlu hero tek bir ülkeyi öne çıkarır, oysa bu sayfanın iddiası
-            üç ülkenin aynı ekipte olması. */}
-        <PageHero
-          crumb={PARTNER_HERO.crumb}
-          title={PARTNER_HERO.title}
-          accent={PARTNER_HERO.accent}
-          lead={PARTNER_HERO.lead}
-        />
-
-        {/* ---------- 1 · iki model + ticari şartların boş kaldığı yer ---------- */}
-        <section className="sec-pad" style={{ background: "var(--white)" }}>
+        {/* ------------------------------------------------------ NASIL ÇALIŞIR
+            Üstte akış panosu (kabın genişliğinde), altında üç kart. */}
+        <section id={PARTNER_AKIS.id} className="sec-pad">
           <div className="container-o">
-            <div className="sec-head">
-              <SplitWords
-                as="h2"
-                text="İki ortaklık modeli."
-                accent="ortaklık modeli."
-                className="h2"
-                style={{ color: "var(--text-900)" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead">
-                  İkisi de aynı operasyona bağlanıyor. Fark, müşterinin kiminle muhatap
-                  olduğunda.
-                </p>
-              </FadeUp>
-            </div>
-
-            <div className="pt-models">
-              {PARTNER_MODELS.map((m, i) => (
-                <FadeUp key={m.key} delay={0.12 + i * 0.08} className="pt-cell">
-                  <article className="pt-model">
-                    <h3 className="pt-model-h">{m.name}</h3>
-                    <p className="pt-model-l">{m.line}</p>
-                    <ul className="pt-model-list">
-                      {m.points.map((p) => (
-                        <li key={p}>{p}</li>
-                      ))}
-                    </ul>
-                    <p className="pt-model-for">{m.forWhom}</p>
-                  </article>
-                </FadeUp>
+            <Bas b={PARTNER_AKIS} />
+            <FadeUp className="iob-akis-pano" delay={0.1}>
+              <div aria-hidden="true">
+                <SahneAkis />
+              </div>
+            </FadeUp>
+            <ul className="iob-uclu">
+              {PARTNER_AKIS.items.map((m, i) => (
+                <li key={m.title}>
+                  <FadeUp className="iob-kart" delay={0.08 + i * 0.05}>
+                    <Kuyu icon={m.icon} />
+                    <h3 className="iob-kart-t">{m.title}</h3>
+                    <p className="iob-kart-p">{m.line}</p>
+                  </FadeUp>
+                </li>
               ))}
-            </div>
+            </ul>
+          </div>
+        </section>
 
-            {/* Ticari şartlar. Dört satır da boş ve bu bilerek görünür: sayfanın
-                en çok merak edilen bilgisi burada olmadığını saklamak yerine
-                söylüyor. PARTNER_TERMS'e değer girildiği an satır kendiliğinden
-                normal bir künye satırına dönüyor, bu blokta kod değişmiyor. */}
-            <FadeUp delay={0.28}>
-              <div className="pt-terms">
-                <div className="pt-terms-head">
-                  <span className="pt-terms-ic" aria-hidden="true">
-                    <Lock size={15} strokeWidth={2.1} />
-                  </span>
-                  <h3 className="pt-h3">Ticari şartlar</h3>
-                </div>
-
-                <dl className="pt-terms-dl">
-                  {PARTNER_TERMS.rows.map((r) => (
-                    <div className="pt-terms-row" key={r.label}>
-                      <dt>{r.label}</dt>
-                      <dd data-empty={r.value ? undefined : ""}>{r.value ?? "—"}</dd>
+        {/* ------------------------------------------------------------ İZLEME
+            Gece kart: solda dosya çizelgesi, sağda üç satır. Satırın çipi
+            neyin bugün var olduğunu, neyin hazırlandığını söylüyor. */}
+        <section id={PARTNER_IZLEME.id} className="sec-pad iob-kirik">
+          <div className="container-o">
+            <Bas b={PARTNER_IZLEME} />
+            <FadeUp className="iob-gece" delay={0.1}>
+              <div className="iob-gece-sahne" aria-hidden="true">
+                <SahneDosya />
+              </div>
+              <ul className="iob-gece-l">
+                {PARTNER_IZLEME.items.map((m) => (
+                  <li key={m.title} className="iob-gece-k">
+                    <Kuyu icon={m.icon} ton={m.ton} />
+                    <div className="iob-gece-m">
+                      <h3 className="iob-gece-t">{m.title}</h3>
+                      <p className="iob-gece-p">{m.line}</p>
                     </div>
-                  ))}
-                </dl>
+                    <span className="iob-gece-z" data-ton={m.ton}>
+                      {m.cip}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </FadeUp>
+          </div>
+        </section>
 
-                <p className="pt-terms-note">{PARTNER_TERMS.notPublished}</p>
-                <AskCta label="Ortaklık şartlarını sorun" />
+        {/* -------------------------------------------------------------- EKİP
+            Beyaz pano: üstte zaman çizgisi, altında üç sayı. Sayılar gerçek
+            metin (ekran okuyucu "700+ şirket kuruluşu" diye okuyor); yalnız
+            çizgi süs. Altındaki amber kutu ortağın veremeyeceği üç söz. */}
+        <section id={PARTNER_EKIP.id} className="sec-pad">
+          <div className="container-o">
+            <Bas b={PARTNER_EKIP} />
+            <FadeUp className="iob-ekip" delay={0.1}>
+              <div aria-hidden="true">
+                <SahneCizgi />
               </div>
+              <ul className="iob-sayi">
+                {PARTNER_EKIP.sayilar.map((s) => (
+                  <li key={s.ad}>
+                    <b>{s.sayi}</b>
+                    <span>{s.ad}</span>
+                  </li>
+                ))}
+              </ul>
+            </FadeUp>
+            <FadeUp className="iob-sinir" delay={0.16}>
+              <h3 className="iob-sinir-t">{PARTNER_EKIP.sinir.title}</h3>
+              <ul className="iob-sinir-l">
+                {PARTNER_EKIP.sinir.maddeler.map((m) => (
+                  <li key={m}>
+                    <Minus size={16} strokeWidth={2.4} aria-hidden="true" />
+                    {m}
+                  </li>
+                ))}
+              </ul>
             </FadeUp>
           </div>
         </section>
 
-        {/* ---------- 2 · ortağın müşterisine götürdüğü altı şey ---------- */}
-        <section className="sec-pad sec-night">
+        {/* ----------------------------------------------------------- ÜLKELER
+            Üç fotoğraflı kart; kartın tamamı ülke sayfasına bağlantı. Yazı
+            fotoğrafın üstünde, altta koyu perde (okunurluk). Bayrak kabı
+            sabit px + overflow hidden (tuzak H). */}
+        <section id={PARTNER_ULKELER.id} className="sec-pad iob-kirik">
           <div className="container-o">
-            <div className="sec-head sec-head-dark">
-              <SplitWords
-                as="h2"
-                text="Müşterinize ne götürüyorsunuz."
-                accent="ne götürüyorsunuz."
-                className="h2"
-                style={{ color: "#ffffff" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead sec-lead-dark">
-                  Altı maddenin altısı da doğrulanabilir. Ortaklık sayfası, yeni iddia
-                  üretmek için uygun bir yer değil.
-                </p>
-              </FadeUp>
-            </div>
-
-            <div className="pt-val">
-              {PARTNER_VALUE.map((v, i) => {
-                const Icon = ICON[v.icon];
-                return (
-                  <FadeUp key={v.title} delay={0.1 + i * 0.05} className="pt-cell">
-                    {/* Yerli <details>: JavaScript yok, klavye ve ekran okuyucu
-                        davranışı tarayıcıdan geliyor, bileşen sunucuda
-                        kalabiliyor. Sektör sayfasındaki kalıbın aynısı, yani
-                        ziyaretçi sitede tek bir açma hareketi öğreniyor. */}
-                    <details className="pt-val-c">
-                      <summary>
-                        <span className="pt-val-ic" aria-hidden="true">
-                          <Icon size={16} strokeWidth={1.9} />
-                        </span>
-                        <span className="pt-val-t">
-                          <b>{v.title}</b>
-                          <i>{v.line}</i>
-                        </span>
-                        <span className="pt-val-x" aria-hidden="true" />
-                      </summary>
-                      <p>{v.detail}</p>
-                    </details>
-                  </FadeUp>
-                );
-              })}
-            </div>
-
-            {/* Politika sınırları. brand.ts'ten okunuyor, burada kopyası yok.
-                <details> içine KONMUYOR: kademelendirme metni azaltmak için
-                var, şerhi gizlemek için değil. */}
-            <FadeUp delay={0.34}>
-              <div className="pt-limits">
-                <div className="pt-limits-head">
-                  <span className="pt-limits-ic" aria-hidden="true">
-                    <TriangleAlert size={15} strokeWidth={2.1} />
-                  </span>
-                  <div>
-                    <h3 className="pt-h3 pt-h3-dark">{PARTNER_LIMITS_HEAD.title}</h3>
-                    <p className="pt-limits-lead">{PARTNER_LIMITS_HEAD.lead}</p>
-                  </div>
-                </div>
-                <ul className="pt-limits-list">
-                  {STANCE_LIMITS.map((l) => (
-                    <li key={l.title}>
-                      <b>{l.title}</b>
-                      <span>{l.line}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </FadeUp>
-          </div>
-        </section>
-
-        {/* ---------- 3 · kuruluştan sonrası ---------- */}
-        <section className="sec-pad" style={{ background: "var(--paper)" }}>
-          <div className="container-o">
-            <div className="sec-head">
-              <SplitWords
-                as="h2"
-                text={PARTNER_CHAIN.title}
-                accent={PARTNER_CHAIN.accent}
-                className="h2"
-                style={{ color: "var(--text-900)" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead">{PARTNER_CHAIN.lead}</p>
-              </FadeUp>
-            </div>
-
-            {/* Beş halka yatay bir ray. Ana sayfadaki Chain bölümünün süre/oran
-                grafiği burada YOK: o grafik müşteriye "ne kadar sürer" sorusunu
-                anlatıyor, ortağa gereken bilgi ise yalnızca zincirin kaç halka
-                olduğu ve hepsinin aynı ekipte durduğu. */}
-            <FadeUp delay={0.24}>
-              <ol className="pt-chain">
-                {CHAIN.map((c, i) => {
-                  const Icon = CHAIN_ICON[c.key];
-                  return (
-                    <li className="pt-link" key={c.key}>
-                      <span className="pt-link-n" aria-hidden="true">
-                        {String(i + 1).padStart(2, "0")}
+            <Bas b={PARTNER_ULKELER} />
+            <ul className="iob-ulke">
+              {PARTNER_ULKELER.items.map((u, i) => (
+                <li key={u.slug}>
+                  <FadeUp className="iob-ulke-f" delay={0.08 + i * 0.05}>
+                    <SmartLink href={u.href} className="iob-ulke-k">
+                      <Image src={COUNTRY_PHOTO[u.slug]} alt="" fill sizes="(min-width: 1024px) 33vw, 100vw" className="iob-ulke-img" />
+                      <span className="iob-ulke-ok" aria-hidden="true">
+                        <ArrowUpRight size={18} strokeWidth={2} />
                       </span>
-                      <span className="pt-link-ic" aria-hidden="true">
-                        {Icon && <Icon size={16} strokeWidth={1.9} />}
-                      </span>
-                      <b>{c.label}</b>
-                      <i>{c.line}</i>
-                    </li>
-                  );
-                })}
-              </ol>
-            </FadeUp>
-
-            <FadeUp delay={0.3}>
-              <p className="pt-chain-note">{PARTNER_CHAIN.note}</p>
-            </FadeUp>
-          </div>
-        </section>
-
-        {/* ---------- 4 · kimler ortak olabilir ---------- */}
-        <section className="sec-pad" style={{ background: "var(--white)" }}>
-          <div className="container-o">
-            <div className="sec-head">
-              <SplitWords
-                as="h2"
-                text="Kimler ortak olabilir."
-                accent="ortak olabilir."
-                className="h2"
-                style={{ color: "var(--text-900)" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead">
-                  Ortak payda meslek unvanı değil: müşterisi ona zaten &ldquo;yurt dışında
-                  şirket kursam mı&rdquo; diye soran meslekler.
-                </p>
-              </FadeUp>
-            </div>
-
-            <div className="pt-who">
-              {PARTNER_WHO.map((w, i) => {
-                const Icon = ICON[w.icon];
-                return (
-                  <FadeUp key={w.title} delay={0.1 + i * 0.05} className="pt-cell">
-                    <article className="pt-who-c">
-                      <span className="pt-who-ic" aria-hidden="true">
-                        <Icon size={17} strokeWidth={1.9} />
-                      </span>
-                      <h3 className="pt-who-h">{w.title}</h3>
-                      <p>{w.line}</p>
-                    </article>
-                  </FadeUp>
-                );
-              })}
-            </div>
-
-            <FadeUp delay={0.3}>
-              <div className="pt-who-foot">
-                <p>{PARTNER_WHO_NOTE}</p>
-                <AskCta label="Durumumu anlatayım" />
-              </div>
-            </FadeUp>
-          </div>
-        </section>
-
-        {/* ---------- 5 · dört adım + başvuru formu (kapalı) ---------- */}
-        <section className="sec-pad" style={{ background: "var(--paper)" }}>
-          <div className="container-o">
-            <div className="sec-head">
-              <SplitWords
-                as="h2"
-                text={PARTNER_FORM.title}
-                accent={PARTNER_FORM.accent}
-                className="h2"
-                style={{ color: "var(--text-900)" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead">{PARTNER_FORM.lead}</p>
-              </FadeUp>
-            </div>
-
-            <div className="pt-apply">
-              <FadeUp delay={0.12} className="pt-cell">
-                <ol className="pt-steps">
-                  {PARTNER_STEPS.map((s, i) => (
-                    <li className="pt-step" key={s.t}>
-                      <span className="pt-step-n" aria-hidden="true">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <div>
-                        <b>{s.t}</b>
-                        <span>{s.s}</span>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              </FadeUp>
-
-              <FadeUp delay={0.2} className="pt-cell">
-                {/* SWAP:PARTNER_FORM — gönderim ucu yok.
-                    action ve onSubmit YOK, alanlar <fieldset disabled> içinde,
-                    buton devre dışı. Form bu hâliyle hiçbir şey göndermiyor ve
-                    gönderdiğini de iddia etmiyor: rozet ve alttaki not durumu
-                    açıkça söylüyor, çalışan çıkış AskCta.
-                    aria-describedby ile not forma bağlı — ekran okuyucu formu
-                    duyurduğunda kapalı olduğunu da duyuruyor. */}
-                <form className="pt-form" aria-describedby="pt-form-note">
-                  <div className="pt-form-top">
-                    <h3 className="pt-h3">Başvuru formu</h3>
-                    {PARTNER_FORM.badge && <span className="pt-form-badge">{PARTNER_FORM.badge}</span>}
-                  </div>
-
-                  {/* İKİ <select> ÇİPE ÇEVRİLDİ (docs/tuzaklar.md · değişmez
-                      kural 9: açılır kutu yasak, görünür çip + gizli native
-                      radio). Kalıp iletişim formundan devralındı
-                      (ContactSections.tsx · .ct-svc-o); sınıf adları .pt-
-                      ad alanında çünkü iki dosya aynı seçiciyi paylaşırsa
-                      birinde yapılan ölçü değişikliği ötekini sessizce bozar.
-
-                      ASIL KAZANÇ GÖRÜNÜRLÜK. Form <fieldset disabled> içinde
-                      ve öyle kalıyor (gönderim ucu yok), ama kapalı bir
-                      <select> seçeneklerini AÇILMADAN göstermiyordu: ziyaretçi
-                      hangi ortaklık modelleri olduğunu ("Referans ortaklığı",
-                      "White-label") hiçbir şekilde göremiyordu. Çipler kapalı
-                      hâlde de okunuyor, yani sayfanın anlattığı iki model
-                      artık formun içinde de yazılı.
-
-                      Seçili durum [data-on] ile DEĞİL `:has(input:checked)`
-                      ile: bu sayfa sunucu bileşeni, durum tutan bir istemci
-                      yok. İşaret native olarak duruyor, uç nokta bağlandığı
-                      gün fazladan JS gerekmiyor. */}
-                  <fieldset className="pt-fields">
-                    {PARTNER_FORM.fields.map((f) =>
-                      f.type === "secenek" ? (
-                        <div className="pt-field" key={f.name} data-wide={f.wide || undefined}>
-                          {/* <label> DEĞİL <span>: etiket tek bir girdiye
-                              değil bir gruba ait. Grubu role="group" +
-                              aria-labelledby taşıyor; her radyonun kendi adı
-                              da sarmalayan <label>'ın metninden geliyor
-                              (tuzak G: adsız radyo ağaçta "on" diye okunur). */}
-                          <span className="pt-label" id={`pt-${f.name}-lbl`}>
-                            {f.label}
-                            {f.optional && <i>İsteğe bağlı</i>}
+                      <span className="iob-ulke-m">
+                        <span className="iob-ulke-ust">
+                          <span className="iob-ulke-bayrak">
+                            <Flag country={u.slug} />
                           </span>
-                          <div className="pt-chips" role="group" aria-labelledby={`pt-${f.name}-lbl`}>
-                            {f.options?.map((o) => (
-                              <label className="pt-chip" key={o}>
-                                <input type="radio" name={f.name} value={o} />
-                                <span className="pt-chip-t">{o}</span>
-                                <span className="pt-chip-x" aria-hidden="true">
-                                  <BadgeCheck size={14} strokeWidth={2.4} />
-                                </span>
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="pt-field" key={f.name} data-wide={f.wide || undefined}>
-                          <label className="pt-label" htmlFor={`pt-${f.name}`}>
-                            {f.label}
-                            {f.optional && <i>İsteğe bağlı</i>}
-                          </label>
-                          <input
-                            className="pt-input"
-                            id={`pt-${f.name}`}
-                            name={f.name}
-                            type={f.type}
-                            placeholder={f.placeholder}
-                          />
-                        </div>
-                      ),
-                    )}
-
-                    {/* btn-primary DEĞİL: o varyant beyaz zeminli ve koyu
-                        yüzeyler için; açık zeminde görünmez olurdu. Açık
-                        zeminin dolu butonu btn-solid. */}
-                    <button type="submit" className="btn btn-solid btn-full">
-                      {PARTNER_FORM.submitLabel}
-                      <ArrowRight size={15} strokeWidth={2.1} />
-                    </button>
-                  </fieldset>
-
-                  <div className="pt-form-foot">
-                    <p className="pt-form-note" id="pt-form-note" role="status">
-                      {PARTNER_FORM.note}
-                    </p>
-                    {/* 09.10.2026 · form gönderime bağlandı (alanlar aynı) */}
-                    <FormBagla
-                      tur="ortaklik"
-                      konu="İş ortaklığı başvurusu"
-                      etiketler={Object.fromEntries(PARTNER_FORM.fields.map((f) => [f.name, f.label]))}
-                      zorunlu={["ad", "eposta"]}
-                      yedekEposta="web@ortacglobal.com"
-                      notId="pt-form-note"
-                    />
-                    <AskCta label={PARTNER_FORM.askLabel} />
-                  </div>
-                </form>
-              </FadeUp>
-            </div>
+                          <b>{u.ad}</b>
+                          <span className="iob-ulke-ofis">
+                            <MapPin size={13} strokeWidth={2.2} aria-hidden="true" />
+                            {u.ofis}
+                          </span>
+                        </span>
+                        <span className="iob-ulke-p">{u.line}</span>
+                      </span>
+                    </SmartLink>
+                  </FadeUp>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
-        {/* ---------- 6 · sekiz soru ----------
-            Sitenin SSS kalıbı: sol sütunda sorular açıkta, seçilen cevap sağda
-            tek panel olarak açılıyor. HomeFaq ile aynı düzen; burada onun
-            {q,a} alan yeniden kullanılabilir hâli (CountryFaq) çağrılıyor,
-            çünkü bu dosya sunucu bileşeni olmak zorunda (generateMetadata) ve
-            akordiyonun durumu istemci tarafında yaşıyor. */}
-        <section id="sss" className="sec-pad" style={{ background: "var(--white)" }}>
+        {/* ------------------------------------------------------------ KİMLER
+            Gece pano, dört kart (2 x 2). Bağlantı değil, düz kart. */}
+        <section id={PARTNER_KIMLER.id} className="sec-pad">
           <div className="container-o">
-            <div className="sec-head">
-              <SplitWords
-                as="h2"
-                text="Ortaklıkta sık sorulanlar."
-                accent="sık sorulanlar."
-                className="h2"
-                style={{ color: "var(--text-900)" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead">
-                  Sekiz başlık. Cevabı henüz kararlaşmamış olan tek konu ilk sırada
-                  duruyor.
-                </p>
-              </FadeUp>
-            </div>
+            <Bas b={PARTNER_KIMLER} />
+            <ul className="iob-kim">
+              {PARTNER_KIMLER.items.map((k, i) => (
+                <li key={k.title}>
+                  <FadeUp className="iob-kim-k" delay={0.08 + i * 0.04}>
+                    <Kuyu icon={k.icon} />
+                    <div className="iob-kim-m">
+                      <h3 className="iob-gece-t">{k.title}</h3>
+                      <p className="iob-gece-p">{k.line}</p>
+                    </div>
+                  </FadeUp>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
+        {/* ----------------------------------------------------------- BAŞVURU
+            Üstte dört adımlı ray (sayı + çubuk), altında form panosu.
+
+            FORM ÇALIŞIYOR. Düz HTML; gönderimi içindeki FormBagla yakalıyor
+            (lib/formGonder → /api/form; sunucu gönderemezse ziyaretçinin
+            e-posta uygulamasında web@ortacglobal.com'a adresli dolu bir ileti
+            açılır). Sonuç cümlesi not satırına yazılıyor (role="status").
+            Seçenekler görünür çip + gizli native radio (kural 9: <select>
+            yok); seçili hâl :has(input:checked) ile, yani durum tutan
+            istemci kodu yok. Radyonun adı sarmalayan <label>'ın metninden,
+            grubun adı aria-labelledby'den geliyor (tuzak G). */}
+        <section id={B.id} className="sec-pad iob-kirik">
+          <div className="container-o">
+            <Bas b={B} />
+            <ol className="iob-ray">
+              {B.adimlar.map((a, i) => (
+                <li key={a.t} className="iob-ray-a">
+                  <span className="iob-ray-ust" aria-hidden="true">
+                    <span className="iob-ray-n">{i + 1}</span>
+                    <i />
+                  </span>
+                  <h3 className="iob-ray-t">{a.t}</h3>
+                  <p className="iob-ray-p">{a.s}</p>
+                </li>
+              ))}
+            </ol>
+
+            <FadeUp delay={0.12}>
+              <form className="iob-form" aria-labelledby="iob-form-t" aria-describedby="iob-form-not">
+                <h3 className="iob-form-t" id="iob-form-t">
+                  {B.formBaslik}
+                </h3>
+                <div className="iob-alanlar">
+                  {B.fields.map((f) =>
+                    f.type === "secenek" ? (
+                      <div className="iob-alan" key={f.name} data-genis={f.wide ? "" : undefined}>
+                        <span className="iob-etiket" id={`iob-${f.name}-e`}>
+                          {f.label}
+                        </span>
+                        <div className="iob-cipler" role="group" aria-labelledby={`iob-${f.name}-e`}>
+                          {f.options?.map((o) => (
+                            <label className="iob-cip" key={o}>
+                              <input type="radio" name={f.name} value={o} />
+                              <span>{o}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="iob-alan" key={f.name}>
+                        <label className="iob-etiket" htmlFor={`iob-${f.name}`}>
+                          {f.label}
+                        </label>
+                        <input
+                          className="iob-girdi"
+                          id={`iob-${f.name}`}
+                          name={f.name}
+                          type={f.type}
+                          placeholder={f.placeholder}
+                          autoComplete={f.autoComplete}
+                          required={B.zorunlu.includes(f.name)}
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+                <div className="iob-form-alt">
+                  <button type="submit" className="btn btn-solid">
+                    {B.submitLabel}
+                    <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+                  </button>
+                  <AskCta label={B.askLabel} />
+                </div>
+                <p className="iob-form-not" id="iob-form-not" role="status">
+                  {B.note}
+                </p>
+                <FormBagla
+                  tur="ortaklik"
+                  konu="İş ortaklığı başvurusu"
+                  etiketler={Object.fromEntries(B.fields.map((f) => [f.name, f.label]))}
+                  zorunlu={B.zorunlu}
+                  yedekEposta="web@ortacglobal.com"
+                  notId="iob-form-not"
+                />
+              </form>
+            </FadeUp>
+          </div>
+        </section>
+
+        <section id={PARTNER_FAQ_BAS.id} className="sec-pad">
+          <div className="container-o">
+            <Bas b={PARTNER_FAQ_BAS} />
             <CountryFaq items={PARTNER_FAQ} />
           </div>
         </section>

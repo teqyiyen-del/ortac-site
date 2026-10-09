@@ -1,0 +1,1158 @@
+/* ============================================================================
+   İŞ ORTAKLIĞI — /is-ortakligi
+   Ad alanı .iob- · Sayfa: app/is-ortakligi/page.tsx (bu dosyayı o bağlıyor,
+   globals.css değil; gerekçe orada) · Metin: lib/partners.ts
+
+   09.10.2026 · İLK YAZIM. Sayfa eski dilden (css/partnerlik.css · .pt-)
+   bugünkü dile taşındı. İskelet kurumsal danışmanlık sayfasının kardeşi
+   (css/svc-kurumsal.css · .skr-): ikon kuyusu, kartlar, gece kart, gece pano.
+   Paylaşmak yerine kendi ad alanında kopya, çünkü o sayfa hâlâ turlarla
+   değişiyor ve bir sayfanın turu ötekini bozmamalı (svc-vize.css'teki karar).
+
+   KURALLAR (docs/tuzaklar.md):
+     · köşe role göre 8 / 12 / 18 / 28; çizimlerin kökü data-yaricap="serbest"
+     · kutu kenarına şerit yok; ayrım kutuyla (1 px çerçeve) ve boşlukla
+     · ızgarada her zaman minmax(0, 1fr) (tuzak B)
+     · okunacak yazı en az 14 px, etiket en az 12 px
+     · ağırlık mavide; amber yalnız not ve sınır; yeşil yok (sayfada para yok)
+     · beyaz yazı marka mavisinde küçük puntoda düşüyor (3,99:1): numara
+       dairesi --blue-900 (7,14:1)
+     · hareket yalnız prefers-reduced-motion: no-preference altında; ekran
+       dışında durdurma globals.css · [data-ekran-disi] kuralından geliyor
+     · dört sürekli periyot: 4,57 s (akış) · 6,43 s (dönüş) · 2,39 s (nabız) ·
+       8,21 s (zaman çizgisi). Dördü de asal (457 · 643 · 239 · 821) ve
+       css/ altındaki öteki periyotlarla ortak katları yok (tuzak K;
+       09.10.2026'da tarandı).
+   ========================================================================= */
+
+/* Zemin sırası: beyaz ve kırık beyaz (hafıza: tam siyah bölüm yok). */
+.iob {
+  background: var(--white);
+}
+.iob-kirik {
+  background: #fafafa;
+}
+
+/* ---------------------------------------------------------- ikon kuyusu */
+.iob-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+
+/* ----------------------------------------------- ortak kart yazıları
+   Başlık 17 / 600, cümle 14 / 1,55. Cümleler veride iki satırı geçmeyecek
+   uzunlukta (hafıza: açıklama en fazla 2 satır); ikisi de dengeli kırılıyor. */
+.iob-kart-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+  text-wrap: balance;
+}
+.iob-kart-p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+  text-wrap: balance;
+}
+.iob-uclu > li,
+.iob-ulke > li,
+.iob-kim > li {
+  display: flex;
+  min-width: 0;
+}
+
+/* ================================================== 1 · NASIL ÇALIŞIR
+   ÇİZİM 1 · akış panosu. Pano kabın genişliğinde (28). Üç durak eşit
+   sütunda, sütun arası boşluk YOK: hatların x'i sütun merkezlerine göre
+   (1/6 · 3/6 · 5/6). Durağın ikon kutusu 64; ileri hat kutuların ARKASINDAN,
+   tam ortasından geçiyor (svg 10 px, tepesi (64 − 10) / 2 = 27). */
+.iob-akis-pano {
+  margin-top: var(--space-head);
+  padding: 32px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+.iob-akis {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.iob-akis-hat {
+  position: absolute;
+  top: 27px;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 10px;
+  overflow: visible;
+}
+.iob-hat,
+.iob-hat-akan,
+.iob-donus-akan {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+.iob-hat {
+  stroke: #c9dcf6;
+  stroke-width: 2;
+}
+.iob-hat[data-kesik] {
+  stroke-dasharray: 4 5;
+}
+/* akan kesikler: duruşta (ve reduce altında) yok, hat tek başına duruyor */
+.iob-hat-akan,
+.iob-donus-akan {
+  display: none;
+  stroke: var(--blue-700);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 2 22;
+}
+.iob-akis-l {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.iob-akis-d {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding: 0 8px;
+  text-align: center;
+}
+.iob-akis-ic {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid #c9dcf6;
+  border-radius: 16px;
+  background: var(--blue-100);
+  color: var(--blue-700);
+}
+/* ortadaki durak (Ortac) dolu: işi yürüten o. İkon büyük grafik, beyazla
+   marka mavisi 3:1 eşiğini geçiyor. */
+.iob-akis-d[data-orta] .iob-akis-ic {
+  border-color: var(--blue-700);
+  background: var(--blue-700);
+  color: var(--white);
+}
+.iob-akis-d b {
+  margin-top: 14px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-900);
+}
+.iob-akis-d small {
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+/* ok: iki durağın tam arasında, hattın üstünde beyaz bir disk */
+.iob-akis-ok {
+  position: absolute;
+  top: 20px;
+  right: -12px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--blue-700);
+}
+/* dönüş hattı: Ortac sütununun altından iniyor, sola yürüyor, Siz sütununa
+   çıkıyor. Ucunda yukarı ok, altında ne taşıdığını söyleyen çip. Çip geniş
+   ekranda yatay parçanın ortasında (kabın 1/3'ü), telefonda kabın ortasında
+   (1/3'e ortalanınca soldan taşıyordu). */
+.iob-donus {
+  position: relative;
+  margin-top: 16px;
+}
+.iob-donus-hat {
+  display: block;
+  width: 100%;
+  height: 30px;
+  overflow: visible;
+}
+.iob-donus-uc {
+  position: absolute;
+  top: -10px;
+  left: 16.667%;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--blue-700);
+  transform: translateX(-50%);
+}
+.iob-donus-cip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  min-height: 32px;
+  margin: 12px auto 0;
+  padding: 4px 12px;
+  border-radius: var(--r-sm);
+  background: var(--blue-100);
+  color: var(--blue-900);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+@media (min-width: 720px) {
+  .iob-donus-cip {
+    margin-left: 33.333%;
+    transform: translateX(-50%);
+  }
+}
+@media (max-width: 719.5px) {
+  /* üç dar sütun (~100 px): alt yazı gizli, ad kalıyor (telefon kuralı:
+     yazıyı azalt, görseli koru; iç boşluk kısılmıyor) */
+  .iob-akis-pano {
+    padding: 24px 20px;
+  }
+  .iob-akis-d {
+    padding: 0 4px;
+  }
+  .iob-akis-d small {
+    display: none;
+  }
+  .iob-akis-d b {
+    font-size: 15px;
+  }
+}
+
+/* üç kart: 1 → 3 (1024). Telefonda kart yatay (kuyu solda, yazı sağda). */
+.iob-uclu {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 1024px) {
+  .iob-uclu {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.iob-kart {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--white);
+}
+.iob-kart .iob-kart-t {
+  margin-top: 20px;
+}
+@media (max-width: 1023.5px) {
+  .iob-kart {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    column-gap: 16px;
+    align-items: start;
+    padding: 20px;
+  }
+  .iob-kart .iob-ic {
+    grid-row: span 2;
+  }
+  .iob-kart .iob-kart-t {
+    margin-top: 0;
+  }
+}
+
+/* ======================================================== 2 · İZLEME
+   GECE KART (hafıza: siyah yalnız büyük gece kartta). Solda dosya çizelgesi,
+   sağda üç satır. Gece zemininde marka mavisi küçük yazıda zayıf: açık mavi
+   (#5c9eeb · #9cc6f8 · #b9d6f8), amber için #f0b44c · #f5c56e
+   (svc-kurumsal.css · .skr-yil'deki ölçülmüş değerler). */
+.iob-gece {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 28px;
+  margin-top: var(--space-head);
+  padding: 28px 20px;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  color: var(--white);
+}
+@media (min-width: 1024px) {
+  .iob-gece {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 40px;
+    padding: 48px;
+  }
+}
+.iob-gece-sahne {
+  display: grid;
+  min-width: 0;
+}
+.iob-gece-l {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.iob-gece-k {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-2);
+}
+.iob-gece .iob-ic,
+.iob-kim .iob-ic {
+  background: #10294a;
+  color: #9cc6f8;
+}
+.iob-gece .iob-ic[data-ton="amber"] {
+  background: #33260d;
+  color: #f0b44c;
+}
+.iob-gece-m,
+.iob-kim-m {
+  min-width: 0;
+}
+.iob-gece-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--white);
+}
+.iob-gece-p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--night-text);
+  text-wrap: balance;
+}
+.iob-gece-z {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 3px 10px;
+  border-radius: var(--r-sm);
+  background: rgba(92, 158, 235, 0.16);
+  color: #b9d6f8;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.iob-gece-z[data-ton="amber"] {
+  background: rgba(240, 180, 76, 0.16);
+  color: #f5c56e;
+}
+@media (max-width: 1279.5px) {
+  /* çip metnin altına: dar kartta üçüncü sütun cümleyi üç satıra itiyordu */
+  .iob-gece-k {
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: start;
+  }
+  .iob-gece-z {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* ÇİZİM 2 · dosya çizelgesi. Kart --night-2, 18 köşe. Üst satır: klasör
+   kuyusu, ad, "Örnek" çipi. Adım satırı: 22 px durum noktası · ad · durum.
+   Noktaları birleştiren 2 px'lik dikey çizgi çizimin parçası (iki noktanın
+   ARASINDA; kutu kenarı değil). Tamamlanan adımdan çıkan çizgi mavi. */
+.iob-dosya {
+  display: grid;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid var(--night-line);
+  border-radius: 18px;
+  background: var(--night-2);
+}
+.iob-dosya-ust {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  color: var(--white);
+}
+.iob-dosya-ust b {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+}
+.iob-dosya-ic {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #10294a;
+  color: #9cc6f8;
+}
+.iob-dosya-cip {
+  padding: 3px 9px;
+  border: 1px dashed #6b6b6b;
+  border-radius: 8px;
+  color: var(--night-text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.iob-dosya-l {
+  display: grid;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.iob-dosya-a {
+  position: relative;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 0;
+}
+.iob-dosya-a:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: calc(50% + 11px);
+  left: 10px;
+  width: 2px;
+  height: calc(100% - 22px);
+  background: var(--night-line);
+}
+.iob-dosya-a[data-durum="tamam"]:not(:last-child)::before {
+  background: var(--blue-500);
+}
+.iob-dosya-n {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--blue-500);
+  color: var(--night);
+}
+.iob-dosya-n i {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.iob-dosya-a[data-durum="suruyor"] .iob-dosya-n {
+  border: 2px solid var(--white);
+  background: transparent;
+}
+.iob-dosya-a[data-durum="suruyor"] .iob-dosya-n i {
+  background: var(--white);
+}
+.iob-dosya-a[data-durum="sirada"] .iob-dosya-n {
+  border: 1px dashed #6b6b6b;
+  background: transparent;
+}
+.iob-dosya-a b {
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--white);
+}
+.iob-dosya-a[data-durum="sirada"] b {
+  color: var(--night-text);
+}
+.iob-dosya-d {
+  padding: 3px 9px;
+  border-radius: 8px;
+  background: rgba(92, 158, 235, 0.16);
+  color: #b9d6f8;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.iob-dosya-a[data-durum="suruyor"] .iob-dosya-d {
+  background: var(--white);
+  color: var(--night);
+}
+.iob-dosya-a[data-durum="sirada"] .iob-dosya-d {
+  background: var(--night-3);
+  color: var(--night-text);
+}
+.iob-dosya-alt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--night-3);
+  color: #9cc6f8;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ========================================================== 3 · EKİP
+   Beyaz pano (28): üstte zaman çizgisi, altında üç sayı kutusu. */
+.iob-ekip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  margin-top: var(--space-head);
+  padding: 32px 24px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+@media (min-width: 1024px) {
+  .iob-ekip {
+    gap: 40px;
+    padding: 48px 48px 40px;
+  }
+}
+/* ÇİZİM 3 · zaman çizgisi. Ortada "30 yıl" (mavi, büyük), altında hat:
+   solda 1996, sağda Bugün, arada otuz bir çentik (her beşincisi uzun).
+   Hat genişliğe gerilen SVG; noktanın yolu kabın genişliği (cqw), o yüzden
+   yol kutusu inline-size kapsayıcı. Duruşta nokta sağ uçta ("Bugün"). */
+.iob-cizgi {
+  display: grid;
+  gap: 20px;
+}
+.iob-cizgi-orta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 12px;
+  margin: 0;
+}
+.iob-cizgi-orta b {
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--blue-700);
+}
+.iob-cizgi-orta small {
+  font-size: 16px;
+  color: var(--text-600);
+}
+.iob-cizgi-sira {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+}
+.iob-cizgi-uc {
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-900);
+}
+.iob-cizgi-yol {
+  position: relative;
+  display: block;
+  height: 24px;
+  container-type: inline-size;
+}
+.iob-cizgi-yol svg {
+  display: block;
+  width: 100%;
+  height: 24px;
+  overflow: visible;
+}
+.iob-cizgi-hat,
+.iob-cizgi-centik {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+.iob-cizgi-hat {
+  stroke: var(--blue-700);
+  stroke-width: 2;
+}
+.iob-cizgi-centik {
+  stroke: #9cc6f8;
+  stroke-width: 1.5;
+}
+.iob-cizgi-centik[data-bes] {
+  stroke: var(--blue-700);
+  stroke-width: 2;
+}
+.iob-cizgi-nokta {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: block;
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--white);
+  border-radius: 50%;
+  background: var(--blue-900);
+  transform: translate(calc(100cqw - 50%), -50%);
+}
+@media (max-width: 719.5px) {
+  /* 31 çentik 220 px'e sığmıyor (aralık 7 px, çizgi gürültüye dönüyor):
+     telefonda yalnız beş yıllık uzun çentikler kalıyor */
+  .iob-cizgi-centik:not([data-bes]) {
+    display: none;
+  }
+  .iob-cizgi-sira {
+    gap: 12px;
+  }
+}
+
+/* üç sayı: 1 → 3 (720). Sayı 40 / 700 mavi, etiket 14. Telefonda satır:
+   sayı solda sabit sütunda, etiket sağda. */
+.iob-sayi {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.iob-sayi > li {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 20px;
+  border-radius: var(--r-lg);
+  background: #f3f8fe;
+}
+.iob-sayi b {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--blue-700);
+}
+.iob-sayi span {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-900);
+}
+@media (min-width: 720px) {
+  .iob-sayi {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .iob-sayi > li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 24px;
+  }
+  .iob-sayi b {
+    font-size: 44px;
+  }
+}
+
+/* Verilemeyen sözler: SINIR, o yüzden amber. Dört kenar eşit zemin, şerit
+   yok (svc-kurumsal.css · .skr-haric kalıbı). Madde listesi DENGELENMİYOR
+   (hafıza: madde listeleri düz akar). */
+.iob-sinir {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+  padding: 24px;
+  border-radius: var(--r-lg);
+  background: var(--amber-100);
+}
+.iob-sinir-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+  text-wrap: balance;
+}
+.iob-sinir-l {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.iob-sinir-l > li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-900);
+}
+.iob-sinir-l svg {
+  margin-top: 2px;
+  color: var(--amber-600);
+}
+@media (min-width: 1024px) {
+  .iob-sinir {
+    grid-template-columns: 220px minmax(0, 1fr);
+    align-items: center;
+    gap: 24px;
+  }
+  .iob-sinir-l {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+/* ======================================================== 4 · ÜLKELER
+   Üç fotoğraflı kart: 1 → 3 (1024). Yazı fotoğrafın üstünde; altta koyu
+   perde (düz renk geçişi, parıltı değil) yazıyı okutuyor: perdenin yazı
+   bölgesi en az 0,62 koyulukta. Kartın tamamı bağlantı. */
+.iob-ulke {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 1024px) {
+  .iob-ulke {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.iob-ulke-f {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.iob-ulke-k {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 280px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--night);
+  color: var(--white);
+  text-decoration: none;
+}
+@media (min-width: 1024px) {
+  .iob-ulke-k {
+    height: 380px;
+  }
+}
+.iob-ulke-img {
+  object-fit: cover;
+  transition: transform 500ms var(--ease-out-soft);
+}
+.iob-ulke-k::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(8, 8, 8, 0.9) 0%, rgba(8, 8, 8, 0.62) 38%, rgba(8, 8, 8, 0) 72%);
+}
+.iob-ulke-ok {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--night);
+}
+.iob-ulke-m {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 1;
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+}
+.iob-ulke-ust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+.iob-ulke-bayrak {
+  display: block;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24);
+}
+.iob-ulke-bayrak svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.iob-ulke-ust b {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.iob-ulke-ofis {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.iob-ulke-p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  text-wrap: balance;
+}
+@media (hover: hover) {
+  a.iob-ulke-k:hover .iob-ulke-img {
+    transform: scale(1.04);
+  }
+}
+
+/* ========================================================= 5 · KİMLER
+   GECE PANO (sayfanın ikinci koyu yüzeyi; izleme kartıyla arasında iki açık
+   bölüm var). Dört kart: 1 → 2 (720). Bölüm zemini beyaz. */
+.iob-kim {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: var(--space-head) 0 0;
+  padding: 20px;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  list-style: none;
+}
+@media (min-width: 720px) {
+  .iob-kim {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 28px;
+  }
+}
+.iob-kim-k {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-lg);
+  background: var(--night-2);
+}
+
+/* ======================================================== 6 · BAŞVURU
+   Dört adımlı RAY: sayı dairesi + çubuk (hafıza: süreçte "liste + sağda
+   kart" yok; ray = çubuk + sayı). 2 x 2 (telefon) → 4 sütun (1024).
+   Telefonda yana kaydırma yok, adımlar iki sıraya iniyor. */
+.iob-ray {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 20px;
+  margin: var(--space-head) 0 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 1024px) {
+  .iob-ray {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+.iob-ray-a {
+  min-width: 0;
+}
+.iob-ray-ust {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.iob-ray-n {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--blue-900);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 700;
+}
+.iob-ray-ust i {
+  display: block;
+  flex: 1 1 auto;
+  height: 2px;
+  border-radius: 1px;
+  background: #c9dcf6;
+}
+.iob-ray-t {
+  margin: 16px 0 0;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--text-900);
+}
+.iob-ray-p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
+
+/* Form panosu (28). Alanlar 1 → 2 sütun (720); seçenek grupları tam satır.
+   Girdi yazısı 16 px: iOS 16'nın altındaki girdide sayfayı yakınlaştırıyor.
+   Çip kalıbı iletişim formundan (.ct-svc-o) ve eski .pt-chip'ten: görünür
+   kutu, üstünde tam boy şeffaf native radio; seçili hâl :has(input:checked).
+   Seçili çerçeve iki katman (1 px kenarlık + 1 px iç gölge, dört kenar eşit). */
+.iob-form {
+  margin-top: 32px;
+  padding: 24px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-panel);
+  background: var(--white);
+}
+@media (min-width: 1024px) {
+  .iob-form {
+    margin-top: 40px;
+    padding: 40px;
+  }
+}
+.iob-form-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.iob-alanlar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+@media (min-width: 720px) {
+  .iob-alanlar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .iob-alan[data-genis] {
+    grid-column: 1 / -1;
+  }
+}
+.iob-alan {
+  min-width: 0;
+}
+.iob-etiket {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-600);
+}
+.iob-girdi {
+  width: 100%;
+  height: 48px;
+  padding-inline: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--text-900);
+  transition: border-color 160ms linear, background-color 160ms linear;
+}
+.iob-girdi::placeholder {
+  color: #8a8a8a;
+}
+.iob-girdi:focus {
+  border-color: var(--blue-700);
+  background: var(--white);
+  outline: none;
+}
+.iob-cipler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.iob-cip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--paper);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-900);
+  cursor: pointer;
+  transition: border-color 160ms linear, background-color 160ms linear;
+}
+/* radyo görünmez ama SİLİNMEDİ: seçimi taşıyan o, çip yalnız kabuk */
+.iob-cip input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.iob-cip:has(input:checked) {
+  border-color: var(--blue-700);
+  background: var(--blue-100);
+  box-shadow: inset 0 0 0 1px var(--blue-700);
+  color: var(--blue-900);
+}
+.iob-cip:has(input:focus-visible) {
+  outline: 2px solid var(--blue-700);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .iob-cip:hover {
+    border-color: #cfcfcf;
+  }
+  .iob-cip:has(input:checked):hover {
+    border-color: var(--blue-700);
+  }
+}
+.iob-form-alt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 24px;
+}
+.iob-form-not {
+  margin: 16px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-600);
+}
+@media (max-width: 719.5px) {
+  .iob-form-alt .btn {
+    width: 100%;
+  }
+}
+
+/* ================================================================ HAREKET
+   Hepsi tek kapıda. Reduce altında: akışta kesikler yok (iki hat duruyor),
+   çizelgede süren adımın noktası sabit, zaman çizgisinde nokta sağ uçta
+   duruyor. Yani hareketsiz hâl de tam bir çizim. */
+@media (prefers-reduced-motion: no-preference) {
+  /* ÇİZİM 1 · ileri hat ve dönüş hattında akan kesikler. Desen 24 birim;
+     ofset bir desen boyu kayınca döngü dikişsiz. */
+  .iob-hat-akan {
+    display: block;
+    animation: iobAkan 4.57s linear infinite;
+  }
+  .iob-donus-akan {
+    display: block;
+    animation: iobAkan 6.43s linear infinite;
+  }
+  /* ÇİZİM 2 · süren adımın noktası yanıp sönüyor (opaklık; parıltı yok) */
+  .iob-dosya-a[data-durum="suruyor"] .iob-dosya-n i {
+    animation: iobNabiz 2.39s var(--ease-inout) infinite;
+  }
+  /* ÇİZİM 3 · nokta 1996'dan bugüne yürüyor, sağ uçta kısa bir duruyor */
+  .iob-cizgi-nokta {
+    animation: iobYuru 8.21s var(--ease-inout) infinite;
+  }
+}
+@keyframes iobAkan {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes iobNabiz {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+@keyframes iobYuru {
+  0% {
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  8% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  70%,
+  92% {
+    transform: translate(calc(100cqw - 50%), -50%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(100cqw - 50%), -50%);
+    opacity: 0;
+  }
+}
