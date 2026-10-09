@@ -71,15 +71,9 @@ export default function LiveTracker() {
                 ) : active ? (
                   /* only the repeat is gated: the markup and the SSR style stay
                      identical either way, so hydration cannot drift */
-                  <motion.span
-                    className="lt-pulse"
-                    animate={{ scale: [1, 1.9], opacity: [0.7, 0] }}
-                    transition={{
-                      duration: 1.4,
-                      repeat: reduced ? 0 : Infinity,
-                      ease: "easeOut",
-                    }}
-                  />
+                  /* 09.10.2026 · JS'ten CSS'e (globals.css · ltNabiz): Motion bu halkayı
+                     her karede JS ile sürüyordu, kart ekranda olmasa da. */
+                  <span className="lt-pulse" />
                 ) : null}
               </span>
               <span className="lt-label">{label}</span>

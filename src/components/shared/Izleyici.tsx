@@ -80,9 +80,26 @@ export default function Izleyici() {
       };
       if (d && !d.closest("form")) veri.etiket = (d.getAttribute("aria-label") || d.textContent || "").trim().slice(0, 48);
       izle("t", veri);
+      /* iletişim bağlantıları adıyla da yazılıyor (09.10.2026): sitede on beş
+         gtm() olayı var ama WhatsApp, e-posta ve telefon bağlantılarının hiçbiri
+         işaretli değildi. Numara ve adres alınmıyor, yalnız türü. */
+      const adres = d instanceof HTMLAnchorElement ? d.href : "";
+      const kanal = /wa\.me|whatsapp/i.test(adres) ? "whatsapp" : adres.startsWith("mailto:") ? "eposta" : adres.startsWith("tel:") ? "telefon" : "";
+      if (kanal) izle("o", { ad: "iletisim_tik", kanal });
     };
+    /* form gönderimi: hangi form olduğu (id ya da sınıfı), alanların HİÇBİRİ değil.
+       Beş formun (iletişim, kariyer, iş ortaklığı, açılış sayfası, isim sorgu)
+       hiçbirinde gtm() çağrısı yoktu. */
+    const gonder = (e: SubmitEvent) => {
+      const f = e.target instanceof HTMLFormElement ? e.target : null;
+      if (f) izle("o", { ad: "form_gonder", form: (f.id || f.getAttribute("name") || f.className.split(" ")[0] || "adsiz").slice(0, 40) });
+    };
+    document.addEventListener("submit", gonder, { capture: true });
     document.addEventListener("click", tikla, { capture: true, passive: true });
-    return () => document.removeEventListener("click", tikla, { capture: true });
+    return () => {
+      document.removeEventListener("click", tikla, { capture: true });
+      document.removeEventListener("submit", gonder, { capture: true });
+    };
   }, []);
 
   return null;
