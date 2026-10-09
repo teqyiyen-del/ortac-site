@@ -126,6 +126,7 @@ export type ToolId =
   /* huni ortası — karar */
   | "uygunluk-testi"
   | "isim-ureteci"
+  | "alan-adi-sorgulama"
   | "ingiltere-isim-sorgulama"
   | "ingiltere-sic-kodu"
   | "ifza-faaliyet-kodu";
@@ -366,6 +367,19 @@ const SEEDS = [
     is: "Bir anahtar kelime ve bir üslup seçiyorsunuz; araç kelime birleştirerek aday isimler çıkarıyor ve ilk üçünü tercih sırasıyla kopyalanacak biçimde veriyor.",
     isNot: "Müsaitlik sorgusu değil. Bir ismin tescil edilebilir olup olmadığını yalnızca ilgili otorite söyler; benzerlik kontrolü ve kısıtlı kelime listesi ayrı bir aşamadır. Araç yapay zekâ da kullanmıyor, sabit kelime listelerini birleştiriyor.",
     source: "lib/tools/names.ts · kelime listeleri (sayı üretmiyor)",
+  },
+  {
+    id: "alan-adi-sorgulama",
+    status: "live",
+    family: "karar",
+    country: null,
+    nav: true,
+    title: "Alan adı sorgulama",
+    accent: "adı sorgulama",
+    meta: "Dokuz uzantıda · alınmış mı, boş mu",
+    is: "Düşündüğünüz adı yazıyorsunuz; araç .com başta olmak üzere dokuz uzantıda kayıtlı olup olmadığına bakıyor, ad alınmışsa boş görünen benzer adları da gösteriyor.",
+    isNot: "Alan adı satmıyor ve bir satıcıya yönlendirmiyor; yalnız bilgi veriyor. Kayıt kütüğünde kayıt olmaması adın alınabileceğinin garantisi değil: ad rezerve edilmiş, uyuşmazlık altında ya da bir marka hakkına takılı olabilir. .ae ve .com.tr uzantılarını soramıyor; bu iki kütük herkese açık sorgu vermiyor.",
+    source: "RDAP · Verisign, Public Interest Registry, Nominet, Identity Digital, Google Registry, CentralNic (tarayıcıdan doğrudan; her uç kayıtlı ve kayıtsız adla ölçüldü)",
   },
   {
     id: "ingiltere-isim-sorgulama",

@@ -1,0 +1,86 @@
+/* ALAN ADI ARACI · yalnız bu aracın parçaları (.ta-alan-)
+   Bileşenden içe aktarılıyor (araclar-ifza.css deseni), globale girmiyor.
+   Form iskeleti, düğme ve bant ortak sınıflardan (.ta-isim-form, .ta-isim-git, .ta-bant). */
+.ta-alan-bolum {
+  margin: 22px 0 0;
+}
+.ta-alan-h {
+  margin: 0 0 10px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+.ta-alan-h span {
+  margin-left: 8px;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--text-600);
+}
+.ta-alan-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  gap: 8px;
+}
+.ta-alan-satir {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--white);
+}
+.ta-alan-ad {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-900);
+}
+.ta-alan-ad b {
+  font-weight: 600;
+  color: var(--blue-900);
+}
+.ta-alan-satir[data-durum="kayitli"] .ta-alan-ad {
+  color: var(--text-600);
+  font-weight: 400;
+}
+.ta-alan-satir[data-durum="kayitli"] .ta-alan-ad b {
+  color: inherit;
+  font-weight: 400;
+}
+.ta-alan-durum {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  background: var(--paper);
+  color: var(--text-600);
+}
+.ta-alan-satir[data-durum="bos"] .ta-alan-durum {
+  background: var(--green-100);
+  color: var(--green-600);
+}
+.ta-alan-satir[data-durum="sorulamadi"] .ta-alan-durum {
+  background: var(--amber-100);
+  color: var(--amber-600);
+}
+.ta-alan-not {
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-600);
+}
