@@ -786,7 +786,13 @@ export default function AboutPage() {
             "neye dayanarak çalışıyoruz kısmını siyah bg üzerine geçirebiliriz
             belki bu senaryoda." Beyaz karolar gece zeminde sayfanın merkezi
             oluyor ve 2. bölüm kalktığından beri gövdede koyu bölüm yoktu.
-            Gerekçe ve ölçüler hakkimizda.css · 1B. */}
+            Gerekçe ve ölçüler hakkimizda.css · 1B.
+
+            10.10.2026 · ZEMİN GECEDEN KIRIK BEYAZA DÖNDÜ, karolar gece
+            kaldı. Burak: "Hâlâ arkası komple siyah olan kısımlar var,
+            hakkımızda kısmında mesela. Onları iptal et. Onlar normal beyazın
+            üstünde siyah bento şeklinde kalabilir." Başlık bu yüzden beyazdan
+            --text-900'e çekildi; içerik, sıra ve metin aynı. */}
         <section className="sec-pad ab-dy-sec">
           <div className="container-o">
             <div className="sec-head">
@@ -795,7 +801,7 @@ export default function AboutPage() {
                 text={BASIS.heading}
                 accent={BASIS.accent}
                 className="h2"
-                style={{ color: "#ffffff" }}
+                style={{ color: "var(--text-900)" }}
               />
             </div>
             <DayanakBento />

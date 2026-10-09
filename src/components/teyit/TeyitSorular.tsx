@@ -24,66 +24,61 @@ import Logo from "@/components/shared/Logo";
    09.10.2026 · Burak: "gerekenlere görsel de koyabilirsin; sitede böyle
    gözüküyor, bu okey mi gibisinden." */
 type Soru = { id: string; s: string; sik?: string[]; cok?: boolean; ipucu?: string; gorsel?: string };
+/* 10.10.2026 · İKİNCİ TUR. İlk 31 sorunun cevabı 09.10'da geldi ve siteye
+   işlendi (docs/durum.md · 09.10 (3)); o sorular buradan çıktı. Kalanlar:
+   cevapların açık bıraktıkları, yeni iş ortaklığı sayfası ve üç yeni blog
+   yazısının yazarken doğrulanamayan noktaları. */
 const GRUPLAR: { ad: string; sorular: Soru[] }[] = [
   {
     ad: "Fiyat",
     sorular: [
-      { id: "f-yil", s: "Dubai'de 2. ve 3. yıl lisans bedeli ne kadar? (Sitede şu an yer tutucu rakam var.)", sik: ["İlk yılla aynı", "Farklı, aşağıya bölge bölge yazıyorum"], ipucu: "IFZA, Meydan ve DWTC için ayrı ayrı." },
-      { id: "f-ifza", s: "Teklifte IFZA \"7.800 $ vergi dahil\" yazıyor; kalemleri toplayınca 7.873 + %5 = 8.266,65 çıkıyor. Müşteri hangisini ödüyor?", sik: ["7.800 $", "8.266,65 $", "Başka, aşağıya yazıyorum"] },
-      { id: "f-uk", s: "İngiltere için teklif belgesi gelecek mi? Sitede Basic 900, Gold 1.500, Platinium 2.600 dolar yazıyor.", sik: ["Rakamlar doğru, kalsın", "Belge göndereceğim", "Paket yok, tek fiyat", "Fiyat yazmayalım"], ipucu: "Dolar mı sterlin mi, onu da yazın." },
-      { id: "f-ukmuh", s: "İngiltere muhasebe ücretini sitede nasıl yazalım?", sik: ["Yıllık sabit tutar", "Aylık tutar", "Fiyat yazmayalım"], ipucu: "Tutarı biliyorsanız yazın." },
-      { id: "f-kharc", s: "KKTC'de başvuru harcı (2.000 USD) ve tescil harcı (2.500 USD) 9.920 €'nun içinde mi?", sik: ["İçinde", "Ayrıca ödeniyor", "Bu harçlar yok"] },
-      { id: "f-kharc2", s: "KKTC başvuru harcı sitede 2.000 USD yazıyor; Serbest Liman'ın resmî sayfasında 200 USD geçiyor. Hangisi doğru?", sik: ["2.000 USD", "200 USD", "Başka, aşağıya yazıyorum"] },
-      { id: "f-kdenetci", s: "KKTC'de denetçi raporu 270 € / 900 € ücrete dahil mi?", sik: ["Dahil", "Ayrı ücret", "Denetçi raporu gerekmiyor"] },
+      { id: "f-lisans", s: "IFZA'daki 5.120 doların tamamı lisans bedeli mi? Çok yıllı indirimi (2 yıl %15, 3 yıl %20, 5 yıl %30) bu tutarın tamamına uyguladık.", sik: ["Evet, tamamı lisans", "Hayır, içinde indirime girmeyen bir pay var"], ipucu: "Pay varsa tutarını yazın. Sitede örnek: IFZA 2 yıl = 2 × 5.120 × 0,85 = 8.704 $." },
+      { id: "f-uk", s: "İngiltere'nin tek kuruluş fiyatı sterlin olarak ne kadar?", ipucu: "Sitede şu an rakam yok, \"tek fiyat, teklifte bildiriyoruz\" yazıyor." },
+      { id: "f-kyil", s: "KKTC'de ikinci yıldan itibaren adres ve temsilcilik (2.000 € + KDV) ile 2.700 € harç aynı tutarla mı yenileniyor?", sik: ["Evet, aynı", "Hayır, aşağıya yazıyorum"] },
     ],
   },
   {
-    ad: "İletişim ve firma bilgisi",
+    ad: "İletişim",
     sorular: [
-      { id: "i-wa", s: "Kurulum akışından gelenler WhatsApp'ta hangi numaraya yazsın?", sik: ["Dubai numarası", "Ülkesine göre ilgili ofis", "Başka, aşağıya yazıyorum"] },
-      { id: "i-unvan", s: "Üç ülkedeki şirketlerimizin tescilli tam adı nedir? (Dubai, KKTC, İngiltere)", ipucu: "Sitenin künyesine ve KVKK metnine yazılacak." },
-      { id: "i-lisans", s: "Hakkımızda sayfasına muhasebe lisans numarasını yazalım mı?", sik: ["Yazalım, numarayı aşağıya yazıyorum", "Yazmayalım"] },
-      { id: "i-panel", s: "Müşteri paneli adresi eski sitedekiyle aynı mı kalacak?", sik: ["Aynı", "Değişecek, aşağıya yazıyorum"] },
+      { id: "i-wa", s: "Kurulum akışından gelenler WhatsApp'ta hangi numaraya yazsın? (İlk turda \"aşağıya yazıyorum\" demiştiniz, numara gelmedi.)" },
+      { id: "i-panel", s: "Yeni müşteri paneli adresi nedir? Kıbrıs ve Dubai için ayrı portal olduğunu yazmıştınız.", ipucu: "İki adresi de yazabilirsiniz." },
     ],
   },
   {
-    ad: "Doğru bilgi",
+    ad: "İş ortaklığı sayfası",
     sorular: [
-      { id: "b-dodeme", s: "Dubai'de hangi ödeme kanalları listede kalsın?", cok: true, sik: ["Stripe", "PayPal", "Binance", "Amazon Payment Services", "Network International", "Payoneer", "wamo"] },
-      { id: "b-ukhesap", s: "İngiltere'de fiilen hangi hesapları açtırıyoruz?", cok: true, sik: ["Tide", "Revolut", "Wise", "Payoneer", "Yerel banka"] },
-      { id: "b-oturum", s: "Dubai oturumu kaç ay ülke dışında kalınca düşüyor?", sik: ["6 ay", "12 ay", "Vize türüne göre değişiyor"] },
-      { id: "b-vize", s: "Ortak vizesi kaç yıllık?", sik: ["2 yıl", "3 yıl", "Serbest bölgeye göre değişiyor"] },
-      { id: "b-mainland", s: "\"Serbest bölgeden mainland'e geçmek yeni kuruluş demek\" cümlesi doğru mu?", sik: ["Doğru", "Yanlış, aşağıya yazıyorum"] },
-      { id: "b-bordro", s: "Dubai'de bordro hizmeti veriyor muyuz?", sik: ["Evet", "Hayır"] },
-      { id: "b-ekip", s: "KKTC ve İngiltere'de muhasebeyi kendi ekibimiz mi yapıyor?", sik: ["İkisinde de kendi ekibimiz", "KKTC kendi, İngiltere anlaşmalı", "İkisi de anlaşmalı firma"] },
-      { id: "b-kay", s: "KKTC'de yıllık hesap ve beyan hangi ayda veriliyor?", sik: ["Ocak - Mart", "Nisan", "Mayıs - Haziran", "Şirkete göre değişiyor"] },
-      { id: "b-ksure", s: "KKTC'de banka hesabı kabaca ne kadar sürede açılıyor?", sik: ["1 hafta içinde", "2 - 4 hafta", "1 aydan uzun", "Sitede süre yazmayalım"] },
+      { id: "o-white", s: "İş ortağı hizmeti kendi markasıyla sunabiliyor mu (white-label)? Tarifinizde geçmediği için sayfadan çıkardık.", sik: ["Evet, var", "Hayır, yalnız yönlendirme"] },
+      { id: "o-panel", s: "Ortak panelinde ortak neyi görecek?", cok: true, sik: ["Dosyanın hangi adımda olduğu", "Yüklenen belgeler", "Ödeme durumu", "Müşteriyle yazışmalar"], ipucu: "Sayfa şu an \"tanımlanan yetkiyle\" diyor, ayrıntı vermiyor." },
+      { id: "o-bugun", s: "Panel hazır olana kadar süreç adımları ortakla nasıl paylaşılıyor?", sik: ["E-posta", "WhatsApp", "Müşteri panelinden", "Bugün paylaşmıyoruz"] },
+      { id: "o-adim", s: "Sayfadaki örnek dosya adımları doğru mu: evrak, kuruluş başvurusu, şirket tescili, banka başvurusu, muhasebe?", sik: ["Doğru", "Düzeltme var, aşağıya yazıyorum"] },
+      { id: "o-rakam", s: "İş ortaklığı sayfasında \"700'den fazla şirket\" ve \"300 civarı aktif muhasebe müşterisi\" yazsın mı?", sik: ["Yazsın", "Yalnız 700 yazsın", "Yazmasın"] },
     ],
   },
   {
-    ad: "Sitede açılacaklar",
+    ad: "KKTC",
     sorular: [
-      { id: "s-kariyer", s: "Kariyer sayfasına koyacağımız açık bir ilan var mı?", sik: ["Var, aşağıya yazıyorum", "Yok, yalnız açık başvuru kalsın", "Kariyer sayfasını kapatalım"], ipucu: "Eski sitede \"Muhasebeci, KKTC\" ilanı vardı; hâlâ geçerli mi?" },
-      { id: "s-ortaklik", s: "İş ortaklığı sayfasını kullanacak mıyız?", sik: ["Evet", "Şimdilik hayır, kapalı dursun"], ipucu: "Evetse komisyon ve şartları yazın; sayfada dört satır boş duruyor." },
-      { id: "s-rakam", s: "Sitede gerçek bir rakam vermek istesek ne yazabiliriz?", ipucu: "Örnek: bugüne kadar kurulan şirket sayısı, hizmet verilen müşteri sayısı, muhasebesi tutulan şirket sayısı. Bildiğiniz kadarını yazın." },
-      { id: "s-gelisme", s: "\"Gelişmeler\" sayfasına yazmamızı istediğiniz son dönem değişiklikleri var mı?", ipucu: "Dubai, KKTC ya da İngiltere'de müşteriyi etkileyen 3-5 değişiklik: ne, hangi tarihte." },
+      { id: "k-sermaye", s: "İki ortak da Türkiye vatandaşıysa 25.000 € sermayenin tamamı mı bloke ediliyor?", sik: ["Evet, tamamı", "Hayır, aşağıya yazıyorum"], ipucu: "Yeni blog yazısında örnek olarak geçiyor." },
+      { id: "k-yerel", s: "KKTC'de yerel (iç piyasa) limited şirket de kuruyor muyuz, yalnız Serbest Liman şirketi mi?", sik: ["Yalnız Serbest Liman", "İkisini de kuruyoruz"] },
+      { id: "k-depo", s: "Yalnız hizmet satan Serbest Liman şirketinden Gazimağusa'da fiilî faaliyet ya da depo isteniyor mu?", sik: ["İstenmiyor", "İsteniyor, aşağıya yazıyorum"] },
+      { id: "k-pazar", s: "Amazon ve Etsy KKTC şirketini satıcı olarak kabul etmiyor diye yazdık. Doğru mu?", sik: ["Doğru", "Yanlış, aşağıya yazıyorum"] },
     ],
   },
   {
-    ad: "Yeni sayfalar · sitede böyle görünüyor",
+    ad: "Dubai",
     sorular: [
-      { id: "y-vergi", gorsel: "/teyit/vergi-kapsam.jpg", s: "Vergi danışmanlığı sayfasında \"ne yapıyoruz\" ve \"dışında kalanlar\" listesi doğru mu?", sik: ["Doğru", "Düzeltme var, aşağıya yazıyorum"], ipucu: "Çıkarılacak ya da eklenecek madde varsa yazın." },
-      { id: "y-ceza", gorsel: "/teyit/vergi-ceza.jpg", s: "Dubai'de geç beyan cezası: ilk 12 ay ayda 500 AED, sonra ayda 1.000 AED yazdık. Güncel mi?", sik: ["Güncel", "Değişti, aşağıya yazıyorum", "Ceza rakamı yazmayalım"] },
-      { id: "y-ktakvim", gorsel: "/teyit/kktc-takvim.jpg", s: "KKTC vergi takvimi (nisan beyanname, mayıs ve ekim ödeme) Serbest Liman şirketi için de geçerli mi?", sik: ["Geçerli", "Serbest Liman şirketinde farklı, aşağıya yazıyorum"] },
-      { id: "y-kurumsal", gorsel: "/teyit/kurumsal-kapsam.jpg", s: "Kurumsal danışmanlık sayfasında üstlendiğimiz işler doğru mu?", sik: ["Doğru", "Düzeltme var, aşağıya yazıyorum"], ipucu: "Pay devri, yönetici değişikliği, faaliyet ekleme, şirket kapatma gibi işleri yapıyor muyuz?" },
-      { id: "y-aml", gorsel: "/teyit/aml-kapsam.jpg", s: "AML ve uyum sayfasında üstlendiğimiz işler doğru mu?", sik: ["Doğru", "Düzeltme var, aşağıya yazıyorum"], ipucu: "Risk değerlendirmesi ve iç politika metni yazıyor muyuz?" },
-      { id: "y-ulke", s: "Kurumsal danışmanlık ve AML hizmetini hangi ülkelerde veriyoruz?", cok: true, sik: ["Dubai", "İngiltere", "KKTC"] },
-      { id: "y-eori", s: "Müşteriler için EORI numarası başvurusu yapıyor muyuz?", sik: ["Evet", "Hayır"] },
+      { id: "d-mainland", s: "Dubai'de mainland şirket kuruluşu da yapıyor muyuz?", sik: ["Evet", "Hayır, yalnız serbest bölge"], ipucu: "Yeni \"serbest bölge mi, mainland mi\" yazısı için." },
+      { id: "d-ceza", s: "Geç beyan cezası rakamını (ayda 500, sonra 1.000 AED) siteden çıkardık. Güncel rakamı yazmak ister misiniz?", sik: ["Yazmayalım", "Yazalım, aşağıya yazıyorum"] },
+    ],
+  },
+  {
+    ad: "AML ve uyum sayfası",
+    sorular: [
+      { id: "a-metin", s: "AML sayfasının yazılarını sevmediğinizi yazmıştınız. Neyi değiştirelim?", cok: true, sik: ["Çok uzun, kısalsın", "Dili fazla teknik", "Anlatılan hizmet bizim yaptığımızla uyuşmuyor", "Başlıklar değişsin"], ipucu: "Aklınızdaki cümle ya da örnek varsa yazın." },
     ],
   },
 ];
 
-const ANAHTAR = "ortac-teyit-sorular-v5";
+const ANAHTAR = "ortac-teyit-sorular-v6";
 type Cevap = { sec: string[]; yazi: string };
 const BOS: Cevap = { sec: [], yazi: "" };
 

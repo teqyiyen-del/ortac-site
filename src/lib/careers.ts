@@ -225,9 +225,22 @@ export function sortedOpenings(): Opening[] {
    Bugün ekranda GÖRÜNMÜYOR (liste dolu) ama duruyor: ilanlar kaldırıldığında
    sayfanın boş bir <ul> basmaması için. Metin veri dosyasında, sayfada değil —
    aynı kalıp lib/about.ts ve lib/press.ts'te. */
+/* 10.10.2026 · BOŞ DURUM ARTIK SAYFANIN AÇILIŞI (ilanlar kapandı, bkz.
+   OPENINGS). Burak: "Başvuru formuyla 'şu an açık pozisyonumuz yok' arasında
+   çok boşluk var. Buranın dizaynında sıkıntı var ve çok cansız duruyor."
+   Cümle 207 karakterden 99'a indi (kural: açıklama en fazla iki satır).
+   Düşen yarı ("sayfa boş duruyor; olmayan pozisyon yazmıyoruz") sayfanın
+   kendisi hakkında bir dipnottu. Eklenen alanlar gece kartın düğmesi ve
+   ofis sütununun etiketi; firma hakkında yeni iddia yok. */
 export const CAREERS_EMPTY = {
   title: "Şu an açık pozisyonumuz yok.",
-  line: "İlan yayımlamadığımız dönemde bu sayfa boş duruyor; doldurmak için olmayan bir pozisyon yazmıyoruz. Yine de başvurunuzu bırakabilirsiniz: bir pozisyon açıldığında önce elimizdeki başvurulara bakıyoruz.",
+  line: "Yine de başvurunuzu bırakabilirsiniz: bir pozisyon açıldığında önce elimizdeki başvurulara bakıyoruz.",
+  cta: "Açık başvuru bırakın",
+  officesLabel: "Ekibin çalıştığı ofisler",
+  /** Hero'nun ilan yokken bastığı tek cümle. Olgular doğrulanmış: 1996,
+   * üç ülkede kendi ofis, muhasebe · vergi · kurumsal danışmanlık. */
+  heroLead:
+    "1996'dan beri muhasebe, vergi ve kurumsal danışmanlık. Üç ülkede kendi ofisimizle çalışıyoruz.",
 };
 
 /* ------------------------------------------------------------ BAŞVURU FORMU
@@ -248,6 +261,9 @@ export const CAREERS_EMPTY = {
 export const APPLICATION_FORM = {
   title: "Başvuru formu",
   lead: "Pozisyonu işaretleyin, size nasıl ulaşabileceğimizi yazın.",
+  /** İlan yokken: işaretlenecek pozisyon yok, form açık başvuruyla açılıyor
+   * (10.10.2026; gerekçe CareerSections.tsx · CareerSections). */
+  leadEmpty: "Size nasıl ulaşabileceğimizi ve bugün ne iş yaptığınızı yazın.",
 
   /** Belirli bir ilana değil, genel olarak başvurmak isteyen için. Kutucuk
    * listesinin sonunda duruyor; değeri hiçbir ilanın id'siyle çakışmıyor. */
@@ -277,12 +293,21 @@ export const APPLICATION_FORM = {
    Yazılmayanlar, tek tek ve bilerek: yanıt süresi, "başvurunuz X ay saklanır"
    taahhüdü, işe alım adımları ve bir muhatap adı. Dördünün de firmada bugün
    karşılığı yok; söz vermek, sözü tutacak yapıyı kurmadan önce gelirdi. */
+/* 10.10.2026 · KAPANIŞ YENİDEN YAZILDI. Burak: "En aşağıdaki açık başvuru
+   call to action'ı da berbat." Eski cümlenin üç yarısı da bayattı: "yukarıdaki
+   ilanlar" yok (liste boş), "form gönderim ucuna bağlanana kadar" geçti (form
+   09.10'da açıldı), "kariyer için ayrı bir adres yayımlamıyoruz" yanlış (aynı
+   sayfanın formu career@ adresini iki yerde yazıyor: fileNote ve note).
+   `inbox` bu yüzden doldu; adres UYDURULMADI, formun 09.10'dan beri bastığı
+   ve yedek olarak kullandığı adresin aynısı. `lineOpenings` ilanlar geri
+   geldiğinde basılacak hâl. */
 export const OPEN_APPLICATION = {
   title: "Açık başvuru",
-  line: "Yukarıdaki ilanların hiçbiri size uymuyorsa formdaki son kutu (“Açık başvuru”) sizin için. Form gönderim ucuna bağlanana kadar başvuruyu iletişim sayfasındaki kanallardan alıyoruz; kariyer için ayrı bir adres yayımlamıyoruz.",
-  /* SWAP:CAREER_INBOX — başvuruya ayrılmış e-posta. Dolduğunda bu satır
-     doğrudan bir mailto: bağlantısına dönecek; sayfa değişmeyecek. */
-  inbox: "",
+  line: "Belirli bir ilan beklemeden yazabilirsiniz. Formu doldurun ya da özgeçmişinizi e-postayla gönderin.",
+  lineOpenings:
+    "İlanların hiçbiri size uymuyorsa formdaki son kutu sizin için. Özgeçmişinizi e-postayla da gönderebilirsiniz.",
+  formCta: "Başvuru formu",
+  inbox: "career@ortacglobal.com",
   cta: { label: "İletişim sayfası", href: "/iletisim" },
 };
 

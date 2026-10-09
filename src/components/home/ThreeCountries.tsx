@@ -47,6 +47,7 @@ import { COUNTRY_PHOTO, photoThumb } from "@/lib/media";
 import { useOrtacStore } from "@/lib/store";
 
 import Tel from "@/components/mobil/Tel";
+import UlkeFotoKartlar from "@/components/shared/UlkeFotoKartlar";
 /* ============================================================================
    §3 — ÜLKE KARARI · "yay + yerinde açılan panel" + "yan yana kıyas"
 
@@ -573,6 +574,24 @@ export default function ThreeCountries() {
             ÜST KENAR BOŞLUĞU taşıyor, iç dolgusu değil — kenar boşluğu
             offsetHeight'a girmediği için ölçüm iki görünümde de yalnızca
             içeriği sayıyor. */}
+        {/* TELEFON · yalnız üç fotoğraflı kart (10.10.2026, css/ulke-foto.css).
+            Görünüm seçici ve açılır liste telefonda gizli; metin FEATS'in ilk
+            satırı ve FACTS.tag, yeni cümle yazılmadı. */}
+        <div className="uk3-mkart">
+          <UlkeFotoKartlar
+            items={COUNTRY_ORDER.map((c) => ({
+              slug: c,
+              ad: COUNTRY_NAME[c],
+              line: FEATS[c][0].t,
+              href: `/${c}`,
+            }))}
+          />
+          <SmartLink href="/ulkeler" className="btn btn-line btn-sm uk3-exit uk3-mkart-git">
+            Ölçüt ölçüt kıyaslayın
+            <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+          </SmartLink>
+        </div>
+
         <div className="uk3-views" id="odeme-altyapisi" ref={viewsRef}>
           {/* ======================================= 1. GÖRÜNÜM · ÜLKE ÜLKE */}
           <div

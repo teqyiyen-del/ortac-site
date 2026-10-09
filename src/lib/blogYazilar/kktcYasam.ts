@@ -42,7 +42,11 @@ export const POST_KKTC_YASAM: BlogPost = {
   heroAccent: "yaşam maliyeti ve iş imkanları",
   summary:
     "KKTC'de yaşam maliyeti, para birimi, asgari ücret ve iş imkanları resmî rakamlarla. Kıbrıs'ta yaşamak ve iş kurmak isteyenler için 2026 rehberi.",
-  publishedAt: "2026-10-09",
+  /* 10.10.2026 · Burak: yazılar toplu girildi; tarihleri 2026'ya yay.
+     Yayın tarihi yayıldı, güncelleme tarihi rakamların doğrulandığı gün
+     (yazı içindeki "Ekim 2026 itibarıyla" ifadeleriyle tutarlı). */
+  publishedAt: "2026-05-14",
+  updatedAt: "2026-10-09",
   topic: "Yaşam ve çalışma",
   country: "kktc",
   tags: ["KKTC", "Yaşam maliyeti", "Çalışma izni"],

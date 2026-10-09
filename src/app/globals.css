@@ -141,6 +141,7 @@
    İlk sayfa /lp/dubai-sirket-kurulusu. Ad alanı .lp-. Dosyanın ilk adı
    lp-muhasebe.css idi; sayfa muhasebeden kuruluşa dönünce genelleşti. */
 @import "./css/lp.css";
+@import "./css/ulke-foto.css";
 
 /* ============================================================================
    KALDIRILDI · ON DÖRT LAB TURU (10.09.2026)

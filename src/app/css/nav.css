@@ -1296,7 +1296,9 @@ span.onv-brief .onv-brief-uzeri em {
 /* -------------------------------------------------------- ikincil paneller */
 .onv-split {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  /* 10.10.2026 · 360 → 280: Burak "Hizmetler kartı daha dar, bunlar biraz
+     büyük; genişlik olarak bir tık daraltsak." Ülke kartıyla aynı genişlik. */
+  grid-template-columns: minmax(0, 1fr) 280px;
   gap: 22px;
   align-items: start;
 }
@@ -1781,4 +1783,19 @@ span.onv-brief .onv-brief-uzeri em {
 .onv-bay-dunya svg {
   width: 13px;
   height: 13px;
+}
+
+/* TELEFON MENÜSÜNDE FOTOĞRAFLI KART · alçak, yatay (10.10.2026).
+   Kaynaklar'da son yazı, Kurumsal'da iletişim. Düğme satırı yok (kartın
+   tamamı bağlantı, satırlar gibi); başlık en çok iki satır. */
+.onv-brief[data-kisa] {
+  min-height: 148px;
+  margin-top: 10px;
+}
+.onv-brief[data-kisa] .onv-brief-go {
+  display: none;
+}
+.onv-brief[data-kisa][data-uzun] .onv-brief-ad b {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }

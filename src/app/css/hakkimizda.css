@@ -1067,8 +1067,22 @@
    karo kendi yüzeyiyle ayrışıyor (kenarlık zemin rengine çekildi, 1 px'lik
    gri bir hâle bırakmasın diye). Sahnelerin içi değişmedi: kırık beyaz
    çerçeve beyaz karonun içinde. */
+/* 10.10.2026 · BÖLÜM ZEMİNİ GECEDEN KIRIK BEYAZA DÖNDÜ. Burak: "Hâlâ arkası
+   komple siyah olan kısımlar var, hakkımızda kısmında mesela. Onları iptal
+   et. Onlar normal beyazın üstünde siyah bento şeklinde kalabilir … Arka plan
+   siyah işini iptal ediyoruz." Site kuralı: bölüm zemini beyaz / kırık beyaz
+   sırayla, siyah yalnız yuvarlak köşeli kart olarak.
+   SEÇİLEN: zemin --paper, beş karo GECE KALDI (aşağıdaki üç kademe aynen
+   duruyor). Karoların içindeki sahneler gece yüzey için çizilmişti (opak
+   griler, beyaz logo); karoyu beyaza çevirmek beş sahneyi yeniden çizmek
+   demekti ve Burak'ın ilk seçeneği zaten "beyazın üstünde siyah bento".
+   ELENEN: beş karoyu ayrıca tek büyük gece kartın içine almak; kart içinde
+   kart olurdu ve telefonda iki kat iç boşluk karoları daraltırdı.
+   --paper, beyaz değil: üstündeki "kim olduğumuz" ile altındaki kurumlar
+   beyaz; üç beyaz arka arkaya gelmesin. Başlık rengi page.tsx'te
+   --text-900'e döndü (#111 / #f5f5f5 üstünde 17:1 dolayında). */
 .ab-dy-sec {
-  background: var(--night);
+  background: var(--paper);
 }
 
 /* 22.09.2026 · KAROLAR DA GECE. Bir gün beyaz karo / gece zemin denendi;

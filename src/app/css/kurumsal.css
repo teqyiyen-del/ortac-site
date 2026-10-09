@@ -1392,3 +1392,245 @@ a.krm-exit:hover svg {
     transform: none;
   }
 }
+
+/* ==========================================================================
+   /kariyer · 10.10.2026 TURU                              (ad alanı .kry-)
+   Burak: "Başvuru formuyla 'şu an açık pozisyonumuz yok' arasında çok boşluk
+   var. Buranın dizaynında sıkıntı var ve çok cansız duruyor, bir tık
+   geliştirebiliriz. En aşağıdaki açık başvuru call to action'ı da berbat."
+
+   AD ALANI AYRI: .krm- kurallarını /basinda-biz de kullanıyor (.krm-empty,
+   .krm-media, .krm-facts); onlara dokunmak o sayfayı da değiştirirdi. Bu
+   blok yalnız /kariyer'in üç yeni parçası: gece kart, form düzeni, kapanış.
+   Hareket yok (giriş FadeUp'tan), parıltı yok, kenar şeridi yok.
+   ====================================================================== */
+
+/* ------------------------------------------------ bölümler arası boşluk
+   Gece kartın altı ile form başlığı arasında 224 px (112 + 112) vardı.
+   Kartın altı üstüyle aynı paya indi (.krm-nohead'in clamp'i), formun üstü
+   72'ye: 1440'ta 48 + 72 = 120. Alt dolgular .sec-pad'de kalıyor. */
+.kry-bos-sec.sec-pad {
+  padding-block-end: clamp(32px, 4vw, 48px);
+}
+.kry-form-sec.sec-pad {
+  padding-block-start: clamp(48px, 6vw, 72px);
+}
+
+/* ------------------------------------------------------- 1 · GECE KART
+   Sitenin gece kart kademeleri (is-ortakligi.css · .iob-gece ile aynı):
+   kart --night, iç satır --night-2 + --night-line, 28 köşe. Gece yüzeyde
+   alfa yok. Kontrast: başlık #fff / #080808 20:1 · cümle #b9b9b9 10,3:1 ·
+   etiket #9a9a9a 7,1:1 · ülke adı #b9b9b9 / #111 9,6:1. */
+.kry-bos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  padding: 32px 24px;
+  border-radius: var(--r-panel);
+  background: var(--night);
+  color: #ffffff;
+}
+@media (min-width: 900px) {
+  .kry-bos {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    align-items: center;
+    gap: 56px;
+    padding: 56px;
+  }
+}
+.kry-bos-m {
+  min-width: 0;
+}
+.kry-bos-t {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  text-wrap: balance;
+}
+.kry-bos-p {
+  max-width: 46ch;
+  margin: 14px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #b9b9b9;
+  text-wrap: balance;
+}
+.kry-bos-a {
+  margin-top: 28px;
+}
+.kry-bos-o {
+  min-width: 0;
+}
+.kry-bos-k {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #9a9a9a;
+}
+.kry-ofis {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.kry-ofis-i {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center; /* taban hizası değil: iki boy yazı kutuda kayıyor (tuzak AC) */
+  gap: 14px;
+  min-width: 0;
+  padding: 14px 18px 14px 14px;
+  border: 1px solid var(--night-line);
+  border-radius: var(--r-md);
+  background: var(--night-2);
+}
+.kry-ofis-i b {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+.kry-ofis-i span:last-child {
+  font-size: 14px;
+  line-height: 1.3;
+  color: #b9b9b9;
+}
+/* Bayrak diski. Ölçü satırları silinemez: Flag width/height taşımıyor ve
+   kabı ölçülmezse 300 × 150'ye şişiyor (tuzak H). */
+.kry-ofis-f {
+  display: block;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #2e2e2e;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.kry-ofis-f svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ------------------------------------------------------ 2 · FORM DÜZENİ
+   1024 ve üstünde başlık solda (yapışkan), panel sağda. Panel 1136'dan
+   ~740'a indi; alan ızgarası (.krm-fields) kendi kırılımını koruyor.
+   `minmax(0, …)`, çıplak fr değil (tuzak B). */
+.kry-form-g {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.kry-form-sec .krm-form {
+  margin-top: 28px;
+}
+@media (min-width: 1024px) {
+  .kry-form-g {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    align-items: start;
+    gap: 48px;
+  }
+  .kry-form-bas {
+    position: sticky;
+    top: 104px;
+  }
+  .kry-form-sec .krm-form {
+    margin-top: 0;
+    padding: 32px;
+  }
+}
+/* İpucu satırları 12'den 14'e: okunan yazı 14'ün altında olmuyor. Kural
+   yalnız bu bölümde; .krm-hint'in kendisi değişmedi. */
+.kry-form-sec .krm-hint {
+  font-size: 14px;
+  line-height: 1.45;
+}
+/* İlan yokken pozisyon bloğu gizli (hidden); ilk görünen blok üst çizgisiz
+   ve üst paysız başlasın, panelin kendi dolgusu yetiyor. */
+.kry-form-sec .krm-block[hidden] {
+  display: none;
+}
+.kry-form-sec .krm-block[hidden] + .krm-block {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* -------------------------------------------------------- 3 · KAPANIŞ
+   Açık mavi panel: sayfada gece kart yukarıda bir kez var, kapanış onun
+   tekrarı olmasın; hemen altında sitenin gece kapanış bandı da geliyor.
+   Kontrast (--blue-100 #e8f1fd üstünde): başlık #080808 17,6:1 · cümle
+   #4a4a4a 7,7:1 (--text-600 #5c5c5c burada 5,9:1; bir kademe koyusu alındı).
+   Çizgi düğme mavi zeminde beyaz dolgulu: şeffaf hâli panelde kayboluyordu. */
+.kry-kapanis-sec {
+  background: var(--white);
+}
+.kry-kapanis {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px 40px;
+  padding: 32px 24px;
+  border-radius: var(--r-panel);
+  background: var(--blue-100);
+}
+@media (min-width: 900px) {
+  .kry-kapanis {
+    padding: 48px 56px;
+  }
+}
+/* flex-basis 320: metin sütunu daralabilsin, düğmeler 1440'ta yanında
+   kalsın (taban auto iken 16 px payla alt satıra düşüyorlardı). */
+.kry-kapanis-m {
+  flex: 1 1 320px;
+  min-width: 0;
+  max-width: 54ch;
+}
+.kry-kapanis-m h2 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-900);
+}
+.kry-kapanis-m p {
+  margin: 12px 0 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #4a4a4a;
+  text-wrap: balance;
+}
+.kry-kapanis-a {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  min-width: 0;
+}
+.kry-kapanis .kry-kapanis-e {
+  border-color: #cfe0f7;
+  background: var(--white);
+}
+.kry-kapanis .kry-kapanis-e:hover {
+  border-color: var(--blue-500);
+  background: var(--white);
+}
+@media (max-width: 559.5px) {
+  .kry-kapanis-a,
+  .kry-kapanis-a .btn {
+    width: 100%;
+  }
+  /* adres 22 karakter; 390'da 16 px ile panele sığıyor, 15 emniyet payı */
+  .kry-kapanis-e {
+    font-size: 15px;
+  }
+}

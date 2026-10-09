@@ -60,7 +60,11 @@ export const POST_DUBAI_YASAM: BlogPost = {
   heroAccent: "maliyetler, yaşam şartları ve oturum",
   summary:
     "Dubai'de yaşam maliyeti, kira, okul, sağlık sigortası, ulaşım ve oturum izinleri; kaynağı belli güncel aralıklarla.",
-  publishedAt: "2026-10-09",
+  /* 10.10.2026 · Burak: yazılar toplu girildi; tarihleri 2026'ya yay.
+     Yayın tarihi yayıldı, güncelleme tarihi rakamların doğrulandığı gün
+     (yazı içindeki "Ekim 2026 itibarıyla" ifadeleriyle tutarlı). */
+  publishedAt: "2026-09-03",
+  updatedAt: "2026-10-09",
   topic: "Yaşam",
   country: "dubai",
   tags: ["Dubai", "Yaşam maliyeti", "Oturum"],

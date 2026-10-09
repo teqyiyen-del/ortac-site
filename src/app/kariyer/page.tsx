@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
-import { ArrowRight, MapPin } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 
 import Nav from "@/components/Nav";
 import FinalCta from "@/components/FinalCta";
 import PageHero from "@/components/shared/PageHero";
+import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
 import CareerSections from "@/app/kariyer/CareerSections";
-import { Flag } from "@/components/shared/CountryPicker";
-import { COUNTRY_NAME } from "@/lib/brand";
-import { OFFICE_ORDER } from "@/lib/offices";
-import { OPEN_APPLICATION, hasCareerInbox, sortedOpenings } from "@/lib/careers";
+import {
+  APPLY_ANCHOR,
+  CAREERS_EMPTY,
+  OPEN_APPLICATION,
+  hasCareerInbox,
+  sortedOpenings,
+} from "@/lib/careers";
 
 import { OG_GORSEL } from "@/lib/seo";
 /* ============================================================================
@@ -151,7 +155,10 @@ export default function KariyerPage() {
           accent={EMPTY ? "başvurun." : "açık pozisyonlar."}
           lead={
             EMPTY
-              ? "Şu an yayımlanmış bir ilanımız yok. Sayfayı doldurmak için olmayan bir pozisyon yazmıyoruz; buna karşılık başvurunuzu her zaman bırakabilirsiniz."
+              ? /* 10.10.2026 · eski lead ("Şu an yayımlanmış bir ilanımız yok.
+                   Sayfayı doldurmak için …") üç satırdı ve hemen altındaki
+                   kartın cümlesini bir kez daha söylüyordu. */
+                CAREERS_EMPTY.heroLead
               : "Muhasebe ve vergi, uyum, şirket kuruluşu ve vize: dört ekip, üç ülke. Her ilanın yanında hangi ekip, hangi ülke ve hangi çalışma biçimi olduğu yazıyor; başvuru formu da aynı sayfada."
           }
         />
@@ -159,60 +166,48 @@ export default function KariyerPage() {
         <CareerSections />
 
         {/* ==================================================================
-            3 · AÇIK BAŞVURU — form bağlanana kadar gerçekten çalışan tek yol
-            ================================================================== */}
-        <section className="sec-pad" id="acik-basvuru" style={{ background: "var(--white)" }}>
-          <div className="container-o">
-            <div className="krm-media">
-              <div>
-                <h2 className="h2">{OPEN_APPLICATION.title}</h2>
-                <p className="sec-lead">{OPEN_APPLICATION.line}</p>
+            3 · AÇIK BAŞVURU · kapanış paneli
 
-                <div className="krm-media-a">
+            10.10.2026 · YENİDEN KURULDU. Burak: "En aşağıdaki açık başvuru
+            call to action'ı da berbat."
+            ESKİ HÂL: solda h2 + dört satırlık bayat bir paragraf ("form
+            gönderim ucuna bağlanana kadar …", oysa form 09.10'da açıldı) +
+            çıplak bir "İletişim sayfası" yazısı (.btn-primary beyaz zeminde
+            beyaz düğme: görünmüyordu), sağda küçük bir ofis şeridi kutusu.
+            YENİ HÂL: kabın genişliğinde tek açık mavi panel (--blue-100, 28
+            köşe); solda başlık ve tek cümle, sağda iki gerçek çıkış: forma
+            inen dolu düğme ve career@ adresine mailto. Ofis şeridi yukarıdaki
+            gece karta taşındı, iki kez basılmıyor.
+            Paylaşılan bileşen KULLANILMADI: shared/AskCta tek bir soru
+            düğmesi (hedefi /iletisim), kapanış paneli değil; sitede panel
+            kalıbını her sayfa kendi ad alanında kuruyor (.ab-close, .sss-cta).
+            Düğmeler ise sitenin ortak .btn ailesi. */}
+        <section className="sec-pad kry-kapanis-sec" id="acik-basvuru">
+          <div className="container-o">
+            <FadeUp>
+              <div className="kry-kapanis">
+                <div className="kry-kapanis-m">
+                  <h2>{OPEN_APPLICATION.title}</h2>
+                  <p>{EMPTY ? OPEN_APPLICATION.line : OPEN_APPLICATION.lineOpenings}</p>
+                </div>
+                <div className="kry-kapanis-a">
+                  <a className="btn btn-solid" href={APPLY_ANCHOR}>
+                    {OPEN_APPLICATION.formCta}
+                    <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+                  </a>
                   {hasCareerInbox() ? (
-                    <a className="btn btn-primary" href={`mailto:${OPEN_APPLICATION.inbox}`}>
+                    <a className="btn btn-line kry-kapanis-e" href={`mailto:${OPEN_APPLICATION.inbox}`}>
+                      <Mail size={16} strokeWidth={2} aria-hidden="true" />
                       {OPEN_APPLICATION.inbox}
-                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
                     </a>
                   ) : (
-                    <SmartLink href={OPEN_APPLICATION.cta.href} className="btn btn-primary">
+                    <SmartLink href={OPEN_APPLICATION.cta.href} className="btn btn-line kry-kapanis-e">
                       {OPEN_APPLICATION.cta.label}
-                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
                     </SmartLink>
                   )}
                 </div>
               </div>
-
-              {/* Nerede çalışıyoruz. Şerit yalnız ülke adı yazıyor.
-
-                  ESKİ GEREKÇE ARTIK GEÇERSİZ: "şehir ve açık adres
-                  doğrulanmadığı için" diyordu, oysa üç ofisin de adresi
-                  18.08.2026'da müşteriden geldi (src/lib/offices.ts). Açık
-                  kalan tek adres alanı KKTC'nin `city`'si.
-
-                  BUGÜNKÜ GEREKÇE İŞE AİT: burası bir ilan sayfası, adayın
-                  sorusu "hangi ülkelerde çalışıyorsunuz", "hangi sokakta"
-                  değil. Açık adres iş başvurusunu bir ziyaret davetine
-                  çevirir. Adres isteyen için iletişim sayfası bir tık ötede
-                  ve orada üçü de yazılı. Aynı şerit navbar'ın iletişim
-                  kartında da aynı sebeple ülke adında kalıyor. */}
-              <div className="krm-facts">
-                <p className="krm-facts-k">
-                  <MapPin size={14} strokeWidth={2} aria-hidden="true" />
-                  Nerede çalışıyoruz
-                </p>
-                <div className="krm-of">
-                  {OFFICE_ORDER.map((c) => (
-                    <span key={c} className="krm-of-i">
-                      <span className="krm-of-f" aria-hidden="true">
-                        <Flag country={c} />
-                      </span>
-                      {COUNTRY_NAME[c]}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+            </FadeUp>
           </div>
         </section>
 

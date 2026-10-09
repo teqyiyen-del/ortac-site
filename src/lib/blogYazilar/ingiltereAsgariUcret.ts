@@ -31,7 +31,11 @@ export const POST_UK_ASGARI_UCRET: BlogPost = {
   summary:
     "İngiltere'de asgari ücret 1 Nisan 2026'dan beri 21 yaş ve üstü için saatte 12,71 sterlin. Aylık karşılığı, yaşa göre oranlar ve Londra farkı.",
   /* Burak: "tarihini güncellendi olarak verme, yeni gibi ver" */
-  publishedAt: "2026-10-09",
+  /* 10.10.2026 · Burak: yazılar toplu girildi; tarihleri 2026'ya yay.
+     Yayın tarihi yayıldı, güncelleme tarihi rakamların doğrulandığı gün
+     (yazı içindeki "Ekim 2026 itibarıyla" ifadeleriyle tutarlı). */
+  publishedAt: "2026-04-07",
+  updatedAt: "2026-10-09",
   topic: "Çalışma hayatı",
   country: "ingiltere",
   tags: ["İngiltere", "Asgari ücret", "Bordro"],

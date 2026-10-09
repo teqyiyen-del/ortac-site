@@ -49,7 +49,11 @@ export const POST_EORI: BlogPost = {
   heroAccent: "EORI sorgulama 2026",
   summary:
     "EORI numarası gümrükte işlem yapan firmayı tanımlayan kayıt numarasıdır. Resmî sorgulama sayfaları, kimin alması gerektiği ve başvuru adımları.",
-  publishedAt: "2026-10-09",
+  /* 10.10.2026 · Burak: yazılar toplu girildi; tarihleri 2026'ya yay.
+     Yayın tarihi yayıldı, güncelleme tarihi rakamların doğrulandığı gün
+     (yazı içindeki "Ekim 2026 itibarıyla" ifadeleriyle tutarlı). */
+  publishedAt: "2026-02-19",
+  updatedAt: "2026-10-09",
   topic: "Gümrük ve dış ticaret",
   tags: ["EORI", "Gümrük", "E-ticaret"],
   author: "Murat Ortaç",

@@ -1,12 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Inbox, Paperclip, Send } from "lucide-react";
+import { ArrowRight, Check, Paperclip, Send } from "lucide-react";
 
 import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
+import { Flag } from "@/components/shared/CountryPicker";
+import { COUNTRY_NAME } from "@/lib/brand";
+import { OFFICES } from "@/lib/offices";
 import {
   APPLICATION_FORM,
+  APPLY_ANCHOR,
   APPLY_ANCHOR_ID,
   CAREERS_EMPTY,
   OPENING_TYPE_LABEL,
@@ -65,21 +69,61 @@ import { formGonder, FORM_SONUC_METNI, type FormSonuc } from "@/lib/formGonder";
    ========================================================================= */
 
 const OPEN = sortedOpenings();
+/* İlan yok: sayfa boş durumla açılıyor, form açık başvuruya ön seçili. */
+const NO_OPENINGS = OPEN.length === 0;
 
 /* =============================================================== 1 · İLANLAR */
 
 function Openings({ onApply }: { onApply: (id: string) => void }) {
   if (OPEN.length === 0) {
-    /* Bugün buraya düşülmüyor (liste dolu). Duruyor ki ilanlar kaldırıldığında
-       sayfa boş bir <ul> basmasın. Metin lib/careers.ts'te. */
+    /* 10.10.2026 · BOŞ DURUM GECE KARTA DÖNDÜ. Burak: "Başvuru formuyla
+       'şu an açık pozisyonumuz yok' arasında çok boşluk var. Buranın
+       dizaynında sıkıntı var ve çok cansız duruyor, bir tık
+       geliştirebiliriz."
+       ESKİ HÂL: 760 px'te duran kesik çerçeveli gri kutu (.krm-empty), sağında
+       376 px boş beyaz; ilan listesinin yedeğiydi, sayfanın açılışı olacağı
+       düşünülmemişti. İlanlar 09.10'da kapanınca sayfanın ilk bölümü oldu.
+       YENİ HÂL: kabın genişliğinde tek gece kart (site kuralı: siyah yalnız
+       büyük yuvarlak kartta). Solda mesaj ve forma inen düğme, sağda ekibin
+       çalıştığı üç ofis: bayrak, şehir, ülke (offices.ts; adres yok, gerekçe
+       page.tsx'in eski şerit notunda: aday "hangi ülke" diye sorar, "hangi
+       sokak" diye değil). Sağdaki eski ofis şeridi kapanıştan buraya çıktı.
+       .krm-empty kuralları DURUYOR: /basinda-biz aynı sınıfı kullanıyor.
+       Düğme düz çapa (kaydırmayı tarayıcı yapıyor); ön seçim gerekmiyor,
+       ilan yokken form zaten açık başvuruyla açılıyor (aşağıda).
+       Başlık <p>: bölümün h2'si duruyor (sr-only). */
     return (
       <FadeUp>
-        <div className="krm-empty">
-          <span className="krm-empty-ic" aria-hidden="true">
-            <Inbox size={20} strokeWidth={1.8} />
-          </span>
-          <p className="krm-empty-t">{CAREERS_EMPTY.title}</p>
-          <p className="krm-empty-l">{CAREERS_EMPTY.line}</p>
+        <div className="kry-bos">
+          <div className="kry-bos-m">
+            <p className="kry-bos-t">{CAREERS_EMPTY.title}</p>
+            <p className="kry-bos-p">{CAREERS_EMPTY.line}</p>
+            <a className="btn btn-primary kry-bos-a" href={APPLY_ANCHOR}>
+              {CAREERS_EMPTY.cta}
+              <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+            </a>
+          </div>
+          <div className="kry-bos-o">
+            <p className="kry-bos-k">{CAREERS_EMPTY.officesLabel}</p>
+            <ul className="kry-ofis">
+              {OFFICES.map((o) => {
+                /* Şehir yoksa ülke adı tek başına; şehir ülke adıyla aynıysa
+                   (Dubai) ikinci kez yazılmıyor. */
+                const ulke = COUNTRY_NAME[o.country];
+                const sehir = o.city.trim() !== "" ? o.city : ulke;
+                return (
+                <li key={o.country} className="kry-ofis-i">
+                  {/* Flag çıplak <svg> basıyor (tuzak H): kap sabit px + clip. */}
+                  <span className="kry-ofis-f" aria-hidden="true">
+                    <Flag country={o.country} />
+                  </span>
+                  <b>{sehir}</b>
+                  {sehir !== ulke ? <span>{ulke}</span> : null}
+                </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       </FadeUp>
     );
@@ -290,9 +334,17 @@ function ApplicationForm({
       {/* aria-live="polite": bir ilanın "başvurun" düğmesinden gelindiğinde
           ekranda değişen tek şey bu cümle. Görmeyen kullanıcı aksi hâlde
           seçiminin karşılığını duymuyor. */}
+      {/* 10.10.2026 · İLAN YOKKEN CÜMLE VE POZİSYON KUTUSU BASILMIYOR.
+          Tek seçenek ("Açık başvuru") kalınca form "Bir pozisyon işaretleyin"
+          diye açılıyor ve işaretlenecek tek kutuyu zorunlu tutuyordu: formun
+          en dağınık yeri buydu. Değer başlangıçta seçili geliyor
+          (CareerSections · EMPTY_VALUES), gönderilen alan ve gönderim mantığı
+          aynı. İlan girildiği gün iki blok kendiliğinden geri gelir. */}
+      {NO_OPENINGS ? null : (
       <p className="krm-say" aria-live="polite">
         {say}
       </p>
+      )}
 
       {/* ============ POZİSYON — açılır menü değil, görünür kutucuklar ======
           Yerli <fieldset> + <legend>: gruplama ve grup adının duyurulması
@@ -300,6 +352,7 @@ function ApplicationForm({
           ad olarak kullanmıyor. */}
       <fieldset
         className="krm-block"
+        hidden={NO_OPENINGS}
         aria-describedby={shown("pozisyon") ? "krm-pozisyon-err" : undefined}
       >
         <legend className="krm-legend">
@@ -555,7 +608,11 @@ function ApplicationForm({
 export default function CareerSections() {
   /* Durum burada, iki bölümün ortasında: ilan kartındaki "başvurun" düğmesi
      formdaki pozisyonu seçiyor. Kaydırma bu işe karışmıyor — onu çapa yapıyor. */
-  const [values, setValues] = useState<Values>(EMPTY_VALUES);
+  /* 10.10.2026 · İLAN YOKKEN ön seçim VAR: seçilecek başka pozisyon yok,
+     aşağıdaki "yanlış pozisyona başvuru" riski de yok. */
+  const [values, setValues] = useState<Values>(
+    NO_OPENINGS ? { ...EMPTY_VALUES, pozisyon: APPLICATION_FORM.openValue } : EMPTY_VALUES,
+  );
 
   /* Ön seçim BAŞLANGIÇTA YOK ve bu bilinçli: hangi işe başvurulduğu, formun
      doldurulmadan önce verilmiş olamayacak tek karar. /iletisim'de ülke ve
@@ -591,7 +648,7 @@ export default function CareerSections() {
           Yer tutucu ayrımını kayıt başına duran küçük rozet taşıyor.)
           ================================================================== */}
       <section
-        className="sec-pad krm-nohead"
+        className="sec-pad krm-nohead kry-bos-sec"
         id="pozisyonlar"
         style={{ background: "var(--white)" }}
       >
@@ -608,15 +665,24 @@ export default function CareerSections() {
           gelindiğinde bölümün ilk satırını örtmesin diye (/iletisim ile
           aynı ölçü).
           ================================================================== */}
+      {/* 10.10.2026 · FORM İKİ SÜTUNA TOPLANDI, ÜST BOŞLUK KISALDI. Burak:
+          "Başvuru formuyla 'şu an açık pozisyonumuz yok' arasında çok boşluk
+          var." 1440'ta kutunun altı ile "Başvuru formu" başlığı arasında
+          224 px vardı (112 + 112). Şimdi başlık solda, panel sağda: panel
+          1136'dan 8/12 sütuna indi (girdiler yarım ekran boyu çizgiler
+          olmaktan çıktı) ve iki bölümün bitişen dolguları kısaldı
+          (kurumsal.css · .kry-bos-sec, .kry-form-sec). */}
       <section
-        className="sec-pad"
+        className="sec-pad kry-form-sec"
         id={APPLY_ANCHOR_ID}
         style={{ background: "var(--paper)", scrollMarginTop: 70 }}
       >
-        <div className="container-o">
-          <div className="sec-head">
+        <div className="container-o kry-form-g">
+          <div className="sec-head kry-form-bas">
             <h2 className="h2">{APPLICATION_FORM.title}</h2>
-            <p className="sec-lead">{APPLICATION_FORM.lead}</p>
+            <p className="sec-lead">
+              {NO_OPENINGS ? APPLICATION_FORM.leadEmpty : APPLICATION_FORM.lead}
+            </p>
           </div>
 
           <FadeUp delay={0.08}>

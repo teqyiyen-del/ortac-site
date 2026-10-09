@@ -46,3 +46,11 @@ metin birebir çeviri olmak zorunda değil; ama fiyat, süre, kural gibi her olg
 - "Çeviri takibi admin panelinde olsun" demiştin: hangi panel? Bugünkü takip betikle.
 - İngilizce tarafın hedefi kim: Türkiye dışındaki Türkler mi, yabancı girişimciler mi?
   Metnin tonu ve hangi bölümlerin kalacağı buna göre değişir.
+
+## 10.10.2026 · Burak'ın cevabı: İngilizce tarafın okuru
+
+"Yurt dışındaki yabancılar, globaldekiler. Global bir firmayız, sadece Türkçe ile geçmek
+istemiyoruz." Yani İngilizce metin Türk okura göre değil, herhangi bir ülkeden
+girişimciye göre yazılır: Türkiye vergisi bölümleri çıkar ya da "kendi ülkenizdeki
+vergi" diye genelleşir, "Türkçe süreç" anlatılmaz, Türkiye'ye yakınlık gibi gerekçeler
+yeniden düşünülür.

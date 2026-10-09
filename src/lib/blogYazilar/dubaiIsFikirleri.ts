@@ -53,7 +53,11 @@ export const POST_DUBAI_IS_FIKIRLERI: BlogPost = {
   heroAccent: "2026 iş fikirleri ve iş imkanları",
   summary:
     "Dubai'de hangi işler kuruluyor, hangileri ek izin istiyor, Türkler ne iş yapıyor ve iş kurmanın vergisi ile maliyeti ne kadar.",
-  publishedAt: "2026-10-09",
+  /* 10.10.2026 · Burak: yazılar toplu girildi; tarihleri 2026'ya yay.
+     Yayın tarihi yayıldı, güncelleme tarihi rakamların doğrulandığı gün
+     (yazı içindeki "Ekim 2026 itibarıyla" ifadeleriyle tutarlı). */
+  publishedAt: "2026-06-18",
+  updatedAt: "2026-10-09",
   topic: "İş fikirleri",
   country: "dubai",
   tags: ["Dubai", "İş fikirleri", "Şirket kuruluşu"],

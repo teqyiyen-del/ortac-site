@@ -810,6 +810,7 @@ function FotoKart({
   on,
   label,
   uzun,
+  kisa,
   onGo,
 }: {
   href: string;
@@ -822,6 +823,9 @@ function FotoKart({
   label: string;
   /* Başlık bir yazı başlığıysa (uzun, üç satıra kadar) punto bir kademe iner. */
   uzun?: boolean;
+  /* Telefon menüsündeki yatay, alçak sürüm (10.10.2026): düğme satırı yok,
+     kartın tamamı bağlantı. */
+  kisa?: boolean;
   onGo: () => void;
 }) {
   return (
@@ -829,6 +833,7 @@ function FotoKart({
       href={href}
       className="onv-brief"
       data-uzun={uzun ? "" : undefined}
+      data-kisa={kisa ? "" : undefined}
       aria-label={label}
       onClick={onGo}
     >
@@ -1756,6 +1761,35 @@ export default function NavIstemci({ sonYazi }: { sonYazi: SonYazi | null }) {
                       )}
                     </SmartLink>
                   ))}
+                  {/* 10.10.2026 · Burak: "bunları mobil navbarda da böyle
+                      gösterebiliriz, yatay bir görsel olarak küçük; diğer
+                      butonlar gibi olunca sıkıcı oluyor." Masaüstü panelindeki
+                      iki fotoğraflı kartın alçak hâli, listenin altında. */}
+                  {sheetSec === "kaynaklar" && sonYazi && (
+                    <FotoKart
+                      kisa
+                      uzun
+                      href={blogHref(sonYazi.slug)}
+                      foto={sonYazi.cover}
+                      ust={sonYazi.category}
+                      baslik={sonYazi.title}
+                      dugme="Yazıyı okuyun"
+                      label={`Son yazı, ${sonYazi.category}: ${sonYazi.title}`}
+                      onGo={closeAll}
+                    />
+                  )}
+                  {sheetSec === "kurumsal" && (
+                    <FotoKart
+                      kisa
+                      href="/iletisim"
+                      foto={PHOTO.formation}
+                      baslik="İletişim"
+                      satir="Üç ülkede ofis, tek muhatap"
+                      dugme="İletişim sayfasına gidin"
+                      label="İletişim: üç ülkede ofis, tek muhatap"
+                      onGo={closeAll}
+                    />
+                  )}
                 </div>
               )}
               </div>

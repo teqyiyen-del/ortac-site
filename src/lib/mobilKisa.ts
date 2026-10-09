@@ -20,7 +20,7 @@
 
 export const MOBIL_KISA: [bas: string, kisa: string][] = [
   /* ---- ana sayfa */
-  ["Dubai, İngiltere ve KKTC'de kendi ofislerimizle çalışıyoruz", "Üç ülkede kendi ofisimiz var. Tek tek inceleyin ya da yan yana kıyaslayın."],
+  ["Dubai, İngiltere ve KKTC'de kendi ofislerimizle çalışıyoruz", "Üç ülkede kendi ofisimiz var. Size uygun olanı seçin."],
   ["Muhasebe ve vergiden şirket kuruluşuna, bankadan uyuma", "Altı alan, tek ekip. Kapsam ülkeye göre değiştiği için ülkeyi siz seçiyorsunuz."],
   ["Kurum ve süre ülkeye göre değişiyor, çalışma biçimimiz", "Evrakı bir kez veriyorsunuz, gerisini biz yürütüyoruz."],
   ["1996'dan beri muhasebe, vergi, şirket kuruluşu ve kurumsal", "1996'dan beri muhasebe, vergi ve şirket kuruluşu aynı çatı altında."],

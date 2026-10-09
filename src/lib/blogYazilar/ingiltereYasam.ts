@@ -46,7 +46,11 @@ export const POST_UK_YASAM: BlogPost = {
   heroAccent: "vize, iş imkanları ve maliyetler",
   summary:
     "İngiltere'de yaşamak için hangi vize gerekiyor, çalışma vizesinin maaş şartı ne, ortalama kira ve kazanç ne kadar? Resmî kaynaklardan 2026 rakamları.",
-  publishedAt: "2026-10-09",
+  /* 10.10.2026 · Burak: yazılar toplu girildi; tarihleri 2026'ya yay.
+     Yayın tarihi yayıldı, güncelleme tarihi rakamların doğrulandığı gün
+     (yazı içindeki "Ekim 2026 itibarıyla" ifadeleriyle tutarlı). */
+  publishedAt: "2026-03-26",
+  updatedAt: "2026-10-09",
   topic: "Yaşam ve vize",
   country: "ingiltere",
   tags: ["İngiltere", "Vize", "Yaşam maliyeti"],

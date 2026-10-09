@@ -63,7 +63,11 @@ export const POST_GELIR_VERGISI_OLMAYAN: BlogPost = {
   heroAccent: "güncel liste ve vergi mukimliği",
   summary:
     "Kişisel gelir vergisi almayan on ülke, kurumlar vergisi oranlarıyla birlikte. Türkiye'de yaşayanlar için asıl belirleyici olan vergi mukimliği.",
-  publishedAt: "2026-10-09",
+  /* 10.10.2026 · Burak: yazılar toplu girildi; tarihleri 2026'ya yay.
+     Yayın tarihi yayıldı, güncelleme tarihi rakamların doğrulandığı gün
+     (yazı içindeki "Ekim 2026 itibarıyla" ifadeleriyle tutarlı). */
+  publishedAt: "2026-01-22",
+  updatedAt: "2026-10-09",
   topic: "Vergi",
   tags: ["Gelir vergisi", "Vergi mukimliği", "Dubai"],
   author: "Murat Ortaç",

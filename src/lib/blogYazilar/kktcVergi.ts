@@ -50,7 +50,11 @@ export const POST_KKTC_VERGI: BlogPost = {
   heroAccent: "Kıbrıs'ta şirket kurmanın avantajları",
   summary:
     "KKTC'de vergi oranları, Serbest Liman şirketinin muafiyeti ve şartı, Kıbrıs'ta şirket kurmanın avantajları ile sınırları. 2026 rakamlarıyla.",
-  publishedAt: "2026-10-09",
+  /* 10.10.2026 · Burak: yazılar toplu girildi; tarihleri 2026'ya yay.
+     Yayın tarihi yayıldı, güncelleme tarihi rakamların doğrulandığı gün
+     (yazı içindeki "Ekim 2026 itibarıyla" ifadeleriyle tutarlı). */
+  publishedAt: "2026-07-23",
+  updatedAt: "2026-10-09",
   topic: "Vergi",
   country: "kktc",
   tags: ["KKTC", "Vergi", "Serbest Liman"],
