@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight, Info, Quote, TriangleAlert } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Info, Quote, TriangleAlert } from "lucide-react";
+import Icindekiler from "@/components/blog/Icindekiler";
+import { COUNTRY_PHOTO } from "@/lib/media";
 import Nav from "@/components/Nav";
 import FadeUp from "@/components/shared/FadeUp";
 import SmartLink from "@/components/shared/SmartLink";
@@ -158,6 +160,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
    bağlantıya çevriliyor: site içi adres SmartLink (yayında olmayan adres
    kendiliğinden sönük basılır), dış adres yeni sekmede. Başka biçimlendirme
    yok; kalın, italik, başlık bu yoldan gelmez. */
+/* YAZAR FOTOĞRAFI. Elimizde Murat Ortaç'ın gerçek bir portresi yok (eski
+   sitedeki kareler stok/üretim). Dosya public/murat-ortac.jpg olarak
+   gelince buraya "/murat-ortac.jpg" yazılır; o zamana kadar baş harfler. */
+const YAZAR_FOTO: string | null = null;
+
 function Zengin({ text }: { text: string }) {
   const parcalar = text.split(/(\[[^\]]+\]\([^)\s]+\))/g);
   return (
@@ -438,6 +445,11 @@ export default async function BlogPostPage({ params }: { params: Params }) {
      YER TUTUCUDA Article DÜĞÜMÜ HİÇ BASILMIYOR: datePublished'ı olan bir
      Article, yazılmamış bir yazıyı yayınlanmış ilan etmek olurdu. Kırıntı
      kalıyor, çünkü sayfanın sitedeki yeri yer tutucuyken de doğru. */
+  /* yazının bağlandığı hizmet: çıkış listesinin ilk girdisi (her yazıda ilgili
+     hizmet sayfası ilk sırada). Şerit ve kapanış bu bağlantıyı kullanıyor. */
+  const hizmet = post.links[0] ?? null;
+  /* şerit ve kapanıştaki kare: yazının ülkesi varsa ülke karesi, yoksa kapak */
+  const gorsel = post.country ? COUNTRY_PHOTO[post.country] : post.cover;
   const sssHepsi = post.body.flatMap((b) => (b.kind === "sss" ? b.items : []));
   const jsonLd = {
     "@context": "https://schema.org",
@@ -647,23 +659,45 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                       Metin sitede doğrulanmış bilgiden (lib/about: yönetici
                       ortak, Certified Accountant; firma 1996'dan beri). Fotoğraf yok: elimizde
                       gerçek bir portre yok, stok yüz konmuyor. */}
+                  {hizmet && (
+                    <SmartLink href={hizmet.href} className="bp-serit">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={gorsel} alt="" loading="lazy" width={120} height={120} />
+                      <span className="bp-serit-m">
+                        <i>Ortac Global&apos;de</i>
+                        <b>{hizmet.label}</b>
+                        <span>{hizmet.line}</span>
+                      </span>
+                      <span className="bp-serit-a">
+                        Hizmeti inceleyin
+                        <ArrowUpRight size={16} strokeWidth={2.2} aria-hidden="true" />
+                      </span>
+                    </SmartLink>
+                  )}
                   {post.author !== "Ortac Global" && (
                     <aside className="bp-yazar" aria-label="Yazar">
-                      <span className="bp-yazar-h" aria-hidden="true">
-                        {post.author
-                          .split(" ")
-                          .map((x) => x[0])
-                          .join("")}
-                      </span>
+                      {YAZAR_FOTO ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img className="bp-yazar-h" src={YAZAR_FOTO} alt={post.author} width={88} height={88} />
+                      ) : (
+                        <span className="bp-yazar-h" aria-hidden="true">
+                          {post.author
+                            .split(" ")
+                            .map((x) => x[0])
+                            .join("")}
+                        </span>
+                      )}
                       <div>
-                        <p className="bp-yazar-k">Yazar</p>
-                        <p className="bp-yazar-a">{post.author}</p>
-                        <p className="bp-yazar-s">
-                          Ortac Global yönetici ortağı, Certified Accountant. Ortac Global 1996&apos;dan beri
-                          muhasebe, vergi ve şirket kuruluşu alanında çalışıyor.
+                        <p className="bp-yazar-a">
+                          {post.author} <span>· Yönetici ortak</span>
                         </p>
-                        <SmartLink href="/hakkimizda" className="bp-a">
-                          Ortac Global hakkında
+                        <p className="bp-yazar-s">
+                          Murat Ortaç, Ortac Global&apos;in yönetici ortağı ve Certified Accountant. Ortac Global
+                          1996&apos;dan beri muhasebe, vergi ve şirket kuruluşu alanında çalışıyor; Dubai, İngiltere ve
+                          KKTC&apos;de kendi ofisleri var.
+                        </p>
+                        <SmartLink href="/blog" className="bp-yazar-l">
+                          Bütün yazıları
                         </SmartLink>
                       </div>
                     </aside>
@@ -678,18 +712,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                     olmasından iyi. Sayfa içi çapa olduğu için düz <a>:
                     SmartLink dolaşım kararı veriyor, buradaki hedef aynı
                     sayfa. */}
-                {toc.length > 1 && (
-                  <nav className="bp-toc" aria-label="İçindekiler">
-                    <p className="bp-toc-h">İçindekiler</p>
-                    <ol>
-                      {toc.map((t) => (
-                        <li key={t.id}>
-                          <a href={`#${t.id}`}>{t.text}</a>
-                        </li>
-                      ))}
-                    </ol>
-                  </nav>
-                )}
+                {toc.length > 1 && <Icindekiler maddeler={toc} />}
               </div>
             </div>
           </div>
@@ -702,30 +725,35 @@ export default async function BlogPostPage({ params }: { params: Params }) {
         {/* 09.10.2026 · Burak: "bloglara daha güzel CTA yapabilirsin; siyah
             üstüne olmasın." Koyu bölüm kalktı: kırık beyaz zeminde beyaz
             çerçeveli panel, solda başlık ve mavi düğme, sağda üç çıkış kartı. */}
+        {/* KAPANIŞ · DÖRDÜNCÜ HÂL (09.10.2026). Burak üçüncü hâli de beğenmedi
+            ("daha görselli güzel bir şey yapabiliriz") ve Piktram'ın blogundaki
+            paneli örnek verdi: solda küçük etiket, büyük başlık, iki satır,
+            düğme ve hizmet bağlantısı; sağda hafif eğik bir görsel. Üç çıkış
+            kartı kalktı; hizmet bağlantısı düğmenin yanında tek satır. */}
         <section className="sec-pad bp-exit-sec">
           <div className="container-o">
             <div className="bp-exit">
-              <FadeUp className="bp-exit-l">
-                <h2 className="bp-exit-h">{post.closing.title}</h2>
-                <SmartLink href="/iletisim" className="btn btn-solid bp-exit-btn">
-                  {post.closing.cta}
-                  <ArrowRight size={16} strokeWidth={2.1} aria-hidden="true" />
-                </SmartLink>
-              </FadeUp>
-
-              <FadeUp delay={0.14} className="bp-exit-r">
-                <p className="bp-exit-k">Devamı için</p>
-                <div className="bp-links">
-                  {post.links.map((l) => (
-                    <SmartLink key={l.href} href={l.href} className="bp-link">
-                      <span>
-                        <b>{l.label}</b>
-                      </span>
-                      <ArrowRight size={15} strokeWidth={2.1} aria-hidden="true" />
+              <div className="bp-exit-l">
+                <p className="bp-exit-k">{hizmet ? hizmet.label : meta.label}</p>
+                <h2 className="bp-exit-h">
+                  Bu konuda <span>konuşalım.</span>
+                </h2>
+                <p className="bp-exit-p">{post.closing.line}</p>
+                <div className="bp-exit-d">
+                  <SmartLink href="/iletisim" className="btn btn-solid bp-exit-btn">
+                    {post.closing.cta}
+                    <ArrowRight size={16} strokeWidth={2.1} aria-hidden="true" />
+                  </SmartLink>
+                  {hizmet && (
+                    <SmartLink href={hizmet.href} className="bp-exit-a">
+                      {hizmet.label}
+                      <ArrowUpRight size={16} strokeWidth={2.2} aria-hidden="true" />
                     </SmartLink>
-                  ))}
+                  )}
                 </div>
-              </FadeUp>
+              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="bp-exit-g" src={gorsel} alt="" loading="lazy" width={360} height={360} />
             </div>
           </div>
         </section>
@@ -737,7 +765,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
         {others.length > 0 && (
           <section className="sec-pad" style={{ background: "var(--white)" }}>
             <div className="container-o">
-              <h2 className="bp-more-h">Diğer yazılar</h2>
+              <h2 className="bp-more-h">Benzer yazılar</h2>
               <div className="bp-more">
                 {others.slice(0, 3).map((o, i) => (
                   <FadeUp key={o.slug} delay={0.1 + i * 0.06}>
@@ -746,10 +774,13 @@ export default async function BlogPostPage({ params }: { params: Params }) {
                         altında kategori, başlık ve tek cümle; tarih ve ok kalktı. */}
                     <SmartLink href={demoHref(o)} className="bp-more-c">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img className="bp-more-g" src={o.cover} alt="" loading="lazy" width={450} height={253} />
+                      <img className="bp-more-g" src={o.cover} alt="" loading="lazy" width={450} height={281} />
                       <span className="bp-more-k">{CATEGORY[o.category].label}</span>
                       <b className="bp-more-t">{o.title}</b>
                       <i className="bp-more-s">{o.summary}</i>
+                      <span className="bp-more-f">
+                        {formatDate(o.publishedAt)} · {readingMinutes(o)} dk okuma
+                      </span>
                     </SmartLink>
                   </FadeUp>
                 ))}
