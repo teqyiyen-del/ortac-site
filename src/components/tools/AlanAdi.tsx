@@ -89,6 +89,7 @@ export default function AlanAdi() {
   const ana = sonuc?.uzantilar.find((u) => u.uzanti === sonuc.ana);
   const digerleri = sonuc?.uzantilar.filter((u) => u.uzanti !== sonuc.ana) ?? [];
   const bosBenzer = sonuc?.benzerler?.filter((b) => b.durum === "bos") ?? [];
+  const sorulamayan = sonuc?.benzerler?.filter((b) => b.durum === "sorulamadi").length ?? 0;
   const tamAd = sonuc ? `${sonuc.etiket}.${sonuc.ana}` : "";
 
   return (
@@ -170,7 +171,8 @@ export default function AlanAdi() {
               <section className="ta-alan-bolum" aria-label="Boş görünen benzer adlar">
                 <h3 className="ta-alan-h">
                   Benzer adlar
-                  {sonuc.benzerler && <span>{sonuc.benzerler.length} ad soruldu, {bosBenzer.length} tanesi boş görünüyor</span>}
+                  {/* Sorulamayan benzer ad "boş değil" diye sayılmasın: sayısı ayrıca yazılıyor. */}
+                  {sonuc.benzerler && <span>{sonuc.benzerler.length} ad soruldu, {bosBenzer.length} tanesi boş görünüyor{sorulamayan ? `, ${sorulamayan} tanesi sorulamadı` : ""}</span>}
                 </h3>
                 {!sonuc.benzerler ? (
                   <p className="ta-alan-not">Benzer adlar soruluyor…</p>
@@ -179,10 +181,14 @@ export default function AlanAdi() {
                     {bosBenzer.map((b) => (<Satir key={b.ad} etiket={b.ad} uzanti="com" durum="bos" />))}
                   </ul>
                 ) : (
-                  <p className="ta-alan-not">Sorduğumuz benzer adların hiçbiri boş görünmüyor. Adı biraz değiştirip yeniden deneyin.</p>
+                  <p className="ta-alan-not">{sorulamayan ? "Benzer adların bir kısmı sorulamadı, kalanlar boş görünmüyor. Biraz sonra yeniden deneyin." : "Sorduğumuz benzer adların hiçbiri boş görünmüyor. Adı biraz değiştirip yeniden deneyin."}</p>
                 )}
               </section>
             )}
+            {/* Denetim (scripts/alan-denetim.mjs): example.dev, www.app, test.xyz gibi kütüğün kendine
+                ayırdığı adlar da "kayıt yok" dönüyor. Uyarı eskiden yalnız aranan ad boşsa çıkıyordu;
+                listelerde "boş görünüyor" yazan her durumda görünmeli. */}
+            <p className="ta-alan-not">Boş görünüyor: kütükte bu ada ait kayıt yok demek. Ad kütük tarafından ayrılmış, özel fiyatlı ya da bir marka hakkına takılı olabilir; kesin cevabı satın alma anında satıcı verir.</p>
           </>
         )}
       </Tezgah>
