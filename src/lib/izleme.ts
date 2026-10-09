@@ -21,7 +21,10 @@
 type Deger = string | number | boolean;
 export type IzOlay = { t: "g" | "c" | "t" | "o"; z: number; y: string } & Record<string, Deger>;
 
-const UC = "/api/olay";
+/* Olayların yazıldığı adres. Varsayılan sitenin kendi ucu. Site Vercel'de dururken
+   kalıcı dosya tutamadığı için NEXT_PUBLIC_IZLEME_UC ile panelin ucu gösterilir
+   (ör. https://panel.ortacglobal.com/api/olay); o zaman istek başka alan adına gider. */
+const UC = process.env.NEXT_PUBLIC_IZLEME_UC || "/api/olay";
 const kuyruk: IzOlay[] = [];
 let acik = false;
 let oturum = "";
@@ -51,8 +54,11 @@ export function izGonder() {
   if (!kuyruk.length) return;
   const govde = JSON.stringify({ o: oturum, e: kuyruk.splice(0, 40) });
   /* sendBeacon sekme kapanırken de gidiyor; yoksa keepalive'lı fetch */
-  if (!navigator.sendBeacon?.(UC, new Blob([govde], { type: "application/json" })))
-    fetch(UC, { method: "POST", body: govde, keepalive: true, headers: { "Content-Type": "application/json" } }).catch(() => {});
+  /* Gövde düz metin türünde: tarayıcı başka alan adına JSON türünde sendBeacon
+     göndermiyor (ön istek gerekir, sendBeacon yapamaz). Uçlar gövdeyi zaten metin
+     olarak okuyup kendileri ayrıştırıyor. no-cors: cevabı okumuyoruz. */
+  if (!navigator.sendBeacon?.(UC, new Blob([govde], { type: "text/plain" })))
+    fetch(UC, { method: "POST", body: govde, keepalive: true, mode: "no-cors", headers: { "Content-Type": "text/plain" } }).catch(() => {});
 }
 
 export function izle(t: IzOlay["t"], veri: Record<string, Deger> = {}) {
