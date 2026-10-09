@@ -114,10 +114,18 @@ const EN_COK = 60;
 
 const VOWELS = "aeıioöuüAEIİOÖUÜ";
 
-/** Türkçe büyük harf kuralıyla: "istanbul" → "İstanbul", "ırmak" → "Irmak". */
+/* Büyük/küçük harf kuralı kelimeye göre seçiliyor. Türkçe kural her kelimeye uygulanınca
+   "ideal" → "İdeal Labs", "INFO" → "Craftınfo" ve İngilizce kök "Ignea" → "Atlasıgnea"
+   çıkıyordu (denetim: 1252 aday). Şimdi: kelimede Türkçeye özgü harf varsa Türkçe kural
+   ("ışık" → "Işık"), yoksa düz kural ("ideal" → "Ideal"). Havuzdaki kökler hep a-z,
+   onlar her zaman düz kuralla küçülüyor. */
+const trMi = (s: string) => /[çğıöşüÇĞİÖŞÜ]/.test(s);
+const kucult = (s: string) => (trMi(s) ? s.toLocaleLowerCase("tr-TR") : s.toLowerCase());
+
+/** "ırmak" → "Irmak", "İstanbul" → "İstanbul", "ideal" → "Ideal". */
 function cap(s: string): string {
   if (!s) return s;
-  return s.charAt(0).toLocaleUpperCase("tr-TR") + s.slice(1).toLocaleLowerCase("tr-TR");
+  return trMi(s) ? s.charAt(0).toLocaleUpperCase("tr-TR") + s.slice(1).toLocaleLowerCase("tr-TR") : s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 }
 
 /**
@@ -126,7 +134,9 @@ function cap(s: string): string {
  * ziyaretçinin işine yaramayan rastgele bir sözcük listesi olurdu.
  */
 export function normalizeKeyword(input: string): string {
-  const letters = input.replace(/[^\p{L}]/gu, "");
+  /* Yalnız Latin harfleri: Kiril ya da Çince bir kelimede alan adı biçimi boşalıyor ve
+     iki ayrı aday aynı alan adını soruyordu; şirket adı da üç ülkede Latin harfle yazılıyor. */
+  const letters = input.replace(/[^\p{Script=Latin}]/gu, "");
   return letters.slice(0, 24);
 }
 
@@ -193,8 +203,11 @@ function ortusme(a: string, b: string): number {
   return 0;
 }
 
+/** Birleşik adın baş harfi büyür, gerisine dokunulmaz (parçalar zaten küçük). Kural baştaki parçanın. */
+const bas = (ad: string, trKural: boolean) => (trKural ? ad.charAt(0).toLocaleUpperCase("tr-TR") : ad.charAt(0).toUpperCase()) + ad.slice(1);
+
 function uret(key: string, sector: SectorKey, tone: NameTone): Aday[] {
-  const word = cap(key), kucuk = key.toLocaleLowerCase("tr-TR");
+  const word = cap(key), kucuk = kucult(key), tr = trMi(key);
   const out = new Map<string, Aday>();
   const ekle = (ad: string, puan: number, kok?: Kok) => {
     if (!ad || ad === word) return;
@@ -209,24 +222,24 @@ function uret(key: string, sector: SectorKey, tone: NameTone): Aday[] {
     for (const b of SEKTOR_IS[sector]) ekle(`${word} ${b}`, puanla(`${word} ${b}`, null));
   } else if (tone === "kisa") {
     for (const e of EKLER) {
-      const govde = stem(key, e), ad = cap(`${govde}${e}`);
+      const govde = stem(key, e), ad = bas(kucult(govde) + e, tr);
       ekle(ad, puanla(ad, [govde, e]));
     }
   } else if (tone === "bilesik") {
     for (const k of kokler) {
-      const r = k[0].toLocaleLowerCase("tr-TR");
+      const r = k[0].toLowerCase();
       /* sektörün kendi kökü tema köküne göre biraz önde: aynı puanda sektörü söyleyen kazansın */
       const sektorden = sektorKok.includes(k) ? 7 : 0;
-      ekle(cap(`${kucuk}${r}`), puanla(cap(`${kucuk}${r}`), [kucuk, r]) + sektorden, k);
-      ekle(cap(`${r}${kucuk}`), puanla(cap(`${r}${kucuk}`), [r, kucuk]) + sektorden, k);
+      ekle(bas(kucuk + r, tr), puanla(kucuk + r, [kucuk, r]) + sektorden, k);
+      ekle(bas(r + kucuk, false), puanla(r + kucuk, [r, kucuk]) + sektorden, k);
     }
   } else {
     for (const k of kokler) {
-      const r = k[0].toLocaleLowerCase("tr-TR");
+      const r = k[0].toLowerCase();
       for (const [a, b] of [[kucuk, r], [r, kucuk]] as const) {
         const o = ortusme(a, b);
         if (!o) continue;
-        const ad = cap(a + b.slice(o));
+        const ad = bas(a + b.slice(o), a === kucuk && tr);
         /* kaynaşma iki kelimeyi de taşımalı: sonuç ikisinden de belirgin uzun, ama okunur boyda */
         if (ad.length < Math.max(a.length, b.length) + 2 || ad.length > 12) continue;
         ekle(ad, puanla(ad, null, o), k);
@@ -309,5 +322,6 @@ export function toDomainLabel(name: string): string {
     .split("")
     .map((ch) => TR_ASCII[ch] ?? ch)
     .join("")
+    .normalize("NFD") /* "é", "ä", "ñ" gibi harfler düşmesin, yalın harfe insin: "café" → "cafe" */
     .replace(/[^a-z0-9]/g, "");
 }
