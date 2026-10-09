@@ -1,6 +1,6 @@
 import Nav from "@/components/Nav";
 import HeroAkis from "@/components/home/HeroAkis";
-import ThreeCountries from "@/components/home/ThreeCountries";
+import UlkeKartBolumu from "@/components/home/UlkeKartBolumu";
 import Chain from "@/components/home/Chain";
 import HomeServices from "@/components/home/HomeServices";
 import ProcessScroll from "@/components/ProcessScroll";
@@ -72,7 +72,21 @@ export default function Home() {
             kaldıracağız." Ana sayfa fiyat konuşmuyor; fiyat ülke
             sayfalarında. Bileşen (home/PriceSummary.tsx) duruyor, akıştan
             çıktı. */}
-        <ThreeCountries />
+        {/* 10.10.2026 · yay ve kıyas tablosu (ThreeCountries) akıştan çıktı;
+            yerinde üç fotoğraflı ülke kartı (gerekçe bileşenin başında).
+            Cümlelerdeki rakamlar lib/brand · FACTS ve fiyat dosyalarıyla
+            aynı; İngilizce karşılığı lib/en/anaSayfa.ts · ulkeler. */}
+        <UlkeKartBolumu
+          title="Hizmet verdiğimiz ülkeler."
+          accent="ülkeler."
+          lead="Dubai, Londra ve Lefkoşa'da kendi ofislerimizle çalışıyoruz. Ülkeyi açın, orada kuruluşun neleri kapsadığını görün."
+          kartlar={[
+            { slug: "dubai", ad: "Dubai", cip: "Serbest bölge", line: "IFZA, Meydan ve DWTC iş ortağı. Kuruluş IFZA'da 5.120 dolardan, 5-6 günde.", href: "/dubai" },
+            { slug: "ingiltere", ad: "İngiltere", cip: "Uzaktan kuruluş", line: "Companies House'ta limited şirket. Tek fiyat, 3-7 günde.", href: "/ingiltere" },
+            { slug: "kktc", ad: "KKTC", cip: "Serbest Liman", line: "Serbest Liman ve Bölge şirketi. İlk yıl dahil 9.920 €, 30-40 iş günü.", href: "/kktc" },
+          ]}
+          kiyas="Üç ülkeyi kıyaslayın"
+        />
         <HomeServices />
         <TrustLayer />
         <Profiles />

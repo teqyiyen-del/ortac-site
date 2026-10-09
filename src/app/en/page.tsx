@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
 import Nav from "@/components/Nav";
 import HeroAkis from "@/components/home/HeroAkis";
 import Chain from "@/components/home/Chain";
@@ -9,10 +8,7 @@ import Profiles from "@/components/home/Profiles";
 import TrustLayer from "@/components/TrustLayer";
 import HomeFaq from "@/components/home/HomeFaq";
 import Footer from "@/components/Footer";
-import SplitWords from "@/components/shared/SplitWords";
-import FadeUp from "@/components/shared/FadeUp";
-import SmartLink from "@/components/shared/SmartLink";
-import UlkeFotoKartlar from "@/components/shared/UlkeFotoKartlar";
+import UlkeKartBolumu from "@/components/home/UlkeKartBolumu";
 import { OG_GORSEL, sayfaKunye } from "@/lib/seo";
 import { EN_ANA_SAYFA as T } from "@/lib/en/anaSayfa";
 
@@ -58,37 +54,14 @@ export default function HomeEn() {
       <main id="icerik">
         <HeroAkis />
 
-        {/* ÜLKELER · sade karşılık. Kimlik (#ulkeler) ve zemin Türkçe
-            sayfadaki bölümle aynı; içerik üç kart. */}
-        <section id="ulkeler" className="sec-pad" style={{ background: "var(--white)" }}>
-          <div className="container-o">
-            <div className="sec-head">
-              <SplitWords
-                as="h2"
-                text={T.ulkeler.title}
-                accent={T.ulkeler.accent}
-                className="h2"
-                style={{ color: "var(--text-900)" }}
-              />
-              <FadeUp delay={0.2}>
-                <p className="sec-lead">{T.ulkeler.lead}</p>
-              </FadeUp>
-            </div>
-            {/* sec-head ile kartlar arasındaki boşluk: öteki bölümlerde ızgaranın
-                kendi üst boşluğu var, .ufk'de yok (telefon kalıbı) */}
-            <div style={{ marginTop: "var(--space-head)" }}>
-              <FadeUp delay={0.24}>
-                <UlkeFotoKartlar items={T.ulkeler.kartlar.map((k) => ({ ...k, href: `/${k.slug}` }))} />
-              </FadeUp>
-            </div>
-            <FadeUp delay={0.3}>
-              <SmartLink href="/ulkeler" className="link-arrow" style={{ marginTop: 28 }}>
-                {T.ulkeler.kiyas}
-                <ArrowRight size={15} strokeWidth={2.1} />
-              </SmartLink>
-            </FadeUp>
-          </div>
-        </section>
+        {/* ÜLKELER · Türkçe ana sayfayla aynı bileşen (home/UlkeKartBolumu) */}
+        <UlkeKartBolumu
+          title={T.ulkeler.title}
+          accent={T.ulkeler.accent}
+          lead={T.ulkeler.lead}
+          kartlar={T.ulkeler.kartlar.map((k) => ({ ...k, href: `/${k.slug}` }))}
+          kiyas={T.ulkeler.kiyas}
+        />
 
         <HomeServices />
         <TrustLayer />

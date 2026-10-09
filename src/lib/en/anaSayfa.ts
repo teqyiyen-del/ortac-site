@@ -1,4 +1,4 @@
-/* kaynak: src/app/page.tsx · ozet: ba06426f */
+/* kaynak: src/app/page.tsx · ozet: e43be7cd */
 /* Ana sayfanın sayfa düzeyindeki İngilizce metni: künye, ülkeler bölümü ve
    kapanış. Bölümlerin kendi metinleri bileşen başına ayrı sözlükte
    (heroAkis, homeServices, trustLayer, profiles, chain, processScroll,
