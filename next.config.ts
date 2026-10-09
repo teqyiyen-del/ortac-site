@@ -1,5 +1,48 @@
 import type { NextConfig } from "next";
 
+/* FRAMER'DAKİ YÖNLENDİRME LİSTESİ (09.10.2026 · Burak panelden ekran görüntüsüyle
+   verdi). Çoğu daha eski WordPress sitesinin adresleri: Framer onları kendi
+   adreslerine taşıyordu, burada DOĞRUDAN yeni adrese gidiyorlar (iki atlama
+   olmasın). Türkçe harfli yazımlar da var ("/hakkımızda", "…-ödeme-…"): Google
+   bir dönem onları dizine almış, Search Console'da hâlâ tıklama alıyorlar.
+   Her satır hem harfli hem kodlanmış (%C4%B1 …) hâliyle yazılıyor.
+   Blog hedefleri yazının ESKİ adresi: yazılar o adresle taşınacak. */
+const FRAMER_ESKI: [string, string][] = [
+  ["/ekibimiz", "/hakkimizda"],
+  ["/home", "/"],
+  ["/hakkımızda", "/hakkimizda"],
+  ["/basında-biz", "/basinda-biz"],
+  ["/ortacglobal/iletisim", "/iletisim"],
+  ["/category/kibris", "/kktc"],
+  ["/kibris/kurumsal", "/hakkimizda"],
+  ["/kibris/hizmetler/denetim", "/kktc/muhasebe"],
+  ["/kibris/hizmetler/vergi", "/kktc/vergi"],
+  ["/kibris/hizmetler/bankacılık-ve-ödeme-sistemleri", "/kktc/banka-hesabi"],
+  ["/dubai/hizmetler/bankacılık-ve-ödeme-sistemleri", "/dubai/banka-hesabi"],
+  ["/ingiltere/hizmetler/bankacılık-ve-ödeme-sistemleri", "/ingiltere/banka-hesabi"],
+  ["/cyprus/services/oversight", "/kktc/muhasebe"],
+  ["/sektorler/information-technology-and-media", "/sektorler/yazilim-ve-teknoloji"],
+  ["/sektorler/financial-services", "/sektorler/finans-ve-yatirim"],
+  ["/sektorler/consumer-goods-and-retail", "/sektorler/e-ticaret"],
+  ["/gelir-vergisi-olmayan-ulkeler", "/blog/gelir-vergisi-olmayan-ulkeler-2025"],
+  ["/dubaide-vergi-var-mi", "/blog/gelir-vergisi-olmayan-ulkeler-2025"],
+  ["/blog/gelir-vergisi-olmayan-ülkeler-2025", "/blog/gelir-vergisi-olmayan-ulkeler-2025"],
+  ["/dubaide-is-fikirleri-en-karli-dubai-is-imkanlari", "/blog/dubai-is-fikirleri-en-karlı-is-imkanlari"],
+  ["/dubaide-yasam", "/blog/dubai-yasam-rehberi-maliyetler-is-imkanlari"],
+  ["/kibrista-yasam", "/blog/kktc-yasam-rehberi-kibris-is-firsatlari-maliyetler"],
+  ["/ingilterede-yasam", "/blog/ingiltere-yasam-rehberi-is-imkanlari-vize-maliyetler"],
+  ["/eori-numarasi", "/blog/eori-numarasi-nedir-nasil-alinir"],
+  ["/etsy-nedir-etsyde-nasil-satis-yapilir", "/blog/etsy-nedir-nasil-satis-yapilir"],
+  ["/2025-ingiltere-asgari-ucret", "/blog/ingiltere-asgari-ucret-2025"],
+];
+const framerEski = FRAMER_ESKI.flatMap(([source, hedef]) => {
+  const destination = encodeURI(hedef);
+  const kodlu = encodeURI(source);
+  const satir = [{ source, destination, permanent: true }];
+  if (kodlu !== source) satir.push({ source: kodlu, destination, permanent: true });
+  return satir;
+});
+
 const nextConfig: NextConfig = {
   /* Build çıktısının yeri dışarıdan verilebiliyor.
      Sebebi pratik: `next build` ile `next dev` aynı .next klasörünü paylaşınca
@@ -61,6 +104,10 @@ const nextConfig: NextConfig = {
          taşınacak; taşınmayanların yönlendirmesi o zaman yazılır.
          /en/... DE YOK: İngilizce sürüm yeni İngilizce adreslerle kurulacak,
          eşleştirme o turda. */
+      ...framerEski,
+      /* "kıbrıs" yazımı (ı ile): Search Console'da tıklama alıyor */
+      { source: "/kıbrıs/:rest*", destination: "/kktc", permanent: true },
+      { source: encodeURI("/kıbrıs") + "/:rest*", destination: "/kktc", permanent: true },
       { source: "/kibris", destination: "/kktc", permanent: true },
       { source: "/:ulke(dubai|ingiltere)/hizmetler/sirket-kurma", destination: "/:ulke", permanent: true },
       { source: "/kibris/hizmetler/sirket-kurma", destination: "/kktc", permanent: true },
@@ -87,6 +134,12 @@ const nextConfig: NextConfig = {
       { source: "/sss", destination: "/#sss", permanent: true },
       /* dönüşüm artık form olayından ölçülüyor; sayfa yok */
       { source: "/tesekkurler", destination: "/", permanent: false },
+      /* ESKİ İNGİLİZCE ADRESLER · GEÇİCİ. İngilizce sürüm yeni İngilizce
+         adreslerle kurulacak; o güne kadar /en/x Türkçe karşılığına (/x)
+         gidiyor, oradan yukarıdaki kurallar devralıyor. Geçici (307): İngilizce
+         açıldığında bu iki satır silinir ve kalıcı eşleştirme yazılır. */
+      { source: "/en", destination: "/", permanent: false },
+      { source: "/en/:rest*", destination: "/:rest*", permanent: false },
       { source: "/privacy-policy", destination: "/kvkk", permanent: true },
       { source: "/legal/:rest*", destination: "/kvkk", permanent: true },
       { source: "/ulke/:slug", destination: "/:slug", permanent: true },
