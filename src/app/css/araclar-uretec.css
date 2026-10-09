@@ -713,3 +713,12 @@
     transform: none;
   }
 }
+
+/* 09.10.2026 · adayın altında kökün dili ve anlamı ("Lumen · Latince · ışık").
+   Yalnız bileşik ve kaynaşık üslupta ve anlamı bilinen kökte basılıyor. */
+.ta-uretec-aday-a {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-600);
+}

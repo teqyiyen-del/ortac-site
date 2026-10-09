@@ -50,111 +50,67 @@
    de "kısıtlı kelime kontrolü yapmıyorum" diyor.
    ========================================================================= */
 
-export type NameTone = "kurumsal" | "kisa" | "bilesik";
+/* ---------------------------------------------------------------------------
+   09.10.2026 · HAVUZ VE FORMÜL YENİLENDİ
+
+   Halil: "sağlam bir havuz + bir formül yapalım." Üç şey değişti; yukarıdaki
+   ilkeler (yapay zekâ yok, dış istek yok, aynı girdi aynı çıktı, kısıtlı sınıf
+   listelerde yok, müsaitlik sözü yok) aynen duruyor.
+
+   1) HAVUZ lib/tools/isimHavuzu.ts'e taşındı ve büyüdü: 96 kökten 679'a, on
+      sektör (gayrimenkul ve sağlık eklendi) ve altı temadan. Nasıl üretilip
+      elendiği o dosyanın başında.
+   2) DÖRDÜNCÜ ÜSLUP: kaynaşık. Kelime ile kök ORTAK HARFTEN birleşiyor
+      ("Atlas" + "Aster" → "Atlaster"); ortak harfi olmayan çift aday olmuyor.
+   3) SIRALAMA. Eskiden adaylar listedeki sırayla geliyordu. Şimdi bir üslubun
+      bütün adayları üretiliyor, PUANLANIYOR ve en iyiden başlayarak altışar
+      veriliyor. Puanın ölçtüğü: uzunluk, hece sayısı, birleşme yerindeki ses
+      (iki ünlü ya da üç ünsüz yan yana gelmesin, aynı harf çiftlenmesin), iki
+      kelimeli adda baş harf uyumu. Eşit puanda havuzdaki sıra: rastgelelik yine yok.
+      Ölçütlerin kaynağı pazarlama yazılarının ortak noktası (2-3 hece, kısa ad,
+      yazıldığı gibi okunma); deneysel bir eşik değil, pratik bir sıralama.
+   Bileşik ve kaynaşık adayda kökün anlamı da dönüyor (isimAciklamalari).
+   ------------------------------------------------------------------------- */
+
+import { EKLER, SEKTOR_IS, SEKTOR_KOK, TEMA_KOK, type Kok } from "./isimHavuzu";
+
+export type NameTone = "kurumsal" | "kisa" | "bilesik" | "kaynasik";
 
 export const TONES: { key: NameTone; label: string; hint: string }[] = [
   { key: "kurumsal", label: "Kurumsal", hint: "Kelimeniz + iş sözcüğü" },
   { key: "kisa", label: "Kısa ve modern", hint: "Kelimenizin kökü + kısa ek" },
   { key: "bilesik", label: "Bileşik", hint: "Kelimeniz + ikinci bir kök" },
+  { key: "kaynasik", label: "Kaynaşık", hint: "Kelimeniz ve bir kök ortak harften birleşir" },
 ];
 
-export type SectorKey =
-  | "genel"
-  | "yazilim"
-  | "eticaret"
-  | "danismanlik"
-  | "lojistik"
-  | "insaat"
-  | "medya"
-  | "turizm";
+export type SectorKey = keyof typeof SEKTOR_KOK;
 
-/* Sektör kaydı. `biz` kurumsal üslubun ikinci kelimesi, `roots` bileşik
-   üslubun ikinci kökü. İkisi de o sektörde ADA GİRMESİ NORMAL karşılanan
-   sözcükler; hiçbiri lisanslı faaliyet ya da otorite çağrıştırmıyor.
+/* Sektör etiketleri. Sıra ekrandaki sıra; "genel" ilk ve varsayılan (sektörünü
+   henüz seçmemiş biri aracı kullanamamış olmasın). "finans" ve "sigorta" yine
+   yok: o sektörde üretilecek her makul sözcük kısıtlı listeye giriyor. */
+const SEKTOR_ETIKET: Record<SectorKey, string> = {
+  genel: "Henüz belli değil",
+  yazilim: "Yazılım ve teknoloji",
+  eticaret: "E-ticaret ve perakende",
+  danismanlik: "Danışmanlık ve hizmet",
+  lojistik: "Lojistik ve dış ticaret",
+  insaat: "İnşaat ve mühendislik",
+  medya: "Medya, reklam ve tasarım",
+  turizm: "Turizm ve konaklama",
+  gayrimenkul: "Gayrimenkul",
+  saglik: "Sağlık ve medikal",
+};
 
-   "genel" listede İLK sırada duruyor ve varsayılan: sektörünü henüz
-   seçmemiş biri aracı kullanamamış olmasın. Adı da bunu söylüyor
-   ("Henüz belli değil"), yani boş bir seçim gibi durmuyor. */
-export const SECTORS: {
-  key: SectorKey;
-  label: string;
-  biz: readonly string[];
-  roots: readonly string[];
-}[] = [
-  {
-    key: "genel",
-    label: "Henüz belli değil",
-    biz: ["Group", "Partners", "Ventures", "Holdings", "Enterprises", "Works", "Associates", "Company", "Collective", "Alliance", "Bureau", "House"],
-    roots: ["Nova", "Vera", "Lumen", "Aster", "Meridia", "Orbis", "Selva", "Arca", "Kanto", "Nordis", "Vento", "Prima"],
-  },
-  {
-    key: "yazilim",
-    label: "Yazılım ve teknoloji",
-    biz: ["Labs", "Systems", "Technologies", "Digital", "Software", "Studio", "Solutions", "Works", "Interactive", "Applications", "Platforms", "Engineering"],
-    roots: ["Byte", "Logic", "Cortex", "Pixel", "Vector", "Quanta", "Circuit", "Kernel", "Nexus", "Cipher", "Vertex", "Signal"],
-  },
-  {
-    key: "eticaret",
-    label: "E-ticaret ve perakende",
-    biz: ["Commerce", "Retail", "Trading", "Brands", "Market", "Goods", "Store", "Supply", "Merchants", "Outlet", "Distribution", "Collection"],
-    roots: ["Cart", "Shelf", "Bazaar", "Vendo", "Basket", "Merca", "Depot", "Stock", "Aisle", "Crate", "Parcel", "Trolley"],
-  },
-  {
-    key: "danismanlik",
-    label: "Danışmanlık ve hizmet",
-    biz: ["Advisory", "Consulting", "Partners", "Associates", "Management", "Consultancy", "Group", "Practice", "Counsel", "Bureau", "Services", "Office"],
-    roots: ["Vista", "Compass", "Anchor", "Summit", "Bridge", "Pillar", "Forum", "Atlas", "Beacon", "Keystone", "Meridian", "Axis"],
-  },
-  {
-    key: "lojistik",
-    label: "Lojistik ve ticaret",
-    biz: ["Logistics", "Shipping", "Freight", "Trading", "Supply", "Transport", "Cargo", "Express", "Forwarding", "Terminals", "Haulage", "Movers"],
-    roots: ["Route", "Harbor", "Voyage", "Transit", "Convoy", "Pallet", "Anchor", "Cargo", "Lane", "Dock", "Fleet", "Berth"],
-  },
-  {
-    key: "insaat",
-    label: "İnşaat ve gayrimenkul",
-    biz: ["Contracting", "Projects", "Developments", "Construction", "Builders", "Works", "Group", "Engineering", "Structures", "Interiors", "Foundations", "Sites"],
-    roots: ["Stone", "Granite", "Terra", "Cedar", "Foundry", "Arch", "Beam", "Quarry", "Mortar", "Slate", "Pylon", "Girder"],
-  },
-  {
-    key: "medya",
-    label: "Medya ve tasarım",
-    biz: ["Media", "Studio", "Creative", "Design", "Productions", "Works", "Content", "House", "Films", "Agency", "Pictures", "Collective"],
-    roots: ["Lumen", "Canvas", "Echo", "Prism", "Frame", "Muse", "Chroma", "Verse", "Reel", "Motif", "Aura", "Tone"],
-  },
-  {
-    key: "turizm",
-    label: "Turizm ve organizasyon",
-    biz: ["Travel", "Journeys", "Hospitality", "Events", "Escapes", "Retreats", "Group", "Experiences", "Tours", "Voyages", "Resorts", "Concierge"],
-    roots: ["Sunda", "Oasis", "Horizon", "Marina", "Dune", "Palma", "Terra", "Serene", "Lagoon", "Cove", "Vista", "Zephyr"],
-  },
-];
+export const SECTORS: { key: SectorKey; label: string; biz: readonly string[]; roots: readonly string[] }[] = (
+  Object.keys(SEKTOR_ETIKET) as SectorKey[]
+).map((key) => ({ key, label: SEKTOR_ETIKET[key], biz: SEKTOR_IS[key], roots: SEKTOR_KOK[key].map((k) => k[0]) }));
 
-export const SECTOR_BY_KEY = SECTORS.reduce(
-  (acc, s) => {
-    acc[s.key] = s;
-    return acc;
-  },
-  {} as Record<SectorKey, (typeof SECTORS)[number]>,
-);
+export const SECTOR_BY_KEY = Object.fromEntries(SECTORS.map((s) => [s.key, s])) as Record<SectorKey, (typeof SECTORS)[number]>;
 
-const ENDINGS = ["ly", "io", "ora", "eva", "ion", "ex", "um", "is", "ana", "va", "iq", "en"] as const;
-
-/**
- * Her turda kaç aday — üçü öne çıkıyor, kalanı yedek.
- *
- * 9 DEĞİL 6 VE SEBEBİ TEKRAR. Havuzlar 12 kelime uzunluğunda; turda 9 aday
- * üretilirse ikinci tur 9-17 aralığını okuyor, yani 12'ye bölünürken başa
- * sarıyor ve "Başka öneriler" düğmesi ziyaretçiye AYNI adları farklı sırada
- * gösteriyordu. Ölçüldü: lojistik + kurumsalda ikinci turun dokuz adayının
- * altısı birinci turda zaten görünmüştü.
- *
- * 6, 12'yi tam bölüyor: iki tur, on iki ayrı ad, tek tekrar yok. Ekranda da
- * daha iyi duruyor — aday ızgarası geniş ekranda üç sütun, yani 6 aday tam
- * iki satır.
- */
+/** Bir turda kaç aday: üçü öne çıkıyor, kalanı yedek. Izgara geniş ekranda üç sütun, 6 tam iki satır. */
 export const PER_ROUND = 6;
+/** Bir üslubun en çok kaç adayı gösterilir (on tur). Puan sıralı olduğu için kuyruk zaten zayıf adaylar. */
+const EN_COK = 60;
 
 const VOWELS = "aeıioöuüAEIİOÖUÜ";
 
@@ -186,67 +142,140 @@ function stem(word: string, ending: string): string {
   return base;
 }
 
-/**
- * Aday listesi. Aynı (kelime, sektör, üslup, tur) her zaman aynı sonucu
- * veriyor. `round` sıfırdan başlıyor ve listelerde kaydırıyor — rastgelelik yok.
- */
-export function generateNames(
-  rawKeyword: string,
-  sector: SectorKey,
-  tone: NameTone,
-  round: number,
-): string[] {
+/* ------------------------------------------------------------------ PUAN */
+const UNLU = "aeiouyıöü";
+const unluMu = (c: string) => UNLU.includes(c);
+const heceSay = (s: string) => (s.toLocaleLowerCase("tr-TR").match(/[aeiouyıöü]+/g) ?? []).length;
+
+/** Birleşme yerinin cezası: `a` ile biten parça `b` ile başlayan parçaya yapışıyor. */
+function ekYeri(a: string, b: string): number {
+  const x = a.toLocaleLowerCase("tr-TR"), y = b.toLocaleLowerCase("tr-TR");
+  const son = x.at(-1) ?? "", ilk = y.charAt(0);
+  let ceza = 0;
+  if (son === ilk) ceza += 9; /* aynı harf çiftleniyor: "Atlassignal" */
+  else if (unluMu(son) && unluMu(ilk)) ceza += 8; /* iki ünlü yan yana, okurken takılıyor */
+  /* birleşme yerinde ünsüz yığını */
+  const sonUnsuz = x.match(/[^aeiouyıöü]+$/)?.[0].length ?? 0, ilkUnsuz = y.match(/^[^aeiouyıöü]+/)?.[0].length ?? 0;
+  if (sonUnsuz + ilkUnsuz >= 3) ceza += 6 * (sonUnsuz + ilkUnsuz - 2);
+  return ceza;
+}
+
+/** 0-100. Yüksek olan önce gelir. `marka` adın uydurulan kısmı (iki kelimeli adda ilk kelime ziyaretçinin). */
+function puanla(ad: string, parcalar: [string, string] | null, ortak = 0): number {
+  const kelimeler = ad.split(" "), harf = ad.replace(/\s/g, "").length;
+  let p = 100;
+  if (kelimeler.length > 1) {
+    /* iki kelime: toplam uzunluk ve ikinci kelimenin hecesi */
+    if (harf > 16) p -= (harf - 16) * 4;
+    const h = heceSay(kelimeler[1]);
+    if (h > 3) p -= (h - 3) * 7;
+    if (kelimeler[0].charAt(0).toLocaleLowerCase("tr-TR") === kelimeler[1].charAt(0).toLocaleLowerCase("tr-TR")) p += 6; /* baş harf uyumu */
+  } else {
+    if (harf > 11) p -= (harf - 11) * 6;
+    if (harf < 5) p -= (5 - harf) * 6;
+    const h = heceSay(ad);
+    if (h >= 5) p -= 22;
+    else if (h === 4) p -= 8;
+    else if (h <= 1) p -= 6;
+  }
+  if (parcalar) p -= ekYeri(parcalar[0], parcalar[1]);
+  if (/(.)\1\1/i.test(ad)) p -= 12;
+  return p + ortak * 5;
+}
+
+/* ---------------------------------------------------------------- ÜRETİM */
+type Aday = { ad: string; puan: number; kok?: Kok };
+
+/** Kelimenin sonu ile kökün başı (ya da tersi) kaç harf örtüşüyor: en uzun örtüşme, en çok 3. */
+function ortusme(a: string, b: string): number {
+  const x = a.toLocaleLowerCase("tr-TR"), y = b.toLocaleLowerCase("tr-TR");
+  for (let k = Math.min(3, x.length - 1, y.length - 1); k >= 1; k--) if (x.endsWith(y.slice(0, k))) return k;
+  return 0;
+}
+
+function uret(key: string, sector: SectorKey, tone: NameTone): Aday[] {
+  const word = cap(key), kucuk = key.toLocaleLowerCase("tr-TR");
+  const out = new Map<string, Aday>();
+  const ekle = (ad: string, puan: number, kok?: Kok) => {
+    if (!ad || ad === word) return;
+    const onceki = out.get(ad);
+    if (!onceki || onceki.puan < puan) out.set(ad, { ad, puan, kok });
+  };
+  /* bileşik ve kaynaşık: önce sektörün kökleri, sonra tema kökleri (sektörde zaten olan atlanıyor) */
+  const sektorKok = SEKTOR_KOK[sector] as readonly Kok[];
+  const kokler = [...sektorKok, ...TEMA_KOK.filter((t) => !sektorKok.some((k) => k[0] === t[0]))];
+
+  if (tone === "kurumsal") {
+    for (const b of SEKTOR_IS[sector]) ekle(`${word} ${b}`, puanla(`${word} ${b}`, null));
+  } else if (tone === "kisa") {
+    for (const e of EKLER) {
+      const govde = stem(key, e), ad = cap(`${govde}${e}`);
+      ekle(ad, puanla(ad, [govde, e]));
+    }
+  } else if (tone === "bilesik") {
+    for (const k of kokler) {
+      const r = k[0].toLocaleLowerCase("tr-TR");
+      /* sektörün kendi kökü tema köküne göre biraz önde: aynı puanda sektörü söyleyen kazansın */
+      const sektorden = sektorKok.includes(k) ? 7 : 0;
+      ekle(cap(`${kucuk}${r}`), puanla(cap(`${kucuk}${r}`), [kucuk, r]) + sektorden, k);
+      ekle(cap(`${r}${kucuk}`), puanla(cap(`${r}${kucuk}`), [r, kucuk]) + sektorden, k);
+    }
+  } else {
+    for (const k of kokler) {
+      const r = k[0].toLocaleLowerCase("tr-TR");
+      for (const [a, b] of [[kucuk, r], [r, kucuk]] as const) {
+        const o = ortusme(a, b);
+        if (!o) continue;
+        const ad = cap(a + b.slice(o));
+        /* kaynaşma iki kelimeyi de taşımalı: sonuç ikisinden de belirgin uzun, ama okunur boyda */
+        if (ad.length < Math.max(a.length, b.length) + 2 || ad.length > 12) continue;
+        ekle(ad, puanla(ad, null, o), k);
+      }
+    }
+  }
+  /* ortak harfi olan kök yoksa (iki harfli kelimede sık) kaynaşık boş kalmasın: bileşiğe düşüyor */
+  if (tone === "kaynasik" && out.size === 0) return uret(key, sector, "bilesik");
+  /* Eşit puanda HAVUZDAKİ sıra korunuyor (sort kararlı, Map ekleme sırasını tutuyor): alfabetik
+     sıralamak "Apps, Cloud, Computing…" diye sözlük gibi bir liste veriyordu. */
+  return [...out.values()].sort((x, y) => y.puan - x.puan).slice(0, EN_COK);
+}
+
+/* Aynı (kelime, sektör, üslup) için liste bir kez kuruluyor; tur değişince yeniden üretmek gerekmiyor. */
+let sonAnahtar = "", sonListe: Aday[] = [];
+function liste(rawKeyword: string, sector: SectorKey, tone: NameTone): Aday[] {
   const key = normalizeKeyword(rawKeyword);
   if (key.length < 2) return [];
-
-  const word = cap(key);
-  const { biz, roots } = SECTOR_BY_KEY[sector] ?? SECTOR_BY_KEY.genel;
-  const out: string[] = [];
-
-  for (let i = 0; i < PER_ROUND; i++) {
-    const step = round * PER_ROUND + i;
-    let candidate = "";
-
-    if (tone === "kurumsal") {
-      candidate = `${word} ${biz[step % biz.length]}`;
-    } else if (tone === "kisa") {
-      const ending = ENDINGS[step % ENDINGS.length];
-      candidate = cap(`${stem(key, ending)}${ending}`);
-    } else {
-      const root = roots[step % roots.length];
-      /* Tek turda iki yön birden: kelime önde ve kökle önde. Aynı iki parçadan
-         iki farklı isim çıkıyor, liste de tekdüze olmuyor. */
-      candidate =
-        step % 2 === 0
-          ? `${word}${root.toLocaleLowerCase("tr-TR")}`
-          : `${root}${key.toLocaleLowerCase("tr-TR")}`;
-      candidate = cap(candidate);
-    }
-
-    /* Aynı isim iki kez çıkmasın; kelimenin kendisi de aday sayılmaz. */
-    if (candidate && candidate !== word && !out.includes(candidate)) out.push(candidate);
+  const a = `${key}|${sector}|${tone}`;
+  if (a !== sonAnahtar) {
+    sonAnahtar = a;
+    sonListe = uret(key, SEKTOR_KOK[sector] ? sector : "genel", tone);
   }
+  return sonListe;
+}
 
+/**
+ * Aday listesi. Aynı (kelime, sektör, üslup, tur) her zaman aynı sonucu veriyor.
+ * `round` sıfırdan başlıyor ve puan sıralı listede altışar ilerliyor; rastgelelik yok.
+ */
+export function generateNames(rawKeyword: string, sector: SectorKey, tone: NameTone, round: number): string[] {
+  return liste(rawKeyword, sector, tone).slice(round * PER_ROUND, (round + 1) * PER_ROUND).map((a) => a.ad);
+}
+
+/** Bileşik ve kaynaşık adaylarda kullanılan kökün anlamı: { "Atlaslumen": "Lumen · Latince · ışık" }. */
+export function isimAciklamalari(rawKeyword: string, sector: SectorKey, tone: NameTone, round: number): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const a of liste(rawKeyword, sector, tone).slice(round * PER_ROUND, (round + 1) * PER_ROUND))
+    if (a.kok?.[1]) out[a.ad] = [a.kok[0], a.kok[2], a.kok[1]].filter(Boolean).join(" · ");
   return out;
 }
 
 /**
- * Bir (sektör, üslup) çifti kaç TUR üretebiliyor.
- *
- * NEDEN GEREKLİ: havuzlar sonlu. "Başka öneriler" sonsuza kadar basılabilseydi
- * belli bir noktadan sonra ziyaretçiye zaten gördüğü adları gösterirdi — araç
- * bozuk sanılır. Arayüz bu sayıyı okuyup son turda düğmeyi hiç basmıyor ve
- * yerine ne yapılacağını yazıyor (sektörü ya da üslubu değiştir).
- *
- * Havuz boyu üsluba göre:
- *   kurumsal → sektörün iş sözcükleri (12)
- *   kisa     → ek listesi (12), sektörden bağımsız
- *   bilesik  → kökler × 2 (24), çünkü her kök iki yönde birleşiyor
+ * Bir (kelime, sektör, üslup) kaç TUR üretebiliyor. Havuz sonlu; arayüz bu sayıyı
+ * okuyup son turda "başka öneriler" düğmesini basmıyor. Kaynaşık üslupta sayı
+ * kelimeye bağlı (ortak harfi olan kök sayısı), o yüzden kelime de soruluyor.
  */
-export function turSayisi(sector: SectorKey, tone: NameTone): number {
-  const s = SECTOR_BY_KEY[sector] ?? SECTOR_BY_KEY.genel;
-  const havuz = tone === "kurumsal" ? s.biz.length : tone === "kisa" ? ENDINGS.length : s.roots.length * 2;
-  return Math.max(1, Math.ceil(havuz / PER_ROUND));
+export function turSayisi(sector: SectorKey, tone: NameTone, rawKeyword = "ornek"): number {
+  return Math.max(1, Math.ceil(liste(rawKeyword, sector, tone).length / PER_ROUND));
 }
 
 /**
