@@ -14,6 +14,8 @@ import {
   Globe,
   Handshake,
   HardHat,
+  HeartPulse,
+  KeyRound,
   ListOrdered,
   Lock,
   Merge,
@@ -60,6 +62,7 @@ import {
   SECTOR_BY_KEY,
   TONES,
   generateNames,
+  isimAciklamalari,
   normalizeKeyword,
   toDomainLabel,
   turSayisi,
@@ -242,12 +245,15 @@ const SEKTOR_IKON: Record<SectorKey, LucideIcon> = {
   insaat: HardHat,
   medya: Clapperboard,
   turizm: Plane,
+  gayrimenkul: KeyRound,
+  saglik: HeartPulse,
 };
 
 const USLUP_IKON: Record<NameTone, LucideIcon> = {
   kurumsal: Building2,
   kisa: Scissors,
   bilesik: Combine,
+  kaynasik: Merge,
 };
 
 const USLUP_BY_KEY = Object.fromEntries(TONES.map((t) => [t.key, t])) as Record<
@@ -269,7 +275,8 @@ const USLUP_BY_KEY = Object.fromEntries(TONES.map((t) => [t.key, t])) as Record<
 const USLUP_KURAL: Record<NameTone, string> = {
   kurumsal: "İş sözcüğü seçtiğiniz sektörün listesinden geliyor.",
   kisa: "Kök, kelimenizin en çok ilk beş harfi; bu üslupta sektör ada girmiyor.",
-  bilesik: "İkinci kök sektörün listesinden geliyor; adaylarda sırayla bir kelimeniz, bir kök önde.",
+  bilesik: "İkinci kök sektörün ve temaların listesinden geliyor; kelimeniz hem önde hem arkada deneniyor, okunuşu en rahat olanlar üstte.",
+  kaynasik: "Kelimenizin sonu ile bir kökün başı (ya da tersi) aynı harfse o harften birleşiyor; ortak harfi olmayan kök aday olmuyor.",
 };
 
 /* ---------------------------------------------------------- BAŞVURU ----
@@ -329,10 +336,11 @@ export default function NameForge() {
   const names = uretim
     ? generateNames(uretim.keyword, uretim.sector, uretim.tone, uretim.round)
     : [];
+  const aciklamalar = uretim ? isimAciklamalari(uretim.keyword, uretim.sector, uretim.tone, uretim.round) : {};
   const top3 = names.slice(0, 3);
   /* Havuz bitti mi: son turdaysak "Başka öneriler" hiç basılmıyor (gerekçe
      lib/tools/names.ts · turSayisi). */
-  const sonTur = uretim ? uretim.round + 1 >= turSayisi(uretim.sector, uretim.tone) : false;
+  const sonTur = uretim ? uretim.round + 1 >= turSayisi(uretim.sector, uretim.tone, uretim.keyword) : false;
 
   /* Girdilerden biri değişince üretilmiş liste düşüyor (bkz. karar 1). */
   const sifirla = () => {
@@ -410,7 +418,7 @@ export default function NameForge() {
      ekranda (yalnız 01 açıkken) söyleyen tek yer bu. */
   const dolu = (kelimeHazir ? 1 : 0) + (sektorGorunur ? 1 : 0) + (uslupGorunur ? 1 : 0);
 
-  const turToplam = uretim ? turSayisi(uretim.sector, uretim.tone) : 0;
+  const turToplam = uretim ? turSayisi(uretim.sector, uretim.tone, uretim.keyword) : 0;
   const kalanTur = uretim ? turToplam - uretim.round - 1 : 0;
 
   const yazilan = keyword.trim();
@@ -759,6 +767,7 @@ export default function NameForge() {
                 key={n}
                 ad={n}
                 sira={i}
+                aciklama={aciklamalar[n]}
                 durum={alan[toDomainLabel(n)]}
                 onSorgula={() => sorgula(n)}
               />
@@ -901,11 +910,14 @@ export default function NameForge() {
    oynasın (aynı anahtarda React düğümü korurdu, animasyon oynamazdı). */
 function AdayKart({
   ad,
+  aciklama,
   sira,
   durum,
   onSorgula,
 }: {
   ad: string;
+  /** bileşik ve kaynaşık adayda kullanılan kökün dili ve anlamı (names.ts · isimAciklamalari) */
+  aciklama?: string;
   sira: number;
   durum: AlanSonuc[] | "yukleniyor" | undefined;
   onSorgula: () => void;
@@ -921,6 +933,7 @@ function AdayKart({
         <span className="ta-uretec-aday-t">{ad}</span>
         {ust && <span className="ta-uretec-rozet">tercih {sira + 1}</span>}
       </div>
+      {aciklama && <p className="ta-uretec-aday-a">{aciklama}</p>}
 
       <div className="ta-uretec-kontrol">
         <div className="ta-uretec-kt">
